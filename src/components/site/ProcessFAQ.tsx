@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { FaqAccordion } from "@/components/site/FaqAccordion";
 
 const items = [
   {
@@ -54,41 +54,9 @@ export function ProcessFAQ() {
           </h2>
         </div>
 
-        <ul className="mt-12 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
-          {items.map((f, i) => {
-            const isOpen = open === i;
-            return (
-              <li key={f.q}>
-                <button
-                  type="button"
-                  onClick={() => setOpen(isOpen ? null : i)}
-                  aria-expanded={isOpen}
-                  className="flex w-full items-start justify-between gap-6 px-6 py-5 text-left transition hover:bg-secondary/40"
-                >
-                  <span className="font-display text-base leading-snug text-foreground sm:text-lg">
-                    {f.q}
-                  </span>
-                  <Plus
-                    className={`mt-1 h-5 w-5 flex-shrink-0 text-brand-orange transition-transform duration-300 ${
-                      isOpen ? "rotate-45" : ""
-                    }`}
-                  />
-                </button>
-                <div
-                  className={`grid overflow-hidden transition-all duration-300 ease-out ${
-                    isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                  }`}
-                >
-                  <div className="min-h-0">
-                    <p className="px-6 pb-6 text-[15px] leading-relaxed text-muted-foreground">
-                      {f.a}
-                    </p>
-                  </div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="mt-12">
+          <FaqAccordion items={items} open={open} onToggle={setOpen} size="sm" />
+        </div>
       </div>
     </section>
   );
