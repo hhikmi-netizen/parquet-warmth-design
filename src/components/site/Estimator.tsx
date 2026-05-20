@@ -19,6 +19,7 @@ import {
   Calculator,
   Send,
 } from "lucide-react";
+import { buildEstimationPayload, submitEstimationStub } from "@/lib/estimation-types";
 
 
 // ---------- Modèle de calcul ----------
@@ -861,6 +862,7 @@ function ContactForm({
   const [errors, setErrors] = useState<ContactErrors>({});
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [sentRef, setSentRef] = useState<string | null>(null);
 
   // Persist on change (pré-remplissage au retour)
   useEffect(() => {
@@ -890,46 +892,44 @@ function ContactForm({
     return parsed.data;
   };
 
-  const submit = (ev?: React.FormEvent) => {
+  const submit = async (ev?: React.FormEvent) => {
     ev?.preventDefault();
     const data = validate();
     if (!data) return;
     setSending(true);
     onSaved(data);
 
-    const link = buildQuoteLink(state);
-    const body = [
-      `Bonjour,`,
-      ``,
-      `Je souhaite être recontacté pour le projet suivant :`,
-      ``,
-      `• Prestation : ${services[state.service].label}`,
-      `• Type : ${types[state.type].label}`,
-      `• État : ${etats[state.etat].label}`,
-      `• Surface : ${fmtNum(totals.surface)} m² (${state.longueur} × ${state.largeur} m)`,
-      state.plinthes ? `• Plinthes : oui (${fmtNum(totals.perimetre)} ml)` : null,
-      state.seuils > 0 ? `• Seuils : ${state.seuils}` : null,
-      ``,
-      `Fourchette estimée : ${fmt(totals.min)} – ${fmt(totals.max)} € TTC`,
-      ``,
-      `Lien du devis : ${link}`,
-      ``,
-      `— ${data.nom}`,
-      `Tél. ${data.telephone} · CP ${data.cp}`,
-      data.message ? `\nMessage : ${data.message}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    const url = `mailto:contact@parqueto.fr?subject=${encodeURIComponent(
-      `Demande de devis parquet — ${fmt(totals.min)}–${fmt(totals.max)} €`,
-    )}&body=${encodeURIComponent(body)}`;
-
-    window.location.href = url;
-    setTimeout(() => {
+    try {
+      // Stub local : prépare le payload exactement comme attendu par
+      // `submitEstimationProject` côté serveur. Quand le backend sera
+      // branché → remplacer par `await submitEstimation({ data: payload })`.
+      const payload = buildEstimationPayload(
+        {
+          service: state.service,
+          type: state.type,
+          etat: state.etat,
+          surface_m2: Math.round(totals.surface * 10) / 10,
+          budget_min: totals.min,
+          budget_max: totals.max,
+          plinthes: state.plinthes,
+          seuils: state.seuils,
+        },
+        {
+          nom: data.nom,
+          email: data.email,
+          telephone: data.telephone,
+          cp: data.cp,
+          message: data.message,
+        },
+      );
+      const result = await submitEstimationStub(payload);
+      setSentRef(result.reference);
+    } catch {
+      /* ignore — on affiche quand même l'écran de confirmation */
+    } finally {
       setSending(false);
       setSent(true);
-    }, 600);
+    }
   };
 
   const downloadPdf = () => {
@@ -942,9 +942,15 @@ function ContactForm({
     return (
       <div className="mt-4 rounded-xl border border-brand-orange/40 bg-brand-orange/10 p-5 text-center">
         <CheckCircle2 className="mx-auto h-8 w-8 text-brand-orange" />
-        <h4 className="mt-2 font-display text-xl text-background">Demande envoyée</h4>
+        <h4 className="mt-2 font-display text-xl text-background">Demande enregistrée</h4>
+        {sentRef && (
+          <p className="mt-1 text-[11px] uppercase tracking-wider text-brand-orange">
+            Référence {sentRef}
+          </p>
+        )}
         <p className="mt-1 text-xs text-background/70">
-          Un artisan vous recontacte sous 24 h. Vos infos sont sauvegardées pour la prochaine fois.
+          Un artisan sélectionné dans votre secteur vous recontacte sous 24 h.
+          Vos infos sont sauvegardées pour la prochaine fois.
         </p>
         <div className="mt-3 flex flex-wrap justify-center gap-3 text-xs">
           <button
