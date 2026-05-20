@@ -1220,9 +1220,53 @@ function Step3({
   const inputRef = useRef<HTMLInputElement>(null);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     setConfirmDelete(false);
+    if (lightbox !== null) {
+      previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+      // focus dialog so Esc/arrows work immediately
+      requestAnimationFrame(() => lightboxRef.current?.focus());
+    } else if (previouslyFocusedRef.current) {
+      previouslyFocusedRef.current.focus?.();
+      previouslyFocusedRef.current = null;
+    }
   }, [lightbox]);
+
+  // Body scroll lock + keyboard shortcuts
+  useEffect(() => {
+    if (lightbox === null) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        if (confirmDelete) setConfirmDelete(false);
+        else setLightbox(null);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setLightbox((lightbox + 1) % photos.length);
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setLightbox((lightbox - 1 + photos.length) % photos.length);
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        setLightbox(0);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        setLightbox(photos.length - 1);
+      } else if ((e.key === "Delete" || e.key === "Backspace") && !confirmDelete) {
+        e.preventDefault();
+        setConfirmDelete(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [lightbox, photos.length, confirmDelete]);
   const MAX = 5;
   const MAX_SIZE = 8 * 1024 * 1024; // 8 MB
   const MIN_DIM = 400; // px (shortest side)
@@ -1400,9 +1444,12 @@ function Step3({
 
         {lightbox !== null && photos[lightbox] && (
           <div
+            ref={lightboxRef}
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-50 flex flex-col bg-foreground/95 backdrop-blur-sm"
+            aria-label={`Aperçu photo ${lightbox + 1} sur ${photos.length}`}
+            tabIndex={-1}
+            className="fixed inset-0 z-50 flex flex-col bg-foreground/95 backdrop-blur-sm outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60"
             onClick={() => setLightbox(null)}
           >
             <div className="flex items-center justify-between gap-3 border-b border-background/10 px-4 py-3 text-background">

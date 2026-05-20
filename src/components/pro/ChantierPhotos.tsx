@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { Camera, ImagePlus, Trash2, Calendar, Pencil, Check, X, Info } from "lucide-react";
+import { Camera, ImagePlus, Trash2, Calendar, Pencil, Check, X, Info, Eye, EyeOff, Clock } from "lucide-react";
 import { PqButton } from "@/components/parqueto/PqButton";
 
 /**
@@ -30,10 +30,12 @@ const PHASES: { id: Phase; label: string; hint: string; tone: string }[] = [
 ];
 
 const MOCK_PROJECTS = [
-  { ref: "PJ-002479", label: "Reprise locale + huile dure · 12 m² — Lyon 3e" },
-  { ref: "PJ-002471", label: "Point de Hongrie · 38 m² — Caluire" },
-  { ref: "PJ-002460", label: "Vitrification · 24 m² — Lyon 2e" },
+  { ref: "PJ-002479", label: "Reprise locale + huile dure · 12 m² — Lyon 3e", closedAt: null as string | null },
+  { ref: "PJ-002471", label: "Point de Hongrie · 38 m² — Caluire", closedAt: "2026-03-12" },
+  { ref: "PJ-002460", label: "Vitrification · 24 m² — Lyon 2e", closedAt: "2026-02-28" },
 ];
+
+const TTL_DAYS = 90;
 
 async function compressImage(file: File): Promise<{ dataUrl: string; sizeKb: number }> {
   const bitmap = await createImageBitmap(file);
@@ -64,9 +66,29 @@ function formatDate(iso: string) {
 export function ChantierPhotos() {
   const [projectRef, setProjectRef] = useState(MOCK_PROJECTS[0].ref);
   const [photos, setPhotos] = useState<Record<string, Photo[]>>({});
+  const [visibleToClient, setVisibleToClient] = useState<Record<string, boolean>>({});
   const [editing, setEditing] = useState<string | null>(null);
   const [draftNote, setDraftNote] = useState("");
   const inputs = useRef<Record<Phase, HTMLInputElement | null>>({ avant: null, pendant: null, apres: null });
+
+  const currentProject = MOCK_PROJECTS.find((p) => p.ref === projectRef)!;
+  const clientShared = !!visibleToClient[projectRef];
+
+  const ttl = useMemo(() => {
+    if (!currentProject.closedAt) {
+      return { status: "active" as const, label: "Projet en cours · conservation illimitée tant qu'il n'est pas clôturé" };
+    }
+    const closed = new Date(currentProject.closedAt).getTime();
+    const expires = closed + TTL_DAYS * 86_400_000;
+    const remaining = Math.ceil((expires - Date.now()) / 86_400_000);
+    if (remaining <= 0) {
+      return { status: "expired" as const, label: `Expirées depuis ${-remaining} j — purge automatique programmée` };
+    }
+    if (remaining <= 14) {
+      return { status: "warning" as const, label: `Expire dans ${remaining} j (le ${new Date(expires).toLocaleDateString("fr-FR")})` };
+    }
+    return { status: "ok" as const, label: `Conservation ${remaining} j restants (jusqu'au ${new Date(expires).toLocaleDateString("fr-FR")})` };
+  }, [currentProject.closedAt]);
 
   const list = photos[projectRef] ?? [];
   const byPhase = useMemo(() => {
@@ -136,9 +158,59 @@ export function ChantierPhotos() {
             </option>
           ))}
         </select>
-        <p className="mt-2 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-          <Info className="size-3" />
-          Photos visibles par vous et l'admin Parqueto. Conservées 90 jours après clôture du projet.
+
+        {/* Partage client + TTL */}
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={() => setVisibleToClient((prev) => ({ ...prev, [projectRef]: !prev[projectRef] }))}
+            aria-pressed={clientShared}
+            className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left text-xs transition ${
+              clientShared
+                ? "border-emerald-300 bg-emerald-50 text-emerald-900 hover:bg-emerald-100"
+                : "border-border bg-background text-foreground hover:bg-accent"
+            }`}
+          >
+            <span className="flex items-center gap-2">
+              {clientShared ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
+              <span className="font-semibold">
+                {clientShared ? "Visible par le client" : "Photos privées (vous + admin)"}
+              </span>
+            </span>
+            <span
+              className={`inline-flex h-4 w-7 shrink-0 items-center rounded-full transition ${
+                clientShared ? "bg-emerald-600" : "bg-muted-foreground/30"
+              }`}
+              aria-hidden
+            >
+              <span
+                className={`h-3 w-3 rounded-full bg-white shadow transition ${
+                  clientShared ? "translate-x-3.5" : "translate-x-0.5"
+                }`}
+              />
+            </span>
+          </button>
+
+          <div
+            className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
+              ttl.status === "expired"
+                ? "border-destructive/40 bg-destructive/10 text-destructive"
+                : ttl.status === "warning"
+                  ? "border-amber-300 bg-amber-50 text-amber-900"
+                  : "border-border bg-background text-muted-foreground"
+            }`}
+            title="Durée de conservation après clôture du projet"
+          >
+            <Clock className="size-3.5 shrink-0" />
+            <span className="font-medium">{ttl.label}</span>
+          </div>
+        </div>
+
+        <p className="mt-2 flex items-start gap-1.5 text-[11px] text-muted-foreground">
+          <Info className="mt-0.5 size-3 shrink-0" />
+          {clientShared
+            ? "Le client peut voir les photos depuis son espace projet. Vous pouvez désactiver le partage à tout moment."
+            : "Photos visibles par vous et l'admin Parqueto uniquement. Conservées 90 jours après clôture du projet."}
         </p>
       </div>
 
