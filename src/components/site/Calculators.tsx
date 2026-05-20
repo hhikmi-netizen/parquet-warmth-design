@@ -394,6 +394,27 @@ function BudgetTool() {
             onChange={(v) => setSupport(v as BudgetSupport)}
           />
         )}
+
+        {/* Tarif personnalisé €/m² (override des fourchettes par défaut) */}
+        <div className="rounded-xl border border-dashed border-border bg-secondary/30 p-3">
+          <label className="flex cursor-pointer items-center justify-between gap-3">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Personnaliser le tarif €/m² (devis, artisan…)
+            </span>
+            <input
+              type="checkbox"
+              checked={customize}
+              onChange={(e) => setCustomize(e.target.checked)}
+              className="h-4 w-4 accent-brand-orange"
+            />
+          </label>
+          {customize && (
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <NumberField label="Prix min" value={priceMin} onChange={setPriceMin} unit="€/m²" step={1} />
+              <NumberField label="Prix max" value={priceMax} onChange={setPriceMax} unit="€/m²" step={1} />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Résultat + CTA conversion */}
