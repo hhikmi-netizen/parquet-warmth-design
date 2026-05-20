@@ -460,6 +460,19 @@ export function EstimateWizard() {
   const [sent, setSent] = useState(false);
   const [shareMsg, setShareMsg] = useState<string>("");
   const [shareFallback, setShareFallback] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
+
+  const handlePdf = async () => {
+    if (pdfLoading) return;
+    setPdfLoading(true);
+    try {
+      // Yield to the event loop so the spinner can paint before jsPDF blocks the main thread
+      await new Promise((r) => setTimeout(r, 30));
+      generateWizardPDF(s);
+    } finally {
+      setPdfLoading(false);
+    }
+  };
 
   useEffect(() => {
     setS(loadWizardState());
