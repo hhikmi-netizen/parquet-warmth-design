@@ -55,7 +55,68 @@ export function Blog() {
           </a>
         </div>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
+        {/* Mobile: snap carousel · Desktop: grid */}
+        <div className="mt-12 md:hidden">
+          <div
+            className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-6 pb-4"
+            style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+          >
+            {articles.map((a, i) => (
+              <article
+                key={a.title}
+                className="group flex w-[85%] flex-shrink-0 snap-center flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition active:scale-[0.985] active:shadow-warm"
+              >
+                <a href="#blog" className="relative block overflow-hidden">
+                  <img
+                    src={a.img}
+                    alt={a.title}
+                    className="aspect-[5/3] w-full object-cover"
+                    loading="lazy"
+                  />
+                  <span className="absolute left-3 top-3 inline-flex items-center rounded-full bg-background/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-orange backdrop-blur">
+                    {a.category}
+                  </span>
+                  <span className="absolute right-3 top-3 inline-flex items-center rounded-full bg-foreground/85 px-2.5 py-1 text-[10px] font-semibold text-background backdrop-blur">
+                    {i + 1}/{articles.length}
+                  </span>
+                </a>
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                    <span>{a.date}</span>
+                    <span className="h-1 w-1 rounded-full bg-border" />
+                    <span>{a.readTime}</span>
+                  </div>
+                  <h3 className="mt-2 font-display text-[22px] leading-tight text-balance">
+                    <a href="#blog" className="transition active:text-brand-orange">
+                      {a.title}
+                    </a>
+                  </h3>
+                  <p className="mt-2 flex-1 text-[14px] leading-relaxed text-muted-foreground line-clamp-3">
+                    {a.excerpt}
+                  </p>
+                  <a
+                    href="#blog"
+                    className="mt-5 inline-flex w-fit items-center gap-1.5 rounded-full bg-brand-orange/10 px-4 py-2 text-sm font-semibold text-brand-orange transition active:bg-brand-orange active:text-primary-foreground"
+                  >
+                    Lire l'article
+                    <ArrowUpRight className="h-4 w-4" />
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div className="mt-3 flex items-center justify-center gap-1.5">
+            {articles.map((_, i) => (
+              <span
+                key={i}
+                className="h-1.5 w-1.5 rounded-full bg-border first:w-6 first:bg-brand-orange"
+                aria-hidden
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-14 hidden gap-6 md:grid md:grid-cols-3">
           {articles.map((a) => (
             <article
               key={a.title}
@@ -97,6 +158,7 @@ export function Blog() {
             </article>
           ))}
         </div>
+
 
         <div className="mt-10 flex justify-center sm:hidden">
           <a
