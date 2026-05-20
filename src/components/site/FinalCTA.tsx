@@ -66,7 +66,7 @@ export function FinalCTA() {
             </div>
           </div>
 
-          <aside className="lg:col-span-5">
+          <aside id="estimate" className="scroll-mt-24 lg:col-span-5">
             <Estimator />
           </aside>
         </div>
