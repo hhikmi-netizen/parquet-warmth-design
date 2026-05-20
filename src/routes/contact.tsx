@@ -298,16 +298,19 @@ function ContactPage() {
 
             {/* Photos */}
             <div className="mt-6">
-              <span className="mb-2 block text-sm font-medium">Photos du projet</span>
-              <p className="mb-3 text-xs text-muted-foreground">
+              <span id="photos-label" className="mb-2 block text-sm font-medium">
+                Photos du projet
+              </span>
+              <p id="photos-hint" className="mb-3 text-xs text-muted-foreground">
                 Ajoutez quelques photos si vous le souhaitez (jusqu'à {MAX_FILES}, {MAX_FILE_MB} Mo max chacune).
               </p>
               <button
                 type="button"
                 onClick={() => fileInput.current?.click()}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-background px-4 py-6 text-sm text-muted-foreground transition hover:border-brand-orange/40 hover:text-brand-orange"
+                aria-describedby="photos-hint"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-background px-4 py-6 text-sm text-muted-foreground transition hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <Upload className="h-4 w-4" />
+                <Upload className="h-4 w-4" aria-hidden />
                 Cliquer pour ajouter des photos
               </button>
               <input
@@ -315,25 +318,33 @@ function ContactPage() {
                 type="file"
                 accept="image/*"
                 multiple
-                className="hidden"
+                aria-labelledby="photos-label"
+                aria-describedby="photos-hint"
+                className="sr-only"
                 onChange={(e) => onFiles(e.target.files)}
               />
+              <p className="sr-only" aria-live="polite">
+                {files.length === 0
+                  ? "Aucune photo sélectionnée."
+                  : `${files.length} photo${files.length > 1 ? "s" : ""} sélectionnée${files.length > 1 ? "s" : ""}.`}
+              </p>
               {files.length > 0 && (
                 <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {files.map((f, i) => (
                     <li key={i} className="group relative overflow-hidden rounded-lg border border-border bg-background">
                       <img
                         src={URL.createObjectURL(f)}
-                        alt={f.name}
+                        alt=""
                         className="aspect-square w-full object-cover"
                       />
+                      <span className="sr-only">{f.name}</span>
                       <button
                         type="button"
                         onClick={() => removeFile(i)}
                         aria-label={`Retirer ${f.name}`}
-                        className="absolute right-1 top-1 rounded-full bg-background/90 p-1 text-foreground opacity-0 shadow-soft transition group-hover:opacity-100 focus:opacity-100"
+                        className="absolute right-1 top-1 rounded-full bg-background/90 p-1 text-foreground opacity-100 shadow-soft transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
                       >
-                        <X className="h-3 w-3" />
+                        <X className="h-3 w-3" aria-hidden />
                       </button>
                     </li>
                   ))}
