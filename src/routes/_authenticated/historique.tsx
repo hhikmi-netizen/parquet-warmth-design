@@ -20,6 +20,12 @@ function HistoriquePage() {
             <img src={logo} alt="Parqueto" className="h-10 w-auto" />
           </Link>
           <div className="flex items-center gap-3 text-sm">
+            <Link
+              to="/messages"
+              className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 font-medium transition hover:bg-accent"
+            >
+              <MessageSquare className="h-4 w-4" /> Messagerie
+            </Link>
             <span className="hidden text-muted-foreground sm:inline">{user?.email}</span>
             <button
               onClick={async () => {
