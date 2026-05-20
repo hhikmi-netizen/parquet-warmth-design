@@ -767,6 +767,7 @@ export function Calculators() {
             </div>
           </div>
           {active === "budget" && <BudgetTool />}
+          {active === "fournitures" && <FournituresTool />}
           {active === "surface" && <SurfaceTool />}
           {active === "colle" && <ColleTool />}
           {active === "souscouche" && <SousCoucheTool />}
