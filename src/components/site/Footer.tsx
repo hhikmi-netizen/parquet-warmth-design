@@ -7,7 +7,7 @@ export function Footer() {
         <div className="md:col-span-2">
           <img src={logo} alt="Parqueto" className="h-12 w-auto" width={48} height={48} />
           <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-            Parqueto, l'estimation parquet en ligne et la mise en relation avec des artisans vérifiés. Le parquet, sans détour.
+            Parqueto, l'estimation parquet en ligne et l'accompagnement par un artisan partenaire vérifié. Le parquet, sans détour ni démarchage.
           </p>
         </div>
         <div>
