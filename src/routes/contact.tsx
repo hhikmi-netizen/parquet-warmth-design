@@ -105,13 +105,24 @@ function ContactPage() {
 
   const addFiles = (incoming: FileList | File[] | null) => {
     if (!incoming) return;
+    if (files.length >= MAX_FILES) {
+      toast.error(`Limite atteinte : ${MAX_FILES} photos maximum.`);
+      return;
+    }
     const list = Array.from(incoming);
+    const remaining = MAX_FILES - files.length;
+    if (list.length > remaining) {
+      toast.error(
+        `Vous pouvez encore ajouter ${remaining} photo${remaining > 1 ? "s" : ""} (${list.length} sélectionnée${list.length > 1 ? "s" : ""}).`
+      );
+    }
     const next = [...files];
     let accepted = 0;
+    let skippedOverflow = 0;
     for (const f of list) {
       if (next.length >= MAX_FILES) {
-        toast.error(`Maximum ${MAX_FILES} photos.`);
-        break;
+        skippedOverflow++;
+        continue;
       }
       const isImage =
         f.type.startsWith("image/") || /\.(jpe?g|png|webp|heic)$/i.test(f.name);
@@ -131,7 +142,12 @@ function ContactPage() {
     if (accepted > 0) {
       toast.success(`${accepted} photo${accepted > 1 ? "s" : ""} ajoutée${accepted > 1 ? "s" : ""}.`);
     }
+    if (skippedOverflow > 0 && accepted > 0) {
+      toast.error(`${skippedOverflow} photo${skippedOverflow > 1 ? "s" : ""} ignorée${skippedOverflow > 1 ? "s" : ""} (max ${MAX_FILES}).`);
+    }
   };
+
+  const filesFull = files.length >= MAX_FILES;
 
   const removeFile = (idx: number) =>
     setFiles((prev) => prev.filter((_, i) => i !== idx));
@@ -424,39 +440,55 @@ function ContactPage() {
 
               <div
                 role="button"
-                tabIndex={0}
-                aria-label="Zone de dépôt de photos"
+                tabIndex={filesFull ? -1 : 0}
+                aria-label={filesFull ? `Limite de ${MAX_FILES} photos atteinte` : "Zone de dépôt de photos"}
                 aria-describedby="photos-hint"
-                onClick={() => fileInput.current?.click()}
+                aria-disabled={filesFull}
+                onClick={() => {
+                  if (filesFull) {
+                    toast.error(`Limite atteinte : ${MAX_FILES} photos maximum.`);
+                    return;
+                  }
+                  fileInput.current?.click();
+                }}
                 onKeyDown={(e) => {
+                  if (filesFull) return;
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     fileInput.current?.click();
                   }
                 }}
-                onDragEnter={onDragEnter}
-                onDragOver={onDragOver}
-                onDragLeave={onDragLeave}
-                onDrop={onDrop}
-                className={`flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-8 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
-                  isDragging
-                    ? "border-brand-orange bg-brand-orange/5 text-brand-orange scale-[1.01]"
-                    : "border-border bg-background text-muted-foreground hover:border-brand-orange/40 hover:text-brand-orange"
+                onDragEnter={filesFull ? undefined : onDragEnter}
+                onDragOver={filesFull ? undefined : onDragOver}
+                onDragLeave={filesFull ? undefined : onDragLeave}
+                onDrop={filesFull ? (e) => { e.preventDefault(); toast.error(`Limite atteinte : ${MAX_FILES} photos maximum.`); } : onDrop}
+                className={`flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-8 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                  filesFull
+                    ? "cursor-not-allowed border-border bg-muted/40 text-muted-foreground opacity-70"
+                    : isDragging
+                    ? "cursor-pointer border-brand-orange bg-brand-orange/5 text-brand-orange scale-[1.01]"
+                    : "cursor-pointer border-border bg-background text-muted-foreground hover:border-brand-orange/40 hover:text-brand-orange"
                 }`}
               >
                 <span
                   className={`inline-flex h-10 w-10 items-center justify-center rounded-full transition ${
-                    isDragging ? "bg-brand-orange text-primary-foreground" : "bg-card text-brand-orange shadow-soft"
+                    isDragging && !filesFull ? "bg-brand-orange text-primary-foreground" : "bg-card text-brand-orange shadow-soft"
                   }`}
                 >
-                  {isDragging ? <ImagePlus className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
+                  {isDragging && !filesFull ? <ImagePlus className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
                 </span>
                 <span className="font-medium text-foreground">
-                  {isDragging ? "Déposez pour ajouter" : "Glissez vos photos ici"}
+                  {filesFull
+                    ? `Limite de ${MAX_FILES} photos atteinte`
+                    : isDragging
+                    ? "Déposez pour ajouter"
+                    : "Glissez vos photos ici"}
                 </span>
-                <span className="text-xs">
-                  ou <span className="underline underline-offset-2">cliquez pour parcourir</span>
-                </span>
+                {!filesFull && (
+                  <span className="text-xs">
+                    ou <span className="underline underline-offset-2">cliquez pour parcourir</span>
+                  </span>
+                )}
               </div>
 
               <input
@@ -464,6 +496,7 @@ function ContactPage() {
                 type="file"
                 accept={ACCEPTED_TYPES.join(",")}
                 multiple
+                disabled={filesFull}
                 aria-labelledby="photos-label"
                 aria-describedby="photos-hint"
                 className="sr-only"
@@ -511,19 +544,42 @@ function ContactPage() {
               )}
             </div>
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-7 py-4 text-[15px] font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
-            >
-              {submitting ? (
+            {(() => {
+              const hasErrors = Object.keys(errors).length > 0;
+              const messageTooShort = messageLen < 10;
+              const disabled = submitting || hasErrors || messageTooShort;
+              const reason = submitting
+                ? "Envoi en cours."
+                : hasErrors
+                ? "Corrigez les champs en erreur pour activer l'envoi."
+                : messageTooShort
+                ? `Décrivez votre projet (${messageLen}/10 caractères minimum) pour activer l'envoi.`
+                : undefined;
+              return (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> Envoi en cours…
+                  <button
+                    type="submit"
+                    disabled={disabled}
+                    aria-disabled={disabled}
+                    aria-describedby={reason ? "submit-reason" : undefined}
+                    className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-7 py-4 text-[15px] font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:bg-brand-orange sm:w-auto"
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" /> Envoi en cours…
+                      </>
+                    ) : (
+                      "Envoyer ma demande"
+                    )}
+                  </button>
+                  {reason && (
+                    <p id="submit-reason" className="mt-2 text-xs text-muted-foreground" aria-live="polite">
+                      {reason}
+                    </p>
+                  )}
                 </>
-              ) : (
-                "Envoyer ma demande"
-              )}
-            </button>
+              );
+            })()}
 
             <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
               <ShieldCheck className="h-3.5 w-3.5 text-brand-orange" />
