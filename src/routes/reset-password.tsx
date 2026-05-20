@@ -71,18 +71,20 @@ function ResetPage() {
     e.preventDefault();
     const parsed = schema.safeParse({ password, confirm });
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Mot de passe invalide");
+      toast.error(parsed.error.issues[0]?.message ?? "Mot de passe invalide", {
+        id: "reset-password",
+      });
       return;
     }
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toast.error(error.message, { id: "reset-password" });
       return;
     }
+    toast.dismiss("reset-password");
     setSuccess(true);
-    toast.success("Mot de passe mis à jour");
   };
 
   if (success) {
