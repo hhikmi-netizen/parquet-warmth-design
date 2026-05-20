@@ -33,7 +33,7 @@ export function Hero() {
           </div>
 
           <ul className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-sm text-muted-foreground">
-            {["Estimation instantanée", "Sans engagement", "Artisans vérifiés"].map((p) => (
+            {["Estimation instantanée", "Sans démarchage", "Artisan partenaire vérifié"].map((p) => (
               <li key={p} className="flex items-center gap-2">
                 <Check className="h-4 w-4 text-brand-orange" />
                 {p}
