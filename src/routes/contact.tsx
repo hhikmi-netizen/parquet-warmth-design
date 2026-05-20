@@ -26,6 +26,17 @@ import { Footer } from "@/components/site/Footer";
 import { FloatingNav } from "@/components/site/FloatingNav";
 import { MicroReassurance } from "@/components/site/MicroReassurance";
 import { toast } from "sonner";
+import antonyLogo from "@/assets/partners/antony-parquet.png";
+import blanchonLogo from "@/assets/partners/blanchon.png";
+import repexLogo from "@/assets/partners/repex-floor.jpeg";
+import danielsLogo from "@/assets/partners/daniels.jpeg";
+
+const PARTNERS = [
+  { name: "Antony Parquet", href: "https://www.antony-parquet.fr", logo: antonyLogo, blurb: "Parqueteur partenaire" },
+  { name: "Blanchon", href: "https://www.blanchon.com", logo: blanchonLogo, blurb: "Finitions bois depuis 1832" },
+  { name: "Repex Floor", href: "https://www.repex.fr", logo: repexLogo, blurb: "Ponceuses professionnelles" },
+  { name: "Daniel's", href: "https://daniels.fr", logo: danielsLogo, blurb: "Spécialiste parquet & finitions" },
+] as const;
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
