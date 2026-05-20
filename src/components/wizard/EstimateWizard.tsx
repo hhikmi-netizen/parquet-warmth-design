@@ -523,6 +523,7 @@ export function EstimateWizard() {
 
   const shareQuote = async () => {
     setShareMsg("");
+    setShareFallback(false);
     const text = buildShareText();
     const nav = typeof navigator !== "undefined" ? navigator : undefined;
     try {
