@@ -11,7 +11,6 @@ import {
   ChevronDown,
   Clock,
   FileDown,
-  Image as ImageIcon,
   Loader2,
   Mail,
   MapPin,
@@ -266,108 +265,126 @@ function computeRange(s: WizardState): { min: number; max: number } | null {
    PDF (générateur dédié au wizard ; ne touche pas l'existant)
    ========================================================================= */
 
-function generateWizardPDF(s: WizardState) {
+function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: string } {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const W = 210;
   const M = 14;
   const RIGHT = W - M;
-  let y = 14;
+  const INNER = RIGHT - M;
+  let y = 0;
 
+  // Header band
   doc.setFillColor(229, 101, 28);
-  doc.rect(0, 0, W, 6, "F");
-  y += 8;
+  doc.rect(0, 0, W, 24, "F");
+  doc.setFont("helvetica", "bold").setFontSize(20).setTextColor(255, 255, 255);
+  doc.text("Parqueto", M, 15);
+  doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(255, 240, 232);
+  doc.text("Demande d'estimation parquet", M, 20);
 
   const ref = `PQ-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`;
-  doc.setFont("helvetica", "bold").setFontSize(22).setTextColor(20);
-  doc.text("Parqueto", M, y);
-  doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(120);
-  doc.text("Demande d'estimation détaillée", M, y + 5);
+  doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(255, 255, 255);
+  doc.text(`Réf. ${ref}`, RIGHT, 15, { align: "right" });
+  doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(255, 240, 232);
+  doc.text(new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" }), RIGHT, 20, { align: "right" });
 
-  doc.setFontSize(9).setTextColor(60);
-  doc.text(`Devis ${ref}`, RIGHT, y, { align: "right" });
-  doc.setTextColor(120);
-  doc.text(new Date().toLocaleDateString("fr-FR"), RIGHT, y + 5, { align: "right" });
+  y = 34;
 
-  y += 14;
-  doc.setDrawColor(229, 101, 28).setLineWidth(0.6);
-  doc.line(M, y, RIGHT, y);
-  doc.setLineWidth(0.2);
-  y += 8;
+  // Fourchette prominent
+  const range = computeRange(s);
+  if (range) {
+    doc.setFillColor(255, 244, 238);
+    doc.setDrawColor(229, 101, 28).setLineWidth(0.4);
+    doc.roundedRect(M, y, INNER, 30, 4, 4, "FD");
+    doc.setFont("helvetica", "bold").setFontSize(8).setTextColor(229, 101, 28);
+    doc.text("FOURCHETTE INDICATIVE TTC", M + 5, y + 8);
+    doc.setFont("helvetica", "bold").setFontSize(24).setTextColor(25, 25, 25);
+    doc.text(`${fmt(range.min)} - ${fmt(range.max)} EUR`, M + 5, y + 21);
+    doc.setFont("helvetica", "italic").setFontSize(8).setTextColor(120);
+    doc.text("Non contractuelle - affinee apres visite technique", M + 5, y + 27);
+    doc.setLineWidth(0.2);
+    y += 38;
+  }
 
   const section = (title: string) => {
-    doc.setFont("helvetica", "bold").setFontSize(11).setTextColor(20);
-    doc.text(title, M, y);
-    y += 6;
-    doc.setFont("helvetica", "normal").setFontSize(10).setTextColor(60);
+    if (y > 250) { doc.addPage(); y = 20; }
+    doc.setFillColor(247, 244, 239);
+    doc.roundedRect(M, y - 4, INNER, 8, 1.5, 1.5, "F");
+    doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(229, 101, 28);
+    doc.text(title.toUpperCase(), M + 3, y + 1.5);
+    y += 9;
   };
 
   const row = (k: string, v: string) => {
     if (!v) return;
-    doc.setTextColor(110); doc.text(k, M, y);
-    doc.setTextColor(20); doc.text(v, M + 60, y);
-    y += 6;
+    if (y > 275) { doc.addPage(); y = 20; }
+    doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(120);
+    doc.text(k, M + 1, y);
+    doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(30);
+    const lines = doc.splitTextToSize(v, INNER - 55);
+    doc.text(lines, M + 55, y);
+    y += Math.max(5.5, lines.length * 5);
   };
+
+  section("Projet");
+  row("Type de prestation", projets.find((p) => p.key === s.projet)?.label ?? "");
+  row("Materiau", s.materiau ? materiaux[s.materiau].label : "");
+  row("Surface", `${s.surface} m2`);
+  const piecesStr = s.pieces.filter((p) => p.count > 0).map((p) => `${p.label} x${p.count}`).join(", ");
+  if (piecesStr) row("Pieces concernees", piecesStr);
+  if (s.escalier) row("Escalier", "Oui, a traiter");
+  if (s.autrePiece) row("Autres pieces", s.autrePiece);
+  y += 3;
+
+  section("Chantier");
+  row("Adresse", `${s.adresse}${s.complement ? " - " + s.complement : ""}`);
+  row("Ville", `${s.cp} ${s.ville}`);
+  row("Logement", labelOf(LOGEMENTS, s.logement));
+  row("Etage", labelOf(ETAGES, s.etage));
+  row("Etat du logement", labelOf(MEUBLES, s.etatMeuble));
+  row("Zone degagee J0", labelOf(ZONES, s.zoneDegagee));
+  row("Manutention lourde", labelOf(YESNOMAYBE, s.manutention));
+  row("Chauffage au sol", labelOf(YESNOMAYBE, s.chauffage));
+  row("Delai souhaite", labelOf(DELAIS, s.delai));
+  y += 3;
 
   section("Client");
   row("Profil", s.profil === "pro" ? "Professionnel" : "Particulier");
-  row("Nom", `${s.civilite === "m" ? "M." : s.civilite === "mme" ? "Mme" : ""} ${s.prenom} ${s.nom}`.trim());
-  if (s.entreprise) row("Société", s.entreprise);
+  const nom = `${s.civilite === "m" ? "M." : s.civilite === "mme" ? "Mme" : ""} ${s.prenom} ${s.nom}`.trim();
+  row("Nom", nom);
+  if (s.entreprise) row("Societe", s.entreprise);
   if (s.siret) row("SIRET", s.siret);
   row("Email", s.email);
-  row("Téléphone", s.telephone);
-  y += 4;
-
-  section("Chantier");
-  row("Adresse", `${s.adresse}${s.complement ? " — " + s.complement : ""}`);
-  row("Ville", `${s.cp} ${s.ville}`);
-  row("Logement", labelOf(LOGEMENTS, s.logement));
-  row("Étage", labelOf(ETAGES, s.etage));
-  row("Chauffage au sol", labelOf(YESNOMAYBE, s.chauffage));
-  row("Délai souhaité", labelOf(DELAIS, s.delai));
-  y += 4;
-
-  section("Projet");
-  row("Type", projets.find((p) => p.key === s.projet)?.label ?? "");
-  row("Matériau", s.materiau ? materiaux[s.materiau].label : "");
-  row("Surface", `${s.surface} m²`);
-  const piecesStr = s.pieces.filter((p) => p.count > 0).map((p) => `${p.label} ×${p.count}`).join(", ");
-  if (piecesStr) row("Pièces", piecesStr);
-  if (s.escalier) row("Escalier", "Oui");
-  if (s.autrePiece) row("Autres pièces", s.autrePiece);
-  row("État du logement", labelOf(MEUBLES, s.etatMeuble));
-  row("Zone dégagée J0", labelOf(ZONES, s.zoneDegagee));
-  row("Manutention lourde", labelOf(YESNOMAYBE, s.manutention));
-  y += 4;
-
-  const range = computeRange(s);
-  if (range) {
-    doc.setFillColor(255, 244, 238);
-    doc.roundedRect(M, y, RIGHT - M, 22, 3, 3, "F");
-    doc.setFont("helvetica", "bold").setFontSize(9).setTextColor(229, 101, 28);
-    doc.text("FOURCHETTE INDICATIVE TTC", M + 4, y + 7);
-    doc.setFontSize(17).setTextColor(20);
-    doc.text(`${fmt(range.min)} – ${fmt(range.max)} €`, RIGHT - 4, y + 14, { align: "right" });
-    y += 28;
-  }
+  row("Telephone", s.telephone);
 
   if (s.message) {
+    y += 3;
     section("Message");
-    const lines = doc.splitTextToSize(s.message, RIGHT - M);
-    doc.setFontSize(10).setTextColor(40);
-    doc.text(lines, M, y);
-    y += lines.length * 5 + 4;
+    const lines = doc.splitTextToSize(s.message, INNER - 2);
+    doc.setFont("helvetica", "normal").setFontSize(10).setTextColor(40);
+    doc.text(lines, M + 1, y);
+    y += lines.length * 5 + 3;
   }
 
-  doc.setFont("helvetica", "italic").setFontSize(8).setTextColor(130);
-  const note = "Estimation indicative non contractuelle. Un devis définitif sera établi après visite technique sur place. Validité 30 jours.";
-  doc.text(doc.splitTextToSize(note, RIGHT - M), M, Math.max(y, 270));
+  const pages = doc.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i);
+    doc.setDrawColor(220).setLineWidth(0.2);
+    doc.line(M, 280, RIGHT, 280);
+    doc.setFont("helvetica", "italic").setFontSize(7).setTextColor(130);
+    doc.text("Estimation indicative non contractuelle - Devis definitif apres visite - Validite 30 jours", M, 284);
+    doc.setFont("helvetica", "normal").setFontSize(7).setTextColor(160);
+    doc.text("contact@parqueto.fr  ·  parqueto.fr", M, 289);
+    doc.text(`${ref}  ·  Page ${i}/${pages}`, RIGHT, 289, { align: "right" });
+  }
 
-  doc.setFont("helvetica", "normal").setTextColor(160).setFontSize(8);
-  doc.text("contact@parqueto.fr  ·  parqueto.fr", M, 287);
-  doc.text(ref, RIGHT, 287, { align: "right" });
-
-  doc.save(`devis-parqueto-${ref}.pdf`);
+  return { doc, ref, filename: `devis-parqueto-${ref}.pdf` };
 }
+
+function generateWizardPDF(s: WizardState) {
+  const { doc, filename } = buildWizardPDF(s);
+  doc.save(filename);
+}
+
 
 /* =========================================================================
    Référentiels d'options (libellés)
@@ -426,7 +443,7 @@ export function EstimateWizard() {
   const [hydrated, setHydrated] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [errors, setErrors] = useState<Errors>({});
-  const [photos, setPhotos] = useState<{ id: string; name: string; url: string }[]>([]);
+  const [photos, setPhotos] = useState<{ id: string; name: string; url: string; size?: number; w?: number; h?: number }[]>([]);
   const [photoError, setPhotoError] = useState<string>("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -506,29 +523,45 @@ export function EstimateWizard() {
   const shareQuote = async () => {
     setShareMsg("");
     const text = buildShareText();
-    const shareData: ShareData = { title: "Mon estimation Parqueto", text };
+    const nav = typeof navigator !== "undefined" ? navigator : undefined;
     try {
-      if (typeof navigator !== "undefined" && (navigator as Navigator).share) {
-        await (navigator as Navigator).share(shareData);
+      // 1) Try sharing with PDF file (best on iOS/Android)
+      if (nav?.share && nav.canShare) {
+        try {
+          const { doc, filename } = buildWizardPDF(s);
+          const blob = doc.output("blob");
+          const file = new File([blob], filename, { type: "application/pdf" });
+          const fileData: ShareData = { title: "Mon estimation Parqueto", text, files: [file] };
+          if (nav.canShare(fileData)) {
+            await nav.share(fileData);
+            return;
+          }
+        } catch { /* fall through to text share */ }
+      }
+      // 2) Text share
+      if (nav?.share) {
+        await nav.share({ title: "Mon estimation Parqueto", text });
         return;
       }
-      if (typeof navigator !== "undefined" && navigator.clipboard) {
-        await navigator.clipboard.writeText(text);
+      // 3) Clipboard fallback
+      if (nav?.clipboard) {
+        await nav.clipboard.writeText(text);
         setShareMsg("Résumé copié dans le presse-papiers.");
         return;
       }
-      setShareMsg("Partage indisponible sur ce navigateur.");
+      setShareMsg("Partage indisponible sur ce navigateur — utilisez le PDF.");
     } catch (err) {
       const name = (err as DOMException)?.name;
       if (name === "AbortError") return; // user cancelled
       try {
-        await navigator.clipboard.writeText(text);
+        await nav!.clipboard.writeText(text);
         setShareMsg("Partage refusé — résumé copié à la place.");
       } catch {
-        setShareMsg("Impossible de partager. Réessayez ou téléchargez le PDF.");
+        setShareMsg("Impossible de partager. Téléchargez le PDF.");
       }
     }
   };
+
 
   const submit = () => {
     if (!validateStep(4)) return;
@@ -701,29 +734,61 @@ export function EstimateWizard() {
   );
 }
 
+const FIELD_LABELS: Record<string, string> = {
+  projet: "Type de projet",
+  materiau: "Matériau",
+  logement: "Type de logement",
+  surface: "Surface",
+  etatMeuble: "État du logement",
+  zoneDegagee: "Zone dégagée",
+  manutention: "Manutention lourde",
+  etage: "Étage",
+  chauffage: "Chauffage au sol",
+  delai: "Délai souhaité",
+  adresse: "Adresse",
+  ville: "Ville",
+  cp: "Code postal",
+  profil: "Profil",
+  civilite: "Civilité",
+  prenom: "Prénom",
+  nom: "Nom",
+  email: "Email",
+  telephone: "Téléphone",
+  entreprise: "Raison sociale",
+  consent: "Consentement",
+};
+
 function StepErrors({ errors }: { errors: Errors }) {
-  const list = Object.values(errors).filter(Boolean);
-  if (list.length === 0) return null;
+  const entries = Object.entries(errors).filter(([, v]) => Boolean(v));
+  if (entries.length === 0) return null;
   return (
     <div
       role="alert"
-      className="mb-6 flex items-start gap-3 rounded-2xl border border-destructive/30 bg-destructive/5 p-4"
+      aria-live="polite"
+      className="mb-6 overflow-hidden rounded-xl border border-destructive/30 bg-destructive/5"
     >
-      <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
-      <div>
+      <div className="flex items-center gap-2.5 border-b border-destructive/20 bg-destructive/10 px-4 py-2.5">
+        <AlertCircle className="h-4 w-4 flex-shrink-0 text-destructive" />
         <div className="text-sm font-semibold text-destructive">
-          {list.length === 1 ? "1 champ à corriger" : `${list.length} champs à corriger`}
+          {entries.length === 1 ? "Un champ à corriger" : `${entries.length} champs à corriger`}
         </div>
-        <ul className="mt-1 list-disc pl-5 text-xs text-destructive/90">
-          {list.slice(0, 4).map((m, i) => (
-            <li key={i}>{m}</li>
-          ))}
-          {list.length > 4 && <li>…et {list.length - 4} autre(s)</li>}
-        </ul>
       </div>
+      <ul className="grid gap-1 px-4 py-2.5 text-[12px] sm:grid-cols-2">
+        {entries.slice(0, 6).map(([k, m]) => (
+          <li key={k} className="flex items-baseline gap-1.5 text-destructive/90">
+            <span className="text-destructive/60">·</span>
+            <span className="font-semibold">{FIELD_LABELS[k] ?? k} :</span>
+            <span className="text-destructive/80">{m}</span>
+          </li>
+        ))}
+        {entries.length > 6 && (
+          <li className="text-[11px] italic text-destructive/70">…et {entries.length - 6} autre(s)</li>
+        )}
+      </ul>
     </div>
   );
 }
+
 
 /* =========================================================================
    Sections (steps)
@@ -906,45 +971,81 @@ function Step3({
   s: WizardState;
   set: <K extends keyof WizardState>(k: K, v: WizardState[K]) => void;
   errors: Errors;
-  photos: { id: string; name: string; url: string }[];
-  setPhotos: React.Dispatch<React.SetStateAction<{ id: string; name: string; url: string }[]>>;
+  photos: { id: string; name: string; url: string; size?: number; w?: number; h?: number }[];
+  setPhotos: React.Dispatch<React.SetStateAction<{ id: string; name: string; url: string; size?: number; w?: number; h?: number }[]>>;
   photoError: string;
   setPhotoError: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [lightbox, setLightbox] = useState<number | null>(null);
   const MAX = 5;
   const MAX_SIZE = 8 * 1024 * 1024; // 8 MB
+  const MIN_DIM = 400; // px (shortest side)
   const ACCEPT = ["image/jpeg", "image/png", "image/webp"];
 
-  const onFiles = (list: FileList | null) => {
+  const readDimensions = (url: string) =>
+    new Promise<{ w: number; h: number } | null>((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
+      img.onerror = () => resolve(null);
+      img.src = url;
+    });
+
+  const onFiles = async (list: FileList | null) => {
     setPhotoError("");
     if (!list || list.length === 0) return;
     const remaining = MAX - photos.length;
     if (remaining <= 0) {
-      setPhotoError(`Vous avez atteint la limite de ${MAX} photos. Retirez-en une pour en ajouter d'autres.`);
+      setPhotoError(`Limite de ${MAX} photos atteinte. Retirez-en une pour en ajouter d'autres.`);
       return;
     }
     const incoming = Array.from(list);
     const rejected: string[] = [];
-    const accepted: File[] = [];
+    const candidates: File[] = [];
     for (const f of incoming) {
-      if (!ACCEPT.includes(f.type)) { rejected.push(`${f.name} (format non supporté)`); continue; }
-      if (f.size > MAX_SIZE) { rejected.push(`${f.name} (> 8 Mo)`); continue; }
-      accepted.push(f);
+      if (!ACCEPT.includes(f.type)) { rejected.push(`${f.name} : format non supporté`); continue; }
+      if (f.size > MAX_SIZE) { rejected.push(`${f.name} : trop volumineuse (> 8 Mo)`); continue; }
+      if (f.size < 5 * 1024) { rejected.push(`${f.name} : fichier vide ou corrompu`); continue; }
+      candidates.push(f);
     }
-    const trimmed = accepted.slice(0, remaining);
-    const skipped = accepted.length - trimmed.length;
-    const next = trimmed.map((f) => ({
-      id: `${f.name}-${f.size}-${Date.now()}-${Math.random()}`,
-      name: f.name,
-      url: URL.createObjectURL(f),
-    }));
-    setPhotos((p) => [...p, ...next].slice(0, MAX));
+    const trimmed = candidates.slice(0, remaining);
+    const skipped = candidates.length - trimmed.length;
+
+    const accepted: { id: string; name: string; url: string; size: number; w: number; h: number }[] = [];
+    for (const f of trimmed) {
+      const url = URL.createObjectURL(f);
+      const dim = await readDimensions(url);
+      if (!dim) {
+        rejected.push(`${f.name} : image illisible`);
+        URL.revokeObjectURL(url);
+        continue;
+      }
+      if (Math.min(dim.w, dim.h) < MIN_DIM) {
+        rejected.push(`${f.name} : résolution trop faible (min ${MIN_DIM}px)`);
+        URL.revokeObjectURL(url);
+        continue;
+      }
+      accepted.push({
+        id: `${f.name}-${f.size}-${Date.now()}-${Math.random()}`,
+        name: f.name, url, size: f.size, w: dim.w, h: dim.h,
+      });
+    }
+    setPhotos((p) => [...p, ...accepted].slice(0, MAX));
     const msgs: string[] = [];
-    if (rejected.length) msgs.push(`Refusé(s) : ${rejected.join(", ")}`);
-    if (skipped > 0) msgs.push(`${skipped} photo(s) ignorée(s) — limite de ${MAX} atteinte.`);
+    if (rejected.length) msgs.push(rejected.join(" · "));
+    if (skipped > 0) msgs.push(`${skipped} photo(s) ignorée(s) — limite de ${MAX}.`);
     if (msgs.length) setPhotoError(msgs.join(" "));
   };
+
+  const removePhoto = (id: string) => {
+    setPhotos((arr) => {
+      const found = arr.find((x) => x.id === id);
+      if (found) URL.revokeObjectURL(found.url);
+      return arr.filter((x) => x.id !== id);
+    });
+    setLightbox(null);
+  };
+
 
 
   return (
@@ -1009,27 +1110,40 @@ function Step3({
 
 
         {photos.length > 0 && (
-          <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {photos.map((p) => (
+          <ul className="mt-4 grid grid-cols-3 gap-2.5 sm:grid-cols-4">
+            {photos.map((p, i) => (
               <li key={p.id} className="group relative overflow-hidden rounded-xl border border-border bg-card shadow-soft">
-                <img src={p.url} alt={p.name} className="aspect-square w-full object-cover" />
                 <button
-                  onClick={() => setPhotos((arr) => arr.filter((x) => x.id !== p.id))}
-                  className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-foreground/85 text-background opacity-0 transition group-hover:opacity-100"
-                  aria-label="Retirer cette photo"
+                  type="button"
+                  onClick={() => setLightbox(i)}
+                  className="block w-full"
+                  aria-label={`Agrandir ${p.name}`}
+                >
+                  <img src={p.url} alt={p.name} className="aspect-square w-full object-cover transition group-hover:scale-[1.03]" />
+                </button>
+                <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1 bg-gradient-to-t from-foreground/85 to-transparent px-2 py-1.5 text-[10px] text-background">
+                  <span className="truncate font-medium">{p.name}</span>
+                  {p.w && p.h && <span className="flex-shrink-0 opacity-80">{p.w}×{p.h}</span>}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removePhoto(p.id)}
+                  className="absolute right-1.5 top-1.5 inline-flex h-7 w-7 items-center justify-center rounded-full bg-foreground/90 text-background shadow-sm transition hover:bg-destructive"
+                  aria-label={`Retirer ${p.name}`}
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
-                <div className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] text-muted-foreground">
-                  <ImageIcon className="h-3 w-3" /> <span className="truncate">{p.name}</span>
+                <div className="absolute left-1.5 top-1.5 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-orange px-1.5 text-[10px] font-bold text-primary-foreground">
+                  {i + 1}
                 </div>
               </li>
             ))}
-            {photos.length > 0 && photos.length < 5 && (
+            {photos.length < MAX && (
               <li>
                 <button
+                  type="button"
                   onClick={() => inputRef.current?.click()}
-                  className="flex aspect-square w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-border text-xs font-semibold text-muted-foreground transition hover:border-brand-orange hover:text-brand-orange"
+                  className="flex aspect-square w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-border text-[11px] font-semibold text-muted-foreground transition hover:border-brand-orange hover:text-brand-orange"
                 >
                   <Plus className="h-5 w-5" />
                   Ajouter
@@ -1038,10 +1152,75 @@ function Step3({
             )}
           </ul>
         )}
+
+        {lightbox !== null && photos[lightbox] && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex flex-col bg-foreground/95 backdrop-blur-sm"
+            onClick={() => setLightbox(null)}
+          >
+            <div className="flex items-center justify-between gap-3 border-b border-background/10 px-4 py-3 text-background">
+              <div className="min-w-0">
+                <div className="truncate text-sm font-semibold">{photos[lightbox].name}</div>
+                <div className="text-[11px] opacity-70">
+                  Photo {lightbox + 1} / {photos.length}
+                  {photos[lightbox].w && photos[lightbox].h && <> · {photos[lightbox].w}×{photos[lightbox].h} px</>}
+                  {photos[lightbox].size && <> · {(photos[lightbox].size! / 1024 / 1024).toFixed(1)} Mo</>}
+                </div>
+              </div>
+              <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                <button
+                  type="button"
+                  onClick={() => removePhoto(photos[lightbox].id)}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-destructive/90 px-3 py-1.5 text-xs font-semibold text-background hover:bg-destructive"
+                >
+                  <X className="h-3.5 w-3.5" /> Retirer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLightbox(null)}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-background/15 text-background hover:bg-background/25"
+                  aria-label="Fermer"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+            <div className="flex flex-1 items-center justify-center p-4" onClick={(e) => e.stopPropagation()}>
+              <img
+                src={photos[lightbox].url}
+                alt={photos[lightbox].name}
+                className="max-h-full max-w-full rounded-lg object-contain shadow-2xl"
+              />
+            </div>
+            {photos.length > 1 && (
+              <div className="flex items-center justify-center gap-3 pb-5" onClick={(e) => e.stopPropagation()}>
+                <button
+                  type="button"
+                  onClick={() => setLightbox((lightbox - 1 + photos.length) % photos.length)}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-background/15 text-background transition hover:bg-background/30"
+                  aria-label="Précédente"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLightbox((lightbox + 1) % photos.length)}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-background/15 text-background transition hover:bg-background/30"
+                  aria-label="Suivante"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </FieldGroup>
     </section>
   );
 }
+
 
 function Step4({
   s,
