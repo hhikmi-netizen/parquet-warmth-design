@@ -1417,9 +1417,12 @@ function Step4({
                 <button
                   type="button"
                   onClick={onPdf}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
+                  disabled={pdfLoading}
+                  aria-busy={pdfLoading}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-brand-orange-deep disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <FileDown className="h-3.5 w-3.5" /> Télécharger le PDF
+                  {pdfLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileDown className="h-3.5 w-3.5" />}
+                  {pdfLoading ? "Génération…" : "Télécharger le PDF"}
                 </button>
               )}
             </div>
