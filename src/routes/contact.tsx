@@ -787,6 +787,50 @@ function ContactPage() {
         </div>
       </section>
 
+      {/* Partenaires de confiance */}
+      <section aria-labelledby="partners-title" className="border-t border-border/60 bg-gradient-warm/40">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-orange" />
+              Partenaires de confiance
+            </span>
+            <h2 id="partners-title" className="mt-4 font-display text-3xl text-foreground sm:text-4xl">
+              Des marques reconnues à nos côtés
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
+              Nous travaillons avec des fournisseurs et fabricants exigeants, pour des finitions durables et un résultat à la hauteur.
+            </p>
+          </div>
+
+          <ul className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+            {PARTNERS.map((p) => (
+              <li key={p.name}>
+                <a
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${p.name} — ouvrir le site (nouvel onglet)`}
+                  className="group flex h-full flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card px-4 py-6 text-center shadow-soft transition hover:-translate-y-0.5 hover:border-brand-orange/40 hover:shadow-warm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  <div className="flex h-16 w-full items-center justify-center">
+                    <img
+                      src={p.logo}
+                      alt={p.name}
+                      loading="lazy"
+                      className="max-h-14 w-auto max-w-full object-contain opacity-80 transition group-hover:opacity-100"
+                    />
+                  </div>
+                  <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                    {p.blurb}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       <Footer />
       <FloatingNav />
 
