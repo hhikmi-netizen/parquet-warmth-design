@@ -17,7 +17,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const { user, loading } = useAuth();
 
-  const accountLink = user ? { to: "/historique" as const, label: "Mon espace" } : { to: "/login" as const, label: "Connexion" };
+  const accountLink = user ? { to: "/pro" as const, label: "Mon espace Pro" } : { to: "/login" as const, label: "Connexion" };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-md">
