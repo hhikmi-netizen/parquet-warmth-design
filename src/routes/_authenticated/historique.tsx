@@ -13,7 +13,7 @@ function HistoriquePage() {
   const navigate = useNavigate();
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
       <header className="border-b border-border/60 bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
           <Link to="/" className="flex items-center gap-2">
