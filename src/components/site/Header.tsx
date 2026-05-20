@@ -7,13 +7,17 @@ import { useAuth } from "@/hooks/use-auth";
 type NavItem = { label: string; to: string };
 
 const nav: NavItem[] = [
-  { label: "Comment ça marche", to: "/#process" },
+  { label: "Comment ça marche", to: "/process" },
   { label: "Réalisations", to: "/realisations" },
   { label: "Nos artisans", to: "/artisans" },
   { label: "Outils", to: "/outils" },
   { label: "À propos", to: "/a-propos" },
   { label: "Contact", to: "/contact" },
 ];
+
+// "/process" is rendered as a hash link to the homepage Process section.
+const isHashItem = (to: string) => to === "/process";
+const hashHref = (to: string) => (to === "/process" ? "/#process" : to);
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -32,8 +36,12 @@ export function Header() {
         </Link>
         <nav className="hidden items-center gap-8 lg:flex">
           {nav.map((n) =>
-            n.to.startsWith("/#") ? (
-              <a key={n.to} href={n.to} className="text-sm font-medium text-foreground/75 transition hover:text-brand-orange">
+            isHashItem(n.to) ? (
+              <a
+                key={n.to}
+                href={hashHref(n.to)}
+                className="text-sm font-medium text-foreground/75 transition hover:text-brand-orange"
+              >
                 {n.label}
               </a>
             ) : (
@@ -71,8 +79,8 @@ export function Header() {
         <div className="border-t border-border bg-background lg:hidden">
           <div className="flex flex-col gap-1 px-6 py-4">
             {nav.map((n) =>
-              n.to.startsWith("/#") ? (
-                <a key={n.to} href={n.to} className="py-2 text-sm font-medium" onClick={() => setOpen(false)}>
+              isHashItem(n.to) ? (
+                <a key={n.to} href={hashHref(n.to)} className="py-2 text-sm font-medium" onClick={() => setOpen(false)}>
                   {n.label}
                 </a>
               ) : (

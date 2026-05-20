@@ -1,4 +1,5 @@
 import { MapPin, Star, ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import a1 from "@/assets/artisan-1.jpg";
 import a2 from "@/assets/artisan-2.jpg";
 import a3 from "@/assets/artisan-3.jpg";
@@ -54,13 +55,13 @@ export function ArtisansShowcase() {
               puis on vous oriente vers celui dont le savoir-faire correspond.
             </p>
           </div>
-          <a
-            href="#estimate"
+          <Link
+            to="/estimation"
             className="group hidden items-center gap-2 text-sm font-semibold text-foreground transition hover:text-brand-orange sm:inline-flex"
           >
             Estimer mon projet
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-          </a>
+          </Link>
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
@@ -108,9 +109,9 @@ export function ArtisansShowcase() {
                 </div>
                 <div className="mt-5 flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground">
                   <span>{a.reviews} avis vérifiés</span>
-                  <a href="#estimate" className="font-semibold text-brand-orange">
+                  <Link to="/estimation" className="font-semibold text-brand-orange">
                     Estimer mon projet →
-                  </a>
+                  </Link>
                 </div>
               </div>
             </article>
