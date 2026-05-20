@@ -307,7 +307,8 @@ export function TeinteSelector() {
               On valide votre choix sur place ?
             </p>
             <p className="text-xs text-muted-foreground">
-              Un artisan vérifié vous présente un échantillon réel chez vous, sous votre lumière naturelle.
+              L'artisan vérifié réalise une démonstration directement sur votre parquet — test de teinte
+              et de finition sur le bois réel, sous votre lumière naturelle.
             </p>
           </div>
         </div>
@@ -315,7 +316,7 @@ export function TeinteSelector() {
           to="/estimation"
           className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand-orange px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-warm transition hover:-translate-y-0.5 hover:bg-brand-orange-deep"
         >
-          Demander un échantillon
+          Demander une démonstration
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
