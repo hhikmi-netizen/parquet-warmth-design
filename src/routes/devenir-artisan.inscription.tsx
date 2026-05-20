@@ -1367,3 +1367,139 @@ function Field({
     </label>
   );
 }
+
+function DocUpload({
+  file,
+  onSelect,
+  onClear,
+  placeholder,
+  compact,
+}: {
+  file: { name: string; size: number } | null;
+  onSelect: (file: File | null) => void;
+  onClear: () => void;
+  placeholder: string;
+  compact?: boolean;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  if (file) {
+    return (
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+        <div className="flex items-center gap-3 truncate">
+          <FileText className="h-5 w-5 shrink-0 text-emerald-700" />
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium text-emerald-900">{file.name}</p>
+            <p className="text-xs text-emerald-700">{Math.round(file.size / 1024)} ko</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onClear}
+          className="rounded-full p-1.5 text-emerald-800 transition hover:bg-emerald-100"
+          aria-label="Supprimer le document"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+    );
+  }
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => ref.current?.click()}
+        className={`flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground transition hover:border-brand-orange hover:bg-brand-orange/5 hover:text-foreground ${
+          compact ? "py-3" : "py-6"
+        }`}
+      >
+        <Upload className="h-4 w-4" />
+        {placeholder}
+      </button>
+      <input
+        ref={ref}
+        type="file"
+        accept="application/pdf,image/jpeg,image/png,image/webp"
+        onChange={(e) => {
+          onSelect(e.target.files?.[0] ?? null);
+          e.target.value = "";
+        }}
+        className="hidden"
+      />
+    </>
+  );
+}
+
+function RecapSection({
+  title,
+  stepId,
+  onEdit,
+  children,
+}: {
+  title: string;
+  stepId: number;
+  onEdit: (s: number) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-2xl border border-border bg-background p-5 shadow-soft">
+      <div className="mb-3 flex items-center justify-between gap-3 border-b border-border/60 pb-3">
+        <h3 className="font-serif text-lg tracking-tight">{title}</h3>
+        <button
+          type="button"
+          onClick={() => onEdit(stepId)}
+          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground transition hover:border-brand-orange hover:text-brand-orange-deep"
+        >
+          <Pencil className="h-3 w-3" /> Modifier
+        </button>
+      </div>
+      <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2">{children}</dl>
+    </div>
+  );
+}
+
+function RecapRow({
+  label,
+  value,
+  multiline,
+}: {
+  label: string;
+  value: string;
+  multiline?: boolean;
+}) {
+  return (
+    <div
+      className={`flex flex-col gap-0.5 py-1 ${
+        multiline ? "sm:col-span-2" : ""
+      }`}
+    >
+      <dt className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </dt>
+      <dd className={`text-sm text-foreground ${multiline ? "whitespace-pre-line" : "truncate"}`}>
+        {value || "—"}
+      </dd>
+    </div>
+  );
+}
+
+function CheckBlock({
+  checked,
+  onChange,
+  children,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border bg-muted/30 p-4 transition hover:bg-muted/50">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="mt-0.5 h-5 w-5 accent-[var(--brand-orange)]"
+      />
+      <span className="text-sm leading-relaxed">{children}</span>
+    </label>
+  );
+}
