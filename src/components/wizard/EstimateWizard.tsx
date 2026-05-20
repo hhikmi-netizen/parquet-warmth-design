@@ -344,15 +344,8 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   const row = (k: string, v: string) => {
     if (!v) return;
 
-    // Présentation empilée : libellé en kicker majuscule + valeur en grand caractère gras.
-    // Meilleur contraste et hiérarchie typographique claire sur mobile.
-    doc.setFont("helvetica", "bold").setFontSize(13);
-    const valueLines = doc.splitTextToSize(v, INNER - 4) as string[];
-    const blockH = 5 + valueLines.length * VALUE_LINE_H + 4;
-    ensureSpace(blockH + 2);
-
-    // Kicker libellé (orange, petit, lettres espacées) — ajusté pour rester sur 1 seule ligne.
-    // On réduit progressivement la taille de police, puis on tronque proprement si vraiment trop long.
+    // 1) Mesure du libellé : on adapte la taille de police pour tenir sur 1 ligne,
+    //    sinon on tronque proprement avec une ellipse.
     const maxLabelW = INNER - 2;
     const labelUpper = k.toUpperCase();
     let labelSize = 7.5;
@@ -368,21 +361,42 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
       }
       labelDisplay += "…";
     }
-    doc.setTextColor(229, 101, 28);
+    const labelWasShrunk = labelSize < 7.5;
+    const labelTruncated = labelDisplay !== labelUpper;
+
+    // 2) Préparation de la valeur (gras 13 pt).
+    doc.setFont("helvetica", "bold").setFontSize(13);
+    const valueLines = doc.splitTextToSize(v, INNER - 4) as string[];
+
+    // 3) Marges verticales dynamiques :
+    //    - Plus le libellé est petit (ou tronqué), plus on augmente l'espace
+    //      entre kicker et valeur pour préserver la respiration et la hiérarchie.
+    //    - Si la valeur retourne à la ligne, on ajoute aussi un peu de souffle bas.
+    const baseLabelToValue = labelSize + 1.5;                                  // ~9 mm à 7.5 pt
+    const compensationShrink = labelWasShrunk ? (7.5 - labelSize) * 0.6 : 0;   // jusqu'à +0.9 mm
+    const compensationTrunc = labelTruncated ? 1.2 : 0;
+    const labelToValue = Math.max(6, baseLabelToValue + compensationShrink + compensationTrunc);
+
+    const bottomPad = valueLines.length > 1 ? 5.5 : 4;
+    const blockH = labelToValue + valueLines.length * VALUE_LINE_H + bottomPad;
+    ensureSpace(blockH + 2);
+
+    // 4) Tracé du kicker
+    doc.setFont("helvetica", "bold").setFontSize(labelSize).setTextColor(229, 101, 28);
     doc.text(labelDisplay, M + 1, y);
 
-    // Valeur (noir profond, gras, grande taille)
+    // 5) Tracé de la valeur
     doc.setFont("helvetica", "bold").setFontSize(13).setTextColor(20, 20, 20);
-    doc.text(valueLines, M + 1, y + 6);
+    doc.text(valueLines, M + 1, y + labelToValue);
 
-    // Filet de séparation discret
-    const lineY = y + 6 + valueLines.length * VALUE_LINE_H + 1.5;
-    // Filet inter-lignes : ton sable légèrement plus contrasté, épaisseur fine constante
+    // 6) Filet de séparation discret, positionné selon la hauteur réelle du bloc
+    const lineY = y + labelToValue + valueLines.length * VALUE_LINE_H + 1.5;
     doc.setDrawColor(214, 205, 190).setLineWidth(0.15);
     doc.line(M + 1, lineY, RIGHT - 1, lineY);
 
     y += blockH;
   };
+
 
 
   section("Projet");
