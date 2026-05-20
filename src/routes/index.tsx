@@ -3,6 +3,7 @@ import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { Promise } from "@/components/site/Promise";
 import { Process } from "@/components/site/Process";
+import { ProcessFAQ } from "@/components/site/ProcessFAQ";
 import { Pains } from "@/components/site/Pains";
 import { Expertise } from "@/components/site/Expertise";
 import { Artisan } from "@/components/site/Artisan";
@@ -34,6 +35,7 @@ function Index() {
         <Hero />
         <Promise />
         <Process />
+        <ProcessFAQ />
       <Pains />
       <Expertise />
       <ArtisansShowcase />
