@@ -1,10 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
-import { Loader2, MailCheck } from "lucide-react";
+import { Loader2, MailCheck, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { authToast } from "@/components/auth/auth-toast";
+
+const TARGET_LABELS: Record<string, string> = {
+  "/historique": "Mon espace — Historique",
+  "/espace-pro": "Espace pro",
+  "/devis": "Mes devis",
+};
+
+function labelFor(path: string): string {
+  if (TARGET_LABELS[path]) return TARGET_LABELS[path];
+  // Strip query/hash and prettify the last segment.
+  const clean = path.split(/[?#]/)[0];
+  const seg = clean.replace(/\/+$/, "").split("/").filter(Boolean).pop() ?? "";
+  if (!seg) return "Accueil";
+  return seg
+    .replace(/[-_]+/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
 
 const searchSchema = z.object({
   email: z.string().email().optional(),
