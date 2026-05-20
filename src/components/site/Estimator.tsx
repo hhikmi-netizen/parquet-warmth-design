@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
+import jsPDF from "jspdf";
 import {
   ArrowRight,
   Clock,
@@ -11,6 +12,11 @@ import {
   Mail,
   Loader2,
   CheckCircle2,
+  FileDown,
+  Ruler,
+  ClipboardList,
+  Calculator,
+  Send,
 } from "lucide-react";
 
 // ---------- Modèle de calcul ----------
@@ -37,14 +43,15 @@ const etats: Record<EtatKey, { label: string; factor: number; hint: string }> = 
   abime: { label: "Très abîmé", factor: 1.15, hint: "Lames à reprendre, trous, fissures" },
 };
 
-const PLINTHE_PRICE = 18; // €/ml
-const SEUIL_PRICE = 110;  // €/u
+const PLINTHE_PRICE = 18;
+const SEUIL_PRICE = 110;
 
 const fmt = (n: number) => new Intl.NumberFormat("fr-FR").format(Math.round(n / 10) * 10);
 const fmtNum = (n: number) => new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1 }).format(n);
 
 // ---------- Persistance ----------
 const STORAGE_KEY = "parqueto:estimate:v1";
+const CONTACT_KEY = "parqueto:contact:v1";
 
 type EstimateState = {
   service: ServiceKey;
@@ -91,15 +98,133 @@ const contactSchema = z.object({
 type ContactInput = z.infer<typeof contactSchema>;
 type ContactErrors = Partial<Record<keyof ContactInput, string>>;
 
+const DEFAULT_CONTACT: ContactInput = {
+  nom: "",
+  email: "",
+  telephone: "",
+  cp: "",
+  message: "",
+};
+
+function loadContact(): ContactInput {
+  if (typeof window === "undefined") return DEFAULT_CONTACT;
+  try {
+    const raw = localStorage.getItem(CONTACT_KEY);
+    if (!raw) return DEFAULT_CONTACT;
+    return { ...DEFAULT_CONTACT, ...JSON.parse(raw) };
+  } catch {
+    return DEFAULT_CONTACT;
+  }
+}
+
+// ---------- Génération PDF ----------
+type Totals = { min: number; max: number; surface: number; perimetre: number; plinthesCost: number; seuilsCost: number };
+
+function generateQuotePDF(state: EstimateState, totals: Totals, contact?: ContactInput) {
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const W = 210;
+  let y = 18;
+
+  // Header
+  doc.setFillColor(232, 93, 58);
+  doc.rect(0, 0, W, 10, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.setTextColor(20, 20, 20);
+  doc.text("Parqueto", 14, y + 4);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(110);
+  doc.text("Devis indicatif — parquet artisanal", 14, y + 10);
+  doc.text(new Date().toLocaleDateString("fr-FR"), W - 14, y + 10, { align: "right" });
+
+  y += 22;
+  doc.setDrawColor(230);
+  doc.line(14, y, W - 14, y);
+  y += 8;
+
+  // Client
+  if (contact && contact.nom) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(20);
+    doc.text("Client", 14, y);
+    y += 6;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(60);
+    doc.text(contact.nom, 14, y); y += 5;
+    if (contact.email) { doc.text(contact.email, 14, y); y += 5; }
+    if (contact.telephone) { doc.text(`Tél. ${contact.telephone}`, 14, y); y += 5; }
+    if (contact.cp) { doc.text(`Code postal ${contact.cp}`, 14, y); y += 5; }
+    y += 4;
+  }
+
+  // Projet
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(20);
+  doc.text("Projet", 14, y);
+  y += 7;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(60);
+
+  const rows: [string, string][] = [
+    ["Prestation", services[state.service].label],
+    ["Type de parquet", types[state.type].label],
+    ["État actuel", etats[state.etat].label],
+    ["Dimensions", `${state.longueur} × ${state.largeur} m`],
+    ["Surface", `${fmtNum(totals.surface)} m²`],
+  ];
+  if (state.plinthes) rows.push(["Plinthes", `${fmtNum(totals.perimetre)} ml — ${fmt(totals.plinthesCost)} €`]);
+  if (state.seuils > 0) rows.push(["Seuils", `${state.seuils} — ${fmt(totals.seuilsCost)} €`]);
+
+  rows.forEach(([k, v]) => {
+    doc.setTextColor(110); doc.text(k, 14, y);
+    doc.setTextColor(20); doc.text(v, 70, y);
+    y += 6;
+  });
+
+  y += 6;
+  // Fourchette
+  doc.setFillColor(255, 245, 240);
+  doc.roundedRect(14, y, W - 28, 26, 3, 3, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(232, 93, 58);
+  doc.text("FOURCHETTE ESTIMÉE", 20, y + 8);
+  doc.setFontSize(18);
+  doc.setTextColor(20);
+  doc.text(`${fmt(totals.min)} – ${fmt(totals.max)} € TTC`, 20, y + 18);
+  y += 34;
+
+  // Footer
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(120);
+  const note =
+    "Estimation indicative générée à titre informatif, hors fournitures spécifiques. Un devis définitif sera établi après visite technique. Validité 30 jours.";
+  const split = doc.splitTextToSize(note, W - 28);
+  doc.text(split, 14, y);
+
+  doc.setTextColor(160);
+  doc.text("contact@parqueto.fr · parqueto.fr", 14, 287);
+
+  doc.save(`devis-parqueto-${Date.now()}.pdf`);
+}
+
 // ---------- Composant ----------
 export function Estimator() {
   const [s, setS] = useState<EstimateState>(DEFAULT_STATE);
   const [hydrated, setHydrated] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [showContact, setShowContact] = useState(false);
+  const [initialContact, setInitialContact] = useState<ContactInput>(DEFAULT_CONTACT);
 
   useEffect(() => {
     setS(loadState());
+    setInitialContact(loadContact());
     setHydrated(true);
   }, []);
 
@@ -115,7 +240,7 @@ export function Estimator() {
   const surface = s.longueur * s.largeur;
   const perimetre = (s.longueur + s.largeur) * 2;
 
-  const totals = useMemo(() => {
+  const totals: Totals = useMemo(() => {
     const svc = services[s.service];
     const t = types[s.type];
     const e = etats[s.etat];
@@ -284,22 +409,63 @@ export function Estimator() {
         </p>
       </div>
 
-      {/* CTA principal */}
+      {/* CTA principal + PDF */}
       {!showContact ? (
-        <button
-          onClick={() => setShowContact(true)}
-          className="group mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep active:scale-[0.98]"
-        >
-          Être recontacté avec ce devis
-          <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-        </button>
+        <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
+          <button
+            onClick={() => setShowContact(true)}
+            className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep active:scale-[0.98]"
+          >
+            Être recontacté avec ce devis
+            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+          </button>
+          <button
+            onClick={() => generateQuotePDF(s, totals, initialContact)}
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-background/25 bg-background/5 px-4 py-3 text-xs font-semibold text-background transition hover:bg-background/10 active:scale-[0.98]"
+            aria-label="Télécharger le devis PDF"
+          >
+            <FileDown className="h-4 w-4 text-brand-orange" />
+            Devis PDF
+          </button>
+        </div>
       ) : (
         <ContactForm
           totals={totals}
           state={s}
+          initial={initialContact}
           onCancel={() => setShowContact(false)}
+          onSaved={(c) => setInitialContact(c)}
         />
       )}
+
+      {/* Comment ça marche */}
+      <div className="mt-5 rounded-xl border border-background/10 bg-background/5 p-4">
+        <div className="flex items-center gap-2">
+          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand-orange/15 text-brand-orange">
+            <Sparkles className="h-3.5 w-3.5" />
+          </span>
+          <h4 className="font-display text-sm text-background">Comment ça marche</h4>
+        </div>
+        <ol className="mt-3 grid gap-2 sm:grid-cols-2">
+          {[
+            { icon: Ruler, t: "1. Mesurez", d: "Longueur × largeur de la pièce." },
+            { icon: ClipboardList, t: "2. Décrivez", d: "Type, état, options." },
+            { icon: Calculator, t: "3. Estimez", d: "Fourchette TTC en direct." },
+            { icon: Send, t: "4. Recevez", d: "Devis PDF ou rappel sous 24 h." },
+          ].map(({ icon: Icon, t, d }) => (
+            <li
+              key={t}
+              className="flex items-start gap-2 rounded-lg border border-background/10 bg-background/5 p-2.5"
+            >
+              <Icon className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange" />
+              <div>
+                <div className="text-xs font-semibold text-background">{t}</div>
+                <div className="text-[11px] text-background/60 leading-snug">{d}</div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
 
       <div className="mt-4 flex items-center justify-between text-[11px] text-background/55">
         <span className="inline-flex items-center gap-1.5">
@@ -407,29 +573,36 @@ function Stepper({ value, onChange }: { value: number; onChange: (v: number) => 
 function ContactForm({
   totals,
   state,
+  initial,
   onCancel,
+  onSaved,
 }: {
-  totals: { min: number; max: number; surface: number; perimetre: number };
+  totals: Totals;
   state: EstimateState;
+  initial: ContactInput;
   onCancel: () => void;
+  onSaved: (c: ContactInput) => void;
 }) {
-  const [form, setForm] = useState<ContactInput>({
-    nom: "",
-    email: "",
-    telephone: "",
-    cp: "",
-    message: "",
-  });
+  const [form, setForm] = useState<ContactInput>(initial);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+
+  // Persist on change (pré-remplissage au retour)
+  useEffect(() => {
+    try {
+      localStorage.setItem(CONTACT_KEY, JSON.stringify(form));
+    } catch {
+      /* ignore */
+    }
+  }, [form]);
 
   const set = (k: keyof ContactInput, v: string) => {
     setForm((f) => ({ ...f, [k]: v }));
     if (errors[k]) setErrors((e) => ({ ...e, [k]: undefined }));
   };
 
-  const submit = () => {
+  const validate = () => {
     const parsed = contactSchema.safeParse(form);
     if (!parsed.success) {
       const fieldErrors: ContactErrors = {};
@@ -438,9 +611,17 @@ function ContactForm({
         if (!fieldErrors[k]) fieldErrors[k] = issue.message;
       }
       setErrors(fieldErrors);
-      return;
+      return null;
     }
+    return parsed.data;
+  };
+
+  const submit = () => {
+    const data = validate();
+    if (!data) return;
     setSending(true);
+    onSaved(data);
+
     const body = [
       `Bonjour,`,
       ``,
@@ -455,9 +636,9 @@ function ContactForm({
       ``,
       `Fourchette estimée : ${fmt(totals.min)} – ${fmt(totals.max)} € TTC`,
       ``,
-      `— ${parsed.data.nom}`,
-      `Tél. ${parsed.data.telephone} · CP ${parsed.data.cp}`,
-      parsed.data.message ? `\nMessage : ${parsed.data.message}` : "",
+      `— ${data.nom}`,
+      `Tél. ${data.telephone} · CP ${data.cp}`,
+      data.message ? `\nMessage : ${data.message}` : "",
     ]
       .filter(Boolean)
       .join("\n");
@@ -473,29 +654,43 @@ function ContactForm({
     }, 600);
   };
 
+  const downloadPdf = () => {
+    const data = validate();
+    generateQuotePDF(state, totals, data ?? form);
+    if (data) onSaved(data);
+  };
+
   if (sent) {
     return (
       <div className="mt-4 rounded-xl border border-brand-orange/40 bg-brand-orange/10 p-5 text-center">
         <CheckCircle2 className="mx-auto h-8 w-8 text-brand-orange" />
         <h4 className="mt-2 font-display text-xl text-background">Demande envoyée</h4>
         <p className="mt-1 text-xs text-background/70">
-          Un artisan vous recontacte sous 24 h. Votre estimation est sauvegardée.
+          Un artisan vous recontacte sous 24 h. Vos infos sont sauvegardées pour la prochaine fois.
         </p>
-        <button
-          onClick={() => {
-            setSent(false);
-            onCancel();
-          }}
-          className="mt-3 text-xs font-semibold text-brand-orange underline-offset-4 hover:underline"
-        >
-          Modifier mon estimation
-        </button>
+        <div className="mt-3 flex flex-wrap justify-center gap-3 text-xs">
+          <button
+            onClick={() => generateQuotePDF(state, totals, form)}
+            className="inline-flex items-center gap-1.5 font-semibold text-brand-orange underline-offset-4 hover:underline"
+          >
+            <FileDown className="h-3.5 w-3.5" /> Télécharger le devis PDF
+          </button>
+          <button
+            onClick={() => {
+              setSent(false);
+              onCancel();
+            }}
+            className="font-semibold text-background/70 underline-offset-4 hover:underline"
+          >
+            Modifier mon estimation
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mt-4 space-y-3 rounded-xl border border-background/15 bg-background/5 p-4">
+    <div className="mt-4 space-y-2.5 rounded-xl border border-background/15 bg-background/5 p-3 sm:p-4">
       <div className="flex items-center justify-between">
         <div className="text-xs font-semibold text-background">Vos coordonnées</div>
         <button
@@ -506,25 +701,32 @@ function ContactForm({
         </button>
       </div>
 
-      <FormField
-        label="Nom complet"
-        value={form.nom}
-        onChange={(v) => set("nom", v)}
-        error={errors.nom}
-        placeholder="Camille Dubois"
-        autoComplete="name"
-      />
-      <FormField
-        label="Email"
-        type="email"
-        value={form.email}
-        onChange={(v) => set("email", v)}
-        error={errors.email}
-        placeholder="camille@exemple.fr"
-        autoComplete="email"
-        inputMode="email"
-      />
-      <div className="grid grid-cols-[1fr_120px] gap-2">
+      {/* Nom + Email côte à côte sur sm+, empilés mobile */}
+      <div className="grid gap-2 sm:grid-cols-2">
+        <FormField
+          label="Nom"
+          value={form.nom}
+          onChange={(v) => set("nom", v)}
+          error={errors.nom}
+          placeholder="Camille Dubois"
+          autoComplete="name"
+          tabIndex={1}
+        />
+        <FormField
+          label="Email"
+          type="email"
+          value={form.email}
+          onChange={(v) => set("email", v)}
+          error={errors.email}
+          placeholder="camille@exemple.fr"
+          autoComplete="email"
+          inputMode="email"
+          tabIndex={2}
+        />
+      </div>
+
+      {/* Tél + CP compacts */}
+      <div className="grid grid-cols-[1fr_96px] gap-2">
         <FormField
           label="Téléphone"
           value={form.telephone}
@@ -533,6 +735,7 @@ function ContactForm({
           placeholder="06 12 34 56 78"
           autoComplete="tel"
           inputMode="tel"
+          tabIndex={3}
         />
         <FormField
           label="CP"
@@ -543,8 +746,10 @@ function ContactForm({
           autoComplete="postal-code"
           inputMode="numeric"
           maxLength={5}
+          tabIndex={4}
         />
       </div>
+
       <FormField
         label="Message (optionnel)"
         value={form.message ?? ""}
@@ -553,13 +758,14 @@ function ContactForm({
         placeholder="Précisions sur votre projet…"
         multiline
         maxLength={500}
+        tabIndex={5}
       />
 
-      <div className="rounded-lg border border-background/10 bg-background/5 p-3 text-[11px] text-background/65">
-        <div className="font-semibold text-background/80">Récap envoyé avec la demande</div>
-        <div className="mt-1 leading-relaxed">
+      <div className="rounded-lg border border-background/10 bg-background/5 p-2.5 text-[11px] text-background/65">
+        <div className="font-semibold text-background/80">Récap envoyé</div>
+        <div className="mt-0.5 leading-relaxed">
           {services[state.service].label} · {types[state.type].label} · {fmtNum(totals.surface)} m²
-          {state.plinthes && ` · plinthes (${fmtNum(totals.perimetre)} ml)`}
+          {state.plinthes && ` · plinthes`}
           {state.seuils > 0 && ` · ${state.seuils} seuil${state.seuils > 1 ? "s" : ""}`}
           {" · "}
           <span className="font-semibold text-brand-orange">
@@ -568,18 +774,24 @@ function ContactForm({
         </div>
       </div>
 
-      <button
-        onClick={submit}
-        disabled={sending}
-        className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep active:scale-[0.98] disabled:opacity-70"
-      >
-        {sending ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <Mail className="h-4 w-4" />
-        )}
-        Envoyer ma demande
-      </button>
+      <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
+        <button
+          onClick={submit}
+          disabled={sending}
+          tabIndex={6}
+          className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep active:scale-[0.98] disabled:opacity-70"
+        >
+          {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+          Envoyer ma demande
+        </button>
+        <button
+          onClick={downloadPdf}
+          tabIndex={7}
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-background/25 bg-background/5 px-4 py-3 text-xs font-semibold text-background transition hover:bg-background/10 active:scale-[0.98]"
+        >
+          <FileDown className="h-4 w-4 text-brand-orange" /> Devis PDF
+        </button>
+      </div>
       <p className="flex items-center justify-center gap-1.5 text-[10px] text-background/50">
         <Check className="h-3 w-3 text-brand-orange" /> Données utilisées uniquement pour vous recontacter
       </p>
@@ -598,6 +810,7 @@ function FormField({
   inputMode,
   maxLength,
   multiline,
+  tabIndex,
 }: {
   label: string;
   value: string;
@@ -609,6 +822,7 @@ function FormField({
   inputMode?: "text" | "email" | "tel" | "numeric" | "decimal";
   maxLength?: number;
   multiline?: boolean;
+  tabIndex?: number;
 }) {
   const inputCls = `w-full rounded-lg border bg-background/10 px-3 py-2.5 text-sm text-background placeholder:text-background/40 outline-none transition focus:border-brand-orange ${
     error ? "border-destructive/70" : "border-background/15 focus:bg-background/15"
@@ -624,7 +838,8 @@ function FormField({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           maxLength={maxLength}
-          rows={3}
+          rows={2}
+          tabIndex={tabIndex}
           className={inputCls + " resize-none"}
         />
       ) : (
@@ -636,6 +851,8 @@ function FormField({
           autoComplete={autoComplete}
           inputMode={inputMode}
           maxLength={maxLength}
+          tabIndex={tabIndex}
+          enterKeyHint={tabIndex === 5 ? "send" : "next"}
           className={inputCls}
         />
       )}
