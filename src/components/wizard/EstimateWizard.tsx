@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { z } from "zod";
 import jsPDF from "jspdf";
 import {
+  AlertCircle,
   ArrowLeft,
   ArrowRight,
   Check,
@@ -16,6 +17,7 @@ import {
   MapPin,
   Minus,
   Plus,
+  Share2,
   ShieldCheck,
   Sparkles,
   Upload,
@@ -425,8 +427,10 @@ export function EstimateWizard() {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [errors, setErrors] = useState<Errors>({});
   const [photos, setPhotos] = useState<{ id: string; name: string; url: string }[]>([]);
+  const [photoError, setPhotoError] = useState<string>("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [shareMsg, setShareMsg] = useState<string>("");
 
   useEffect(() => {
     setS(loadWizardState());
@@ -485,6 +489,44 @@ export function EstimateWizard() {
     if (step > 1) {
       setStep((step - 1) as 1 | 2 | 3 | 4);
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const buildShareText = () => {
+    const lines = [
+      `Demande Parqueto — ${projets.find((p) => p.key === s.projet)?.label ?? ""}`,
+      s.materiau ? `Matériau : ${materiaux[s.materiau].label}` : "",
+      s.surface ? `Surface : ${s.surface} m²` : "",
+      s.cp || s.ville ? `Lieu : ${s.cp} ${s.ville}` : "",
+      range ? `Fourchette indicative : ${fmt(range.min)} – ${fmt(range.max)} € TTC` : "",
+    ].filter(Boolean);
+    return lines.join("\n");
+  };
+
+  const shareQuote = async () => {
+    setShareMsg("");
+    const text = buildShareText();
+    const shareData: ShareData = { title: "Mon estimation Parqueto", text };
+    try {
+      if (typeof navigator !== "undefined" && (navigator as Navigator).share) {
+        await (navigator as Navigator).share(shareData);
+        return;
+      }
+      if (typeof navigator !== "undefined" && navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+        setShareMsg("Résumé copié dans le presse-papiers.");
+        return;
+      }
+      setShareMsg("Partage indisponible sur ce navigateur.");
+    } catch (err) {
+      const name = (err as DOMException)?.name;
+      if (name === "AbortError") return; // user cancelled
+      try {
+        await navigator.clipboard.writeText(text);
+        setShareMsg("Partage refusé — résumé copié à la place.");
+      } catch {
+        setShareMsg("Impossible de partager. Réessayez ou téléchargez le PDF.");
+      }
     }
   };
 
@@ -570,53 +612,114 @@ export function EstimateWizard() {
         <ProgressBar step={step} />
       </header>
 
-      <main className="mx-auto max-w-3xl px-5 pb-40 pt-8 sm:pt-12">
+      <main className="mx-auto max-w-3xl px-5 pb-44 pt-8 sm:pt-12">
         <ReassuranceStrip />
+
+        <StepErrors errors={errors} />
 
         {step === 1 && <Step1 s={s} set={set} errors={errors} />}
         {step === 2 && <Step2 s={s} set={set} errors={errors} />}
-        {step === 3 && <Step3 s={s} set={set} errors={errors} photos={photos} setPhotos={setPhotos} />}
-        {step === 4 && <Step4 s={s} set={set} errors={errors} range={range} photos={photos.length} />}
+        {step === 3 && (
+          <Step3
+            s={s}
+            set={set}
+            errors={errors}
+            photos={photos}
+            setPhotos={setPhotos}
+            photoError={photoError}
+            setPhotoError={setPhotoError}
+          />
+        )}
+        {step === 4 && (
+          <Step4
+            s={s}
+            set={set}
+            errors={errors}
+            range={range}
+            photos={photos.length}
+            onPdf={() => generateWizardPDF(s)}
+            onShare={shareQuote}
+            shareMsg={shareMsg}
+          />
+        )}
       </main>
 
       {/* Bottom navigation bar */}
       <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-5 py-3 sm:py-4">
-          <button
-            onClick={prev}
-            disabled={step === 1}
-            className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-foreground/70 transition hover:text-foreground disabled:opacity-30"
-          >
-            <ArrowLeft className="h-4 w-4" /> Retour
-          </button>
-
-          <div className="hidden text-xs text-muted-foreground sm:block">
-            Étape <span className="font-semibold text-foreground">{step}</span> / 4
-            {range && step < 4 && (
-              <span className="ml-3 inline-flex items-center gap-1.5 rounded-full bg-brand-orange/10 px-2.5 py-1 font-semibold text-brand-orange">
+        <div className="mx-auto max-w-3xl px-4 py-2.5 sm:px-5 sm:py-4">
+          {/* Mobile range chip */}
+          {range && step < 4 && (
+            <div className="mb-2 flex items-center justify-center sm:hidden">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange/10 px-3 py-1 text-[11px] font-semibold text-brand-orange">
                 <Sparkles className="h-3 w-3" /> {fmt(range.min)}–{fmt(range.max)} € indicatif
               </span>
+            </div>
+          )}
+          <div className="flex items-center justify-between gap-2">
+            <button
+              onClick={prev}
+              disabled={step === 1}
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-foreground/70 transition hover:text-foreground disabled:opacity-30"
+            >
+              <ArrowLeft className="h-4 w-4" /> Retour
+            </button>
+
+            <div className="hidden text-xs text-muted-foreground sm:block">
+              Étape <span className="font-semibold text-foreground">{step}</span> / 4
+              {range && step < 4 && (
+                <span className="ml-3 inline-flex items-center gap-1.5 rounded-full bg-brand-orange/10 px-2.5 py-1 font-semibold text-brand-orange">
+                  <Sparkles className="h-3 w-3" /> {fmt(range.min)}–{fmt(range.max)} € indicatif
+                </span>
+              )}
+            </div>
+
+            <span className="text-[11px] font-semibold text-muted-foreground sm:hidden">
+              {step}/4
+            </span>
+
+            {step < 4 ? (
+              <button
+                onClick={next}
+                className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-brand-orange-deep active:scale-[0.98] sm:px-6"
+              >
+                Continuer <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+              </button>
+            ) : (
+              <button
+                onClick={submit}
+                disabled={sending}
+                className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-brand-orange-deep active:scale-[0.98] disabled:opacity-70 sm:px-6"
+              >
+                {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+                Envoyer
+              </button>
             )}
           </div>
-
-          {step < 4 ? (
-            <button
-              onClick={next}
-              className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-brand-orange-deep active:scale-[0.98]"
-            >
-              Continuer <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-            </button>
-          ) : (
-            <button
-              onClick={submit}
-              disabled={sending}
-              className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-brand-orange-deep active:scale-[0.98] disabled:opacity-70"
-            >
-              {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-              Envoyer ma demande
-            </button>
-          )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function StepErrors({ errors }: { errors: Errors }) {
+  const list = Object.values(errors).filter(Boolean);
+  if (list.length === 0) return null;
+  return (
+    <div
+      role="alert"
+      className="mb-6 flex items-start gap-3 rounded-2xl border border-destructive/30 bg-destructive/5 p-4"
+    >
+      <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
+      <div>
+        <div className="text-sm font-semibold text-destructive">
+          {list.length === 1 ? "1 champ à corriger" : `${list.length} champs à corriger`}
+        </div>
+        <ul className="mt-1 list-disc pl-5 text-xs text-destructive/90">
+          {list.slice(0, 4).map((m, i) => (
+            <li key={i}>{m}</li>
+          ))}
+          {list.length > 4 && <li>…et {list.length - 4} autre(s)</li>}
+        </ul>
       </div>
     </div>
   );
@@ -797,21 +900,52 @@ function Step3({
   errors,
   photos,
   setPhotos,
+  photoError,
+  setPhotoError,
 }: {
   s: WizardState;
   set: <K extends keyof WizardState>(k: K, v: WizardState[K]) => void;
   errors: Errors;
   photos: { id: string; name: string; url: string }[];
   setPhotos: React.Dispatch<React.SetStateAction<{ id: string; name: string; url: string }[]>>;
+  photoError: string;
+  setPhotoError: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const MAX = 5;
+  const MAX_SIZE = 8 * 1024 * 1024; // 8 MB
+  const ACCEPT = ["image/jpeg", "image/png", "image/webp"];
 
   const onFiles = (list: FileList | null) => {
-    if (!list) return;
-    const arr = Array.from(list).slice(0, 5 - photos.length);
-    const next = arr.map((f) => ({ id: `${f.name}-${f.size}-${Date.now()}-${Math.random()}`, name: f.name, url: URL.createObjectURL(f) }));
-    setPhotos((p) => [...p, ...next].slice(0, 5));
+    setPhotoError("");
+    if (!list || list.length === 0) return;
+    const remaining = MAX - photos.length;
+    if (remaining <= 0) {
+      setPhotoError(`Vous avez atteint la limite de ${MAX} photos. Retirez-en une pour en ajouter d'autres.`);
+      return;
+    }
+    const incoming = Array.from(list);
+    const rejected: string[] = [];
+    const accepted: File[] = [];
+    for (const f of incoming) {
+      if (!ACCEPT.includes(f.type)) { rejected.push(`${f.name} (format non supporté)`); continue; }
+      if (f.size > MAX_SIZE) { rejected.push(`${f.name} (> 8 Mo)`); continue; }
+      accepted.push(f);
+    }
+    const trimmed = accepted.slice(0, remaining);
+    const skipped = accepted.length - trimmed.length;
+    const next = trimmed.map((f) => ({
+      id: `${f.name}-${f.size}-${Date.now()}-${Math.random()}`,
+      name: f.name,
+      url: URL.createObjectURL(f),
+    }));
+    setPhotos((p) => [...p, ...next].slice(0, MAX));
+    const msgs: string[] = [];
+    if (rejected.length) msgs.push(`Refusé(s) : ${rejected.join(", ")}`);
+    if (skipped > 0) msgs.push(`${skipped} photo(s) ignorée(s) — limite de ${MAX} atteinte.`);
+    if (msgs.length) setPhotoError(msgs.join(" "));
   };
+
 
   return (
     <section>
@@ -838,29 +972,41 @@ function Step3({
         <TextInput value={s.complement} onChange={(v) => set("complement", v)} placeholder="Bât. B, 3ᵉ étage gauche" />
       </FieldGroup>
 
-      <FieldGroup label="Photos du sol actuel" hint="1 à 5 photos — accélère l'estimation. Stockées localement dans votre navigateur.">
+      <FieldGroup
+        label={`Photos du sol actuel (${photos.length}/${MAX})`}
+        hint="1 à 5 photos — accélère l'estimation. Stockées localement dans votre navigateur."
+        error={photoError}
+      >
         <div
           onClick={() => inputRef.current?.click()}
           onDragOver={(e) => { e.preventDefault(); }}
           onDrop={(e) => { e.preventDefault(); onFiles(e.dataTransfer.files); }}
-          className="group relative cursor-pointer rounded-2xl border-2 border-dashed border-border bg-muted/30 px-6 py-10 text-center transition hover:border-brand-orange hover:bg-brand-orange/5"
+          className={`group relative cursor-pointer rounded-2xl border-2 border-dashed px-6 py-10 text-center transition ${
+            photos.length >= MAX
+              ? "border-border bg-muted/40 opacity-70"
+              : "border-border bg-muted/30 hover:border-brand-orange hover:bg-brand-orange/5"
+          }`}
         >
           <input
             ref={inputRef}
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp"
             multiple
+            disabled={photos.length >= MAX}
             className="sr-only"
-            onChange={(e) => onFiles(e.target.files)}
+            onChange={(e) => { onFiles(e.target.files); e.target.value = ""; }}
           />
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-orange/15 text-brand-orange transition group-hover:bg-brand-orange/25">
             <Upload className="h-5 w-5" />
           </div>
           <div className="mt-3 font-display text-base text-foreground">
-            Glissez-déposez ou <span className="text-brand-orange underline-offset-4 group-hover:underline">parcourez</span>
+            {photos.length >= MAX
+              ? `Maximum atteint (${MAX} photos)`
+              : <>Glissez-déposez ou <span className="text-brand-orange underline-offset-4 group-hover:underline">parcourez</span></>}
           </div>
-          <div className="mt-1 text-xs text-muted-foreground">JPEG, PNG ou WebP · jusqu'à 5 photos</div>
+          <div className="mt-1 text-xs text-muted-foreground">JPEG, PNG ou WebP · max 8 Mo par photo · jusqu'à {MAX} photos</div>
         </div>
+
 
         {photos.length > 0 && (
           <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -903,12 +1049,18 @@ function Step4({
   errors,
   range,
   photos,
+  onPdf,
+  onShare,
+  shareMsg,
 }: {
   s: WizardState;
   set: <K extends keyof WizardState>(k: K, v: WizardState[K]) => void;
   errors: Errors;
   range: { min: number; max: number } | null;
   photos: number;
+  onPdf: () => void;
+  onShare: () => void | Promise<void>;
+  shareMsg: string;
 }) {
   return (
     <section>
@@ -986,28 +1138,62 @@ function Step4({
         />
       </FieldGroup>
 
-      {/* Récap */}
-      <div className="mt-8 rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-6">
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-brand-orange">Récapitulatif</div>
-        <h3 className="mt-1 font-display text-xl text-foreground">{projets.find((p) => p.key === s.projet)?.label ?? "Projet"}</h3>
-        <dl className="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
-          <RecapLine k="Matériau" v={s.materiau ? materiaux[s.materiau].label : "—"} />
-          <RecapLine k="Surface" v={s.surface ? `${s.surface} m²` : "—"} />
-          <RecapLine k="Logement" v={labelOf(LOGEMENTS, s.logement) || "—"} />
-          <RecapLine k="Étage" v={labelOf(ETAGES, s.etage) || "—"} />
-          <RecapLine k="Délai" v={labelOf(DELAIS, s.delai) || "—"} />
-          <RecapLine k="Chauffage sol" v={labelOf(YESNOMAYBE, s.chauffage) || "—"} />
-          <RecapLine k="Ville" v={s.ville && s.cp ? `${s.cp} ${s.ville}` : "—"} />
-          <RecapLine k="Photos" v={photos ? `${photos} photo(s)` : "—"} />
-        </dl>
-        {range && (
-          <div className="mt-5 rounded-xl bg-brand-orange/10 px-4 py-4">
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-brand-orange">Fourchette indicative</div>
-            <div className="mt-1 font-display text-2xl text-foreground">{fmt(range.min)} – {fmt(range.max)} <span className="text-base text-muted-foreground">€ TTC</span></div>
-            <div className="mt-1 text-[11px] text-muted-foreground">Non contractuelle — un artisan affinera après visite.</div>
+      {/* Récap final avant envoi */}
+      <div className="mt-8 overflow-hidden rounded-2xl border-2 border-brand-orange/30 bg-card shadow-soft">
+        <div className="flex items-center justify-between gap-3 border-b border-border bg-brand-orange/[0.06] px-5 py-3 sm:px-6">
+          <div>
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-brand-orange">Récapitulatif avant envoi</div>
+            <h3 className="mt-0.5 font-display text-lg text-foreground sm:text-xl">
+              {projets.find((p) => p.key === s.projet)?.label ?? "Projet"}
+            </h3>
           </div>
-        )}
+          <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-brand-orange" />
+        </div>
+
+        <div className="p-5 sm:p-6">
+          <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+            <RecapLine k="Matériau" v={s.materiau ? materiaux[s.materiau].label : "—"} />
+            <RecapLine k="Surface" v={s.surface ? `${s.surface} m²` : "—"} />
+            <RecapLine k="Logement" v={labelOf(LOGEMENTS, s.logement) || "—"} />
+            <RecapLine k="Étage" v={labelOf(ETAGES, s.etage) || "—"} />
+            <RecapLine k="Délai" v={labelOf(DELAIS, s.delai) || "—"} />
+            <RecapLine k="Chauffage sol" v={labelOf(YESNOMAYBE, s.chauffage) || "—"} />
+            <RecapLine k="Ville" v={s.ville && s.cp ? `${s.cp} ${s.ville}` : "—"} />
+            <RecapLine k="Photos" v={photos ? `${photos} photo(s)` : "—"} />
+          </dl>
+
+          {range && (
+            <div className="mt-5 rounded-xl bg-brand-orange/10 px-4 py-4">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-brand-orange">Fourchette indicative TTC</div>
+              <div className="mt-1 font-display text-2xl text-foreground sm:text-3xl">
+                {fmt(range.min)} – {fmt(range.max)} <span className="text-base text-muted-foreground">€</span>
+              </div>
+              <div className="mt-1 text-[11px] text-muted-foreground">Non contractuelle — un artisan affinera après visite.</div>
+            </div>
+          )}
+
+          <div className="mt-5 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={onPdf}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-brand-orange hover:bg-brand-orange/5 sm:flex-none"
+            >
+              <FileDown className="h-4 w-4" /> Télécharger le PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => onShare()}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-brand-orange hover:bg-brand-orange/5 sm:flex-none"
+            >
+              <Share2 className="h-4 w-4" /> Partager
+            </button>
+          </div>
+          {shareMsg && (
+            <p className="mt-2 text-xs text-muted-foreground">{shareMsg}</p>
+          )}
+        </div>
       </div>
+
 
       {/* Consentement */}
       <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-brand-orange/40">
