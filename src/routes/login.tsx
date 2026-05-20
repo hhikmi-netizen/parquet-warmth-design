@@ -38,6 +38,7 @@ function LoginPage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading || social) return;
     const parsed = schema.safeParse({ email, password });
     if (!parsed.success) {
       authToast.error(parsed.error.issues[0]?.message ?? "Champs invalides");
