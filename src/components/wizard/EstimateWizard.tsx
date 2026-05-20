@@ -337,18 +337,24 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   // Marge de sécurité : la zone de pied de page commence à 278 mm.
   // On ne dessine jamais au-delà de SAFE_BOTTOM pour éviter tout chevauchement.
   const SAFE_BOTTOM = 268;
-  const LABEL_W = 50;
-  const VALUE_W = INNER - LABEL_W - 4;
+  const PAGE_TOP = 20;
+  const PAGE_USABLE = SAFE_BOTTOM - PAGE_TOP;
   const LINE_H = 5.5;
+  const VALUE_LINE_H = 6;
 
+  // Hauteur disponible restante sur la page courante.
+  const remaining = () => SAFE_BOTTOM - y;
+
+  // Garantit `needed` mm de hauteur dispo. Renvoie true si on a paginé.
   const ensureSpace = (needed: number) => {
     if (y + needed > SAFE_BOTTOM) {
       doc.addPage();
-      y = 20;
+      y = PAGE_TOP;
+      return true;
     }
+    return false;
   };
 
-  const VALUE_LINE_H = 6;
   const row = (k: string, v: string) => {
     if (!v) return;
 
@@ -376,34 +382,72 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
     doc.setFont("helvetica", "bold").setFontSize(13);
     const valueLines = doc.splitTextToSize(v, INNER - 4) as string[];
 
-    // 3) Marges verticales dynamiques :
-    //    - Plus le libellé est petit (ou tronqué), plus on augmente l'espace
-    //      entre kicker et valeur pour préserver la respiration et la hiérarchie.
-    //    - Si la valeur retourne à la ligne, on ajoute aussi un peu de souffle bas.
-    const baseLabelToValue = labelSize + 1.5;                                  // ~9 mm à 7.5 pt
-    const compensationShrink = labelWasShrunk ? (7.5 - labelSize) * 0.6 : 0;   // jusqu'à +0.9 mm
+    // 3) Marges verticales dynamiques.
+    const baseLabelToValue = labelSize + 1.5;
+    const compensationShrink = labelWasShrunk ? (7.5 - labelSize) * 0.6 : 0;
     const compensationTrunc = labelTruncated ? 1.2 : 0;
     const labelToValue = Math.max(6, baseLabelToValue + compensationShrink + compensationTrunc);
-
     const bottomPad = valueLines.length > 1 ? 5.5 : 4;
-    const blockH = labelToValue + valueLines.length * VALUE_LINE_H + bottomPad;
-    ensureSpace(blockH + 2);
 
-    // 4) Tracé du kicker
-    doc.setFont("helvetica", "bold").setFontSize(labelSize).setTextColor(229, 101, 28);
-    doc.text(labelDisplay, M + 1, y);
+    // 4) Algorithme anti-débordement renforcé.
+    //    a) Hauteur minimale incompressible = kicker + 1 ligne de valeur + bas.
+    const minBlockH = labelToValue + VALUE_LINE_H + bottomPad;
+    //    b) Si même ce minimum ne tient pas → page suivante.
+    if (remaining() < minBlockH + 2) {
+      doc.addPage();
+      y = PAGE_TOP;
+    }
+    //    c) Nombre max de lignes que l'on peut tracer sur la page courante.
+    const fitLines = Math.max(
+      1,
+      Math.floor((remaining() - labelToValue - bottomPad - 2) / VALUE_LINE_H)
+    );
+    //    d) Si toutes les lignes tiennent → bloc unique.
+    //       Sinon on découpe en plusieurs chunks paginés, chacun avec son kicker
+    //       (« suite… ») pour conserver la hiérarchie après un saut de page.
+    const chunks: string[][] = [];
+    if (valueLines.length <= fitLines) {
+      chunks.push(valueLines);
+    } else {
+      // 1er chunk sur la page courante
+      chunks.push(valueLines.slice(0, fitLines));
+      let i = fitLines;
+      // chunks suivants sur pages neuves : capacité max = floor((PAGE_USABLE - labelToValue - bottomPad - 2) / VALUE_LINE_H)
+      const perFreshPage = Math.max(
+        1,
+        Math.floor((PAGE_USABLE - labelToValue - bottomPad - 2) / VALUE_LINE_H)
+      );
+      while (i < valueLines.length) {
+        chunks.push(valueLines.slice(i, i + perFreshPage));
+        i += perFreshPage;
+      }
+    }
 
-    // 5) Tracé de la valeur
-    doc.setFont("helvetica", "bold").setFontSize(13).setTextColor(20, 20, 20);
-    doc.text(valueLines, M + 1, y + labelToValue);
+    chunks.forEach((chunk, idx) => {
+      if (idx > 0) {
+        doc.addPage();
+        y = PAGE_TOP;
+      }
+      const isContinuation = idx > 0;
+      const display = isContinuation ? `${labelDisplay} (SUITE)` : labelDisplay;
 
-    // 6) Filet de séparation discret, positionné selon la hauteur réelle du bloc
-    const lineY = y + labelToValue + valueLines.length * VALUE_LINE_H + 1.5;
-    doc.setDrawColor(214, 205, 190).setLineWidth(0.15);
-    doc.line(M + 1, lineY, RIGHT - 1, lineY);
+      // Kicker
+      doc.setFont("helvetica", "bold").setFontSize(labelSize).setTextColor(229, 101, 28);
+      doc.text(display, M + 1, y);
 
-    y += blockH;
+      // Valeur
+      doc.setFont("helvetica", "bold").setFontSize(13).setTextColor(20, 20, 20);
+      doc.text(chunk, M + 1, y + labelToValue);
+
+      // Filet de séparation
+      const lineY = y + labelToValue + chunk.length * VALUE_LINE_H + 1.5;
+      doc.setDrawColor(214, 205, 190).setLineWidth(0.15);
+      doc.line(M + 1, lineY, RIGHT - 1, lineY);
+
+      y += labelToValue + chunk.length * VALUE_LINE_H + bottomPad;
+    });
   };
+
 
 
 
