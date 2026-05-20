@@ -249,12 +249,22 @@ function ArtisanOnboarding() {
     }));
 
   const onPhotos = (files: FileList | null) => {
-    if (!files) return;
-    const limit = 6 - form.photos.length;
-    const slice = Array.from(files).slice(0, Math.max(0, limit));
+    if (!files || files.length === 0) return;
+    const arr = Array.from(files);
+    const remaining = MAX_PHOTOS - form.photos.length;
+    const tooMany = arr.length > remaining;
+    const slice = arr.slice(0, Math.max(0, remaining));
+    let rejectedType = 0;
+    let rejectedSize = 0;
     slice.forEach((file) => {
-      if (!file.type.startsWith("image/")) return;
-      if (file.size > 5 * 1024 * 1024) return;
+      if (!file.type.startsWith("image/")) {
+        rejectedType += 1;
+        return;
+      }
+      if (file.size > MAX_PHOTO_MB * 1024 * 1024) {
+        rejectedSize += 1;
+        return;
+      }
       const reader = new FileReader();
       reader.onload = () => {
         const dataUrl = reader.result as string;
@@ -265,10 +275,28 @@ function ArtisanOnboarding() {
       };
       reader.readAsDataURL(file);
     });
+
+    const msgs: string[] = [];
+    if (tooMany) msgs.push(`Limite de ${MAX_PHOTOS} photos atteinte.`);
+    if (rejectedType > 0) msgs.push(`${rejectedType} fichier(s) ignoré(s) — format non supporté.`);
+    if (rejectedSize > 0) msgs.push(`${rejectedSize} photo(s) > ${MAX_PHOTO_MB} Mo ignorée(s).`);
+    setPhotoError(msgs.length ? msgs.join(" ") : null);
+    if (msgs.length) {
+      setTimeout(() => setPhotoError(null), 5000);
+    }
   };
 
   const removePhoto = (i: number) =>
     setForm((prev) => ({ ...prev, photos: prev.photos.filter((_, idx) => idx !== i) }));
+
+  const makeCover = (i: number) =>
+    setForm((prev) => {
+      if (i === 0) return prev;
+      const next = [...prev.photos];
+      const [picked] = next.splice(i, 1);
+      next.unshift(picked);
+      return { ...prev, photos: next };
+    });
 
   const toggleEssence = (e: Essence) =>
     setForm((prev) => ({
