@@ -1,4 +1,4 @@
-import { useId, useRef, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, type KeyboardEvent } from "react";
 import { Plus } from "lucide-react";
 
 export type FaqItem = { q: string; a: string };
@@ -20,10 +20,48 @@ type Props = {
  * - Arrow Up/Down + Home/End cycle focus between triggers (APG pattern).
  * - Focus is always visible via focus-visible ring on the trigger.
  * - Tap targets are at least 56px tall on mobile for comfortable touch.
+ *
+ * Layout-stability notes (mobile):
+ * - Panels stay in the DOM during the open/close transition (no `hidden`)
+ *   so the grid-rows height animation runs both ways without snapping.
+ * - When a different item is opened, the just-clicked trigger is scrolled
+ *   back into view to compensate for content above that just collapsed —
+ *   prevents the "the question I tapped jumped off screen" feeling.
+ * - `scroll-margin-top` on each <li> leaves room for the sticky header.
+ * - `[contain:layout_paint]` on each row stops the panel's height change
+ *   from invalidating layout outside the accordion.
  */
 export function FaqAccordion({ items, open, onToggle, size = "md" }: Props) {
   const baseId = useId();
   const triggersRef = useRef<Array<HTMLButtonElement | null>>([]);
+  const previousOpenRef = useRef<number | null>(open);
+
+  // After a toggle, keep the active trigger in view on mobile.
+  // We only scroll when switching to a different item (not when simply
+  // closing the current one) and only if the trigger is off-screen.
+  useEffect(() => {
+    const prev = previousOpenRef.current;
+    previousOpenRef.current = open;
+    if (open === null || open === prev) return;
+
+    const trigger = triggersRef.current[open];
+    if (!trigger) return;
+
+    const id = window.requestAnimationFrame(() => {
+      const rect = trigger.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const offTop = rect.top < 88; // sticky header allowance
+      const offBottom = rect.bottom > vh - 24;
+      if (!offTop && !offBottom) return;
+      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      trigger.scrollIntoView({
+        behavior: reduce ? "auto" : "smooth",
+        block: "start",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(id);
+  }, [open]);
 
   function onTriggerKeyDown(e: KeyboardEvent<HTMLButtonElement>, index: number) {
     const last = items.length - 1;
@@ -45,7 +83,9 @@ export function FaqAccordion({ items, open, onToggle, size = "md" }: Props) {
 
   return (
     <ul
-      className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card shadow-soft"
+      // overflow-anchor:none on the wrapper avoids the browser jumping
+      // to "preserve" position when a sibling above collapses.
+      className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card shadow-soft [overflow-anchor:none]"
       role="list"
     >
       {items.map((f, i) => {
@@ -53,7 +93,10 @@ export function FaqAccordion({ items, open, onToggle, size = "md" }: Props) {
         const triggerId = `${baseId}-trigger-${i}`;
         const panelId = `${baseId}-panel-${i}`;
         return (
-          <li key={f.q}>
+          <li
+            key={f.q}
+            className="scroll-mt-24 [contain:layout_paint]"
+          >
             <h3 className="m-0">
               <button
                 ref={(el) => {
@@ -80,8 +123,11 @@ export function FaqAccordion({ items, open, onToggle, size = "md" }: Props) {
               id={panelId}
               role="region"
               aria-labelledby={triggerId}
-              hidden={!isOpen}
-              className={`grid overflow-hidden transition-all duration-300 ease-out motion-reduce:transition-none ${
+              aria-hidden={!isOpen}
+              // `inert` removes the closed panel from tab/AT trees without
+              // setting display:none, so the close animation can play.
+              {...(!isOpen ? { inert: "" as unknown as boolean } : {})}
+              className={`grid overflow-hidden transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none ${
                 isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
               }`}
             >
