@@ -361,7 +361,8 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
 
     // Filet de séparation discret
     const lineY = y + 6 + valueLines.length * VALUE_LINE_H + 1.5;
-    doc.setDrawColor(232, 226, 216).setLineWidth(0.2);
+    // Filet inter-lignes : ton sable légèrement plus contrasté, épaisseur fine constante
+    doc.setDrawColor(214, 205, 190).setLineWidth(0.15);
     doc.line(M + 1, lineY, RIGHT - 1, lineY);
 
     y += blockH;
@@ -414,7 +415,8 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   const pages = doc.getNumberOfPages();
   for (let i = 1; i <= pages; i++) {
     doc.setPage(i);
-    doc.setDrawColor(220).setLineWidth(0.2);
+    // Filet de pied de page : un peu plus visible que les filets de lignes, sans rivaliser avec le contenu
+    doc.setDrawColor(198, 188, 172).setLineWidth(0.25);
     doc.line(M, 280, RIGHT, 280);
     doc.setFont("helvetica", "italic").setFontSize(7).setTextColor(130);
     doc.text("Estimation indicative non contractuelle - Devis definitif apres visite - Validite 30 jours", M, 284);
