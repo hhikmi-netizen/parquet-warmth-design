@@ -108,6 +108,9 @@ function ContactPage() {
   const [previewIdx, setPreviewIdx] = useState<number | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const dragCounter = useRef(0);
+  // Anti-spam: timestamp set on mount; any submit before MIN_FILL_MS is rejected.
+  const mountedAt = useRef<number>(Date.now());
+  const MIN_FILL_MS = 2500;
 
   // Object URLs for previews — memoized + revoked on change/unmount.
   const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
