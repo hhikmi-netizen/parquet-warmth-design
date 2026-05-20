@@ -1111,27 +1111,40 @@ function Step3({
 
 
         {photos.length > 0 && (
-          <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {photos.map((p) => (
+          <ul className="mt-4 grid grid-cols-3 gap-2.5 sm:grid-cols-4">
+            {photos.map((p, i) => (
               <li key={p.id} className="group relative overflow-hidden rounded-xl border border-border bg-card shadow-soft">
-                <img src={p.url} alt={p.name} className="aspect-square w-full object-cover" />
                 <button
-                  onClick={() => setPhotos((arr) => arr.filter((x) => x.id !== p.id))}
-                  className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-foreground/85 text-background opacity-0 transition group-hover:opacity-100"
-                  aria-label="Retirer cette photo"
+                  type="button"
+                  onClick={() => setLightbox(i)}
+                  className="block w-full"
+                  aria-label={`Agrandir ${p.name}`}
+                >
+                  <img src={p.url} alt={p.name} className="aspect-square w-full object-cover transition group-hover:scale-[1.03]" />
+                </button>
+                <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1 bg-gradient-to-t from-foreground/85 to-transparent px-2 py-1.5 text-[10px] text-background">
+                  <span className="truncate font-medium">{p.name}</span>
+                  {p.w && p.h && <span className="flex-shrink-0 opacity-80">{p.w}×{p.h}</span>}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removePhoto(p.id)}
+                  className="absolute right-1.5 top-1.5 inline-flex h-7 w-7 items-center justify-center rounded-full bg-foreground/90 text-background shadow-sm transition hover:bg-destructive"
+                  aria-label={`Retirer ${p.name}`}
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
-                <div className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] text-muted-foreground">
-                  <ImageIcon className="h-3 w-3" /> <span className="truncate">{p.name}</span>
+                <div className="absolute left-1.5 top-1.5 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-orange px-1.5 text-[10px] font-bold text-primary-foreground">
+                  {i + 1}
                 </div>
               </li>
             ))}
-            {photos.length > 0 && photos.length < 5 && (
+            {photos.length < MAX && (
               <li>
                 <button
+                  type="button"
                   onClick={() => inputRef.current?.click()}
-                  className="flex aspect-square w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-border text-xs font-semibold text-muted-foreground transition hover:border-brand-orange hover:text-brand-orange"
+                  className="flex aspect-square w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-border text-[11px] font-semibold text-muted-foreground transition hover:border-brand-orange hover:text-brand-orange"
                 >
                   <Plus className="h-5 w-5" />
                   Ajouter
@@ -1140,10 +1153,75 @@ function Step3({
             )}
           </ul>
         )}
+
+        {lightbox !== null && photos[lightbox] && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex flex-col bg-foreground/95 backdrop-blur-sm"
+            onClick={() => setLightbox(null)}
+          >
+            <div className="flex items-center justify-between gap-3 border-b border-background/10 px-4 py-3 text-background">
+              <div className="min-w-0">
+                <div className="truncate text-sm font-semibold">{photos[lightbox].name}</div>
+                <div className="text-[11px] opacity-70">
+                  Photo {lightbox + 1} / {photos.length}
+                  {photos[lightbox].w && photos[lightbox].h && <> · {photos[lightbox].w}×{photos[lightbox].h} px</>}
+                  {photos[lightbox].size && <> · {(photos[lightbox].size! / 1024 / 1024).toFixed(1)} Mo</>}
+                </div>
+              </div>
+              <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                <button
+                  type="button"
+                  onClick={() => removePhoto(photos[lightbox].id)}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-destructive/90 px-3 py-1.5 text-xs font-semibold text-background hover:bg-destructive"
+                >
+                  <X className="h-3.5 w-3.5" /> Retirer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLightbox(null)}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-background/15 text-background hover:bg-background/25"
+                  aria-label="Fermer"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+            <div className="flex flex-1 items-center justify-center p-4" onClick={(e) => e.stopPropagation()}>
+              <img
+                src={photos[lightbox].url}
+                alt={photos[lightbox].name}
+                className="max-h-full max-w-full rounded-lg object-contain shadow-2xl"
+              />
+            </div>
+            {photos.length > 1 && (
+              <div className="flex items-center justify-center gap-3 pb-5" onClick={(e) => e.stopPropagation()}>
+                <button
+                  type="button"
+                  onClick={() => setLightbox((lightbox - 1 + photos.length) % photos.length)}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-background/15 text-background transition hover:bg-background/30"
+                  aria-label="Précédente"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLightbox((lightbox + 1) % photos.length)}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-background/15 text-background transition hover:bg-background/30"
+                  aria-label="Suivante"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </FieldGroup>
     </section>
   );
 }
+
 
 function Step4({
   s,
