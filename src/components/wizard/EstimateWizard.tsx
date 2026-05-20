@@ -415,7 +415,8 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   const pages = doc.getNumberOfPages();
   for (let i = 1; i <= pages; i++) {
     doc.setPage(i);
-    doc.setDrawColor(220).setLineWidth(0.2);
+    // Filet de pied de page : un peu plus visible que les filets de lignes, sans rivaliser avec le contenu
+    doc.setDrawColor(198, 188, 172).setLineWidth(0.25);
     doc.line(M, 280, RIGHT, 280);
     doc.setFont("helvetica", "italic").setFontSize(7).setTextColor(130);
     doc.text("Estimation indicative non contractuelle - Devis definitif apres visite - Validite 30 jours", M, 284);
