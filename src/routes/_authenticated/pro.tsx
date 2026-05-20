@@ -316,10 +316,10 @@ function CreditsBadge({ balance }: { balance: number }) {
       <span className="font-semibold">{balance}</span>
       <span className="text-muted-foreground">crédit{balance > 1 ? "s" : ""}</span>
       <Link
-        to="/pro/offres"
+        to="/pro/facturation"
         className="ml-2 text-xs font-semibold text-brand-orange-deep hover:underline"
       >
-        Recharger
+        Facturation
       </Link>
     </div>
   );
