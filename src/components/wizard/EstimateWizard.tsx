@@ -305,10 +305,17 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
     y += 38;
   }
 
+  // Espacement uniforme entre sections : on n'impose plus de saut de page,
+  // le flux remplit chaque page jusqu'à SAFE_BOTTOM puis paginera proprement.
+  // → la densité verticale reste constante quel que soit le volume de chaque section.
+  const SECTION_GAP = 10;          // air avant un nouveau titre
+  const SECTION_HEADER_H = 22;     // hauteur du bloc titre
+
   let sectionCount = 0;
   const section = (title: string) => {
-    // Mobile-friendly: 1 section per page → toujours une nouvelle page (sauf la première)
-    if (sectionCount > 0) {
+    if (sectionCount > 0) y += SECTION_GAP;
+    // Évite les titres orphelins en bas de page : on réserve la place pour le titre + 1 ligne (~26 mm)
+    if (y + SECTION_HEADER_H + 26 > 268) {
       doc.addPage();
       y = 20;
     }
@@ -322,8 +329,9 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
     doc.setDrawColor(229, 101, 28).setLineWidth(1.2);
     doc.line(M, y + 13, M + 28, y + 13);
     doc.setLineWidth(0.2);
-    y += 22;
+    y += SECTION_HEADER_H;
   };
+
 
 
   // Marge de sécurité : la zone de pied de page commence à 278 mm.
