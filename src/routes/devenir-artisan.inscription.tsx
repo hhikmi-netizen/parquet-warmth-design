@@ -47,6 +47,26 @@ type Specialite =
   | "escaliers"
   | "terrasse_bois";
 
+type Essence =
+  | "chene"
+  | "chataignier"
+  | "exotiques"
+  | "resineux"
+  | "ancien_recupere";
+
+type Finition = "huile" | "vitrification" | "cire" | "savon_noir";
+
+type FormeJuridique =
+  | "auto_entrepreneur"
+  | "ei"
+  | "eurl"
+  | "sarl"
+  | "sas"
+  | "sasu"
+  | "autre";
+
+type DocFile = { name: string; dataUrl: string; size: number } | null;
+
 type FormState = {
   // Étape 1 — Identité
   raisonSociale: string;
@@ -60,18 +80,37 @@ type FormState = {
   ville: string;
   codePostal: string;
   rayonKm: number;
-  // Étape 3 — Spécialités
+  // Étape 3 — Métier
   specialites: Specialite[];
+  essences: Essence[];
+  finitions: Finition[];
   poseMin: string;
+  capaciteMois: string;
+  delaiDemarrage: string;
+  tarifIndicatif: string;
   // Étape 4 — Réalisations
   photos: { name: string; dataUrl: string }[];
   bio: string;
-  // Étape 5 — Assurance
-  assuranceDecennale: string;
-  numeroDecennale: string;
-  rcPro: boolean;
-  // Final
+  anneeCreation: string;
+  effectif: string;
+  chantierSignature: string;
+  siteWeb: string;
+  instagram: string;
+  // Étape 5 — Statut & assurances
+  formeJuridique: FormeJuridique | "";
+  justificatif: DocFile;
+  decennaleCompagnie: string;
+  decennaleNumero: string;
+  decennaleValidite: string;
+  decennaleAttestation: DocFile;
+  rcProCompagnie: string;
+  rcProNumero: string;
+  qualibat: boolean;
+  rge: boolean;
+  // Étape 6 — Récap & validation
   cgu: boolean;
+  chartQualite: boolean;
+  exactitude: boolean;
 };
 
 const STORAGE_KEY = "parqueto.artisan.inscription";
@@ -87,6 +126,31 @@ const SPECIALITE_LABELS: Record<Specialite, string> = {
   terrasse_bois: "Terrasse extérieure",
 };
 
+const ESSENCE_LABELS: Record<Essence, string> = {
+  chene: "Chêne",
+  chataignier: "Châtaignier",
+  exotiques: "Bois exotiques",
+  resineux: "Résineux (pin, sapin)",
+  ancien_recupere: "Bois ancien / récupéré",
+};
+
+const FINITION_LABELS: Record<Finition, string> = {
+  huile: "Huile naturelle",
+  vitrification: "Vitrification",
+  cire: "Cire traditionnelle",
+  savon_noir: "Savon noir",
+};
+
+const FORME_LABELS: Record<FormeJuridique, string> = {
+  auto_entrepreneur: "Auto-entrepreneur / Micro-entreprise",
+  ei: "Entreprise individuelle (EI)",
+  eurl: "EURL",
+  sarl: "SARL",
+  sas: "SAS",
+  sasu: "SASU",
+  autre: "Autre",
+};
+
 const initialState: FormState = {
   raisonSociale: "",
   representant: "",
@@ -99,13 +163,32 @@ const initialState: FormState = {
   codePostal: "",
   rayonKm: 25,
   specialites: [],
+  essences: [],
+  finitions: [],
   poseMin: "",
+  capaciteMois: "",
+  delaiDemarrage: "",
+  tarifIndicatif: "",
   photos: [],
   bio: "",
-  assuranceDecennale: "",
-  numeroDecennale: "",
-  rcPro: false,
+  anneeCreation: "",
+  effectif: "",
+  chantierSignature: "",
+  siteWeb: "",
+  instagram: "",
+  formeJuridique: "",
+  justificatif: null,
+  decennaleCompagnie: "",
+  decennaleNumero: "",
+  decennaleValidite: "",
+  decennaleAttestation: null,
+  rcProCompagnie: "",
+  rcProNumero: "",
+  qualibat: false,
+  rge: false,
   cgu: false,
+  chartQualite: false,
+  exactitude: false,
 };
 
 const STEPS = [
@@ -113,7 +196,8 @@ const STEPS = [
   { id: 2, label: "Zone", icon: MapPin },
   { id: 3, label: "Métier", icon: Hammer },
   { id: 4, label: "Réalisations", icon: Camera },
-  { id: 5, label: "Assurance", icon: ShieldCheck },
+  { id: 5, label: "Assurances", icon: ShieldCheck },
+  { id: 6, label: "Récap", icon: ClipboardCheck },
 ] as const;
 
 function ArtisanOnboarding() {
