@@ -19,7 +19,7 @@ import {
   Calculator,
   Send,
 } from "lucide-react";
-import { toast } from "sonner";
+
 
 // ---------- Modèle de calcul ----------
 type ServiceKey = "poncage" | "vitrification" | "pose" | "renovation";
