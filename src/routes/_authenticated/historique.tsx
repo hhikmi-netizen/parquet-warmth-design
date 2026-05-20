@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, FileText } from "lucide-react";
+import { LogOut, FileText, MessageSquare } from "lucide-react";
 import logo from "@/assets/parqueto-logo.png";
 import { useAuth } from "@/hooks/use-auth";
 
