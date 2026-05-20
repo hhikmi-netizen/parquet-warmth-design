@@ -158,9 +158,59 @@ export function ChantierPhotos() {
             </option>
           ))}
         </select>
-        <p className="mt-2 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-          <Info className="size-3" />
-          Photos visibles par vous et l'admin Parqueto. Conservées 90 jours après clôture du projet.
+
+        {/* Partage client + TTL */}
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={() => setVisibleToClient((prev) => ({ ...prev, [projectRef]: !prev[projectRef] }))}
+            aria-pressed={clientShared}
+            className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left text-xs transition ${
+              clientShared
+                ? "border-emerald-300 bg-emerald-50 text-emerald-900 hover:bg-emerald-100"
+                : "border-border bg-background text-foreground hover:bg-accent"
+            }`}
+          >
+            <span className="flex items-center gap-2">
+              {clientShared ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
+              <span className="font-semibold">
+                {clientShared ? "Visible par le client" : "Photos privées (vous + admin)"}
+              </span>
+            </span>
+            <span
+              className={`inline-flex h-4 w-7 shrink-0 items-center rounded-full transition ${
+                clientShared ? "bg-emerald-600" : "bg-muted-foreground/30"
+              }`}
+              aria-hidden
+            >
+              <span
+                className={`h-3 w-3 rounded-full bg-white shadow transition ${
+                  clientShared ? "translate-x-3.5" : "translate-x-0.5"
+                }`}
+              />
+            </span>
+          </button>
+
+          <div
+            className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
+              ttl.status === "expired"
+                ? "border-destructive/40 bg-destructive/10 text-destructive"
+                : ttl.status === "warning"
+                  ? "border-amber-300 bg-amber-50 text-amber-900"
+                  : "border-border bg-background text-muted-foreground"
+            }`}
+            title="Durée de conservation après clôture du projet"
+          >
+            <Clock className="size-3.5 shrink-0" />
+            <span className="font-medium">{ttl.label}</span>
+          </div>
+        </div>
+
+        <p className="mt-2 flex items-start gap-1.5 text-[11px] text-muted-foreground">
+          <Info className="mt-0.5 size-3 shrink-0" />
+          {clientShared
+            ? "Le client peut voir les photos depuis son espace projet. Vous pouvez désactiver le partage à tout moment."
+            : "Photos visibles par vous et l'admin Parqueto uniquement. Conservées 90 jours après clôture du projet."}
         </p>
       </div>
 
