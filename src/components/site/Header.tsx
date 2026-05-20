@@ -9,7 +9,7 @@ const nav = [
   { label: "Réalisations", href: "#realisations" },
   { label: "Nos artisans", href: "#nos-artisans" },
   { label: "Outils", href: "#outils" },
-  { label: "Blog", href: "#blog" },
+  { label: "Espace Pro", href: "/devenir-artisan" },
   { label: "Contact", href: "/contact" },
 ];
 
