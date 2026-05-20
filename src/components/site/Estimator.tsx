@@ -967,17 +967,49 @@ function ContactForm({
     );
   }
 
+  const hasPrefill = !!(initial.nom || initial.email || initial.cp);
+  const clearPrefill = () => {
+    setForm(DEFAULT_CONTACT);
+    setErrors({});
+    try {
+      localStorage.removeItem(CONTACT_KEY);
+    } catch {
+      /* ignore */
+    }
+  };
+
   return (
-    <div className="mt-4 space-y-2.5 rounded-xl border border-background/15 bg-background/5 p-3 sm:p-4">
+    <form
+      onSubmit={submit}
+      noValidate
+      className="mt-4 space-y-2.5 rounded-xl border border-background/15 bg-background/5 p-3 sm:p-4"
+    >
       <div className="flex items-center justify-between">
         <div className="text-xs font-semibold text-background">Vos coordonnées</div>
         <button
+          type="button"
           onClick={onCancel}
           className="text-[11px] text-background/55 underline-offset-4 hover:underline"
         >
           Annuler
         </button>
       </div>
+
+      {hasPrefill && (
+        <div className="flex items-center justify-between gap-2 rounded-lg border border-brand-orange/30 bg-brand-orange/10 px-2.5 py-1.5 text-[11px] text-background/80">
+          <span className="inline-flex items-center gap-1.5">
+            <CheckCircle2 className="h-3.5 w-3.5 text-brand-orange" />
+            Pré-rempli depuis votre dernière visite
+          </span>
+          <button
+            type="button"
+            onClick={clearPrefill}
+            className="font-semibold text-background/70 underline-offset-4 hover:underline"
+          >
+            Effacer
+          </button>
+        </div>
+      )}
 
       {/* Nom + Email côte à côte sur sm+, empilés mobile */}
       <div className="grid gap-2 sm:grid-cols-2">
@@ -1049,12 +1081,13 @@ function ContactForm({
           <span className="font-semibold text-brand-orange">
             {fmt(totals.min)}–{fmt(totals.max)} €
           </span>
+          <span className="block text-background/55"> + lien devis & PDF joints</span>
         </div>
       </div>
 
       <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
         <button
-          onClick={submit}
+          type="submit"
           disabled={sending}
           tabIndex={6}
           className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep active:scale-[0.98] disabled:opacity-70"
@@ -1063,6 +1096,7 @@ function ContactForm({
           Envoyer ma demande
         </button>
         <button
+          type="button"
           onClick={downloadPdf}
           tabIndex={7}
           className="inline-flex items-center justify-center gap-2 rounded-full border border-background/25 bg-background/5 px-4 py-3 text-xs font-semibold text-background transition hover:bg-background/10 active:scale-[0.98]"
@@ -1073,7 +1107,7 @@ function ContactForm({
       <p className="flex items-center justify-center gap-1.5 text-[10px] text-background/50">
         <Check className="h-3 w-3 text-brand-orange" /> Données utilisées uniquement pour vous recontacter
       </p>
-    </div>
+    </form>
   );
 }
 
