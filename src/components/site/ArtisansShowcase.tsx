@@ -109,9 +109,9 @@ export function ArtisansShowcase() {
                 </div>
                 <div className="mt-5 flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground">
                   <span>{a.reviews} avis vérifiés</span>
-                  <a href="#estimate" className="font-semibold text-brand-orange">
+                  <Link to="/estimation" className="font-semibold text-brand-orange">
                     Estimer mon projet →
-                  </a>
+                  </Link>
                 </div>
               </div>
             </article>
