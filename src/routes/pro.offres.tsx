@@ -189,7 +189,7 @@ function ProOffres() {
                   ))}
                 </ul>
                 <Link
-                  to="/signup"
+                  to="/devenir-artisan/inscription"
                   className={`mt-8 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition ${
                     p.highlight
                       ? "bg-brand-orange text-primary-foreground shadow-warm hover:-translate-y-0.5 hover:bg-brand-orange-deep"
@@ -355,7 +355,7 @@ function ProOffres() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              to="/signup"
+              to="/devenir-artisan/inscription"
               className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground shadow-warm transition hover:-translate-y-0.5 hover:bg-brand-orange-deep"
             >
               Créer mon profil <ArrowRight className="h-4 w-4" />

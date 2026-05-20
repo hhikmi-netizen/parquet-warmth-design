@@ -64,7 +64,7 @@ function DevenirArtisan() {
                 Découvrir les formules <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                to="/signup"
+                to="/devenir-artisan/inscription"
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-accent"
               >
                 Créer mon profil artisan
@@ -301,7 +301,7 @@ function DevenirArtisan() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              to="/signup"
+              to="/devenir-artisan/inscription"
               className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground shadow-warm transition hover:-translate-y-0.5 hover:bg-brand-orange-deep"
             >
               Créer mon profil artisan <ArrowRight className="h-4 w-4" />
