@@ -1,11 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
-import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { AuthShell, SocialButtons, Divider } from "@/components/auth/AuthShell";
+import { authToast } from "@/components/auth/auth-toast";
 
 const schema = z.object({
   email: z.string().trim().email("Email invalide").max(255),
