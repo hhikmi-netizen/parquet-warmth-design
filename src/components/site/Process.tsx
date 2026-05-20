@@ -11,8 +11,8 @@ const steps = [
   },
   {
     n: "03",
-    title: "Échangez avec un artisan",
-    body: "Mise en relation avec un professionnel vérifié près de chez vous. Vous gardez la main, à chaque étape.",
+    title: "Un artisan partenaire prend le relais",
+    body: "Un seul professionnel vérifié, sélectionné pour votre projet. Pas de démarchage, pas de mise en concurrence — juste un interlocuteur de confiance.",
   },
 ];
 
