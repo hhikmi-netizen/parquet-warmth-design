@@ -393,8 +393,8 @@ function Bubble({ message, viewer }: { message: ChatMessage; viewer: Viewer }) {
                   label="Ajouter à mon agenda"
                   event={{
                     title: message.rdv.title,
-                    start: message.rdv.start,
-                    end: message.rdv.end,
+                    start: new Date(message.rdv.start),
+                    end: new Date(message.rdv.end),
                     location: message.rdv.location,
                     description: message.body,
                   }}
