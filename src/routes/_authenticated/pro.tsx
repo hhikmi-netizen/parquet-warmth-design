@@ -26,8 +26,11 @@ import {
   Lock,
   AlertTriangle,
   X,
+  Wrench,
 } from "lucide-react";
 import { MOCK_INBOX, type InboxMatch, type MatchStatus } from "@/lib/inbox-mock";
+import { OutilsTab } from "@/components/pro/OutilsTab";
+import { QuickActions } from "@/components/pro/QuickActions";
 
 export const Route = createFileRoute("/_authenticated/pro")({
   component: ProDashboard,
@@ -52,7 +55,7 @@ const STATUS_CLASS: Record<MatchStatus, string> = {
 type FilterKey = "tous" | MatchStatus;
 
 function ProDashboard() {
-  const [tab, setTab] = useState<"projets" | "historique" | "zone" | "compte">("projets");
+  const [tab, setTab] = useState<"projets" | "outils" | "historique" | "zone" | "compte">("projets");
   const [filter, setFilter] = useState<FilterKey>("tous");
   const [selected, setSelected] = useState<InboxMatch | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(true);
@@ -158,6 +161,7 @@ function ProDashboard() {
           <nav className="flex gap-2 overflow-x-auto rounded-2xl border border-border bg-background p-2 lg:flex-col lg:gap-1">
             {[
               { k: "projets", l: "Projets reçus", i: Inbox },
+              { k: "outils", l: "Boîte à outils", i: Wrench },
               { k: "historique", l: "Historique", i: LayoutDashboard },
               { k: "zone", l: "Zone d'intervention", i: MapPin },
               { k: "compte", l: "Compte & profil", i: Settings },
@@ -196,14 +200,18 @@ function ProDashboard() {
           {showOnboarding && <OnboardingCard onClose={() => setShowOnboarding(false)} />}
 
           {tab === "projets" && (
-            <ProjectsTab
-              matches={matches}
-              stats={inbox.stats}
-              filter={filter}
-              setFilter={setFilter}
-              onSelect={setSelected}
-            />
+            <>
+              <QuickActions />
+              <ProjectsTab
+                matches={matches}
+                stats={inbox.stats}
+                filter={filter}
+                setFilter={setFilter}
+                onSelect={setSelected}
+              />
+            </>
           )}
+          {tab === "outils" && <OutilsTab />}
           {tab === "historique" && <HistoryTab refunded={inbox.stats.refunded} />}
           {tab === "zone" && <ZoneTab />}
           {tab === "compte" && (
