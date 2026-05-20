@@ -496,6 +496,7 @@ function ContactPage() {
                 type="file"
                 accept={ACCEPTED_TYPES.join(",")}
                 multiple
+                disabled={filesFull}
                 aria-labelledby="photos-label"
                 aria-describedby="photos-hint"
                 className="sr-only"
