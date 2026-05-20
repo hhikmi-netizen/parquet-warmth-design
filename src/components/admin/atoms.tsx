@@ -20,19 +20,19 @@ export function KpiCard({
       ? "text-rose-600 bg-rose-500/10"
       : "text-emerald-700 bg-emerald-500/10";
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
-      <div className="flex items-start justify-between gap-3">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+    <div className="group rounded-2xl border border-border bg-card p-3.5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-brand-orange/30 hover:shadow-warm sm:p-5">
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground sm:text-xs">
           {label}
         </p>
         {Icon && (
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange">
-            <Icon className="h-4 w-4" />
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange transition group-hover:bg-brand-orange/15 sm:h-8 sm:w-8">
+            <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </span>
         )}
       </div>
-      <div className="mt-3 flex items-baseline gap-2">
-        <span className="font-display text-3xl text-foreground">{value}</span>
+      <div className="mt-2 flex flex-wrap items-baseline gap-1.5 sm:mt-3 sm:gap-2">
+        <span className="font-display text-2xl text-foreground sm:text-3xl">{value}</span>
         {trend && (
           <span className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${trendClass}`}>
             <TrendIcon className="h-3 w-3" />
@@ -40,7 +40,7 @@ export function KpiCard({
           </span>
         )}
       </div>
-      {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
+      {hint && <p className="mt-1 text-[11px] text-muted-foreground sm:text-xs">{hint}</p>}
     </div>
   );
 }
@@ -61,15 +61,15 @@ export function Panel({
   return (
     <section className={`rounded-2xl border border-border bg-card shadow-soft ${className}`}>
       {(title || actions) && (
-        <header className="flex flex-wrap items-end justify-between gap-3 border-b border-border px-5 py-4">
-          <div>
-            {title && <h2 className="font-display text-lg text-foreground">{title}</h2>}
-            {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
+        <header className="flex flex-wrap items-end justify-between gap-3 border-b border-border px-4 py-3 sm:px-5 sm:py-4">
+          <div className="min-w-0">
+            {title && <h2 className="font-display text-base text-foreground sm:text-lg">{title}</h2>}
+            {description && <p className="mt-0.5 text-[11px] text-muted-foreground sm:text-xs">{description}</p>}
           </div>
-          {actions && <div className="flex items-center gap-2">{actions}</div>}
+          {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
         </header>
       )}
-      <div className="p-5">{children}</div>
+      <div className="p-4 sm:p-5">{children}</div>
     </section>
   );
 }
