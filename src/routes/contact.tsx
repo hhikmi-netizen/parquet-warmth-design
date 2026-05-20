@@ -105,6 +105,7 @@ function ContactPage() {
   const [sent, setSent] = useState(false);
   const [messageLen, setMessageLen] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [previewIdx, setPreviewIdx] = useState<number | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const dragCounter = useRef(0);
 
