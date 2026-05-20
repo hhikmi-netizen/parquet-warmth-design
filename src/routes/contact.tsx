@@ -220,6 +220,16 @@ function ContactPage() {
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 900));
     setSubmitting(false);
+
+    // Reset form, files, previews, drag state and counters after success.
+    form.reset();
+    setFiles([]);
+    setErrors({});
+    setMessageLen(0);
+    setIsDragging(false);
+    dragCounter.current = 0;
+    if (fileInput.current) fileInput.current.value = "";
+
     setSent(true);
     toast.success("Demande envoyée. Nous revenons vers vous très vite.");
   };
