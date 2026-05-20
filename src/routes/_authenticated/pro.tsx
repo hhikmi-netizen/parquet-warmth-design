@@ -161,7 +161,7 @@ function ProDashboard() {
           <nav className="flex gap-2 overflow-x-auto rounded-2xl border border-border bg-background p-2 lg:flex-col lg:gap-1">
             {[
               { k: "projets", l: "Projets reçus", i: Inbox },
-              { k: "outils", l: "Boîte à outils", i: Wrench },
+              { k: "outils", l: "Atelier artisan", i: Wrench },
               { k: "historique", l: "Historique", i: LayoutDashboard },
               { k: "zone", l: "Zone d'intervention", i: MapPin },
               { k: "compte", l: "Compte & profil", i: Settings },

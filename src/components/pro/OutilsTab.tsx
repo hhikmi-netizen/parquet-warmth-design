@@ -9,16 +9,17 @@ import {
   Calculator,
   Droplets,
   Sparkles,
-  Wrench,
   ShieldCheck,
   Thermometer,
   Hammer,
   Flame,
   Replace,
+  Wallet,
   ArrowRight,
+  Hammer as AtelierIcon,
 } from "lucide-react";
 
-type Category = "quotidien" | "chantier";
+type Category = "quotidien" | "chantier" | "vente";
 
 type Tool = {
   id: string;
@@ -31,7 +32,7 @@ type Tool = {
 const TOOLS: Tool[] = [
   // Quotidien
   { id: "devis-express", title: "Générateur devis express", desc: "Devis PDF prêt à envoyer en 2 min.", category: "quotidien", icon: FileText },
-  { id: "calc-surface", title: "Calcul de surface", desc: "Pièces simples, complexes ou en L.", category: "quotidien", icon: Ruler },
+  { id: "calc-surface", title: "Calcul surface parquet", desc: "Pièces simples, complexes ou en L.", category: "quotidien", icon: Ruler },
   { id: "calc-plinthes", title: "Calcul plinthes", desc: "Longueur totale + chutes 10 %.", category: "quotidien", icon: Layers },
   { id: "calc-parquet", title: "Quantité parquet", desc: "M² + pertes selon type de pose.", category: "quotidien", icon: Calculator },
   { id: "rendement-vitri", title: "Rendement vitrificateur", desc: "Litres nécessaires par couche.", category: "quotidien", icon: Droplets },
@@ -43,18 +44,24 @@ const TOOLS: Tool[] = [
   { id: "ragreage", title: "Ragréage", desc: "Épaisseur, primaire, sacs nécessaires.", category: "chantier", icon: Hammer },
   { id: "chauffage-sol", title: "Chauffage au sol", desc: "Compatibilité essence & pose.", category: "chantier", icon: Flame },
   { id: "renovation", title: "Rénovation / remplacement", desc: "Diagnostic ponçage vs dépose.", category: "chantier", icon: Replace },
-  { id: "diagnostic-chantier", title: "Diagnostic chantier", desc: "Check-list complète avant devis.", category: "chantier", icon: Wrench },
+
+  // Aide vente
+  { id: "estim-budget", title: "Estimation budget client", desc: "Fourchette claire à présenter en RDV.", category: "vente", icon: Wallet },
 ];
 
 const CAT_LABEL: Record<Category, string> = {
   quotidien: "Outils quotidiens",
   chantier: "Outils chantier",
+  vente: "Aide à la vente",
 };
 
 const CAT_DESC: Record<Category, string> = {
   quotidien: "Les calculs que vous utilisez tous les jours.",
   chantier: "Plus techniques — à dégainer en visite ou avant pose.",
+  vente: "Pour rassurer et convaincre en rendez-vous client.",
 };
+
+const ORDER: Category[] = ["quotidien", "chantier", "vente"];
 
 export function OutilsTab() {
   const [query, setQuery] = useState("");
@@ -79,27 +86,38 @@ export function OutilsTab() {
     });
   }, [query, filter, favs]);
 
-  const groups: Category[] = filter === "tous" || filter === "favoris" ? ["quotidien", "chantier"] : [filter];
-  const recentTools = recents.map((id) => TOOLS.find((t) => t.id === id)).filter(Boolean) as Tool[];
+  const groups: Category[] = filter === "tous" || filter === "favoris" ? ORDER : [filter];
+  const recentTools = recents
+    .map((id) => TOOLS.find((t) => t.id === id))
+    .filter(Boolean) as Tool[];
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="rounded-3xl border border-border bg-background p-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h2 className="font-serif text-2xl">Boîte à outils artisan</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Calculs métier, simulateurs et générateurs — tout au même endroit.
-            </p>
+      {/* Header — Atelier Artisan */}
+      <div className="relative overflow-hidden rounded-3xl border border-brand-orange/20 bg-gradient-to-br from-brand-cream via-background to-brand-cream/40 p-6 sm:p-7">
+        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-orange/10 blur-3xl" aria-hidden />
+        <div className="relative flex flex-wrap items-start justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-orange text-primary-foreground shadow-warm">
+              <AtelierIcon className="h-5 w-5" />
+            </span>
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-orange-deep">
+                Atelier Artisan
+              </span>
+              <h2 className="mt-2 font-serif text-2xl leading-tight">Mes outils métier</h2>
+              <p className="mt-1 max-w-md text-sm text-muted-foreground">
+                Vos calculateurs, simulateurs et générateurs — réunis dans un seul atelier, prêts à l'emploi.
+              </p>
+            </div>
           </div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-brand-orange/10 px-3 py-1 text-xs font-semibold text-brand-orange-deep">
+          <span className="hidden items-center gap-2 self-start rounded-full border border-brand-orange/30 bg-background/80 px-3 py-1 text-xs font-semibold text-brand-orange-deep sm:inline-flex">
             <Sparkles className="h-3 w-3" /> {TOOLS.length} outils
           </span>
         </div>
 
         {/* Search */}
-        <div className="mt-5 flex items-center gap-2 rounded-full border border-border bg-muted/30 px-4 py-2.5">
+        <div className="relative mt-6 flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5 shadow-soft">
           <Search className="h-4 w-4 text-muted-foreground" />
           <input
             value={query}
@@ -107,27 +125,46 @@ export function OutilsTab() {
             placeholder="Rechercher un outil (surface, plinthes, humidité…)"
             className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              className="text-xs text-muted-foreground hover:text-foreground"
+            >
+              Effacer
+            </button>
+          )}
         </div>
 
         {/* Filters */}
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="relative mt-4 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
           {[
-            { k: "tous", l: "Tous" },
-            { k: "favoris", l: "★ Favoris" },
+            { k: "tous", l: "Tous", c: TOOLS.length },
+            { k: "favoris", l: "★ Favoris", c: favs.length },
             { k: "quotidien", l: "Quotidien" },
             { k: "chantier", l: "Chantier" },
+            { k: "vente", l: "Aide vente" },
           ].map((f) => (
             <button
               key={f.k}
               type="button"
               onClick={() => setFilter(f.k as typeof filter)}
-              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
+              className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
                 filter === f.k
                   ? "bg-foreground text-background"
                   : "border border-border bg-background text-muted-foreground hover:text-foreground"
               }`}
             >
               {f.l}
+              {typeof f.c === "number" && (
+                <span
+                  className={`ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] ${
+                    filter === f.k ? "bg-background/20" : "bg-muted-foreground/15"
+                  }`}
+                >
+                  {f.c}
+                </span>
+              )}
             </button>
           ))}
         </div>
@@ -145,7 +182,7 @@ export function OutilsTab() {
                 key={`recent-${t.id}`}
                 type="button"
                 onClick={() => openTool(t.id)}
-                className="flex items-center gap-3 rounded-2xl border border-border bg-background p-3 text-left transition hover:border-brand-orange/40 hover:bg-brand-cream/30"
+                className="flex items-center gap-3 rounded-2xl border border-border bg-background p-3 text-left transition hover:-translate-y-0.5 hover:border-brand-orange/40 hover:bg-brand-cream/30"
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-cream text-brand-orange-deep">
                   <t.icon className="h-4 w-4" />
@@ -178,7 +215,9 @@ export function OutilsTab() {
                   <h3 className="font-serif text-lg">{CAT_LABEL[cat]}</h3>
                   <p className="text-xs text-muted-foreground">{CAT_DESC[cat]}</p>
                 </div>
-                <span className="text-xs text-muted-foreground">{items.length} outils</span>
+                <span className="text-xs text-muted-foreground">
+                  {items.length} outil{items.length > 1 ? "s" : ""}
+                </span>
               </div>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((t) => (
@@ -226,7 +265,7 @@ function ToolCard({
         <Star className={`h-4 w-4 ${fav ? "fill-current" : ""}`} />
       </button>
 
-      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-cream text-brand-orange-deep">
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-cream text-brand-orange-deep ring-1 ring-brand-orange/10">
         <Icon className="h-5 w-5" />
       </span>
 
