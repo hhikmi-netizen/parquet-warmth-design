@@ -664,6 +664,96 @@ function ContactPage() {
 
       <Footer />
       <FloatingNav />
+
+      <Dialog
+        open={previewIdx !== null}
+        onOpenChange={(o) => !o && setPreviewIdx(null)}
+      >
+        <DialogContent
+          className="max-w-3xl border-border bg-card p-0 sm:p-0"
+          onKeyDown={(e) => {
+            if (previewIdx === null || files.length === 0) return;
+            if (e.key === "ArrowRight") {
+              e.preventDefault();
+              setPreviewIdx((previewIdx + 1) % files.length);
+            } else if (e.key === "ArrowLeft") {
+              e.preventDefault();
+              setPreviewIdx((previewIdx - 1 + files.length) % files.length);
+            }
+          }}
+        >
+          {previewIdx !== null && files[previewIdx] && (
+            <>
+              <DialogTitle className="sr-only">
+                Aperçu de {files[previewIdx].name}
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                Photo {previewIdx + 1} sur {files.length}. Utilisez les flèches gauche et droite pour naviguer.
+              </DialogDescription>
+
+              <div className="relative flex items-center justify-center bg-foreground/5">
+                <img
+                  src={previews[previewIdx]}
+                  alt={files[previewIdx].name}
+                  className="max-h-[70vh] w-full object-contain"
+                />
+
+                {files.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPreviewIdx(
+                          (previewIdx - 1 + files.length) % files.length
+                        )
+                      }
+                      aria-label="Photo précédente"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 text-foreground shadow-soft transition hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    >
+                      <ChevronLeft className="h-5 w-5" aria-hidden />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPreviewIdx((previewIdx + 1) % files.length)
+                      }
+                      aria-label="Photo suivante"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 text-foreground shadow-soft transition hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    >
+                      <ChevronRight className="h-5 w-5" aria-hidden />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-3 border-t border-border p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0 text-sm">
+                  <p className="truncate font-medium text-foreground" title={files[previewIdx].name}>
+                    {files[previewIdx].name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {(files[previewIdx].size / 1024 / 1024).toFixed(2)} Mo · Photo {previewIdx + 1}/{files.length}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const idx = previewIdx;
+                    const lastIdx = files.length - 1;
+                    removeFile(idx);
+                    if (files.length <= 1) setPreviewIdx(null);
+                    else if (idx >= lastIdx) setPreviewIdx(lastIdx - 1);
+                  }}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground shadow-soft transition hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  <Trash2 className="h-4 w-4" aria-hidden />
+                  Supprimer cette photo
+                </button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
