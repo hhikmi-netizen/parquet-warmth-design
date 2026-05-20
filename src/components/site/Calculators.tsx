@@ -970,6 +970,38 @@ export function Calculators() {
           {active === "vitrification" && <VitrifTool />}
         </div>
 
+        {/* CTA Espace Pro — Devis Express */}
+        <div className="mt-8 overflow-hidden rounded-3xl border border-brand-orange/30 bg-gradient-to-br from-foreground to-foreground/90 p-6 text-background sm:p-8">
+          <div className="grid items-center gap-6 sm:grid-cols-[1fr_auto]">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-brand-orange/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-orange">
+                Espace Pro · exclusif artisans
+              </div>
+              <h3 className="mt-3 font-display text-2xl sm:text-3xl">
+                Générateur de devis express
+              </h3>
+              <p className="mt-2 max-w-xl text-sm text-background/75">
+                Sur chantier, depuis votre téléphone : entrez les m², le bois choisi, la main-d'œuvre.
+                Le site génère un PDF aux normes françaises (TVA 10/20 %, mentions légales, logo, SIRET).
+                À télécharger, partager ou envoyer au client en deux clics.
+              </p>
+              <ul className="mt-3 grid gap-1 text-xs text-background/70 sm:grid-cols-2">
+                <li>· Profil artisan enregistré sur l'appareil</li>
+                <li>· Acompte, validité, mentions Hamon &amp; médiateur</li>
+                <li>· Aperçu PDF instantané</li>
+                <li>· Web Share API + envoi par email</li>
+              </ul>
+            </div>
+            <a
+              href="/devis"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground shadow-warm transition hover:-translate-y-0.5 hover:bg-brand-orange-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Ouvrir l'outil Pro
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </a>
+          </div>
+        </div>
+
         <p className="mt-6 text-center text-xs text-muted-foreground">
           Valeurs indicatives basées sur les usages métier courants. Pour un chiffrage précis, demandez un devis artisan.
         </p>
