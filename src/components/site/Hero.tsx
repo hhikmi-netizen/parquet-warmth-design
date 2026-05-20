@@ -2,6 +2,7 @@ import heroImg from "@/assets/hero-parquet.jpg";
 import detail from "@/assets/detail-wood.jpg";
 import beforeAfter from "@/assets/before-after.jpg";
 import { ArrowRight } from "lucide-react";
+import { MicroReassurance } from "./MicroReassurance";
 
 export function Hero() {
   return (

@@ -1005,10 +1005,9 @@ function Step1({ s, set, errors }: { s: WizardState; set: <K extends keyof Wizar
         subtitle="Le type de prestation et le matériau souhaité conditionnent l'estimation. Pas de mauvaise réponse — vous pouvez préciser en bas de page."
       />
 
-      <p className="-mt-2 mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-3 py-1 text-[12px] text-muted-foreground">
-        <span className="h-1.5 w-1.5 rounded-full bg-brand-orange" />
-        Votre estimation est gratuite et sans engagement.
-      </p>
+      <div className="-mt-2 mb-6">
+        <MicroReassurance variant="pill" />
+      </div>
 
 
       <FieldGroup label="Type de projet" error={errors["projet"]}>
