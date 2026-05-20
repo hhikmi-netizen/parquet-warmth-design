@@ -44,13 +44,7 @@ export function Hero() {
               </a>
             </div>
 
-            <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[13px] text-muted-foreground">
-              <span>Gratuit</span>
-              <span aria-hidden className="text-brand-orange/60">·</span>
-              <span>Sans engagement</span>
-              <span aria-hidden className="text-brand-orange/60">·</span>
-              <span>Artisan partenaire ensuite</span>
-            </p>
+            <MicroReassurance />
           </div>
         </div>
 
