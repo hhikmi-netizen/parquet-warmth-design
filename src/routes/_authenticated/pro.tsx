@@ -1,6 +1,14 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import {
+  acceptMatch,
+  declineMatch,
+  getArtisanInbox,
+  refundMatch,
+} from "@/lib/projects.functions";
 import {
   LayoutDashboard,
   Inbox,
@@ -28,7 +36,8 @@ import {
   X,
   Wrench,
 } from "lucide-react";
-import { MOCK_INBOX, type InboxMatch, type MatchStatus } from "@/lib/inbox-mock";
+import { MOCK_INBOX as _UNUSED_MOCK, type InboxMatch, type MatchStatus } from "@/lib/inbox-mock";
+void _UNUSED_MOCK;
 import { OutilsTab } from "@/components/pro/OutilsTab";
 import { QuickActions } from "@/components/pro/QuickActions";
 
@@ -60,69 +69,112 @@ function ProDashboard() {
   const [selected, setSelected] = useState<InboxMatch | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(true);
 
-  // Mock local — quand le backend sera branché, remplacer par
-  // const { data } = useQuery({ queryKey:['inbox'], queryFn: useServerFn(getArtisanInbox) })
-  const [inbox, setInbox] = useState(MOCK_INBOX);
+  // Real backend wiring — server fns + React Query
+  const fetchInbox = useServerFn(getArtisanInbox);
+  const acceptFn = useServerFn(acceptMatch);
+  const declineFn = useServerFn(declineMatch);
+  const refundFn = useServerFn(refundMatch);
+  const qc = useQueryClient();
 
-  const matches = useMemo(
-    () => (filter === "tous" ? inbox.matches : inbox.matches.filter((m) => m.status === filter)),
-    [filter, inbox.matches],
-  );
+  const { data: inbox, isLoading } = useQuery({
+    queryKey: ["artisan-inbox"],
+    queryFn: () => fetchInbox(),
+    staleTime: 30_000,
+  });
 
-  const updateMatch = (match_id: string, patch: Partial<InboxMatch>, creditDelta = 0) => {
-    setInbox((prev) => ({
-      ...prev,
-      artisan: { ...prev.artisan, credits_balance: prev.artisan.credits_balance + creditDelta },
-      matches: prev.matches.map((m) => (m.match_id === match_id ? { ...m, ...patch } : m)),
-      stats: recomputeStats(
-        prev.matches.map((m) => (m.match_id === match_id ? { ...m, ...patch } : m)),
-      ),
-    }));
-    setSelected((s) => (s && s.match_id === match_id ? { ...s, ...patch } : s));
-  };
+  const invalidate = () => qc.invalidateQueries({ queryKey: ["artisan-inbox"] });
+
+  const acceptMutation = useMutation({
+    mutationFn: (match_id: string) => acceptFn({ data: { match_id } }),
+    onSuccess: (res) => {
+      if (res?.success) {
+        toast.success("Projet accepté", { description: "Crédit débité — coordonnées client débloquées." });
+        invalidate();
+        setSelected(null);
+      } else {
+        toast.error("Échec", { description: res?.error ?? "Action impossible." });
+      }
+    },
+    onError: (e: Error) => toast.error("Erreur", { description: e.message }),
+  });
+
+  const declineMutation = useMutation({
+    mutationFn: (match_id: string) => declineFn({ data: { match_id } }),
+    onSuccess: () => {
+      toast("Projet décliné", { description: "Aucun crédit débité." });
+      invalidate();
+      setSelected(null);
+    },
+    onError: (e: Error) => toast.error("Erreur", { description: e.message }),
+  });
+
+  const refundMutation = useMutation({
+    mutationFn: ({ match_id, reason }: { match_id: string; reason: "client_injoignable" | "hors_zone" | "annulation_client" }) =>
+      refundFn({ data: { match_id, reason } }),
+    onSuccess: (res, vars) => {
+      if (res?.success) {
+        toast.success("Crédit remboursé", { description: vars.reason });
+        invalidate();
+        setSelected(null);
+      } else {
+        toast.error("Échec", { description: res?.error ?? "Action impossible." });
+      }
+    },
+    onError: (e: Error) => toast.error("Erreur", { description: e.message }),
+  });
+
+  const filteredMatches = useMemo(() => {
+    const list = (inbox?.matches ?? []) as InboxMatch[];
+    return filter === "tous" ? list : list.filter((m) => m.status === filter);
+  }, [filter, inbox?.matches]);
 
   const onAccept = (m: InboxMatch) => {
-    if (inbox.artisan.credits_balance < m.project.credits_cost) {
-      toast.error("Crédits insuffisants", {
-        description: "Rechargez votre compte pour accepter ce projet.",
-      });
+    const balance = inbox?.artisan?.credits_balance ?? 0;
+    if (balance < m.project.credits_cost) {
+      toast.error("Crédits insuffisants", { description: "Rechargez votre compte pour accepter ce projet." });
       return;
     }
-    updateMatch(
-      m.match_id,
-      {
-        status: "accepted",
-        decided_at: new Date().toISOString(),
-        project: {
-          ...m.project,
-          status: "accepted",
-          // Données démo — quand on branche, le backend renvoie les vraies
-          client_email: m.project.client_email ?? "client@exemple.fr",
-          client_phone: m.project.client_phone ?? "06 00 00 00 00",
-          client_name:
-            m.project.client_name.length <= 4 ? "Camille Dubois" : m.project.client_name,
-        },
-      },
-      -m.project.credits_cost,
-    );
-    toast.success("Projet accepté", {
-      description: `${m.project.credits_cost} crédit débité — coordonnées client débloquées.`,
-    });
+    acceptMutation.mutate(m.match_id);
+  };
+  const onDecline = (m: InboxMatch) => declineMutation.mutate(m.match_id);
+  const onRefund = (m: InboxMatch, reasonLabel: string) => {
+    // map French label → enum
+    const map: Record<string, "client_injoignable" | "hors_zone" | "annulation_client"> = {
+      "Client injoignable sous 5 jours": "client_injoignable",
+      "Projet hors zone d'intervention": "hors_zone",
+      "Annulation du client": "annulation_client",
+    };
+    const reason = map[reasonLabel] ?? "client_injoignable";
+    refundMutation.mutate({ match_id: m.match_id, reason });
   };
 
-  const onDecline = (m: InboxMatch) => {
-    updateMatch(m.match_id, { status: "declined", decided_at: new Date().toISOString() });
-    toast("Projet décliné", { description: "Aucun crédit débité." });
-  };
-
-  const onRefund = (m: InboxMatch, reason: string) => {
-    updateMatch(
-      m.match_id,
-      { status: "refunded", decided_at: new Date().toISOString() },
-      m.project.credits_cost,
+  // Loading / empty states
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-brand-cream/30 text-sm text-muted-foreground">
+        Chargement de votre tableau de bord…
+      </div>
     );
-    toast.success("Crédit remboursé", { description: reason });
-  };
+  }
+
+  if (!inbox?.artisan) {
+    return (
+      <div className="mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center gap-4 px-6 text-center">
+        <h1 className="font-serif text-2xl">Aucun profil artisan</h1>
+        <p className="text-sm text-muted-foreground">
+          Pour accéder au dashboard pro, créez votre profil artisan vérifié.
+        </p>
+        <Link
+          to="/devenir-artisan/inscription"
+          className="rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm"
+        >
+          Créer mon profil artisan
+        </Link>
+      </div>
+    );
+  }
+
+  const stats = inbox.stats ?? { pending: 0, accepted: 0, refunded: 0, total: 0 };
 
   return (
     <div className="min-h-screen bg-brand-cream/30">
@@ -203,8 +255,8 @@ function ProDashboard() {
             <>
               <QuickActions />
               <ProjectsTab
-                matches={matches}
-                stats={inbox.stats}
+                matches={filteredMatches}
+                stats={stats}
                 filter={filter}
                 setFilter={setFilter}
                 onSelect={setSelected}
@@ -212,7 +264,7 @@ function ProDashboard() {
             </>
           )}
           {tab === "outils" && <OutilsTab />}
-          {tab === "historique" && <HistoryTab refunded={inbox.stats.refunded} />}
+          {tab === "historique" && <HistoryTab refunded={stats.refunded} />}
           {tab === "zone" && <ZoneTab />}
           {tab === "compte" && (
             <CompteTab artisanName={inbox.artisan.raison_sociale} balance={inbox.artisan.credits_balance} />

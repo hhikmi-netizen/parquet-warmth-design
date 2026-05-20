@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { submitEstimationProject } from "@/lib/projects.functions";
 import { z } from "zod";
 import jsPDF from "jspdf";
 import {
@@ -713,9 +715,38 @@ export function EstimateWizard() {
   };
 
 
-  const submit = () => {
+  const submitProject = useServerFn(submitEstimationProject);
+
+  const submit = async () => {
     if (!validateStep(4)) return;
     setSending(true);
+
+    // 1) Persist the lead in DB + trigger matching (best-effort, non-blocking)
+    try {
+      await submitProject({
+        data: {
+          client_name: `${s.prenom} ${s.nom}`.trim() || s.email,
+          client_email: s.email,
+          client_phone: s.telephone || undefined,
+          ville: s.ville,
+          code_postal: s.cp,
+          surface_m2: s.surface,
+          type_pose: projets.find((p) => p.key === s.projet)?.label ?? "",
+          type_bois: s.materiau ? materiaux[s.materiau].label : "",
+          etat_sol: labelOf(MEUBLES, s.etatMeuble),
+          budget_min: range?.min ?? 0,
+          budget_max: range?.max ?? 0,
+          delai_souhaite: labelOf(DELAIS, s.delai) || undefined,
+          description: s.message || undefined,
+          required_specialites: s.projet ? [s.projet] : [],
+        },
+      });
+    } catch (err) {
+      console.error("submitEstimationProject failed", err);
+      // continue — we still send the mailto so the lead is not lost
+    }
+
+    // 2) Email notification (existing flow)
     const subject = `Demande d'estimation parquet — ${s.cp} ${s.ville}`;
     const body = [
       `Bonjour,`,
