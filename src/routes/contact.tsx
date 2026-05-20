@@ -1,7 +1,17 @@
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
-import { Mail, Phone, MapPin, Upload, X, ShieldCheck, CheckCircle2, Loader2 } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Upload,
+  X,
+  ShieldCheck,
+  CheckCircle2,
+  Loader2,
+  ImagePlus,
+} from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { FloatingNav } from "@/components/site/FloatingNav";
@@ -37,24 +47,47 @@ const PROJET_OPTIONS = [
 ] as const;
 
 const contactSchema = z.object({
-  nom: z.string().trim().min(2, "Votre nom est requis.").max(80),
-  email: z.string().trim().email("Email invalide.").max(255),
+  nom: z
+    .string()
+    .trim()
+    .min(2, "Votre nom est requis.")
+    .max(80, "80 caractères maximum.")
+    .regex(/^[\p{L}\p{M}'\- ]+$/u, "Caractères non autorisés."),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email requis.")
+    .email("Format d'email invalide (ex. nom@domaine.fr).")
+    .max(255),
   telephone: z
     .string()
     .trim()
-    .max(20)
-    .regex(/^[0-9 +().-]*$/, "Téléphone invalide.")
+    .max(20, "20 caractères maximum.")
+    .regex(/^[0-9 +().\-]{8,}$/, "Téléphone invalide (8 chiffres min).")
     .optional()
     .or(z.literal("")),
-  ville: z.string().trim().min(2, "Indiquez votre ville.").max(80),
-  projet: z.enum(PROJET_OPTIONS, { errorMap: () => ({ message: "Choisissez un type de projet." }) }),
-  message: z.string().trim().min(10, "Décrivez brièvement votre projet (10 caractères min).").max(2000),
+  ville: z
+    .string()
+    .trim()
+    .min(2, "Indiquez votre ville.")
+    .max(80)
+    .regex(/^[\p{L}\p{M}'\-\s]+$/u, "Caractères non autorisés."),
+  projet: z.enum(PROJET_OPTIONS, {
+    errorMap: () => ({ message: "Choisissez un type de projet." }),
+  }),
+  message: z
+    .string()
+    .trim()
+    .min(10, "Décrivez brièvement votre projet (10 caractères min).")
+    .max(2000, "2000 caractères maximum."),
 });
 
 type FormErrors = Partial<Record<keyof z.infer<typeof contactSchema>, string>>;
+type FormValues = z.infer<typeof contactSchema>;
 
 const MAX_FILES = 4;
 const MAX_FILE_MB = 5;
+const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic"];
 
 function ContactPage() {
   const [files, setFiles] = useState<File[]>([]);
