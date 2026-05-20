@@ -600,9 +600,23 @@ function ProjectDrawer({
 }) {
   const [acceptOpen, setAcceptOpen] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
+  const defaultRdvDate = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 3);
+    return d.toISOString().slice(0, 10);
+  }, []);
+  const [rdvDate, setRdvDate] = useState(defaultRdvDate);
+  const [rdvTime, setRdvTime] = useState("10:00");
   const p = match.project;
   const unlocked = match.status === "accepted";
   const isPending = match.status === "pending";
+
+  const rdvStart = useMemo(() => {
+    const [y, mo, d] = rdvDate.split("-").map(Number);
+    const [h, mi] = rdvTime.split(":").map(Number);
+    return new Date(y, (mo ?? 1) - 1, d ?? 1, h ?? 10, mi ?? 0);
+  }, [rdvDate, rdvTime]);
+  const rdvEnd = useMemo(() => new Date(rdvStart.getTime() + 60 * 60 * 1000), [rdvStart]);
 
   return (
     <>
