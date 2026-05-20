@@ -463,7 +463,7 @@ function ArtisanOnboarding() {
           </div>
 
           {/* Stepper */}
-          <ol className="mt-8 grid grid-cols-5 gap-2">
+          <ol className="mt-8 grid grid-cols-6 gap-2">
             {STEPS.map((s) => {
               const active = s.id === step;
               const done = s.id < step;
