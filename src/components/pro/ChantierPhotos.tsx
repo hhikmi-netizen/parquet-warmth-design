@@ -258,7 +258,9 @@ export function ChantierPhotos() {
             )}
 
             <input
-              ref={(el) => (inputs.current[phase.id] = el)}
+              ref={(el) => {
+                inputs.current[phase.id] = el;
+              }}
               type="file"
               accept="image/*"
               capture="environment"

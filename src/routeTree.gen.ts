@@ -44,7 +44,9 @@ import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/
 import { Route as ProDevisNouveauRouteImport } from './routes/pro.devis.nouveau'
 import { Route as AuthenticatedProOnboardingRouteImport } from './routes/_authenticated/pro.onboarding'
 import { Route as AuthenticatedProMessagesRouteImport } from './routes/_authenticated/pro.messages'
+import { Route as AuthenticatedProChantiersRouteImport } from './routes/_authenticated/pro.chantiers'
 import { Route as AuthenticatedProCalendrierRouteImport } from './routes/_authenticated/pro.calendrier'
+import { Route as AuthenticatedProChantiersRouteImport } from './routes/_authenticated/pro.chantiers'
 
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
@@ -223,10 +225,22 @@ const AuthenticatedProMessagesRoute =
     path: '/messages',
     getParentRoute: () => AuthenticatedProRoute,
   } as any)
+const AuthenticatedProChantiersRoute =
+  AuthenticatedProChantiersRouteImport.update({
+    id: '/chantiers',
+    path: '/chantiers',
+    getParentRoute: () => AuthenticatedProRoute,
+  } as any)
 const AuthenticatedProCalendrierRoute =
   AuthenticatedProCalendrierRouteImport.update({
     id: '/calendrier',
     path: '/calendrier',
+    getParentRoute: () => AuthenticatedProRoute,
+  } as any)
+const AuthenticatedProChantiersRoute =
+  AuthenticatedProChantiersRouteImport.update({
+    id: '/chantiers',
+    path: '/chantiers',
     getParentRoute: () => AuthenticatedProRoute,
   } as any)
 
@@ -263,6 +277,8 @@ export interface FileRoutesByFullPath {
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
   '/pro/calendrier': typeof AuthenticatedProCalendrierRoute
+  '/pro/chantiers': typeof AuthenticatedProChantiersRoute
+  '/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/pro/messages': typeof AuthenticatedProMessagesRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
@@ -299,6 +315,8 @@ export interface FileRoutesByTo {
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
   '/pro/calendrier': typeof AuthenticatedProCalendrierRoute
+  '/pro/chantiers': typeof AuthenticatedProChantiersRoute
+  '/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/pro/messages': typeof AuthenticatedProMessagesRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
@@ -338,6 +356,8 @@ export interface FileRoutesById {
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
   '/_authenticated/pro/calendrier': typeof AuthenticatedProCalendrierRoute
+  '/_authenticated/pro/chantiers': typeof AuthenticatedProChantiersRoute
+  '/_authenticated/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/_authenticated/pro/messages': typeof AuthenticatedProMessagesRoute
   '/_authenticated/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
@@ -377,6 +397,8 @@ export interface FileRouteTypes {
     | '/pro/offres'
     | '/admin/'
     | '/pro/calendrier'
+    | '/pro/chantiers'
+    | '/pro/chantiers'
     | '/pro/messages'
     | '/pro/onboarding'
     | '/pro/devis/nouveau'
@@ -413,6 +435,8 @@ export interface FileRouteTypes {
     | '/pro/offres'
     | '/admin'
     | '/pro/calendrier'
+    | '/pro/chantiers'
+    | '/pro/chantiers'
     | '/pro/messages'
     | '/pro/onboarding'
     | '/pro/devis/nouveau'
@@ -451,6 +475,8 @@ export interface FileRouteTypes {
     | '/pro/offres'
     | '/admin/'
     | '/_authenticated/pro/calendrier'
+    | '/_authenticated/pro/chantiers'
+    | '/_authenticated/pro/chantiers'
     | '/_authenticated/pro/messages'
     | '/_authenticated/pro/onboarding'
     | '/pro/devis/nouveau'
@@ -725,6 +751,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProMessagesRouteImport
       parentRoute: typeof AuthenticatedProRoute
     }
+    '/_authenticated/pro/chantiers': {
+      id: '/_authenticated/pro/chantiers'
+      path: '/chantiers'
+      fullPath: '/pro/chantiers'
+      preLoaderRoute: typeof AuthenticatedProChantiersRouteImport
+      parentRoute: typeof AuthenticatedProRoute
+    }
     '/_authenticated/pro/calendrier': {
       id: '/_authenticated/pro/calendrier'
       path: '/calendrier'
@@ -732,17 +765,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProCalendrierRouteImport
       parentRoute: typeof AuthenticatedProRoute
     }
+    '/_authenticated/pro/chantiers': {
+      id: '/_authenticated/pro/chantiers'
+      path: '/chantiers'
+      fullPath: '/pro/chantiers'
+      preLoaderRoute: typeof AuthenticatedProChantiersRouteImport
+      parentRoute: typeof AuthenticatedProRoute
+    }
   }
 }
 
 interface AuthenticatedProRouteChildren {
   AuthenticatedProCalendrierRoute: typeof AuthenticatedProCalendrierRoute
+  AuthenticatedProChantiersRoute: typeof AuthenticatedProChantiersRoute
   AuthenticatedProMessagesRoute: typeof AuthenticatedProMessagesRoute
   AuthenticatedProOnboardingRoute: typeof AuthenticatedProOnboardingRoute
 }
 
 const AuthenticatedProRouteChildren: AuthenticatedProRouteChildren = {
   AuthenticatedProCalendrierRoute: AuthenticatedProCalendrierRoute,
+  AuthenticatedProChantiersRoute: AuthenticatedProChantiersRoute,
   AuthenticatedProMessagesRoute: AuthenticatedProMessagesRoute,
   AuthenticatedProOnboardingRoute: AuthenticatedProOnboardingRoute,
 }
