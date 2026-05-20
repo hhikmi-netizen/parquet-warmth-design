@@ -17,6 +17,7 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as EstimationRouteImport } from './routes/estimation'
 import { Route as DevenirArtisanRouteImport } from './routes/devenir-artisan'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CharteQualiteRouteImport } from './routes/charte-qualite'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProOffresRouteImport } from './routes/pro.offres'
@@ -66,6 +67,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CharteQualiteRoute = CharteQualiteRouteImport.update({
+  id: '/charte-qualite',
+  path: '/charte-qualite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -109,6 +115,7 @@ const AuthenticatedDevisRoute = AuthenticatedDevisRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/charte-qualite'
     | '/contact'
     | '/devenir-artisan'
     | '/estimation'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/charte-qualite'
     | '/contact'
     | '/devenir-artisan'
     | '/estimation'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/charte-qualite'
     | '/contact'
     | '/devenir-artisan'
     | '/estimation'
@@ -218,6 +230,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  CharteQualiteRoute: typeof CharteQualiteRoute
   ContactRoute: typeof ContactRoute
   DevenirArtisanRoute: typeof DevenirArtisanRouteWithChildren
   EstimationRoute: typeof EstimationRoute
@@ -286,6 +299,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/charte-qualite': {
+      id: '/charte-qualite'
+      path: '/charte-qualite'
+      fullPath: '/charte-qualite'
+      preLoaderRoute: typeof CharteQualiteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -378,6 +398,7 @@ const DevenirArtisanRouteWithChildren = DevenirArtisanRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  CharteQualiteRoute: CharteQualiteRoute,
   ContactRoute: ContactRoute,
   DevenirArtisanRoute: DevenirArtisanRouteWithChildren,
   EstimationRoute: EstimationRoute,
