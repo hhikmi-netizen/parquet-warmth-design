@@ -420,6 +420,7 @@ function Field({
   error,
   placeholder,
   autoComplete,
+  hint,
 }: {
   label: string;
   name: string;
@@ -428,12 +429,23 @@ function Field({
   error?: string;
   placeholder?: string;
   autoComplete?: string;
+  hint?: string;
 }) {
+  const hintId = hint ? `${name}-hint` : undefined;
+  const errorId = error ? `${name}-error` : undefined;
+  const describedBy = [errorId, hintId].filter(Boolean).join(" ") || undefined;
   return (
     <div>
       <label htmlFor={name} className="mb-2 block text-sm font-medium">
         {label}
-        {required && <span className="ml-0.5 text-brand-orange">*</span>}
+        {required && (
+          <>
+            <span className="ml-0.5 text-brand-orange" aria-hidden>
+              *
+            </span>
+            <span className="sr-only"> (obligatoire)</span>
+          </>
+        )}
       </label>
       <input
         id={name}
@@ -441,12 +453,25 @@ function Field({
         type={type}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        required={required}
+        aria-required={required || undefined}
         aria-invalid={!!error}
-        className={`w-full rounded-xl border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-brand-orange/30 ${
+        aria-describedby={describedBy}
+        className={`w-full rounded-xl border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
           error ? "border-destructive" : "border-border"
         }`}
       />
-      {error && <p className="mt-1.5 text-xs text-destructive">{error}</p>}
+      {hint && !error && (
+        <p id={hintId} className="mt-1.5 text-xs text-muted-foreground">
+          {hint}
+        </p>
+      )}
+      {error && (
+        <p id={errorId} className="mt-1.5 text-xs text-destructive">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
+
