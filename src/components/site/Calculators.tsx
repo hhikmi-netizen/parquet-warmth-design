@@ -625,7 +625,7 @@ function DiagnosticTool() {
             href={contactHref}
             className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            {verdict === "expertise" ? "Demander une expertise" : "Recevoir 3 devis fermes"}
+            {verdict === "expertise" ? "Demander une expertise" : "Être mis en relation avec un artisan"}
             <ArrowRight className="h-4 w-4" aria-hidden />
           </a>
 
@@ -820,11 +820,11 @@ function BudgetTool() {
           <div className="my-5 h-px bg-border" />
 
           <p className="text-sm font-medium text-foreground">
-            Bloquez ce tarif et recevez 3 devis fermes d'artisans locaux.
+            Bloquez ce tarif et faites-vous rappeler par un artisan vérifié.
           </p>
           <ul className="mt-3 space-y-1.5 text-xs text-muted-foreground">
-            <li>· Sous 48 h ouvrées</li>
-            <li>· Artisans vérifiés près de chez vous</li>
+            <li>· Réponse sous 48 h ouvrées</li>
+            <li>· Un artisan vérifié près de chez vous</li>
             <li>· Sans engagement, sans démarchage</li>
           </ul>
 
@@ -832,7 +832,7 @@ function BudgetTool() {
             href={contactHref}
             className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            Recevoir mes 3 devis
+            Être mis en relation
             <ArrowRight className="h-4 w-4" aria-hidden />
           </a>
 
@@ -916,7 +916,7 @@ export function Calculators() {
             Les calculateurs <span className="italic text-brand-orange">du parquet.</span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Quatre outils précis, utilisés au quotidien par nos artisans. Surface réelle, colle, sous-couche, vitrificateur — chiffrés en deux clics.
+            Sept outils précis, utilisés au quotidien par nos artisans. Budget, diagnostic, surface, fournitures, colle, sous-couche, vitrificateur — chiffrés en deux clics.
           </p>
         </div>
 

@@ -36,10 +36,12 @@ import { Route as AdminLogsRouteImport } from './routes/admin.logs'
 import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminArtisansRouteImport } from './routes/admin.artisans'
 import { Route as AuthenticatedProRouteImport } from './routes/_authenticated/pro'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
 import { Route as ProDevisNouveauRouteImport } from './routes/pro.devis.nouveau'
 import { Route as AuthenticatedProOnboardingRouteImport } from './routes/_authenticated/pro.onboarding'
+import { Route as AuthenticatedProMessagesRouteImport } from './routes/_authenticated/pro.messages'
 import { Route as AuthenticatedProCalendrierRouteImport } from './routes/_authenticated/pro.calendrier'
 
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
@@ -177,6 +179,11 @@ const AuthenticatedProRoute = AuthenticatedProRouteImport.update({
   path: '/pro',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedHistoriqueRoute = AuthenticatedHistoriqueRouteImport.update({
   id: '/historique',
   path: '/historique',
@@ -196,6 +203,12 @@ const AuthenticatedProOnboardingRoute =
   AuthenticatedProOnboardingRouteImport.update({
     id: '/onboarding',
     path: '/onboarding',
+    getParentRoute: () => AuthenticatedProRoute,
+  } as any)
+const AuthenticatedProMessagesRoute =
+  AuthenticatedProMessagesRouteImport.update({
+    id: '/messages',
+    path: '/messages',
     getParentRoute: () => AuthenticatedProRoute,
   } as any)
 const AuthenticatedProCalendrierRoute =
@@ -220,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
@@ -235,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
   '/pro/calendrier': typeof AuthenticatedProCalendrierRoute
+  '/pro/messages': typeof AuthenticatedProMessagesRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
@@ -252,6 +267,7 @@ export interface FileRoutesByTo {
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
@@ -267,6 +283,7 @@ export interface FileRoutesByTo {
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
   '/pro/calendrier': typeof AuthenticatedProCalendrierRoute
+  '/pro/messages': typeof AuthenticatedProMessagesRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
@@ -287,6 +304,7 @@ export interface FileRoutesById {
   '/verify-email': typeof VerifyEmailRoute
   '/_authenticated/devis': typeof AuthenticatedDevisRoute
   '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
@@ -302,6 +320,7 @@ export interface FileRoutesById {
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
   '/_authenticated/pro/calendrier': typeof AuthenticatedProCalendrierRoute
+  '/_authenticated/pro/messages': typeof AuthenticatedProMessagesRoute
   '/_authenticated/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
@@ -322,6 +341,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/devis'
     | '/historique'
+    | '/messages'
     | '/pro'
     | '/admin/artisans'
     | '/admin/clients'
@@ -337,6 +357,7 @@ export interface FileRouteTypes {
     | '/pro/offres'
     | '/admin/'
     | '/pro/calendrier'
+    | '/pro/messages'
     | '/pro/onboarding'
     | '/pro/devis/nouveau'
   fileRoutesByTo: FileRoutesByTo
@@ -354,6 +375,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/devis'
     | '/historique'
+    | '/messages'
     | '/pro'
     | '/admin/artisans'
     | '/admin/clients'
@@ -369,6 +391,7 @@ export interface FileRouteTypes {
     | '/pro/offres'
     | '/admin'
     | '/pro/calendrier'
+    | '/pro/messages'
     | '/pro/onboarding'
     | '/pro/devis/nouveau'
   id:
@@ -388,6 +411,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/_authenticated/devis'
     | '/_authenticated/historique'
+    | '/_authenticated/messages'
     | '/_authenticated/pro'
     | '/admin/artisans'
     | '/admin/clients'
@@ -403,6 +427,7 @@ export interface FileRouteTypes {
     | '/pro/offres'
     | '/admin/'
     | '/_authenticated/pro/calendrier'
+    | '/_authenticated/pro/messages'
     | '/_authenticated/pro/onboarding'
     | '/pro/devis/nouveau'
   fileRoutesById: FileRoutesById
@@ -618,6 +643,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/historique': {
       id: '/_authenticated/historique'
       path: '/historique'
@@ -646,6 +678,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProOnboardingRouteImport
       parentRoute: typeof AuthenticatedProRoute
     }
+    '/_authenticated/pro/messages': {
+      id: '/_authenticated/pro/messages'
+      path: '/messages'
+      fullPath: '/pro/messages'
+      preLoaderRoute: typeof AuthenticatedProMessagesRouteImport
+      parentRoute: typeof AuthenticatedProRoute
+    }
     '/_authenticated/pro/calendrier': {
       id: '/_authenticated/pro/calendrier'
       path: '/calendrier'
@@ -658,11 +697,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedProRouteChildren {
   AuthenticatedProCalendrierRoute: typeof AuthenticatedProCalendrierRoute
+  AuthenticatedProMessagesRoute: typeof AuthenticatedProMessagesRoute
   AuthenticatedProOnboardingRoute: typeof AuthenticatedProOnboardingRoute
 }
 
 const AuthenticatedProRouteChildren: AuthenticatedProRouteChildren = {
   AuthenticatedProCalendrierRoute: AuthenticatedProCalendrierRoute,
+  AuthenticatedProMessagesRoute: AuthenticatedProMessagesRoute,
   AuthenticatedProOnboardingRoute: AuthenticatedProOnboardingRoute,
 }
 
@@ -672,12 +713,14 @@ const AuthenticatedProRouteWithChildren =
 interface AuthenticatedRouteChildren {
   AuthenticatedDevisRoute: typeof AuthenticatedDevisRoute
   AuthenticatedHistoriqueRoute: typeof AuthenticatedHistoriqueRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedProRoute: typeof AuthenticatedProRouteWithChildren
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDevisRoute: AuthenticatedDevisRoute,
   AuthenticatedHistoriqueRoute: AuthenticatedHistoriqueRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedProRoute: AuthenticatedProRouteWithChildren,
 }
 
