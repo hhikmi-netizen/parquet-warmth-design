@@ -1,6 +1,14 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import {
+  acceptMatch,
+  declineMatch,
+  getArtisanInbox,
+  refundMatch,
+} from "@/lib/projects.functions";
 import {
   LayoutDashboard,
   Inbox,
@@ -28,7 +36,8 @@ import {
   X,
   Wrench,
 } from "lucide-react";
-import { MOCK_INBOX, type InboxMatch, type MatchStatus } from "@/lib/inbox-mock";
+import { MOCK_INBOX as _UNUSED_MOCK, type InboxMatch, type MatchStatus } from "@/lib/inbox-mock";
+void _UNUSED_MOCK;
 import { OutilsTab } from "@/components/pro/OutilsTab";
 import { QuickActions } from "@/components/pro/QuickActions";
 
