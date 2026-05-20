@@ -12,13 +12,24 @@ const schema = z.object({
   password: z.string().min(1, "Mot de passe requis").max(72),
 });
 
+const searchSchema = z.object({ redirect: z.string().optional() });
+
+function safeRedirect(value: string | undefined): string {
+  if (!value) return "/historique";
+  if (!value.startsWith("/") || value.startsWith("//")) return "/historique";
+  return value;
+}
+
 export const Route = createFileRoute("/login")({
   component: LoginPage,
+  validateSearch: (s) => searchSchema.parse(s),
   head: () => ({ meta: [{ title: "Connexion — Parqueto" }] }),
 });
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { redirect } = Route.useSearch();
+  const target = safeRedirect(redirect);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,7 +49,7 @@ function LoginPage() {
       const lower = error.message.toLowerCase();
       if (lower.includes("not confirmed") || lower.includes("email_not_confirmed")) {
         toast.info("Confirmez votre email pour continuer.");
-        navigate({ to: "/verify-email", search: { email: parsed.data.email } });
+        navigate({ to: "/verify-email", search: { email: parsed.data.email, redirect: target } });
         return;
       }
       const msg = lower.includes("invalid")
@@ -48,13 +59,13 @@ function LoginPage() {
       return;
     }
     toast.success("Bienvenue !");
-    navigate({ to: "/historique" });
+    navigate({ to: target });
   };
 
   const onProvider = async (provider: "google" | "apple") => {
     setSocial(provider);
     const result = await lovable.auth.signInWithOAuth(provider, {
-      redirect_uri: window.location.origin + "/historique",
+      redirect_uri: window.location.origin + target,
     });
     if (result.error) {
       setSocial(null);
@@ -62,7 +73,7 @@ function LoginPage() {
       return;
     }
     if (result.redirected) return;
-    navigate({ to: "/historique" });
+    navigate({ to: target });
   };
 
   return (
@@ -72,7 +83,11 @@ function LoginPage() {
       footer={
         <>
           Pas encore de compte ?{" "}
-          <Link to="/signup" className="font-medium text-brand-orange hover:underline">
+          <Link
+            to="/signup"
+            search={redirect ? { redirect } : undefined}
+            className="font-medium text-brand-orange hover:underline"
+          >
             Créer un compte
           </Link>
         </>

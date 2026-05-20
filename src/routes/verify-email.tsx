@@ -1,12 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Loader2, MailCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell } from "@/components/auth/AuthShell";
 
-const searchSchema = z.object({ email: z.string().email().optional() });
+const searchSchema = z.object({
+  email: z.string().email().optional(),
+  redirect: z.string().optional(),
+});
 
 export const Route = createFileRoute("/verify-email")({
   component: VerifyEmailPage,
@@ -14,22 +17,28 @@ export const Route = createFileRoute("/verify-email")({
   head: () => ({ meta: [{ title: "Vérification de l'email — Parqueto" }] }),
 });
 
+// Only accept same-origin relative paths to prevent open-redirect.
+function safeRedirect(value: string | undefined): string {
+  if (!value) return "/historique";
+  if (!value.startsWith("/") || value.startsWith("//")) return "/historique";
+  return value;
+}
+
 function VerifyEmailPage() {
-  const { email: emailFromUrl } = Route.useSearch();
+  const { email: emailFromUrl, redirect } = Route.useSearch();
   const [email, setEmail] = useState(emailFromUrl ?? "");
   const [resending, setResending] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const target = useMemo(() => safeRedirect(redirect), [redirect]);
 
   useEffect(() => {
-    // If session becomes active (user clicked the email link in another tab),
-    // hop straight into the app.
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       if (session?.user?.email_confirmed_at) {
-        window.location.href = "/historique";
+        window.location.href = target;
       }
     });
     return () => subscription.unsubscribe();
-  }, []);
+  }, [target]);
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -47,7 +56,7 @@ function VerifyEmailPage() {
     const { error } = await supabase.auth.resend({
       type: "signup",
       email: parsed.data,
-      options: { emailRedirectTo: window.location.origin + "/historique" },
+      options: { emailRedirectTo: window.location.origin + target },
     });
     setResending(false);
     if (error) {
