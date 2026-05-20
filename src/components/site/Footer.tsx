@@ -28,9 +28,25 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-2 px-6 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} Parqueto. Tous droits réservés.</p>
-          <p>Mentions légales · Confidentialité · CGU</p>
+        <div className="mx-auto max-w-7xl px-6 py-5">
+          <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px] text-muted-foreground">
+            <li className="inline-flex items-center gap-1.5">
+              <span className="h-1 w-1 rounded-full bg-brand-orange/70" />
+              Estimation non contractuelle
+            </li>
+            <li className="inline-flex items-center gap-1.5">
+              <span className="h-1 w-1 rounded-full bg-brand-orange/70" />
+              Sans engagement
+            </li>
+            <li className="inline-flex items-center gap-1.5">
+              <span className="h-1 w-1 rounded-full bg-brand-orange/70" />
+              Aucun paiement demandé
+            </li>
+          </ul>
+          <div className="mt-4 flex flex-col items-start justify-between gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center">
+            <p>© {new Date().getFullYear()} Parqueto. Tous droits réservés.</p>
+            <p>Mentions légales · Confidentialité · CGU</p>
+          </div>
         </div>
       </div>
     </footer>

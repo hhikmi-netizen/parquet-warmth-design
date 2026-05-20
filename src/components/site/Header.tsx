@@ -42,8 +42,8 @@ export function Header() {
               <User className="h-4 w-4" /> {accountLink.label}
             </Link>
           )}
-          <a href="#estimate" className="inline-flex items-center rounded-full bg-brand-orange px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-brand-orange-deep">
-            Estimer mon projet
+          <a href="#estimate" className="inline-flex items-center rounded-full bg-brand-orange px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep hover:shadow-warm">
+            Estimer gratuitement
           </a>
         </div>
         <button onClick={() => setOpen(!open)} className="lg:hidden" aria-label="Menu">
@@ -66,7 +66,7 @@ export function Header() {
               </Link>
             )}
             <a href="#estimate" className="mt-2 rounded-full bg-brand-orange px-5 py-3 text-center text-sm font-semibold text-primary-foreground" onClick={() => setOpen(false)}>
-              Estimer mon projet
+              Estimer gratuitement
             </a>
           </div>
         </div>

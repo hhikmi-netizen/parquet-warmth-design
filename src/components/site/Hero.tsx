@@ -1,11 +1,11 @@
 import heroImg from "@/assets/hero-parquet.jpg";
 import detail from "@/assets/detail-wood.jpg";
 import beforeAfter from "@/assets/before-after.jpg";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function Hero() {
   return (
-    <section id="estimate" className="relative overflow-hidden">
+    <section id="hero" className="relative overflow-hidden">
       <div className="grain absolute inset-0 opacity-40" aria-hidden />
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-12 lg:gap-10 lg:py-24">
         <div className="lg:col-span-6 lg:pt-8">
@@ -14,33 +14,45 @@ export function Hero() {
             Parqueto · Le parquet, sans détour
           </span>
           <h1 className="mt-6 font-display text-5xl leading-[1.05] text-balance text-foreground sm:text-6xl lg:text-7xl">
-            Votre parquet,
-            <span className="block italic text-brand-orange">estimé en quelques minutes.</span>
+            Estimez votre projet parquet
+            <span className="block italic text-brand-orange">en quelques minutes.</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            Ponçage, pose, vitrification, rénovation de parquet ancien — obtenez une estimation
-            claire en quelques minutes et un artisan partenaire référent pour cadrer votre projet.
+            Obtenez gratuitement une estimation claire selon votre surface, votre type de parquet
+            et votre projet de rénovation. Un artisan partenaire vérifié prend ensuite le relais — sans démarchage.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a href="#process" className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep">
-              Estimer mon projet
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-            </a>
-            <a href="#realisations" className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3.5 text-sm font-semibold text-foreground transition hover:border-brand-orange/40 hover:text-brand-orange">
-              Voir des réalisations
-            </a>
-          </div>
+          <div className="mt-9 flex flex-col gap-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href="#estimate"
+                className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-brand-orange px-7 py-4 text-[15px] font-semibold tracking-[-0.005em] text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition duration-300 hover:-translate-y-0.5 hover:bg-brand-orange-deep hover:shadow-[0_18px_40px_-12px_rgba(204,82,29,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full"
+                />
+                <span className="relative">Estimer mon projet gratuitement</span>
+                <ArrowRight className="relative h-4 w-4 transition group-hover:translate-x-0.5" />
+              </a>
+              <a
+                href="#realisations"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3.5 text-sm font-semibold text-foreground transition hover:border-brand-orange/40 hover:text-brand-orange"
+              >
+                Voir des réalisations
+              </a>
+            </div>
 
-          <ul className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-sm text-muted-foreground">
-            {["Estimation instantanée", "Sans démarchage", "Artisan partenaire vérifié"].map((p) => (
-              <li key={p} className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-brand-orange" />
-                {p}
-              </li>
-            ))}
-          </ul>
+            <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[13px] text-muted-foreground">
+              <span>Gratuit</span>
+              <span aria-hidden className="text-brand-orange/60">·</span>
+              <span>Sans engagement</span>
+              <span aria-hidden className="text-brand-orange/60">·</span>
+              <span>Artisan partenaire ensuite</span>
+            </p>
+          </div>
         </div>
+
 
         <div className="relative lg:col-span-6">
           <div className="relative overflow-hidden rounded-2xl shadow-warm">
