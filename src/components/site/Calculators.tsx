@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
-import { Ruler, Droplet, Layers, Paintbrush, Info } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Ruler, Droplet, Layers, Paintbrush, Info, Wallet, ArrowRight, ShieldCheck } from "lucide-react";
 
-type ToolKey = "surface" | "colle" | "souscouche" | "vitrification";
+type ToolKey = "budget" | "surface" | "colle" | "souscouche" | "vitrification";
 
 const tools: { key: ToolKey; label: string; icon: typeof Ruler; subtitle: string }[] = [
+  { key: "budget", label: "Budget travaux", icon: Wallet, subtitle: "Fourchette de prix pour votre projet" },
   { key: "surface", label: "Surface & chutes", icon: Ruler, subtitle: "Calculez la surface réelle à commander" },
   { key: "colle", label: "Colle parquet", icon: Droplet, subtitle: "Quantité de colle nécessaire en kg" },
   { key: "souscouche", label: "Sous-couche", icon: Layers, subtitle: "Rouleaux à prévoir, recouvrement inclus" },
