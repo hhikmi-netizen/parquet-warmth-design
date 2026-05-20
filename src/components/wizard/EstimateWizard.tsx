@@ -704,7 +704,8 @@ export function EstimateWizard() {
             errors={errors}
             range={range}
             photos={photos.length}
-            onPdf={() => generateWizardPDF(s)}
+            onPdf={handlePdf}
+            pdfLoading={pdfLoading}
             onShare={shareQuote}
             shareMsg={shareMsg}
             shareFallback={shareFallback}
