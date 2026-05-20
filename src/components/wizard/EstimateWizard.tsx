@@ -539,18 +539,22 @@ export function EstimateWizard() {
           }
         } catch { /* fall through to text share */ }
       }
-      // 2) Text share
+      // 2) Text share (PDF files not supported here → propose fallback)
       if (nav?.share) {
         await nav.share({ title: "Mon estimation Parqueto", text });
+        setShareMsg("Résumé partagé. Le PDF n'a pas pu être joint sur ce navigateur.");
+        setShareFallback(true);
         return;
       }
       // 3) Clipboard fallback
       if (nav?.clipboard) {
         await nav.clipboard.writeText(text);
         setShareMsg("Résumé copié dans le presse-papiers.");
+        setShareFallback(true);
         return;
       }
-      setShareMsg("Partage indisponible sur ce navigateur — utilisez le PDF.");
+      setShareMsg("Partage indisponible sur ce navigateur.");
+      setShareFallback(true);
     } catch (err) {
       const name = (err as DOMException)?.name;
       if (name === "AbortError") return; // user cancelled
@@ -558,8 +562,9 @@ export function EstimateWizard() {
         await nav!.clipboard.writeText(text);
         setShareMsg("Partage refusé — résumé copié à la place.");
       } catch {
-        setShareMsg("Impossible de partager. Téléchargez le PDF.");
+        setShareMsg("Impossible de partager.");
       }
+      setShareFallback(true);
     }
   };
 
