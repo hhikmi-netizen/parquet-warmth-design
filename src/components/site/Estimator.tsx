@@ -122,12 +122,11 @@ function loadContact(): ContactInput {
 // ---------- Génération PDF ----------
 type Totals = { min: number; max: number; surface: number; perimetre: number; plinthesCost: number; seuilsCost: number };
 
-function generateQuotePDF(state: EstimateState, totals: Totals, contact?: ContactInput) {
+function buildQuoteDoc(state: EstimateState, totals: Totals, contact?: ContactInput) {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const W = 210;
   let y = 18;
 
-  // Header
   doc.setFillColor(232, 93, 58);
   doc.rect(0, 0, W, 10, "F");
   doc.setFont("helvetica", "bold");
@@ -145,7 +144,6 @@ function generateQuotePDF(state: EstimateState, totals: Totals, contact?: Contac
   doc.line(14, y, W - 14, y);
   y += 8;
 
-  // Client
   if (contact && contact.nom) {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
@@ -162,7 +160,6 @@ function generateQuotePDF(state: EstimateState, totals: Totals, contact?: Contac
     y += 4;
   }
 
-  // Projet
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.setTextColor(20);
@@ -189,7 +186,6 @@ function generateQuotePDF(state: EstimateState, totals: Totals, contact?: Contac
   });
 
   y += 6;
-  // Fourchette
   doc.setFillColor(255, 245, 240);
   doc.roundedRect(14, y, W - 28, 26, 3, 3, "F");
   doc.setFont("helvetica", "bold");
@@ -201,7 +197,6 @@ function generateQuotePDF(state: EstimateState, totals: Totals, contact?: Contac
   doc.text(`${fmt(totals.min)} – ${fmt(totals.max)} € TTC`, 20, y + 18);
   y += 34;
 
-  // Footer
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(120);
@@ -213,7 +208,50 @@ function generateQuotePDF(state: EstimateState, totals: Totals, contact?: Contac
   doc.setTextColor(160);
   doc.text("contact@parqueto.fr · parqueto.fr", 14, 287);
 
-  doc.save(`devis-parqueto-${Date.now()}.pdf`);
+  return doc;
+}
+
+function generateQuotePDF(state: EstimateState, totals: Totals, contact?: ContactInput) {
+  buildQuoteDoc(state, totals, contact).save(`devis-parqueto-${Date.now()}.pdf`);
+}
+
+function buildShareText(state: EstimateState, totals: Totals) {
+  return [
+    `Devis Parqueto — ${services[state.service].label}`,
+    `${types[state.type].label} · ${etats[state.etat].label}`,
+    `Surface : ${fmtNum(totals.surface)} m²${state.plinthes ? " · plinthes" : ""}${state.seuils > 0 ? ` · ${state.seuils} seuil(s)` : ""}`,
+    `Fourchette estimée : ${fmt(totals.min)} – ${fmt(totals.max)} € TTC`,
+    `Demandez le vôtre sur parqueto.fr`,
+  ].join("\n");
+}
+
+async function shareQuote(state: EstimateState, totals: Totals, contact?: ContactInput) {
+  const text = buildShareText(state, totals);
+  const title = "Mon devis Parqueto";
+  try {
+    const doc = buildQuoteDoc(state, totals, contact);
+    const blob = doc.output("blob");
+    const file = new File([blob], `devis-parqueto.pdf`, { type: "application/pdf" });
+    const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean };
+    if (nav.canShare && nav.canShare({ files: [file] })) {
+      await navigator.share({ title, text, files: [file] });
+      return "shared";
+    }
+    if (typeof navigator.share === "function") {
+      await navigator.share({ title, text });
+      return "shared";
+    }
+    await navigator.clipboard.writeText(text);
+    return "copied";
+  } catch (err) {
+    if ((err as DOMException)?.name === "AbortError") return "aborted";
+    try {
+      await navigator.clipboard.writeText(text);
+      return "copied";
+    } catch {
+      return "error";
+    }
+  }
 }
 
 // ---------- Composant ----------
