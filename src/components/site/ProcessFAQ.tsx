@@ -28,7 +28,11 @@ export function ProcessFAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="process-faq" className="scroll-mt-24 py-20 sm:py-24">
+    <section
+      id="process-faq"
+      className="relative scroll-mt-24 border-b border-border bg-secondary/40 pt-4 pb-24 sm:pt-6 sm:pb-28"
+    >
+      <div className="grain pointer-events-none absolute inset-0 opacity-30" aria-hidden />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -43,18 +47,18 @@ export function ProcessFAQ() {
           }),
         }}
       />
-      <div className="mx-auto max-w-3xl px-6">
-        <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
+      <div className="relative mx-auto max-w-7xl px-6">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-orange">
             Encore une hésitation ?
           </p>
-          <h2 className="mt-4 font-display text-3xl text-balance sm:text-4xl">
+          <h2 className="mt-4 font-display text-4xl text-balance sm:text-5xl">
             Ce que les gens nous demandent
             <span className="block italic text-brand-orange">avant de se lancer.</span>
           </h2>
         </div>
 
-        <div className="mt-12">
+        <div className="mx-auto mt-16 max-w-3xl">
           <FaqAccordion items={items} open={open} onToggle={setOpen} size="sm" />
         </div>
       </div>

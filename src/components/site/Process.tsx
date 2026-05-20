@@ -23,7 +23,7 @@ const steps = [
 
 export function Process() {
   return (
-    <section id="process" className="relative scroll-mt-24 border-y border-border bg-secondary/40 py-24 sm:py-28">
+    <section id="process" className="relative scroll-mt-24 border-t border-border bg-secondary/40 pt-24 pb-16 sm:pt-28 sm:pb-20">
       <div className="grain pointer-events-none absolute inset-0 opacity-30" aria-hidden />
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
