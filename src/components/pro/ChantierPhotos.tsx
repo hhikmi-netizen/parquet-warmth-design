@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { Camera, ImagePlus, Trash2, Calendar, Pencil, Check, X, Info } from "lucide-react";
+import { Camera, ImagePlus, Trash2, Calendar, Pencil, Check, X, Info, Eye, EyeOff, Clock } from "lucide-react";
 import { PqButton } from "@/components/parqueto/PqButton";
 
 /**
