@@ -33,6 +33,8 @@ function Index() {
       <Process />
       <Pains />
       <Expertise />
+      <ArtisansShowcase />
+      <Calculators />
       <Artisan />
       <Blog />
       <FinalCTA />
