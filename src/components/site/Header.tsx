@@ -3,9 +3,9 @@ import logo from "@/assets/parqueto-logo.png";
 import { Menu, X } from "lucide-react";
 
 const nav = [
+  { label: "Pourquoi Parqueto", href: "#pourquoi" },
   { label: "Comment ça marche", href: "#process" },
   { label: "Réalisations", href: "#realisations" },
-  { label: "Blog", href: "#blog" },
   { label: "Vous êtes artisan", href: "#artisan" },
   { label: "Contact", href: "#contact" },
 ];
