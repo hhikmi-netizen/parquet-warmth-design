@@ -11,7 +11,16 @@ import {
   CheckCircle2,
   Loader2,
   ImagePlus,
+  ChevronLeft,
+  ChevronRight,
+  Trash2,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { FloatingNav } from "@/components/site/FloatingNav";
