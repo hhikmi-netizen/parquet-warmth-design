@@ -30,10 +30,12 @@ const PHASES: { id: Phase; label: string; hint: string; tone: string }[] = [
 ];
 
 const MOCK_PROJECTS = [
-  { ref: "PJ-002479", label: "Reprise locale + huile dure · 12 m² — Lyon 3e" },
-  { ref: "PJ-002471", label: "Point de Hongrie · 38 m² — Caluire" },
-  { ref: "PJ-002460", label: "Vitrification · 24 m² — Lyon 2e" },
+  { ref: "PJ-002479", label: "Reprise locale + huile dure · 12 m² — Lyon 3e", closedAt: null as string | null },
+  { ref: "PJ-002471", label: "Point de Hongrie · 38 m² — Caluire", closedAt: "2026-03-12" },
+  { ref: "PJ-002460", label: "Vitrification · 24 m² — Lyon 2e", closedAt: "2026-02-28" },
 ];
+
+const TTL_DAYS = 90;
 
 async function compressImage(file: File): Promise<{ dataUrl: string; sizeKb: number }> {
   const bitmap = await createImageBitmap(file);
