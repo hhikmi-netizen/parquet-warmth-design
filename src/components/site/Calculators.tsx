@@ -490,6 +490,7 @@ export function Calculators() {
               <p className="text-xs text-muted-foreground">{current.subtitle}</p>
             </div>
           </div>
+          {active === "budget" && <BudgetTool />}
           {active === "surface" && <SurfaceTool />}
           {active === "colle" && <ColleTool />}
           {active === "souscouche" && <SousCoucheTool />}
