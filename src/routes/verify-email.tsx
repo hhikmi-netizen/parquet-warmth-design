@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
-import { toast } from "sonner";
 import { Loader2, MailCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell } from "@/components/auth/AuthShell";
+import { authToast } from "@/components/auth/auth-toast";
 
 const searchSchema = z.object({
   email: z.string().email().optional(),
@@ -49,7 +49,7 @@ function VerifyEmailPage() {
   const onResend = async () => {
     const parsed = z.string().trim().email("Email invalide").max(255).safeParse(email);
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Email invalide");
+      authToast.error(parsed.error.issues[0]?.message ?? "Email invalide");
       return;
     }
     setResending(true);
@@ -60,10 +60,10 @@ function VerifyEmailPage() {
     });
     setResending(false);
     if (error) {
-      toast.error(error.message);
+      authToast.error(error.message);
       return;
     }
-    toast.success("Email renvoyé");
+    authToast.success("Email renvoyé");
     setCooldown(45);
   };
 

@@ -1,11 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
-import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { AuthShell, SocialButtons, Divider } from "@/components/auth/AuthShell";
+import { authToast } from "@/components/auth/auth-toast";
 
 const schema = z.object({
   email: z.string().trim().email("Email invalide").max(255),
@@ -40,7 +40,7 @@ function SignupPage() {
     e.preventDefault();
     const parsed = schema.safeParse({ email, password });
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Champs invalides");
+      authToast.error(parsed.error.issues[0]?.message ?? "Champs invalides");
       return;
     }
     setLoading(true);
@@ -50,9 +50,10 @@ function SignupPage() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      authToast.error(error.message);
       return;
     }
+    authToast.dismiss();
     if (data.session) {
       navigate({ to: target });
       return;
@@ -68,7 +69,7 @@ function SignupPage() {
     });
     if (result.error) {
       setSocial(null);
-      toast.error("Connexion impossible : " + (result.error.message ?? "erreur"));
+      authToast.error(result.error.message);
       return;
     }
     if (result.redirected) return;

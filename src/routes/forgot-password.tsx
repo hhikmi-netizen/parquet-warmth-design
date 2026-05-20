@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
-import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell } from "@/components/auth/AuthShell";
+import { authToast } from "@/components/auth/auth-toast";
 
 const schema = z.object({ email: z.string().trim().email("Email invalide").max(255) });
 
@@ -22,7 +22,7 @@ function ForgotPage() {
     e.preventDefault();
     const parsed = schema.safeParse({ email });
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Email invalide");
+      authToast.error(parsed.error.issues[0]?.message ?? "Email invalide");
       return;
     }
     setLoading(true);
@@ -31,9 +31,10 @@ function ForgotPage() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      authToast.error(error.message);
       return;
     }
+    authToast.dismiss();
     setSent(true);
   };
 
