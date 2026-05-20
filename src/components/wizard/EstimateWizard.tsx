@@ -900,21 +900,52 @@ function Step3({
   errors,
   photos,
   setPhotos,
+  photoError,
+  setPhotoError,
 }: {
   s: WizardState;
   set: <K extends keyof WizardState>(k: K, v: WizardState[K]) => void;
   errors: Errors;
   photos: { id: string; name: string; url: string }[];
   setPhotos: React.Dispatch<React.SetStateAction<{ id: string; name: string; url: string }[]>>;
+  photoError: string;
+  setPhotoError: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const MAX = 5;
+  const MAX_SIZE = 8 * 1024 * 1024; // 8 MB
+  const ACCEPT = ["image/jpeg", "image/png", "image/webp"];
 
   const onFiles = (list: FileList | null) => {
-    if (!list) return;
-    const arr = Array.from(list).slice(0, 5 - photos.length);
-    const next = arr.map((f) => ({ id: `${f.name}-${f.size}-${Date.now()}-${Math.random()}`, name: f.name, url: URL.createObjectURL(f) }));
-    setPhotos((p) => [...p, ...next].slice(0, 5));
+    setPhotoError("");
+    if (!list || list.length === 0) return;
+    const remaining = MAX - photos.length;
+    if (remaining <= 0) {
+      setPhotoError(`Vous avez atteint la limite de ${MAX} photos. Retirez-en une pour en ajouter d'autres.`);
+      return;
+    }
+    const incoming = Array.from(list);
+    const rejected: string[] = [];
+    const accepted: File[] = [];
+    for (const f of incoming) {
+      if (!ACCEPT.includes(f.type)) { rejected.push(`${f.name} (format non supporté)`); continue; }
+      if (f.size > MAX_SIZE) { rejected.push(`${f.name} (> 8 Mo)`); continue; }
+      accepted.push(f);
+    }
+    const trimmed = accepted.slice(0, remaining);
+    const skipped = accepted.length - trimmed.length;
+    const next = trimmed.map((f) => ({
+      id: `${f.name}-${f.size}-${Date.now()}-${Math.random()}`,
+      name: f.name,
+      url: URL.createObjectURL(f),
+    }));
+    setPhotos((p) => [...p, ...next].slice(0, MAX));
+    const msgs: string[] = [];
+    if (rejected.length) msgs.push(`Refusé(s) : ${rejected.join(", ")}`);
+    if (skipped > 0) msgs.push(`${skipped} photo(s) ignorée(s) — limite de ${MAX} atteinte.`);
+    if (msgs.length) setPhotoError(msgs.join(" "));
   };
+
 
   return (
     <section>
