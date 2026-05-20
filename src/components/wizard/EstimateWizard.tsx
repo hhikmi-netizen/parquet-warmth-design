@@ -393,7 +393,6 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   if (piecesStr) row("Pieces concernees", piecesStr);
   if (s.escalier) row("Escalier", "Oui, a traiter");
   if (s.autrePiece) row("Autres pieces", s.autrePiece);
-  y += 5;
 
   section("Chantier");
   row("Adresse", `${s.adresse}${s.complement ? " - " + s.complement : ""}`);
@@ -405,7 +404,7 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   row("Manutention lourde", labelOf(YESNOMAYBE, s.manutention));
   row("Chauffage au sol", labelOf(YESNOMAYBE, s.chauffage));
   row("Delai souhaite", labelOf(DELAIS, s.delai));
-  y += 5;
+
 
   section("Client");
   row("Profil", s.profil === "pro" ? "Professionnel" : "Particulier");
