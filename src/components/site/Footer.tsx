@@ -15,6 +15,7 @@ export function Footer() {
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             <li><a href="#process" className="hover:text-brand-orange">Comment ça marche</a></li>
             <li><a href="#realisations" className="hover:text-brand-orange">Réalisations</a></li>
+            <li><a href="/a-propos" className="hover:text-brand-orange">À propos</a></li>
             <li><a href="#blog" className="hover:text-brand-orange">Blog</a></li>
             <li><a href="#artisan" className="hover:text-brand-orange">Vous êtes artisan</a></li>
           </ul>
