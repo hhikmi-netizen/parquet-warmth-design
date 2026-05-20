@@ -326,15 +326,34 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   };
 
 
+  // Marge de sécurité : la zone de pied de page commence à 278 mm.
+  // On ne dessine jamais au-delà de SAFE_BOTTOM pour éviter tout chevauchement.
+  const SAFE_BOTTOM = 268;
+  const LABEL_W = 50;
+  const VALUE_W = INNER - LABEL_W - 4;
+  const LINE_H = 5.5;
+
+  const ensureSpace = (needed: number) => {
+    if (y + needed > SAFE_BOTTOM) {
+      doc.addPage();
+      y = 20;
+    }
+  };
+
   const row = (k: string, v: string) => {
     if (!v) return;
-    if (y > 275) { doc.addPage(); y = 20; }
+    doc.setFont("helvetica", "bold").setFontSize(10);
+    const valueLines = doc.splitTextToSize(v, VALUE_W) as string[];
+    doc.setFont("helvetica", "normal").setFontSize(9);
+    const labelLines = doc.splitTextToSize(k, LABEL_W - 2) as string[];
+    const blockH = Math.max(LINE_H + 1, valueLines.length * LINE_H, labelLines.length * LINE_H);
+    ensureSpace(blockH);
+
     doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(110);
-    doc.text(k, M + 1, y);
+    doc.text(labelLines, M + 1, y);
     doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(25);
-    const lines = doc.splitTextToSize(v, INNER - 55);
-    doc.text(lines, M + 55, y);
-    y += Math.max(6.5, lines.length * 5.5);
+    doc.text(valueLines, M + LABEL_W + 4, y);
+    y += blockH + 1;
   };
 
   section("Projet");
@@ -369,12 +388,14 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   row("Telephone", s.telephone);
 
   if (s.message) {
-    y += 5;
     section("Message");
-    const lines = doc.splitTextToSize(s.message, INNER - 2);
     doc.setFont("helvetica", "normal").setFontSize(10).setTextColor(40);
-    doc.text(lines, M + 1, y);
-    y += lines.length * 5 + 3;
+    const msgLines = doc.splitTextToSize(s.message, INNER - 2) as string[];
+    for (const line of msgLines) {
+      ensureSpace(LINE_H);
+      doc.text(line, M + 1, y);
+      y += LINE_H;
+    }
   }
 
 
