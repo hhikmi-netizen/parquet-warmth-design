@@ -40,7 +40,7 @@ function LoginPage() {
     e.preventDefault();
     const parsed = schema.safeParse({ email, password });
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Champs invalides");
+      authToast.error(parsed.error.issues[0]?.message ?? "Champs invalides");
       return;
     }
     setLoading(true);
@@ -49,17 +49,14 @@ function LoginPage() {
     if (error) {
       const lower = error.message.toLowerCase();
       if (lower.includes("not confirmed") || lower.includes("email_not_confirmed")) {
-        toast.info("Confirmez votre email pour continuer.");
+        authToast.info("Confirmez votre email pour continuer.");
         navigate({ to: "/verify-email", search: { email: parsed.data.email, redirect: target } });
         return;
       }
-      const msg = lower.includes("invalid")
-        ? "Email ou mot de passe incorrect."
-        : error.message;
-      toast.error(msg);
+      authToast.error(error.message);
       return;
     }
-    toast.success("Bienvenue !");
+    authToast.success("Bienvenue !");
     navigate({ to: target });
   };
 
@@ -70,7 +67,7 @@ function LoginPage() {
     });
     if (result.error) {
       setSocial(null);
-      toast.error("Connexion impossible : " + (result.error.message ?? "erreur"));
+      authToast.error(result.error.message);
       return;
     }
     if (result.redirected) return;
