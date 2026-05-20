@@ -307,22 +307,24 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
 
   let sectionCount = 0;
   const section = (title: string) => {
-    // Mobile-friendly: max 2 sections per page → force page break
-    if (sectionCount > 0 && sectionCount % 2 === 0) {
-      doc.addPage();
-      y = 20;
-    } else if (y > 240) {
+    // Mobile-friendly: 1 section per page → toujours une nouvelle page (sauf la première)
+    if (sectionCount > 0) {
       doc.addPage();
       y = 20;
     }
     sectionCount += 1;
-    // High-contrast title: solid orange bar with white text
-    doc.setFillColor(229, 101, 28);
-    doc.roundedRect(M, y - 5, INNER, 10, 2, 2, "F");
-    doc.setFont("helvetica", "bold").setFontSize(12).setTextColor(255, 255, 255);
-    doc.text(title.toUpperCase(), M + 4, y + 2);
-    y += 12;
+
+    // Titre haute lisibilité : kicker fin + grand titre + filet orange
+    doc.setFont("helvetica", "bold").setFontSize(8).setTextColor(229, 101, 28);
+    doc.text(`SECTION ${sectionCount}`, M, y);
+    doc.setFont("helvetica", "bold").setFontSize(20).setTextColor(20, 20, 20);
+    doc.text(title, M, y + 9);
+    doc.setDrawColor(229, 101, 28).setLineWidth(1.2);
+    doc.line(M, y + 13, M + 28, y + 13);
+    doc.setLineWidth(0.2);
+    y += 22;
   };
+
 
   const row = (k: string, v: string) => {
     if (!v) return;
