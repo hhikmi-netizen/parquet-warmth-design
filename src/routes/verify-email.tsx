@@ -49,7 +49,7 @@ function VerifyEmailPage() {
   const onResend = async () => {
     const parsed = z.string().trim().email("Email invalide").max(255).safeParse(email);
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Email invalide");
+      authToast.error(parsed.error.issues[0]?.message ?? "Email invalide");
       return;
     }
     setResending(true);
@@ -60,10 +60,10 @@ function VerifyEmailPage() {
     });
     setResending(false);
     if (error) {
-      toast.error(error.message);
+      authToast.error(error.message);
       return;
     }
-    toast.success("Email renvoyé");
+    authToast.success("Email renvoyé");
     setCooldown(45);
   };
 
