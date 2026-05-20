@@ -578,6 +578,7 @@ function Field({
   placeholder,
   autoComplete,
   hint,
+  onValidate,
 }: {
   label: string;
   name: string;
@@ -587,6 +588,7 @@ function Field({
   placeholder?: string;
   autoComplete?: string;
   hint?: string;
+  onValidate?: (name: keyof FormValues, value: string) => void;
 }) {
   const hintId = hint ? `${name}-hint` : undefined;
   const errorId = error ? `${name}-error` : undefined;
@@ -614,6 +616,7 @@ function Field({
         aria-required={required || undefined}
         aria-invalid={!!error}
         aria-describedby={describedBy}
+        onBlur={(e) => onValidate?.(name as keyof FormValues, e.target.value)}
         className={`w-full rounded-xl border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
           error ? "border-destructive" : "border-border"
         }`}
