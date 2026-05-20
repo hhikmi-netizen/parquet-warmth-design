@@ -36,8 +36,12 @@ export function Header() {
         </Link>
         <nav className="hidden items-center gap-8 lg:flex">
           {nav.map((n) =>
-            n.to.startsWith("/#") ? (
-              <a key={n.to} href={n.to} className="text-sm font-medium text-foreground/75 transition hover:text-brand-orange">
+            isHashItem(n.to) ? (
+              <a
+                key={n.to}
+                href={hashHref(n.to)}
+                className="text-sm font-medium text-foreground/75 transition hover:text-brand-orange"
+              >
                 {n.label}
               </a>
             ) : (
