@@ -916,7 +916,7 @@ export function Calculators() {
             Les calculateurs <span className="italic text-brand-orange">du parquet.</span>
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Quatre outils précis, utilisés au quotidien par nos artisans. Surface réelle, colle, sous-couche, vitrificateur — chiffrés en deux clics.
+            Sept outils précis, utilisés au quotidien par nos artisans. Budget, diagnostic, surface, fournitures, colle, sous-couche, vitrificateur — chiffrés en deux clics.
           </p>
         </div>
 
