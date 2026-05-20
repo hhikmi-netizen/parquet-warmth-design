@@ -1436,23 +1436,62 @@ function Step3({
               />
             </div>
             {photos.length > 1 && (
-              <div className="flex items-center justify-center gap-3 pb-5" onClick={(e) => e.stopPropagation()}>
-                <button
-                  type="button"
-                  onClick={() => setLightbox((lightbox - 1 + photos.length) % photos.length)}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-background/15 text-background transition hover:bg-background/30"
-                  aria-label="Précédente"
+              <div
+                className="flex flex-col items-center gap-3 px-3 pb-5"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setLightbox((lightbox - 1 + photos.length) % photos.length)}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-background/15 text-background transition hover:bg-background/30"
+                    aria-label="Précédente"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLightbox((lightbox + 1) % photos.length)}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-background/15 text-background transition hover:bg-background/30"
+                    aria-label="Suivante"
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
+                <div
+                  role="tablist"
+                  aria-label="Sélectionner une photo"
+                  className="flex max-w-full gap-2 overflow-x-auto px-1 pb-1"
                 >
-                  <ArrowLeft className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLightbox((lightbox + 1) % photos.length)}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-background/15 text-background transition hover:bg-background/30"
-                  aria-label="Suivante"
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </button>
+                  {photos.map((p, i) => {
+                    const active = i === lightbox;
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={active}
+                        aria-label={`Afficher la photo ${i + 1} : ${p.name}`}
+                        onClick={() => setLightbox(i)}
+                        className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-md ring-2 transition sm:h-16 sm:w-16 ${
+                          active
+                            ? "ring-brand-orange opacity-100"
+                            : "ring-background/20 opacity-60 hover:opacity-100 hover:ring-background/50"
+                        }`}
+                      >
+                        <img
+                          src={p.url}
+                          alt=""
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                        <span className="absolute bottom-0.5 right-0.5 rounded bg-foreground/70 px-1 text-[9px] font-bold text-background">
+                          {i + 1}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
