@@ -682,12 +682,12 @@ export function Estimator() {
             <button
               onClick={async () => {
                 const r = await shareQuote(s, totals, initialContact);
-                if (r === "copied") setShareMsg("Résumé copié dans le presse-papier");
-                else if (r === "shared") setShareMsg("Devis partagé");
-                else if (r === "error") setShareMsg("Partage indisponible");
-                if (r === "copied" || r === "shared" || r === "error") {
-                  setTimeout(() => setShareMsg(null), 2500);
-                }
+                if (r === "shared") setShareMsg("Devis partagé ✓");
+                else if (r === "copied") setShareMsg("Lien du devis copié ✓");
+                else if (r === "unsupported") setShareMsg("Partage non supporté sur ce navigateur");
+                else if (r === "error") setShareMsg("Impossible de partager — réessayez");
+                // "aborted" → silencieux
+                if (r !== "aborted") setTimeout(() => setShareMsg(null), 2800);
               }}
               className="inline-flex items-center justify-center gap-2 rounded-full border border-background/25 bg-background/5 px-4 py-3 text-xs font-semibold text-background transition hover:bg-background/10 active:scale-[0.98]"
               aria-label="Partager le devis"
