@@ -1415,13 +1415,42 @@ function Step3({
                 </div>
               </div>
               <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                <button
-                  type="button"
-                  onClick={() => removePhoto(photos[lightbox].id)}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-destructive/90 px-3 py-1.5 text-xs font-semibold text-background hover:bg-destructive"
-                >
-                  <X className="h-3.5 w-3.5" /> Retirer
-                </button>
+                {confirmDelete ? (
+                  <>
+                    <span className="hidden text-[11px] font-medium text-background/90 sm:inline">
+                      Supprimer cette photo ?
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const id = photos[lightbox].id;
+                        const wasLast = photos.length === 1;
+                        const nextIndex = lightbox >= photos.length - 1 ? lightbox - 1 : lightbox;
+                        removePhoto(id);
+                        setConfirmDelete(false);
+                        setLightbox(wasLast ? null : Math.max(0, nextIndex));
+                      }}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-destructive px-3 py-1.5 text-xs font-semibold text-background hover:bg-destructive/90"
+                    >
+                      <X className="h-3.5 w-3.5" /> Confirmer
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmDelete(false)}
+                      className="inline-flex items-center rounded-full bg-background/15 px-3 py-1.5 text-xs font-semibold text-background hover:bg-background/25"
+                    >
+                      Annuler
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmDelete(true)}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-destructive/90 px-3 py-1.5 text-xs font-semibold text-background hover:bg-destructive"
+                  >
+                    <X className="h-3.5 w-3.5" /> Retirer
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setLightbox(null)}
