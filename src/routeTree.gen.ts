@@ -18,11 +18,21 @@ import { Route as EstimationRouteImport } from './routes/estimation'
 import { Route as DevenirArtisanRouteImport } from './routes/devenir-artisan'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CharteQualiteRouteImport } from './routes/charte-qualite'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProOffresRouteImport } from './routes/pro.offres'
 import { Route as DevenirArtisanInscriptionRouteImport } from './routes/devenir-artisan.inscription'
 import { Route as DemoMicroReassuranceRouteImport } from './routes/demo.micro-reassurance'
+import { Route as AdminSupportRouteImport } from './routes/admin.support'
+import { Route as AdminParametresRouteImport } from './routes/admin.parametres'
+import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
+import { Route as AdminMonetisationRouteImport } from './routes/admin.monetisation'
+import { Route as AdminModerationRouteImport } from './routes/admin.moderation'
+import { Route as AdminLogsRouteImport } from './routes/admin.logs'
+import { Route as AdminClientsRouteImport } from './routes/admin.clients'
+import { Route as AdminArtisansRouteImport } from './routes/admin.artisans'
 import { Route as AuthenticatedProRouteImport } from './routes/_authenticated/pro'
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
@@ -72,6 +82,11 @@ const CharteQualiteRoute = CharteQualiteRouteImport.update({
   path: '/charte-qualite',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -80,6 +95,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const ProOffresRoute = ProOffresRouteImport.update({
   id: '/pro/offres',
@@ -96,6 +116,46 @@ const DemoMicroReassuranceRoute = DemoMicroReassuranceRouteImport.update({
   id: '/demo/micro-reassurance',
   path: '/demo/micro-reassurance',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSupportRoute = AdminSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminParametresRoute = AdminParametresRouteImport.update({
+  id: '/parametres',
+  path: '/parametres',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMonetisationRoute = AdminMonetisationRouteImport.update({
+  id: '/monetisation',
+  path: '/monetisation',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminModerationRoute = AdminModerationRouteImport.update({
+  id: '/moderation',
+  path: '/moderation',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLogsRoute = AdminLogsRouteImport.update({
+  id: '/logs',
+  path: '/logs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminClientsRoute = AdminClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminArtisansRoute = AdminArtisansRouteImport.update({
+  id: '/artisans',
+  path: '/artisans',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AuthenticatedProRoute = AuthenticatedProRouteImport.update({
   id: '/pro',
@@ -115,6 +175,7 @@ const AuthenticatedDevisRoute = AuthenticatedDevisRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
@@ -127,9 +188,18 @@ export interface FileRoutesByFullPath {
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
   '/pro': typeof AuthenticatedProRoute
+  '/admin/artisans': typeof AdminArtisansRoute
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/logs': typeof AdminLogsRoute
+  '/admin/moderation': typeof AdminModerationRoute
+  '/admin/monetisation': typeof AdminMonetisationRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/parametres': typeof AdminParametresRoute
+  '/admin/support': typeof AdminSupportRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/pro/offres': typeof ProOffresRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -145,14 +215,24 @@ export interface FileRoutesByTo {
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
   '/pro': typeof AuthenticatedProRoute
+  '/admin/artisans': typeof AdminArtisansRoute
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/logs': typeof AdminLogsRoute
+  '/admin/moderation': typeof AdminModerationRoute
+  '/admin/monetisation': typeof AdminMonetisationRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/parametres': typeof AdminParametresRoute
+  '/admin/support': typeof AdminSupportRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/pro/offres': typeof ProOffresRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
@@ -165,14 +245,24 @@ export interface FileRoutesById {
   '/_authenticated/devis': typeof AuthenticatedDevisRoute
   '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
   '/_authenticated/pro': typeof AuthenticatedProRoute
+  '/admin/artisans': typeof AdminArtisansRoute
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/logs': typeof AdminLogsRoute
+  '/admin/moderation': typeof AdminModerationRoute
+  '/admin/monetisation': typeof AdminMonetisationRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/parametres': typeof AdminParametresRoute
+  '/admin/support': typeof AdminSupportRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/pro/offres': typeof ProOffresRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/charte-qualite'
     | '/contact'
     | '/devenir-artisan'
@@ -185,9 +275,18 @@ export interface FileRouteTypes {
     | '/devis'
     | '/historique'
     | '/pro'
+    | '/admin/artisans'
+    | '/admin/clients'
+    | '/admin/logs'
+    | '/admin/moderation'
+    | '/admin/monetisation'
+    | '/admin/notifications'
+    | '/admin/parametres'
+    | '/admin/support'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
     | '/pro/offres'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -203,13 +302,23 @@ export interface FileRouteTypes {
     | '/devis'
     | '/historique'
     | '/pro'
+    | '/admin/artisans'
+    | '/admin/clients'
+    | '/admin/logs'
+    | '/admin/moderation'
+    | '/admin/monetisation'
+    | '/admin/notifications'
+    | '/admin/parametres'
+    | '/admin/support'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
     | '/pro/offres'
+    | '/admin'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/admin'
     | '/charte-qualite'
     | '/contact'
     | '/devenir-artisan'
@@ -222,14 +331,24 @@ export interface FileRouteTypes {
     | '/_authenticated/devis'
     | '/_authenticated/historique'
     | '/_authenticated/pro'
+    | '/admin/artisans'
+    | '/admin/clients'
+    | '/admin/logs'
+    | '/admin/moderation'
+    | '/admin/monetisation'
+    | '/admin/notifications'
+    | '/admin/parametres'
+    | '/admin/support'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
     | '/pro/offres'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AdminRoute: typeof AdminRouteWithChildren
   CharteQualiteRoute: typeof CharteQualiteRoute
   ContactRoute: typeof ContactRoute
   DevenirArtisanRoute: typeof DevenirArtisanRouteWithChildren
@@ -308,6 +427,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CharteQualiteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -321,6 +447,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/pro/offres': {
       id: '/pro/offres'
@@ -342,6 +475,62 @@ declare module '@tanstack/react-router' {
       fullPath: '/demo/micro-reassurance'
       preLoaderRoute: typeof DemoMicroReassuranceRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/support': {
+      id: '/admin/support'
+      path: '/support'
+      fullPath: '/admin/support'
+      preLoaderRoute: typeof AdminSupportRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/parametres': {
+      id: '/admin/parametres'
+      path: '/parametres'
+      fullPath: '/admin/parametres'
+      preLoaderRoute: typeof AdminParametresRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications': {
+      id: '/admin/notifications'
+      path: '/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/monetisation': {
+      id: '/admin/monetisation'
+      path: '/monetisation'
+      fullPath: '/admin/monetisation'
+      preLoaderRoute: typeof AdminMonetisationRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/moderation': {
+      id: '/admin/moderation'
+      path: '/moderation'
+      fullPath: '/admin/moderation'
+      preLoaderRoute: typeof AdminModerationRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/logs': {
+      id: '/admin/logs'
+      path: '/logs'
+      fullPath: '/admin/logs'
+      preLoaderRoute: typeof AdminLogsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/clients': {
+      id: '/admin/clients'
+      path: '/clients'
+      fullPath: '/admin/clients'
+      preLoaderRoute: typeof AdminClientsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/artisans': {
+      id: '/admin/artisans'
+      path: '/artisans'
+      fullPath: '/admin/artisans'
+      preLoaderRoute: typeof AdminArtisansRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/_authenticated/pro': {
       id: '/_authenticated/pro'
@@ -383,6 +572,32 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface AdminRouteChildren {
+  AdminArtisansRoute: typeof AdminArtisansRoute
+  AdminClientsRoute: typeof AdminClientsRoute
+  AdminLogsRoute: typeof AdminLogsRoute
+  AdminModerationRoute: typeof AdminModerationRoute
+  AdminMonetisationRoute: typeof AdminMonetisationRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminParametresRoute: typeof AdminParametresRoute
+  AdminSupportRoute: typeof AdminSupportRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminArtisansRoute: AdminArtisansRoute,
+  AdminClientsRoute: AdminClientsRoute,
+  AdminLogsRoute: AdminLogsRoute,
+  AdminModerationRoute: AdminModerationRoute,
+  AdminMonetisationRoute: AdminMonetisationRoute,
+  AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminParametresRoute: AdminParametresRoute,
+  AdminSupportRoute: AdminSupportRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 interface DevenirArtisanRouteChildren {
   DevenirArtisanInscriptionRoute: typeof DevenirArtisanInscriptionRoute
 }
@@ -398,6 +613,7 @@ const DevenirArtisanRouteWithChildren = DevenirArtisanRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AdminRoute: AdminRouteWithChildren,
   CharteQualiteRoute: CharteQualiteRoute,
   ContactRoute: ContactRoute,
   DevenirArtisanRoute: DevenirArtisanRouteWithChildren,
