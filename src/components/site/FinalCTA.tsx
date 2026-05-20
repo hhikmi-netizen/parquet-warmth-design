@@ -67,44 +67,7 @@ export function FinalCTA() {
           </div>
 
           <aside className="lg:col-span-5">
-            <div className="rounded-2xl border border-background/15 bg-background/5 p-6 backdrop-blur">
-              <div className="flex items-center justify-between border-b border-background/10 pb-4">
-                <div>
-                  <div className="font-display text-3xl text-background">+2 400</div>
-                  <div className="text-xs text-background/60">projets estimés</div>
-                </div>
-                <div className="text-right">
-                  <div className="font-display text-3xl text-brand-orange">4,8/5</div>
-                  <div className="text-xs text-background/60">avis particuliers</div>
-                </div>
-              </div>
-
-              <ul className="mt-5 space-y-4">
-                {proofs.map((p) => (
-                  <li key={p.label} className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-orange/15 text-brand-orange">
-                      <p.icon className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold text-background">{p.label}</div>
-                      <div className="text-xs text-background/60">{p.sub}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-
-              <figure className="mt-6 rounded-xl border border-background/10 bg-background/5 p-4">
-                <blockquote className="font-display text-[15px] leading-snug text-background/90">
-                  « Estimation reçue en 4 minutes, artisan sur place la semaine suivante. Bluffant de simplicité. »
-                </blockquote>
-                <figcaption className="mt-3 flex items-center gap-2 text-xs text-background/60">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-orange/20 font-display text-xs text-brand-orange">
-                    C
-                  </span>
-                  Camille R. · Paris 11ᵉ · 38 m² chêne massif
-                </figcaption>
-              </figure>
-            </div>
+            <Estimator />
           </aside>
         </div>
       </div>
