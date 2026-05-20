@@ -22,6 +22,7 @@ import {
   Upload,
   X,
 } from "lucide-react";
+import { MicroReassurance } from "@/components/site/MicroReassurance";
 
 /* =========================================================================
    Domaine — alignées sur la logique métier existante de Estimator.tsx.
