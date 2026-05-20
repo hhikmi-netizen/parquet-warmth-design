@@ -85,7 +85,7 @@ function AdminSidebar() {
                         {!collapsed && (
                           <>
                             <span className="flex-1 truncate">{item.label}</span>
-                            {"badge" in item && item.badge && (
+                            {item.badge && (
                               <span className="ml-auto inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-orange/10 px-1.5 text-[10px] font-semibold text-brand-orange">
                                 {item.badge}
                               </span>
