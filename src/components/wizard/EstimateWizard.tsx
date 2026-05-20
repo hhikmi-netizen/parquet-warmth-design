@@ -444,7 +444,7 @@ export function EstimateWizard() {
   const [hydrated, setHydrated] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [errors, setErrors] = useState<Errors>({});
-  const [photos, setPhotos] = useState<{ id: string; name: string; url: string }[]>([]);
+  const [photos, setPhotos] = useState<{ id: string; name: string; url: string; size?: number; w?: number; h?: number }[]>([]);
   const [photoError, setPhotoError] = useState<string>("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -972,8 +972,8 @@ function Step3({
   s: WizardState;
   set: <K extends keyof WizardState>(k: K, v: WizardState[K]) => void;
   errors: Errors;
-  photos: { id: string; name: string; url: string }[];
-  setPhotos: React.Dispatch<React.SetStateAction<{ id: string; name: string; url: string }[]>>;
+  photos: { id: string; name: string; url: string; size?: number; w?: number; h?: number }[];
+  setPhotos: React.Dispatch<React.SetStateAction<{ id: string; name: string; url: string; size?: number; w?: number; h?: number }[]>>;
   photoError: string;
   setPhotoError: React.Dispatch<React.SetStateAction<string>>;
 }) {
