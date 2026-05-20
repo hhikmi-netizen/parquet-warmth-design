@@ -52,21 +52,28 @@ export function FinalCTA() {
               ))}
             </ol>
 
-            <div className="mt-9 flex flex-wrap items-center gap-4">
+            <div className="mt-9 flex flex-wrap items-center gap-3">
+              <Link
+                to="/estimation"
+                className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-7 py-4 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
+              >
+                <FileText className="h-4 w-4" />
+                Demande détaillée
+                <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+              </Link>
               <a
                 href="#estimate"
                 onClick={(e) => {
                   e.preventDefault();
                   document.getElementById("estimate")?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
-                className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-7 py-4 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
+                className="inline-flex items-center gap-2 rounded-full border border-background/25 px-5 py-3.5 text-sm font-semibold text-background transition hover:bg-background/10"
               >
-                Estimer mon projet
-                <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                Mini-simulation
               </a>
               <span className="inline-flex items-center gap-2 text-xs text-background/60">
                 <Check className="h-3.5 w-3.5 text-brand-orange" />
-                Réponse immédiate · 100 % en ligne
+                Sans engagement
               </span>
             </div>
           </div>
