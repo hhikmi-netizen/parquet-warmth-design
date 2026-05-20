@@ -448,6 +448,7 @@ export function EstimateWizard() {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [shareMsg, setShareMsg] = useState<string>("");
+  const [shareFallback, setShareFallback] = useState(false);
 
   useEffect(() => {
     setS(loadWizardState());
