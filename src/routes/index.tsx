@@ -15,6 +15,7 @@ import { FinalCTA } from "@/components/site/FinalCTA";
 import { Partners } from "@/components/site/Partners";
 import { Footer } from "@/components/site/Footer";
 import { FloatingNav } from "@/components/site/FloatingNav";
+import { MobileStickyCTA } from "@/components/site/MobileStickyCTA";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -49,6 +50,7 @@ function Index() {
         <FinalCTA />
       <Footer />
       <FloatingNav />
+      <MobileStickyCTA />
     </main>
   );
 }
