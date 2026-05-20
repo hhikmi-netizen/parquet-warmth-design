@@ -33,11 +33,16 @@ export function QuickActions() {
               }`}
             >
               <span
-                className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+                className={`relative flex h-10 w-10 items-center justify-center rounded-xl ${
                   primary ? "bg-brand-orange text-primary-foreground" : "bg-brand-cream text-brand-orange-deep"
                 }`}
               >
                 <Icon className="h-5 w-5" />
+                {"badge" in a && a.badge ? (
+                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-orange px-1 text-[10px] font-bold text-primary-foreground">
+                    {a.badge}
+                  </span>
+                ) : null}
               </span>
               <span className="text-sm font-semibold leading-tight">{a.label}</span>
               <ArrowRight className="h-3.5 w-3.5 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-brand-orange-deep" />
