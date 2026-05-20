@@ -69,6 +69,7 @@ function ResetPage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading || success) return;
     const parsed = schema.safeParse({ password, confirm });
     if (!parsed.success) {
       authToast.error(parsed.error.issues[0]?.message ?? "Mot de passe invalide");
