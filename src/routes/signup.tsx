@@ -33,7 +33,7 @@ function SignupPage() {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       ...parsed.data,
       options: { emailRedirectTo: window.location.origin + "/historique" },
     });
@@ -42,7 +42,13 @@ function SignupPage() {
       toast.error(error.message);
       return;
     }
+    // If email confirmation is required, Supabase returns a user without a session.
+    if (data.session) {
+      navigate({ to: "/historique" });
+      return;
+    }
     setSent(true);
+    navigate({ to: "/verify-email", search: { email: parsed.data.email } });
   };
 
   const onProvider = async (provider: "google" | "apple") => {
@@ -60,22 +66,19 @@ function SignupPage() {
   };
 
   if (sent) {
+    // We navigate to /verify-email above, but render a fallback in case navigation hasn't kicked in.
     return (
       <AuthShell
         title="Vérifiez vos emails"
-        subtitle={`Nous avons envoyé un lien de confirmation à ${email}. Cliquez dessus pour activer votre compte.`}
-        footer={
-          <Link to="/login" className="font-medium text-brand-orange hover:underline">
-            Retour à la connexion
-          </Link>
-        }
+        subtitle={`Un lien de confirmation a été envoyé à ${email}.`}
       >
         <div className="rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-          Pensez à vérifier vos spams si vous ne recevez rien dans la minute.
+          Redirection vers la page de vérification…
         </div>
       </AuthShell>
     );
   }
+
 
   return (
     <AuthShell
