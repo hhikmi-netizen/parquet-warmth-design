@@ -305,24 +305,34 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
     y += 38;
   }
 
+  let sectionCount = 0;
   const section = (title: string) => {
-    if (y > 250) { doc.addPage(); y = 20; }
-    doc.setFillColor(247, 244, 239);
-    doc.roundedRect(M, y - 4, INNER, 8, 1.5, 1.5, "F");
-    doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(229, 101, 28);
-    doc.text(title.toUpperCase(), M + 3, y + 1.5);
-    y += 9;
+    // Mobile-friendly: max 2 sections per page → force page break
+    if (sectionCount > 0 && sectionCount % 2 === 0) {
+      doc.addPage();
+      y = 20;
+    } else if (y > 240) {
+      doc.addPage();
+      y = 20;
+    }
+    sectionCount += 1;
+    // High-contrast title: solid orange bar with white text
+    doc.setFillColor(229, 101, 28);
+    doc.roundedRect(M, y - 5, INNER, 10, 2, 2, "F");
+    doc.setFont("helvetica", "bold").setFontSize(12).setTextColor(255, 255, 255);
+    doc.text(title.toUpperCase(), M + 4, y + 2);
+    y += 12;
   };
 
   const row = (k: string, v: string) => {
     if (!v) return;
     if (y > 275) { doc.addPage(); y = 20; }
-    doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(120);
+    doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(110);
     doc.text(k, M + 1, y);
-    doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(30);
+    doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(25);
     const lines = doc.splitTextToSize(v, INNER - 55);
     doc.text(lines, M + 55, y);
-    y += Math.max(5.5, lines.length * 5);
+    y += Math.max(6.5, lines.length * 5.5);
   };
 
   section("Projet");
@@ -333,7 +343,7 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   if (piecesStr) row("Pieces concernees", piecesStr);
   if (s.escalier) row("Escalier", "Oui, a traiter");
   if (s.autrePiece) row("Autres pieces", s.autrePiece);
-  y += 3;
+  y += 5;
 
   section("Chantier");
   row("Adresse", `${s.adresse}${s.complement ? " - " + s.complement : ""}`);
@@ -345,7 +355,7 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   row("Manutention lourde", labelOf(YESNOMAYBE, s.manutention));
   row("Chauffage au sol", labelOf(YESNOMAYBE, s.chauffage));
   row("Delai souhaite", labelOf(DELAIS, s.delai));
-  y += 3;
+  y += 5;
 
   section("Client");
   row("Profil", s.profil === "pro" ? "Professionnel" : "Particulier");
@@ -357,13 +367,14 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   row("Telephone", s.telephone);
 
   if (s.message) {
-    y += 3;
+    y += 5;
     section("Message");
     const lines = doc.splitTextToSize(s.message, INNER - 2);
     doc.setFont("helvetica", "normal").setFontSize(10).setTextColor(40);
     doc.text(lines, M + 1, y);
     y += lines.length * 5 + 3;
   }
+
 
   const pages = doc.getNumberOfPages();
   for (let i = 1; i <= pages; i++) {
