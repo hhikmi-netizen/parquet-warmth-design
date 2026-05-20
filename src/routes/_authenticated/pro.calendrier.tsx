@@ -410,7 +410,7 @@ function CalendrierPage() {
               const startDate = new Date(y, m - 1, d, sh, sm);
               const endDate = new Date(y, m - 1, d, eh, em);
               const typeLabel = r.type === "visite" ? "Visite technique" : r.type === "chantier" ? "Chantier" : "Appel découverte";
-              const typeTone =
+              const typeTone: "info" | "warning" | "neutral" =
                 r.type === "visite" ? "info" : r.type === "chantier" ? "warning" : "neutral";
               return (
                 <PqSurface key={r.id} padding="md" tone="card">
