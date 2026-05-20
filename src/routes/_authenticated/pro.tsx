@@ -40,6 +40,7 @@ import { MOCK_INBOX as _UNUSED_MOCK, type InboxMatch, type MatchStatus } from "@
 void _UNUSED_MOCK;
 import { OutilsTab } from "@/components/pro/OutilsTab";
 import { QuickActions } from "@/components/pro/QuickActions";
+import { AddToCalendar } from "@/components/calendar/AddToCalendar";
 
 export const Route = createFileRoute("/_authenticated/pro")({
   component: ProDashboard,
