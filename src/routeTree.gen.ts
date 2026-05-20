@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
+import { Route as TeintesRouteImport } from './routes/teintes'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
@@ -47,6 +48,11 @@ import { Route as AuthenticatedProCalendrierRouteImport } from './routes/_authen
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
   path: '/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeintesRoute = TeintesRouteImport.update({
+  id: '/teintes',
+  path: '/teintes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoute = SignupRouteImport.update({
@@ -230,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/teintes': typeof TeintesRoute
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/teintes': typeof TeintesRoute
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
@@ -301,6 +309,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/teintes': typeof TeintesRoute
   '/verify-email': typeof VerifyEmailRoute
   '/_authenticated/devis': typeof AuthenticatedDevisRoute
   '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
@@ -338,6 +347,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/signup'
+    | '/teintes'
     | '/verify-email'
     | '/devis'
     | '/historique'
@@ -372,6 +382,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/signup'
+    | '/teintes'
     | '/verify-email'
     | '/devis'
     | '/historique'
@@ -408,6 +419,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/signup'
+    | '/teintes'
     | '/verify-email'
     | '/_authenticated/devis'
     | '/_authenticated/historique'
@@ -445,6 +457,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
+  TeintesRoute: typeof TeintesRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   DemoMicroReassuranceRoute: typeof DemoMicroReassuranceRoute
   ProFacturationRoute: typeof ProFacturationRoute
@@ -459,6 +472,13 @@ declare module '@tanstack/react-router' {
       path: '/verify-email'
       fullPath: '/verify-email'
       preLoaderRoute: typeof VerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teintes': {
+      id: '/teintes'
+      path: '/teintes'
+      fullPath: '/teintes'
+      preLoaderRoute: typeof TeintesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup': {
@@ -779,6 +799,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
+  TeintesRoute: TeintesRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   DemoMicroReassuranceRoute: DemoMicroReassuranceRoute,
   ProFacturationRoute: ProFacturationRoute,
