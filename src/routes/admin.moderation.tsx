@@ -41,11 +41,11 @@ function ModerationPage() {
                   <p className="text-xs text-muted-foreground">Motif : {m.motif}</p>
                   <p className="text-[11px] text-muted-foreground">Statut interne : {m.action}</p>
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <button className="rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground hover:border-brand-orange/40">
+                <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+                  <button className="flex-1 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground transition hover:border-brand-orange/40 sm:flex-none">
                     Examiner
                   </button>
-                  <button className="rounded-full bg-brand-orange px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-brand-orange-deep">
+                  <button className="flex-1 rounded-full bg-brand-orange px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-brand-orange-deep sm:flex-none">
                     Rembourser le crédit
                   </button>
                 </div>
