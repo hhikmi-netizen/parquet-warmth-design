@@ -415,7 +415,7 @@ function DevisPage() {
       <header className="sticky top-0 z-20 border-b border-border/60 bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <Link to="/_authenticated/historique" className="text-muted-foreground hover:text-foreground sm:hidden" aria-label="Retour">
+            <Link to="/historique" className="text-muted-foreground hover:text-foreground sm:hidden" aria-label="Retour">
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <Link to="/" className="hidden items-center gap-2 sm:flex">
