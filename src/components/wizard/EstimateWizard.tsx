@@ -460,6 +460,19 @@ export function EstimateWizard() {
   const [sent, setSent] = useState(false);
   const [shareMsg, setShareMsg] = useState<string>("");
   const [shareFallback, setShareFallback] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
+
+  const handlePdf = async () => {
+    if (pdfLoading) return;
+    setPdfLoading(true);
+    try {
+      // Yield to the event loop so the spinner can paint before jsPDF blocks the main thread
+      await new Promise((r) => setTimeout(r, 30));
+      generateWizardPDF(s);
+    } finally {
+      setPdfLoading(false);
+    }
+  };
 
   useEffect(() => {
     setS(loadWizardState());
@@ -631,10 +644,13 @@ export function EstimateWizard() {
         )}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
-            onClick={() => generateWizardPDF(s)}
-            className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background transition hover:opacity-90"
+            onClick={handlePdf}
+            disabled={pdfLoading}
+            aria-busy={pdfLoading}
+            className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <FileDown className="h-4 w-4" /> Télécharger le récap PDF
+            {pdfLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileDown className="h-4 w-4" />}
+            {pdfLoading ? "Génération…" : "Télécharger le récap PDF"}
           </button>
           <Link
             to="/"
@@ -688,7 +704,8 @@ export function EstimateWizard() {
             errors={errors}
             range={range}
             photos={photos.length}
-            onPdf={() => generateWizardPDF(s)}
+            onPdf={handlePdf}
+            pdfLoading={pdfLoading}
             onShare={shareQuote}
             shareMsg={shareMsg}
             shareFallback={shareFallback}
@@ -1248,6 +1265,7 @@ function Step4({
   range,
   photos,
   onPdf,
+  pdfLoading,
   onShare,
   shareMsg,
   shareFallback,
@@ -1258,6 +1276,7 @@ function Step4({
   range: { min: number; max: number } | null;
   photos: number;
   onPdf: () => void;
+  pdfLoading: boolean;
   onShare: () => void | Promise<void>;
   shareMsg: string;
   shareFallback: boolean;
@@ -1376,9 +1395,12 @@ function Step4({
             <button
               type="button"
               onClick={onPdf}
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-brand-orange hover:bg-brand-orange/5 sm:flex-none"
+              disabled={pdfLoading}
+              aria-busy={pdfLoading}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-brand-orange hover:bg-brand-orange/5 disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
             >
-              <FileDown className="h-4 w-4" /> Télécharger le PDF
+              {pdfLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileDown className="h-4 w-4" />}
+              {pdfLoading ? "Génération…" : "Télécharger le PDF"}
             </button>
             <button
               type="button"
@@ -1395,9 +1417,12 @@ function Step4({
                 <button
                   type="button"
                   onClick={onPdf}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
+                  disabled={pdfLoading}
+                  aria-busy={pdfLoading}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-brand-orange-deep disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <FileDown className="h-3.5 w-3.5" /> Télécharger le PDF
+                  {pdfLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileDown className="h-3.5 w-3.5" />}
+                  {pdfLoading ? "Génération…" : "Télécharger le PDF"}
                 </button>
               )}
             </div>
