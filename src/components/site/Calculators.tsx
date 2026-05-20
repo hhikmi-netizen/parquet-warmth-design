@@ -444,6 +444,200 @@ function FournituresTool() {
   );
 }
 
+// --- Diagnostic : ponçage vs remplacement --------------------------------
+// Logique métier : un parquet massif ou contrecollé peut être rénové si la
+// couche d'usure (bois noble) restante permet au moins un ponçage (≥ 2 mm).
+// Un stratifié, sans bois, ne se ponce jamais — remplacement obligatoire.
+type DiagType = "stratifie" | "contrecolle" | "massif" | "inconnu";
+type DiagEtat = "raye" | "tache" | "creuse" | "ok";
+type DiagVerdict = "poncage" | "remplacement" | "expertise";
+
+function DiagnosticTool() {
+  const [type, setType] = useState<DiagType>("massif");
+  const [etat, setEtat] = useState<DiagEtat>("raye");
+  const [epaisseur, setEpaisseur] = useState(3);
+  const [surface, setSurface] = useState(25);
+
+  const { verdict, title, why, costMin, costMax } = useMemo(() => {
+    if (type === "stratifie") {
+      return {
+        verdict: "remplacement" as DiagVerdict,
+        title: "Remplacement obligatoire",
+        why: "Un sol stratifié n'a pas de bois noble : la couche de surface est un décor imprimé sous résine, impossible à poncer. Seul un remplacement complet est envisageable.",
+        costMin: 35,
+        costMax: 60,
+      };
+    }
+    if (etat === "creuse") {
+      return {
+        verdict: "expertise" as DiagVerdict,
+        title: "Expertise sur place recommandée",
+        why: "Des lames creusées ou affaissées peuvent indiquer un défaut du support, de l'humidité ou des lambourdes abîmées. Un diagnostic visuel sur place est nécessaire avant de chiffrer.",
+        costMin: 0,
+        costMax: 0,
+      };
+    }
+    if (type === "inconnu") {
+      return {
+        verdict: "expertise" as DiagVerdict,
+        title: "Identification du parquet nécessaire",
+        why: "Sans connaître la nature exacte du sol (massif, contrecollé, stratifié), impossible de trancher. Un artisan peut l'identifier en 5 minutes sur place.",
+        costMin: 0,
+        costMax: 0,
+      };
+    }
+    const seuil = type === "massif" ? 2 : 2.5;
+    if (epaisseur >= seuil) {
+      return {
+        verdict: "poncage" as DiagVerdict,
+        title: "Ponçage + vitrification recommandés",
+        why: `Avec ${epaisseur} mm de bois noble, votre parquet ${type === "massif" ? "massif" : "contrecollé"} peut être rénové. Un ponçage retire ${etat === "tache" ? "les taches" : "les rayures"} et redonne un aspect neuf, pour 3 à 5 fois moins cher qu'un remplacement.`,
+        costMin: 25,
+        costMax: 45,
+      };
+    }
+    return {
+      verdict: "remplacement" as DiagVerdict,
+      title: "Remplacement conseillé",
+      why: `Avec seulement ${epaisseur} mm de bois noble, la couche d'usure est trop fine pour un ponçage sûr (minimum ${seuil} mm requis). Mieux vaut envisager une pose neuve pour repartir sur des bases saines.`,
+      costMin: type === "massif" ? 80 : 55,
+      costMax: type === "massif" ? 130 : 85,
+    };
+  }, [type, etat, epaisseur]);
+
+  const showEpaisseur = type === "massif" || type === "contrecolle";
+  const safeSurface = Math.max(1, surface);
+  const totalLow = costMin * safeSurface;
+  const totalHigh = costMax * safeSurface;
+
+  const verdictStyle = {
+    poncage: { Icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50 border-emerald-200" },
+    remplacement: { Icon: XCircle, color: "text-red-600", bg: "bg-red-50 border-red-200" },
+    expertise: { Icon: AlertTriangle, color: "text-amber-600", bg: "bg-amber-50 border-amber-200" },
+  }[verdict];
+  const VerdictIcon = verdictStyle.Icon;
+
+  const contactHref = useMemo(() => {
+    const params = new URLSearchParams({
+      projet:
+        verdict === "poncage"
+          ? "Ponçage / vitrification"
+          : verdict === "remplacement"
+          ? "Rénovation parquet"
+          : "Diagnostic parquet",
+      surface: String(surface),
+      ...(costMin > 0 ? { budget: `${costMin * safeSurface}-${costMax * safeSurface}€` } : {}),
+    });
+    return `/contact?${params.toString()}`;
+  }, [verdict, surface, costMin, costMax, safeSurface]);
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-5">
+      <div className="space-y-5 lg:col-span-3">
+        <SegmentedGroup
+          label="1. Type de parquet actuel"
+          value={type}
+          options={[
+            { value: "massif", label: "Massif", hint: "Bois plein" },
+            { value: "contrecolle", label: "Contrecollé", hint: "Multi-couches" },
+            { value: "stratifie", label: "Stratifié", hint: "Décor imprimé" },
+            { value: "inconnu", label: "Je ne sais pas", hint: "On vous aide" },
+          ]}
+          onChange={(v) => setType(v as DiagType)}
+        />
+
+        <SegmentedGroup
+          label="2. État principal du sol"
+          value={etat}
+          options={[
+            { value: "ok", label: "Bon état", hint: "Petites marques" },
+            { value: "raye", label: "Rayé", hint: "Rayures visibles" },
+            { value: "tache", label: "Taché", hint: "Auréoles, encre…" },
+            { value: "creuse", label: "Creusé", hint: "Lames affaissées" },
+          ]}
+          onChange={(v) => setEtat(v as DiagEtat)}
+        />
+
+        {showEpaisseur && (
+          <div>
+            <div className="mb-2 flex items-baseline justify-between">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                3. Couche de bois noble (couche d'usure)
+              </span>
+              <span className="font-display text-base text-foreground">{epaisseur} mm</span>
+            </div>
+            <input
+              type="range"
+              min={0.5}
+              max={6}
+              step={0.5}
+              value={epaisseur}
+              onChange={(e) => setEpaisseur(Number(e.target.value))}
+              aria-label="Épaisseur de bois noble en mm"
+              className="h-1.5 w-full cursor-pointer appearance-none rounded-full"
+              style={{
+                background: `linear-gradient(to right, var(--brand-orange) ${((epaisseur - 0.5) / 5.5) * 100}%, oklch(0.88 0.015 70) ${((epaisseur - 0.5) / 5.5) * 100}%)`,
+              }}
+            />
+            <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
+              <span>0,5 mm</span>
+              <span>Seuil ponçage : {type === "massif" ? "2" : "2,5"} mm</span>
+              <span>6 mm</span>
+            </div>
+            <p className="mt-2 text-[11px] text-muted-foreground">
+              Astuce : sur une lame démontée ou un seuil de porte, mesurez l'épaisseur visible au-dessus de la rainure. En cas de doute, choisissez 1 mm.
+            </p>
+          </div>
+        )}
+
+        <NumberField label={`${showEpaisseur ? "4." : "3."} Surface concernée`} value={surface} onChange={setSurface} unit="m²" step={1} />
+      </div>
+
+      <div className="lg:col-span-2">
+        <div className={`rounded-2xl border p-6 ${verdictStyle.bg}`}>
+          <div className="flex items-start gap-3">
+            <VerdictIcon className={`mt-0.5 h-6 w-6 flex-shrink-0 ${verdictStyle.color}`} aria-hidden />
+            <div>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Verdict du diagnostic
+              </div>
+              <div className={`mt-1 font-display text-xl leading-tight ${verdictStyle.color}`}>{title}</div>
+            </div>
+          </div>
+
+          <p className="mt-4 text-sm leading-relaxed text-foreground/85">{why}</p>
+
+          {costMin > 0 && (
+            <div className="mt-5 rounded-xl border border-border bg-card p-4">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Estimation TTC pour {surface} m²
+              </div>
+              <div className="mt-1 font-display text-2xl text-foreground">
+                {eur(totalLow)} <span className="mx-1 text-muted-foreground">—</span> {eur(totalHigh)}
+              </div>
+              <div className="mt-0.5 text-[11px] text-muted-foreground">
+                Soit {costMin}–{costMax} €/m² · fourniture + main d'œuvre
+              </div>
+            </div>
+          )}
+
+          <a
+            href={contactHref}
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            {verdict === "expertise" ? "Demander une expertise" : "Recevoir 3 devis fermes"}
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </a>
+
+          <p className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+            <ShieldCheck className="h-3 w-3 text-brand-orange" aria-hidden />
+            Diagnostic indicatif. Un artisan confirmera sur place.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 
 // --- Budget travaux -------------------------------------------------------
