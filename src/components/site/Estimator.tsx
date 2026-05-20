@@ -942,9 +942,15 @@ function ContactForm({
     return (
       <div className="mt-4 rounded-xl border border-brand-orange/40 bg-brand-orange/10 p-5 text-center">
         <CheckCircle2 className="mx-auto h-8 w-8 text-brand-orange" />
-        <h4 className="mt-2 font-display text-xl text-background">Demande envoyée</h4>
+        <h4 className="mt-2 font-display text-xl text-background">Demande enregistrée</h4>
+        {sentRef && (
+          <p className="mt-1 text-[11px] uppercase tracking-wider text-brand-orange">
+            Référence {sentRef}
+          </p>
+        )}
         <p className="mt-1 text-xs text-background/70">
-          Un artisan vous recontacte sous 24 h. Vos infos sont sauvegardées pour la prochaine fois.
+          Un artisan sélectionné dans votre secteur vous recontacte sous 24 h.
+          Vos infos sont sauvegardées pour la prochaine fois.
         </p>
         <div className="mt-3 flex flex-wrap justify-center gap-3 text-xs">
           <button
