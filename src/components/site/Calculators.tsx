@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Ruler, Droplet, Layers, Paintbrush, Info, Wallet, ArrowRight, ShieldCheck } from "lucide-react";
 
@@ -71,14 +71,25 @@ function SurfaceTool() {
   const [l, setL] = useState(5);
   const [w, setW] = useState(4);
   const [chute, setChute] = useState(8);
+  // Dimensions lame (mm) + surface botte (m²) + prix au m² personnalisables
+  const [lameL, setLameL] = useState(1200);
+  const [lameW, setLameW] = useState(190);
+  const [botteSurface, setBotteSurface] = useState(2.2);
+  const [prixM2, setPrixM2] = useState(45);
+
   const surface = l * w;
   const total = surface * (1 + chute / 100);
+  const lameM2 = (lameL * lameW) / 1_000_000; // mm² → m²
+  const nbLames = lameM2 > 0 ? Math.ceil(total / lameM2) : 0;
+  const nbBottes = botteSurface > 0 ? Math.ceil(total / botteSurface) : 0;
+  const coutTotal = total * prixM2;
+
   return (
     <div className="grid gap-5 md:grid-cols-2">
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <NumberField label="Longueur" value={l} onChange={setL} unit="m" step={0.1} />
-          <NumberField label="Largeur" value={w} onChange={setW} unit="m" step={0.1} />
+          <NumberField label="Longueur pièce" value={l} onChange={setL} unit="m" step={0.1} />
+          <NumberField label="Largeur pièce" value={w} onChange={setW} unit="m" step={0.1} />
         </div>
         <div>
           <div className="mb-2 flex items-baseline justify-between">
@@ -103,10 +114,27 @@ function SurfaceTool() {
             <span>Chevron · 12-15%</span>
           </div>
         </div>
+
+        <div className="rounded-xl border border-dashed border-border bg-secondary/30 p-3">
+          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Dimensions des lames & conditionnement
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <NumberField label="Longueur lame" value={lameL} onChange={setLameL} unit="mm" step={10} />
+            <NumberField label="Largeur lame" value={lameW} onChange={setLameW} unit="mm" step={5} />
+            <NumberField label="Surface / botte" value={botteSurface} onChange={setBotteSurface} unit="m²" step={0.1} />
+            <NumberField label="Prix au m²" value={prixM2} onChange={setPrixM2} unit="€" step={1} />
+          </div>
+        </div>
       </div>
       <ResultBox hint="Quantité à commander, marge de découpe incluse. Comptez +2 lames par pièce pour les réserves.">
         {fmt(total, 2)} <span className="text-lg text-muted-foreground">m²</span>
-        <div className="mt-1 text-xs text-muted-foreground">Surface nette : {fmt(surface, 2)} m²</div>
+        <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+          <div>Surface nette : {fmt(surface, 2)} m²</div>
+          <div>≈ {nbLames} lame{nbLames > 1 ? "s" : ""} ({lameL}×{lameW} mm)</div>
+          <div>≈ {nbBottes} botte{nbBottes > 1 ? "s" : ""} de {fmt(botteSurface, 2)} m²</div>
+          <div className="pt-1 font-display text-base text-foreground">Budget fourniture : {eur(coutTotal)}</div>
+        </div>
       </ResultBox>
     </div>
   );
@@ -115,10 +143,13 @@ function SurfaceTool() {
 function ColleTool() {
   const [surface, setSurface] = useState(35);
   const [type, setType] = useState<"contrecolle" | "massif" | "ancien">("contrecolle");
+  const [kgSeau, setKgSeau] = useState(15);
+  const [prixSeau, setPrixSeau] = useState(85);
   const ratios = { contrecolle: 0.9, massif: 1.1, ancien: 1.3 };
   const labels = { contrecolle: "Contrecollé", massif: "Massif", ancien: "Parquet ancien" } as const;
   const kg = surface * ratios[type];
-  const seaux = Math.ceil(kg / 15);
+  const seaux = kgSeau > 0 ? Math.ceil(kg / kgSeau) : 0;
+  const cout = seaux * prixSeau;
   return (
     <div className="grid gap-5 md:grid-cols-2">
       <div className="space-y-4">
@@ -143,11 +174,16 @@ function ColleTool() {
             ))}
           </div>
         </div>
+        <div className="grid grid-cols-2 gap-3">
+          <NumberField label="Contenance seau" value={kgSeau} onChange={setKgSeau} unit="kg" step={1} />
+          <NumberField label="Prix par seau" value={prixSeau} onChange={setPrixSeau} unit="€" step={1} />
+        </div>
       </div>
-      <ResultBox hint="Base : 900 g/m² (contrecollé) à 1,3 kg/m² (ancien). Seaux standard 15 kg.">
+      <ResultBox hint="Base : 900 g/m² (contrecollé) à 1,3 kg/m² (ancien). Personnalisez la contenance et le prix de vos seaux.">
         {fmt(kg)} <span className="text-lg text-muted-foreground">kg</span>
-        <div className="mt-1 text-xs text-muted-foreground">
-          Soit {seaux} seau{seaux > 1 ? "x" : ""} de 15 kg
+        <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+          <div>Soit {seaux} seau{seaux > 1 ? "x" : ""} de {kgSeau} kg</div>
+          <div className="pt-1 font-display text-base text-foreground">Budget colle : {eur(cout)}</div>
         </div>
       </ResultBox>
     </div>
@@ -157,21 +193,27 @@ function ColleTool() {
 function SousCoucheTool() {
   const [surface, setSurface] = useState(35);
   const [rouleau, setRouleau] = useState(15);
+  const [prixRouleau, setPrixRouleau] = useState(35);
   const surfaceUtile = surface * 1.05;
-  const rouleaux = Math.ceil(surfaceUtile / rouleau);
+  const rouleaux = rouleau > 0 ? Math.ceil(surfaceUtile / rouleau) : 0;
+  const cout = rouleaux * prixRouleau;
   return (
     <div className="grid gap-5 md:grid-cols-2">
       <div className="space-y-4">
         <NumberField label="Surface à couvrir" value={surface} onChange={setSurface} unit="m²" />
-        <NumberField label="Surface d'un rouleau" value={rouleau} onChange={setRouleau} unit="m²" />
+        <div className="grid grid-cols-2 gap-3">
+          <NumberField label="Surface d'un rouleau" value={rouleau} onChange={setRouleau} unit="m²" />
+          <NumberField label="Prix par rouleau" value={prixRouleau} onChange={setPrixRouleau} unit="€" step={1} />
+        </div>
         <p className="text-xs text-muted-foreground">
           Marge automatique de 5 % pour les recouvrements et chutes.
         </p>
       </div>
       <ResultBox hint="Rouleaux courants : 10 m² (mousse), 15 m² (liège), 20 m² (fibre de bois).">
         {rouleaux} <span className="text-lg text-muted-foreground">rouleau{rouleaux > 1 ? "x" : ""}</span>
-        <div className="mt-1 text-xs text-muted-foreground">
-          ≈ {fmt(surfaceUtile)} m² de sous-couche
+        <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+          <div>≈ {fmt(surfaceUtile)} m² de sous-couche</div>
+          <div className="pt-1 font-display text-base text-foreground">Budget sous-couche : {eur(cout)}</div>
         </div>
       </ResultBox>
     </div>
@@ -182,8 +224,11 @@ function VitrifTool() {
   const [surface, setSurface] = useState(35);
   const [couches, setCouches] = useState(3);
   const [rendement, setRendement] = useState(10);
+  const [litreBidon, setLitreBidon] = useState(5);
+  const [prixBidon, setPrixBidon] = useState(95);
   const litres = useMemo(() => (surface * couches) / rendement, [surface, couches, rendement]);
-  const bidons5 = Math.ceil(litres / 5);
+  const bidons = litreBidon > 0 ? Math.ceil(litres / litreBidon) : 0;
+  const cout = bidons * prixBidon;
   return (
     <div className="grid gap-5 md:grid-cols-2">
       <div className="space-y-4">
@@ -192,14 +237,19 @@ function VitrifTool() {
           <NumberField label="Couches" value={couches} onChange={setCouches} unit="" min={1} />
         </div>
         <NumberField label="Rendement" value={rendement} onChange={setRendement} unit="m²/L" />
+        <div className="grid grid-cols-2 gap-3">
+          <NumberField label="Contenance bidon" value={litreBidon} onChange={setLitreBidon} unit="L" step={0.5} />
+          <NumberField label="Prix par bidon" value={prixBidon} onChange={setPrixBidon} unit="€" step={1} />
+        </div>
         <p className="text-xs text-muted-foreground">
           Standard : 3 couches, 10 m²/L. Première couche en fond dur, 2 couches de finition.
         </p>
       </div>
       <ResultBox hint="Bidons courants : 1 L, 2,5 L, 5 L. Prévoir 5-10 % de plus en pose complexe.">
         {fmt(litres)} <span className="text-lg text-muted-foreground">L</span>
-        <div className="mt-1 text-xs text-muted-foreground">
-          Soit {bidons5} bidon{bidons5 > 1 ? "s" : ""} de 5 L
+        <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+          <div>Soit {bidons} bidon{bidons > 1 ? "s" : ""} de {litreBidon} L</div>
+          <div className="pt-1 font-display text-base text-foreground">Budget vitrificateur : {eur(cout)}</div>
         </div>
       </ResultBox>
     </div>
@@ -235,18 +285,31 @@ function BudgetTool() {
   const [pose, setPose] = useState<BudgetPose>("collee");
   const [surface, setSurface] = useState(35);
   const [support, setSupport] = useState<BudgetSupport>("plat");
+  const [customize, setCustomize] = useState(false);
+  const [priceMin, setPriceMin] = useState<number>(POSE_RANGES["collee"].min);
+  const [priceMax, setPriceMax] = useState<number>(POSE_RANGES["collee"].max);
+
+  // Synchronise les valeurs par défaut quand on change de type de pose,
+  // sauf si l'utilisateur a activé le mode tarif personnalisé.
+  useEffect(() => {
+    if (!customize) {
+      setPriceMin(POSE_RANGES[pose].min);
+      setPriceMax(POSE_RANGES[pose].max);
+    }
+  }, [pose, customize]);
 
   const { low, high } = useMemo(() => {
-    const poseR = POSE_RANGES[pose];
+    const baseMin = customize ? priceMin : POSE_RANGES[pose].min;
+    const baseMax = customize ? priceMax : POSE_RANGES[pose].max;
     const sup = projet === "renovation" ? SUPPORT_EXTRA[support] : { min: 0, max: 0 };
     // Neuf bénéficie d'une légère décote (pas d'enlèvement/protection existant).
     const neufFactor = projet === "neuf" ? 0.92 : 1;
     const safeSurface = Math.max(1, surface);
     return {
-      low: (poseR.min + sup.min) * safeSurface * neufFactor,
-      high: (poseR.max + sup.max) * safeSurface * neufFactor,
+      low: (baseMin + sup.min) * safeSurface * neufFactor,
+      high: (Math.max(baseMax, baseMin) + sup.max) * safeSurface * neufFactor,
     };
-  }, [projet, pose, surface, support]);
+  }, [projet, pose, surface, support, customize, priceMin, priceMax]);
 
   // Build a plain query string so /contact can prefill later without
   // forcing a typed search schema on the route.
@@ -331,6 +394,27 @@ function BudgetTool() {
             onChange={(v) => setSupport(v as BudgetSupport)}
           />
         )}
+
+        {/* Tarif personnalisé €/m² (override des fourchettes par défaut) */}
+        <div className="rounded-xl border border-dashed border-border bg-secondary/30 p-3">
+          <label className="flex cursor-pointer items-center justify-between gap-3">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Personnaliser le tarif €/m² (devis, artisan…)
+            </span>
+            <input
+              type="checkbox"
+              checked={customize}
+              onChange={(e) => setCustomize(e.target.checked)}
+              className="h-4 w-4 accent-brand-orange"
+            />
+          </label>
+          {customize && (
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <NumberField label="Prix min" value={priceMin} onChange={setPriceMin} unit="€/m²" step={1} />
+              <NumberField label="Prix max" value={priceMax} onChange={setPriceMax} unit="€/m²" step={1} />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Résultat + CTA conversion */}
