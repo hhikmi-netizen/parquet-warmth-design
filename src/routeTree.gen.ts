@@ -15,8 +15,10 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as EstimationRouteImport } from './routes/estimation'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DemoMicroReassuranceRouteImport } from './routes/demo.micro-reassurance'
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
@@ -49,6 +51,11 @@ const EstimationRoute = EstimationRouteImport.update({
   path: '/estimation',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -56,6 +63,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoMicroReassuranceRoute = DemoMicroReassuranceRouteImport.update({
+  id: '/demo/micro-reassurance',
+  path: '/demo/micro-reassurance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedHistoriqueRoute = AuthenticatedHistoriqueRouteImport.update({
@@ -66,6 +78,7 @@ const AuthenticatedHistoriqueRoute = AuthenticatedHistoriqueRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -73,9 +86,11 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/verify-email': typeof VerifyEmailRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
+  '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -83,11 +98,13 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/verify-email': typeof VerifyEmailRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
+  '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/contact': typeof ContactRoute
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -95,11 +112,13 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/verify-email': typeof VerifyEmailRoute
   '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
+  '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/contact'
     | '/estimation'
     | '/forgot-password'
     | '/login'
@@ -107,9 +126,11 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-email'
     | '/historique'
+    | '/demo/micro-reassurance'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/contact'
     | '/estimation'
     | '/forgot-password'
     | '/login'
@@ -117,10 +138,12 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-email'
     | '/historique'
+    | '/demo/micro-reassurance'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/contact'
     | '/estimation'
     | '/forgot-password'
     | '/login'
@@ -128,17 +151,20 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-email'
     | '/_authenticated/historique'
+    | '/demo/micro-reassurance'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  ContactRoute: typeof ContactRoute
   EstimationRoute: typeof EstimationRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
+  DemoMicroReassuranceRoute: typeof DemoMicroReassuranceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -185,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstimationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -197,6 +230,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/micro-reassurance': {
+      id: '/demo/micro-reassurance'
+      path: '/demo/micro-reassurance'
+      fullPath: '/demo/micro-reassurance'
+      preLoaderRoute: typeof DemoMicroReassuranceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/historique': {
@@ -224,12 +264,14 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  ContactRoute: ContactRoute,
   EstimationRoute: EstimationRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   VerifyEmailRoute: VerifyEmailRoute,
+  DemoMicroReassuranceRoute: DemoMicroReassuranceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -10,7 +10,7 @@ const nav = [
   { label: "Nos artisans", href: "#nos-artisans" },
   { label: "Outils", href: "#outils" },
   { label: "Blog", href: "#blog" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function Header() {
