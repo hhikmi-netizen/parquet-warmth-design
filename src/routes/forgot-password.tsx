@@ -22,7 +22,7 @@ function ForgotPage() {
     e.preventDefault();
     const parsed = schema.safeParse({ email });
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Email invalide");
+      authToast.error(parsed.error.issues[0]?.message ?? "Email invalide");
       return;
     }
     setLoading(true);
@@ -31,9 +31,10 @@ function ForgotPage() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      authToast.error(error.message);
       return;
     }
+    authToast.dismiss();
     setSent(true);
   };
 
