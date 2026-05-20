@@ -12,6 +12,7 @@ import { Calculators } from "@/components/site/Calculators";
 import { Blog } from "@/components/site/Blog";
 import { FAQ } from "@/components/site/FAQ";
 import { FinalCTA } from "@/components/site/FinalCTA";
+import { Partners } from "@/components/site/Partners";
 import { Footer } from "@/components/site/Footer";
 import { FloatingNav } from "@/components/site/FloatingNav";
 
@@ -44,6 +45,7 @@ function Index() {
       <Artisan />
         <Blog />
         <FAQ />
+        <Partners />
         <FinalCTA />
       <Footer />
       <FloatingNav />
