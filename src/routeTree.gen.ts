@@ -36,6 +36,7 @@ import { Route as AdminLogsRouteImport } from './routes/admin.logs'
 import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminArtisansRouteImport } from './routes/admin.artisans'
 import { Route as AuthenticatedProRouteImport } from './routes/_authenticated/pro'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
 import { Route as ProDevisNouveauRouteImport } from './routes/pro.devis.nouveau'
@@ -177,6 +178,11 @@ const AuthenticatedProRoute = AuthenticatedProRouteImport.update({
   path: '/pro',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedHistoriqueRoute = AuthenticatedHistoriqueRouteImport.update({
   id: '/historique',
   path: '/historique',
@@ -220,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
@@ -287,6 +295,7 @@ export interface FileRoutesById {
   '/verify-email': typeof VerifyEmailRoute
   '/_authenticated/devis': typeof AuthenticatedDevisRoute
   '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
@@ -322,6 +331,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/devis'
     | '/historique'
+    | '/messages'
     | '/pro'
     | '/admin/artisans'
     | '/admin/clients'
@@ -354,6 +364,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/devis'
     | '/historique'
+    | '/messages'
     | '/pro'
     | '/admin/artisans'
     | '/admin/clients'
@@ -388,6 +399,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/_authenticated/devis'
     | '/_authenticated/historique'
+    | '/_authenticated/messages'
     | '/_authenticated/pro'
     | '/admin/artisans'
     | '/admin/clients'
@@ -618,6 +630,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/historique': {
       id: '/_authenticated/historique'
       path: '/historique'
@@ -672,12 +691,14 @@ const AuthenticatedProRouteWithChildren =
 interface AuthenticatedRouteChildren {
   AuthenticatedDevisRoute: typeof AuthenticatedDevisRoute
   AuthenticatedHistoriqueRoute: typeof AuthenticatedHistoriqueRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedProRoute: typeof AuthenticatedProRouteWithChildren
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDevisRoute: AuthenticatedDevisRoute,
   AuthenticatedHistoriqueRoute: AuthenticatedHistoriqueRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedProRoute: AuthenticatedProRouteWithChildren,
 }
 
