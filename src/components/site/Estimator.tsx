@@ -862,6 +862,7 @@ function ContactForm({
   const [errors, setErrors] = useState<ContactErrors>({});
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [sentRef, setSentRef] = useState<string | null>(null);
 
   // Persist on change (pré-remplissage au retour)
   useEffect(() => {
