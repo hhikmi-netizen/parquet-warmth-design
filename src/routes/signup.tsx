@@ -28,6 +28,8 @@ export const Route = createFileRoute("/signup")({
 
 function SignupPage() {
   const navigate = useNavigate();
+  const { redirect } = Route.useSearch();
+  const target = safeRedirect(redirect);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,26 +46,25 @@ function SignupPage() {
     setLoading(true);
     const { data, error } = await supabase.auth.signUp({
       ...parsed.data,
-      options: { emailRedirectTo: window.location.origin + "/historique" },
+      options: { emailRedirectTo: window.location.origin + target },
     });
     setLoading(false);
     if (error) {
       toast.error(error.message);
       return;
     }
-    // If email confirmation is required, Supabase returns a user without a session.
     if (data.session) {
-      navigate({ to: "/historique" });
+      navigate({ to: target });
       return;
     }
     setSent(true);
-    navigate({ to: "/verify-email", search: { email: parsed.data.email } });
+    navigate({ to: "/verify-email", search: { email: parsed.data.email, redirect: target } });
   };
 
   const onProvider = async (provider: "google" | "apple") => {
     setSocial(provider);
     const result = await lovable.auth.signInWithOAuth(provider, {
-      redirect_uri: window.location.origin + "/historique",
+      redirect_uri: window.location.origin + target,
     });
     if (result.error) {
       setSocial(null);
@@ -71,7 +72,7 @@ function SignupPage() {
       return;
     }
     if (result.redirected) return;
-    navigate({ to: "/historique" });
+    navigate({ to: target });
   };
 
   if (sent) {
