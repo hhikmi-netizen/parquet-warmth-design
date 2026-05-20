@@ -29,7 +29,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const NAV = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean; badge?: string };
+const NAV: NavItem[] = [
   { to: "/admin", label: "Vue 360°", icon: LayoutDashboard, exact: true },
   { to: "/admin/clients", label: "Demandes clients", icon: Inbox, badge: "3" },
   { to: "/admin/artisans", label: "Artisans", icon: Hammer },
@@ -39,7 +40,7 @@ const NAV = [
   { to: "/admin/logs", label: "Journal & logs", icon: ScrollText },
   { to: "/admin/notifications", label: "Notifications", icon: Bell, badge: "7" },
   { to: "/admin/parametres", label: "Paramètres", icon: Settings },
-] as const;
+];
 
 function AdminSidebar() {
   const { state } = useSidebar();
