@@ -450,7 +450,29 @@ export function Estimator() {
   const [shareMsg, setShareMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    setS(loadState());
+    const loaded = loadState();
+    // Override depuis l'URL si présent (lien devis partagé)
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get(QUOTE_PARAM);
+      if (token) {
+        const decoded = decodeQuote(token);
+        if (decoded) {
+          setS({ ...loaded, ...decoded });
+          setShowContact(false);
+          setHydrated(true);
+          setInitialContact(loadContact());
+          // scroll vers l'estimateur après hydratation
+          setTimeout(() => {
+            document.getElementById("estimate")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 50);
+          return;
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    setS(loaded);
     setInitialContact(loadContact());
     setHydrated(true);
   }, []);
