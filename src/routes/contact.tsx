@@ -316,10 +316,10 @@ function ContactPage() {
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Nom" name="nom" error={errors.nom} required autoComplete="name" />
-              <Field label="Email" name="email" type="email" error={errors.email} required autoComplete="email" />
-              <Field label="Téléphone" name="telephone" type="tel" placeholder="Optionnel" error={errors.telephone} autoComplete="tel" hint="Optionnel" />
-              <Field label="Ville" name="ville" error={errors.ville} required autoComplete="address-level2" />
+              <Field label="Nom" name="nom" error={errors.nom} required autoComplete="name" onValidate={validateField} />
+              <Field label="Email" name="email" type="email" error={errors.email} required autoComplete="email" onValidate={validateField} />
+              <Field label="Téléphone" name="telephone" type="tel" placeholder="Optionnel" error={errors.telephone} autoComplete="tel" hint="Optionnel" onValidate={validateField} />
+              <Field label="Ville" name="ville" error={errors.ville} required autoComplete="address-level2" onValidate={validateField} />
             </div>
 
             <fieldset
