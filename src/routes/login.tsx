@@ -12,8 +12,17 @@ const schema = z.object({
   password: z.string().min(1, "Mot de passe requis").max(72),
 });
 
+const searchSchema = z.object({ redirect: z.string().optional() });
+
+function safeRedirect(value: string | undefined): string {
+  if (!value) return "/historique";
+  if (!value.startsWith("/") || value.startsWith("//")) return "/historique";
+  return value;
+}
+
 export const Route = createFileRoute("/login")({
   component: LoginPage,
+  validateSearch: (s) => searchSchema.parse(s),
   head: () => ({ meta: [{ title: "Connexion — Parqueto" }] }),
 });
 
