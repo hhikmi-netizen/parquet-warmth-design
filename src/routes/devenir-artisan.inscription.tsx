@@ -13,6 +13,11 @@ import {
   X,
   Sparkles,
   Lock,
+  FileText,
+  Award,
+  Pencil,
+  ClipboardCheck,
+  Info,
 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -42,6 +47,26 @@ type Specialite =
   | "escaliers"
   | "terrasse_bois";
 
+type Essence =
+  | "chene"
+  | "chataignier"
+  | "exotiques"
+  | "resineux"
+  | "ancien_recupere";
+
+type Finition = "huile" | "vitrification" | "cire" | "savon_noir";
+
+type FormeJuridique =
+  | "auto_entrepreneur"
+  | "ei"
+  | "eurl"
+  | "sarl"
+  | "sas"
+  | "sasu"
+  | "autre";
+
+type DocFile = { name: string; dataUrl: string; size: number } | null;
+
 type FormState = {
   // Étape 1 — Identité
   raisonSociale: string;
@@ -55,18 +80,37 @@ type FormState = {
   ville: string;
   codePostal: string;
   rayonKm: number;
-  // Étape 3 — Spécialités
+  // Étape 3 — Métier
   specialites: Specialite[];
+  essences: Essence[];
+  finitions: Finition[];
   poseMin: string;
+  capaciteMois: string;
+  delaiDemarrage: string;
+  tarifIndicatif: string;
   // Étape 4 — Réalisations
   photos: { name: string; dataUrl: string }[];
   bio: string;
-  // Étape 5 — Assurance
-  assuranceDecennale: string;
-  numeroDecennale: string;
-  rcPro: boolean;
-  // Final
+  anneeCreation: string;
+  effectif: string;
+  chantierSignature: string;
+  siteWeb: string;
+  instagram: string;
+  // Étape 5 — Statut & assurances
+  formeJuridique: FormeJuridique | "";
+  justificatif: DocFile;
+  decennaleCompagnie: string;
+  decennaleNumero: string;
+  decennaleValidite: string;
+  decennaleAttestation: DocFile;
+  rcProCompagnie: string;
+  rcProNumero: string;
+  qualibat: boolean;
+  rge: boolean;
+  // Étape 6 — Récap & validation
   cgu: boolean;
+  chartQualite: boolean;
+  exactitude: boolean;
 };
 
 const STORAGE_KEY = "parqueto.artisan.inscription";
@@ -82,6 +126,31 @@ const SPECIALITE_LABELS: Record<Specialite, string> = {
   terrasse_bois: "Terrasse extérieure",
 };
 
+const ESSENCE_LABELS: Record<Essence, string> = {
+  chene: "Chêne",
+  chataignier: "Châtaignier",
+  exotiques: "Bois exotiques",
+  resineux: "Résineux (pin, sapin)",
+  ancien_recupere: "Bois ancien / récupéré",
+};
+
+const FINITION_LABELS: Record<Finition, string> = {
+  huile: "Huile naturelle",
+  vitrification: "Vitrification",
+  cire: "Cire traditionnelle",
+  savon_noir: "Savon noir",
+};
+
+const FORME_LABELS: Record<FormeJuridique, string> = {
+  auto_entrepreneur: "Auto-entrepreneur / Micro-entreprise",
+  ei: "Entreprise individuelle (EI)",
+  eurl: "EURL",
+  sarl: "SARL",
+  sas: "SAS",
+  sasu: "SASU",
+  autre: "Autre",
+};
+
 const initialState: FormState = {
   raisonSociale: "",
   representant: "",
@@ -94,13 +163,32 @@ const initialState: FormState = {
   codePostal: "",
   rayonKm: 25,
   specialites: [],
+  essences: [],
+  finitions: [],
   poseMin: "",
+  capaciteMois: "",
+  delaiDemarrage: "",
+  tarifIndicatif: "",
   photos: [],
   bio: "",
-  assuranceDecennale: "",
-  numeroDecennale: "",
-  rcPro: false,
+  anneeCreation: "",
+  effectif: "",
+  chantierSignature: "",
+  siteWeb: "",
+  instagram: "",
+  formeJuridique: "",
+  justificatif: null,
+  decennaleCompagnie: "",
+  decennaleNumero: "",
+  decennaleValidite: "",
+  decennaleAttestation: null,
+  rcProCompagnie: "",
+  rcProNumero: "",
+  qualibat: false,
+  rge: false,
   cgu: false,
+  chartQualite: false,
+  exactitude: false,
 };
 
 const STEPS = [
@@ -108,7 +196,8 @@ const STEPS = [
   { id: 2, label: "Zone", icon: MapPin },
   { id: 3, label: "Métier", icon: Hammer },
   { id: 4, label: "Réalisations", icon: Camera },
-  { id: 5, label: "Assurance", icon: ShieldCheck },
+  { id: 5, label: "Assurances", icon: ShieldCheck },
+  { id: 6, label: "Récap", icon: ClipboardCheck },
 ] as const;
 
 function ArtisanOnboarding() {
@@ -174,6 +263,42 @@ function ArtisanOnboarding() {
   const removePhoto = (i: number) =>
     setForm((prev) => ({ ...prev, photos: prev.photos.filter((_, idx) => idx !== i) }));
 
+  const toggleEssence = (e: Essence) =>
+    setForm((prev) => ({
+      ...prev,
+      essences: prev.essences.includes(e)
+        ? prev.essences.filter((x) => x !== e)
+        : [...prev.essences, e],
+    }));
+
+  const toggleFinition = (f: Finition) =>
+    setForm((prev) => ({
+      ...prev,
+      finitions: prev.finitions.includes(f)
+        ? prev.finitions.filter((x) => x !== f)
+        : [...prev.finitions, f],
+    }));
+
+  const onDoc = (key: "justificatif" | "decennaleAttestation", file: File | null) => {
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) return;
+    const ok = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
+    if (!ok.includes(file.type)) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setForm((prev) => ({
+        ...prev,
+        [key]: { name: file.name, dataUrl: reader.result as string, size: file.size },
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const labelJustificatif =
+    form.formeJuridique === "auto_entrepreneur" || form.formeJuridique === "ei"
+      ? "Certificat d'immatriculation INSEE / extrait Sirene"
+      : "Extrait Kbis (moins de 3 mois)";
+
   const validity = useMemo(() => {
     const v: Record<number, boolean> = {
       1:
@@ -186,13 +311,27 @@ function ArtisanOnboarding() {
         form.ville.trim().length > 1 &&
         /^\d{5}$/.test(form.codePostal) &&
         form.rayonKm >= 5,
-      3: form.specialites.length >= 1,
-      4: form.photos.length >= 1 && form.bio.trim().length >= 40,
+      3:
+        form.specialites.length >= 1 &&
+        form.essences.length >= 1 &&
+        form.finitions.length >= 1,
+      4:
+        form.photos.length >= 1 &&
+        form.bio.trim().length >= 40 &&
+        /^\d{4}$/.test(form.anneeCreation) &&
+        Number(form.anneeCreation) >= 1900 &&
+        Number(form.anneeCreation) <= new Date().getFullYear(),
       5:
-        form.assuranceDecennale.trim().length > 1 &&
-        form.numeroDecennale.trim().length > 3 &&
-        form.rcPro &&
-        form.cgu,
+        form.formeJuridique !== "" &&
+        form.justificatif !== null &&
+        form.decennaleCompagnie.trim().length > 1 &&
+        form.decennaleNumero.trim().length > 3 &&
+        /^\d{4}-\d{2}-\d{2}$/.test(form.decennaleValidite) &&
+        new Date(form.decennaleValidite) > new Date() &&
+        form.decennaleAttestation !== null &&
+        form.rcProCompagnie.trim().length > 1 &&
+        form.rcProNumero.trim().length > 3,
+      6: form.cgu && form.chartQualite && form.exactitude,
     };
     return v;
   }, [form]);
@@ -324,7 +463,7 @@ function ArtisanOnboarding() {
           </div>
 
           {/* Stepper */}
-          <ol className="mt-8 grid grid-cols-5 gap-2">
+          <ol className="mt-8 grid grid-cols-6 gap-2">
             {STEPS.map((s) => {
               const active = s.id === step;
               const done = s.id < step;
@@ -533,86 +672,198 @@ function ArtisanOnboarding() {
               </div>
             )}
 
-            {/* Étape 3 */}
+            {/* Étape 3 — Métier */}
             {step === 3 && (
-              <div className="space-y-6">
+              <div className="space-y-8">
                 <header>
-                  <h2 className="font-serif text-2xl tracking-tight">Votre métier</h2>
+                  <h2 className="font-serif text-2xl tracking-tight">Votre savoir-faire</h2>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Sélectionnez les prestations que vous proposez (au moins une).
+                    Précisez les prestations, essences et finitions que vous maîtrisez.
+                    Ces critères servent à filtrer les projets qui vous sont proposés.
                   </p>
                 </header>
 
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {(Object.keys(SPECIALITE_LABELS) as Specialite[]).map((s) => {
-                    const active = form.specialites.includes(s);
-                    return (
-                      <button
-                        key={s}
-                        type="button"
-                        onClick={() => toggleSpecialite(s)}
-                        className={`flex items-center gap-3 rounded-2xl border p-4 text-left text-sm transition ${
-                          active
-                            ? "border-brand-orange bg-brand-orange/5 shadow-soft"
-                            : "border-border bg-background hover:border-brand-orange/50"
-                        }`}
-                      >
-                        <span
-                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 ${
+                <section className="space-y-3">
+                  <div className="flex items-baseline justify-between">
+                    <h3 className="text-sm font-semibold">Prestations proposées</h3>
+                    <span className="text-xs text-muted-foreground">
+                      {form.specialites.length} sélectionnée(s) — min. 1
+                    </span>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {(Object.keys(SPECIALITE_LABELS) as Specialite[]).map((s) => {
+                      const active = form.specialites.includes(s);
+                      return (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => toggleSpecialite(s)}
+                          className={`flex items-center gap-3 rounded-2xl border p-4 text-left text-sm transition ${
                             active
-                              ? "border-brand-orange bg-brand-orange text-white"
-                              : "border-border"
+                              ? "border-brand-orange bg-brand-orange/5 shadow-soft"
+                              : "border-border bg-background hover:border-brand-orange/50"
                           }`}
                         >
-                          {active && <CheckCircle2 className="h-3.5 w-3.5" />}
-                        </span>
-                        <span className={active ? "font-semibold" : ""}>
-                          {SPECIALITE_LABELS[s]}
-                        </span>
-                      </button>
-                    );
-                  })}
+                          <span
+                            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 ${
+                              active ? "border-brand-orange bg-brand-orange text-white" : "border-border"
+                            }`}
+                          >
+                            {active && <CheckCircle2 className="h-3.5 w-3.5" />}
+                          </span>
+                          <span className={active ? "font-semibold" : ""}>{SPECIALITE_LABELS[s]}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                <section className="space-y-3">
+                  <div className="flex items-baseline justify-between">
+                    <h3 className="text-sm font-semibold">Essences maîtrisées</h3>
+                    <span className="text-xs text-muted-foreground">min. 1</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {(Object.keys(ESSENCE_LABELS) as Essence[]).map((e) => {
+                      const active = form.essences.includes(e);
+                      return (
+                        <button
+                          key={e}
+                          type="button"
+                          onClick={() => toggleEssence(e)}
+                          className={`rounded-full border px-4 py-2 text-sm transition ${
+                            active
+                              ? "border-brand-orange bg-brand-orange text-primary-foreground"
+                              : "border-border bg-background text-foreground hover:border-brand-orange/50"
+                          }`}
+                        >
+                          {ESSENCE_LABELS[e]}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                <section className="space-y-3">
+                  <div className="flex items-baseline justify-between">
+                    <h3 className="text-sm font-semibold">Finitions proposées</h3>
+                    <span className="text-xs text-muted-foreground">min. 1</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {(Object.keys(FINITION_LABELS) as Finition[]).map((f) => {
+                      const active = form.finitions.includes(f);
+                      return (
+                        <button
+                          key={f}
+                          type="button"
+                          onClick={() => toggleFinition(f)}
+                          className={`rounded-full border px-4 py-2 text-sm transition ${
+                            active
+                              ? "border-brand-orange bg-brand-orange text-primary-foreground"
+                              : "border-border bg-background text-foreground hover:border-brand-orange/50"
+                          }`}
+                        >
+                          {FINITION_LABELS[f]}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Surface minimum acceptée" hint="Filtre les petits chantiers">
+                    <select
+                      value={form.poseMin}
+                      onChange={(e) => update("poseMin", e.target.value)}
+                      className={inputCls}
+                    >
+                      <option value="">Aucun minimum</option>
+                      <option value="10">À partir de 10 m²</option>
+                      <option value="20">À partir de 20 m²</option>
+                      <option value="30">À partir de 30 m²</option>
+                      <option value="50">À partir de 50 m²</option>
+                    </select>
+                  </Field>
+                  <Field label="Capacité moyenne" hint="Chantiers acceptés par mois">
+                    <select
+                      value={form.capaciteMois}
+                      onChange={(e) => update("capaciteMois", e.target.value)}
+                      className={inputCls}
+                    >
+                      <option value="">Sélectionner…</option>
+                      <option value="1-2">1 à 2 chantiers</option>
+                      <option value="3-5">3 à 5 chantiers</option>
+                      <option value="6-10">6 à 10 chantiers</option>
+                      <option value="10+">Plus de 10</option>
+                    </select>
+                  </Field>
+                  <Field label="Délai moyen avant démarrage" hint="À partir de la signature">
+                    <select
+                      value={form.delaiDemarrage}
+                      onChange={(e) => update("delaiDemarrage", e.target.value)}
+                      className={inputCls}
+                    >
+                      <option value="">Sélectionner…</option>
+                      <option value="1s">Sous 1 semaine</option>
+                      <option value="2s">Sous 2 semaines</option>
+                      <option value="1m">Sous 1 mois</option>
+                      <option value="2m">Sous 2 mois</option>
+                      <option value="+">Plus de 2 mois</option>
+                    </select>
+                  </Field>
+                  <Field label="Tarif indicatif main-d'œuvre" hint="€ HT / m² — optionnel">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={form.tarifIndicatif}
+                      onChange={(e) =>
+                        update("tarifIndicatif", e.target.value.replace(/[^\d,]/g, "").slice(0, 6))
+                      }
+                      placeholder="Ex. 45"
+                      className={inputCls}
+                    />
+                  </Field>
                 </div>
 
-                <Field label="Surface minimum acceptée" hint="Optionnel — filtre les petits chantiers">
-                  <select
-                    value={form.poseMin}
-                    onChange={(e) => update("poseMin", e.target.value)}
-                    className={inputCls}
-                  >
-                    <option value="">Aucun minimum</option>
-                    <option value="10">À partir de 10 m²</option>
-                    <option value="20">À partir de 20 m²</option>
-                    <option value="30">À partir de 30 m²</option>
-                    <option value="50">À partir de 50 m²</option>
-                  </select>
-                </Field>
+                <div className="flex items-start gap-3 rounded-2xl bg-muted/40 p-4 text-xs text-muted-foreground">
+                  <Info className="mt-0.5 h-4 w-4 shrink-0" />
+                  <p>
+                    Vos tarifs restent libres et confidentiels. Cette indication
+                    nous aide à vous proposer des projets compatibles avec votre
+                    positionnement — elle n'est jamais affichée aux clients.
+                  </p>
+                </div>
               </div>
             )}
 
-            {/* Étape 4 */}
+            {/* Étape 4 — Réalisations */}
             {step === 4 && (
-              <div className="space-y-6">
+              <div className="space-y-8">
                 <header>
-                  <h2 className="font-serif text-2xl tracking-tight">Vos réalisations</h2>
+                  <h2 className="font-serif text-2xl tracking-tight">Votre vitrine</h2>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Au moins 1 photo (jusqu'à 6) et une courte présentation.
-                    C'est ce que les clients verront en premier.
+                    Vos photos et votre récit sont ce que les clients voient en premier.
+                    Soignez-les comme la devanture de votre atelier.
                   </p>
                 </header>
 
                 <div>
+                  <div className="mb-2 flex items-baseline justify-between">
+                    <h3 className="text-sm font-semibold">Photos de chantiers</h3>
+                    <span className="text-xs text-muted-foreground">{form.photos.length}/6 — min. 1</span>
+                  </div>
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                     {form.photos.map((p, i) => (
                       <div
                         key={i}
                         className="relative aspect-square overflow-hidden rounded-xl border border-border bg-muted"
                       >
-                        <img
-                          src={p.dataUrl}
-                          alt={p.name}
-                          className="h-full w-full object-cover"
-                        />
+                        <img src={p.dataUrl} alt={p.name} className="h-full w-full object-cover" />
+                        {i === 0 && (
+                          <span className="absolute left-1.5 top-1.5 rounded-full bg-brand-orange px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
+                            Couverture
+                          </span>
+                        )}
                         <button
                           type="button"
                           onClick={() => removePhoto(i)}
@@ -646,13 +897,13 @@ function ArtisanOnboarding() {
                     className="hidden"
                   />
                   <p className="mt-2 text-xs text-muted-foreground">
-                    JPG ou PNG, 5 Mo max par photo. {form.photos.length}/6 ajoutées.
+                    JPG, PNG ou WebP — 5 Mo max par photo. La première photo sert de couverture.
                   </p>
                 </div>
 
                 <Field
                   label="Présentation de votre atelier"
-                  hint={`${form.bio.length}/500 caractères — min. 40`}
+                  hint={`${form.bio.length}/500 — min. 40`}
                   required
                 >
                   <textarea
@@ -663,81 +914,398 @@ function ArtisanOnboarding() {
                     className={`${inputCls} resize-none`}
                   />
                 </Field>
-              </div>
-            )}
-
-            {/* Étape 5 */}
-            {step === 5 && (
-              <div className="space-y-6">
-                <header>
-                  <h2 className="font-serif text-2xl tracking-tight">Assurance & conditions</h2>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Obligatoire pour rejoindre le réseau. Justificatif demandé après validation.
-                  </p>
-                </header>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <Field label="Compagnie d'assurance décennale" required>
+                  <Field label="Année de création" required>
                     <input
                       type="text"
-                      value={form.assuranceDecennale}
-                      onChange={(e) => update("assuranceDecennale", e.target.value)}
-                      placeholder="Ex. MAAF Pro, SMABTP…"
+                      inputMode="numeric"
+                      value={form.anneeCreation}
+                      onChange={(e) =>
+                        update("anneeCreation", e.target.value.replace(/\D/g, "").slice(0, 4))
+                      }
+                      placeholder="1987"
                       className={inputCls}
-                      maxLength={80}
                     />
                   </Field>
-                  <Field label="N° de contrat" required>
-                    <input
-                      type="text"
-                      value={form.numeroDecennale}
-                      onChange={(e) => update("numeroDecennale", e.target.value)}
-                      placeholder="Ex. 1234567890"
+                  <Field label="Effectif" hint="Optionnel">
+                    <select
+                      value={form.effectif}
+                      onChange={(e) => update("effectif", e.target.value)}
                       className={inputCls}
-                      maxLength={40}
-                    />
+                    >
+                      <option value="">Sélectionner…</option>
+                      <option value="1">Artisan seul</option>
+                      <option value="2-3">2 à 3 personnes</option>
+                      <option value="4-9">4 à 9 personnes</option>
+                      <option value="10+">10 personnes et plus</option>
+                    </select>
                   </Field>
                 </div>
 
-                <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border bg-muted/30 p-4 transition hover:bg-muted/50">
-                  <input
-                    type="checkbox"
-                    checked={form.rcPro}
-                    onChange={(e) => update("rcPro", e.target.checked)}
-                    className="mt-0.5 h-5 w-5 accent-[var(--brand-orange)]"
+                <Field
+                  label="Chantier signature"
+                  hint="Un projet emblématique à mettre en avant — optionnel"
+                >
+                  <textarea
+                    value={form.chantierSignature}
+                    onChange={(e) => update("chantierSignature", e.target.value.slice(0, 300))}
+                    rows={3}
+                    placeholder="Ex. Restauration d'un parquet versaillais XVIIIᵉ dans un hôtel particulier du 6ᵉ arrondissement, 180 m², point de Hongrie chêne."
+                    className={`${inputCls} resize-none`}
                   />
-                  <span className="text-sm">
-                    <strong>Je dispose d'une RC Pro</strong> et d'une assurance décennale
-                    en cours de validité.
-                  </span>
-                </label>
+                </Field>
 
-                <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border bg-muted/30 p-4 transition hover:bg-muted/50">
-                  <input
-                    type="checkbox"
-                    checked={form.cgu}
-                    onChange={(e) => update("cgu", e.target.checked)}
-                    className="mt-0.5 h-5 w-5 accent-[var(--brand-orange)]"
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Site web" hint="Optionnel">
+                    <input
+                      type="url"
+                      value={form.siteWeb}
+                      onChange={(e) => update("siteWeb", e.target.value)}
+                      placeholder="https://"
+                      className={inputCls}
+                      maxLength={200}
+                    />
+                  </Field>
+                  <Field label="Instagram" hint="Optionnel">
+                    <input
+                      type="text"
+                      value={form.instagram}
+                      onChange={(e) => update("instagram", e.target.value)}
+                      placeholder="@votre_atelier"
+                      className={inputCls}
+                      maxLength={60}
+                    />
+                  </Field>
+                </div>
+              </div>
+            )}
+
+            {/* Étape 5 — Statut & assurances */}
+            {step === 5 && (
+              <div className="space-y-8">
+                <header>
+                  <h2 className="font-serif text-2xl tracking-tight">Statut & assurances</h2>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Pour rejoindre le réseau, nous vérifions votre immatriculation et vos
+                    assurances professionnelles. Les justificatifs restent strictement confidentiels.
+                  </p>
+                </header>
+
+                <section className="space-y-4">
+                  <h3 className="text-sm font-semibold">Forme juridique</h3>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {(Object.keys(FORME_LABELS) as FormeJuridique[]).map((f) => {
+                      const active = form.formeJuridique === f;
+                      return (
+                        <button
+                          key={f}
+                          type="button"
+                          onClick={() => update("formeJuridique", f)}
+                          className={`rounded-xl border p-3 text-left text-sm transition ${
+                            active
+                              ? "border-brand-orange bg-brand-orange/5 font-semibold shadow-soft"
+                              : "border-border bg-background hover:border-brand-orange/50"
+                          }`}
+                        >
+                          {FORME_LABELS[f]}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                <section className="space-y-3">
+                  <h3 className="text-sm font-semibold">
+                    Justificatif d'immatriculation <span className="text-brand-orange">*</span>
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    {labelJustificatif}. PDF, JPG ou PNG — 8 Mo max.
+                  </p>
+                  <DocUpload
+                    file={form.justificatif}
+                    onSelect={(file) => onDoc("justificatif", file)}
+                    onClear={() => update("justificatif", null)}
+                    placeholder={
+                      form.formeJuridique === "auto_entrepreneur" || form.formeJuridique === "ei"
+                        ? "Téléverser le certificat INSEE"
+                        : "Téléverser l'extrait Kbis"
+                    }
                   />
-                  <span className="text-sm">
-                    J'accepte la{" "}
-                    <Link to="/" className="font-semibold text-brand-orange-deep underline">
-                      charte qualité
-                    </Link>{" "}
-                    et les conditions du réseau Parqueto.
-                  </span>
-                </label>
+                </section>
+
+                <section className="space-y-4">
+                  <div className="flex items-baseline gap-2">
+                    <h3 className="text-sm font-semibold">Garantie décennale</h3>
+                    <span className="text-xs text-muted-foreground">obligatoire</span>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field label="Compagnie" required>
+                      <input
+                        type="text"
+                        value={form.decennaleCompagnie}
+                        onChange={(e) => update("decennaleCompagnie", e.target.value)}
+                        placeholder="Ex. MAAF Pro, SMABTP…"
+                        className={inputCls}
+                        maxLength={80}
+                      />
+                    </Field>
+                    <Field label="N° de contrat" required>
+                      <input
+                        type="text"
+                        value={form.decennaleNumero}
+                        onChange={(e) => update("decennaleNumero", e.target.value)}
+                        placeholder="Ex. 1234567890"
+                        className={inputCls}
+                        maxLength={40}
+                      />
+                    </Field>
+                    <Field label="Validité jusqu'au" required>
+                      <input
+                        type="date"
+                        value={form.decennaleValidite}
+                        onChange={(e) => update("decennaleValidite", e.target.value)}
+                        className={inputCls}
+                        min={new Date().toISOString().slice(0, 10)}
+                      />
+                    </Field>
+                    <Field label="Attestation décennale" hint="PDF / image — 8 Mo max" required>
+                      <DocUpload
+                        file={form.decennaleAttestation}
+                        onSelect={(file) => onDoc("decennaleAttestation", file)}
+                        onClear={() => update("decennaleAttestation", null)}
+                        placeholder="Téléverser l'attestation"
+                        compact
+                      />
+                    </Field>
+                  </div>
+                </section>
+
+                <section className="space-y-4">
+                  <div className="flex items-baseline gap-2">
+                    <h3 className="text-sm font-semibold">Responsabilité Civile Professionnelle</h3>
+                    <span className="text-xs text-muted-foreground">obligatoire</span>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field label="Compagnie RC Pro" required>
+                      <input
+                        type="text"
+                        value={form.rcProCompagnie}
+                        onChange={(e) => update("rcProCompagnie", e.target.value)}
+                        placeholder="Ex. AXA, MAAF Pro…"
+                        className={inputCls}
+                        maxLength={80}
+                      />
+                    </Field>
+                    <Field label="N° de contrat RC Pro" required>
+                      <input
+                        type="text"
+                        value={form.rcProNumero}
+                        onChange={(e) => update("rcProNumero", e.target.value)}
+                        placeholder="Ex. RC-987654"
+                        className={inputCls}
+                        maxLength={40}
+                      />
+                    </Field>
+                  </div>
+                </section>
+
+                <section className="space-y-3">
+                  <h3 className="text-sm font-semibold">Labels & certifications</h3>
+                  <p className="text-xs text-muted-foreground">Optionnel — mis en avant sur votre fiche.</p>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-brand-orange/50">
+                      <input
+                        type="checkbox"
+                        checked={form.qualibat}
+                        onChange={(e) => update("qualibat", e.target.checked)}
+                        className="h-5 w-5 accent-[var(--brand-orange)]"
+                      />
+                      <div className="flex items-center gap-2 text-sm">
+                        <Award className="h-4 w-4 text-brand-orange" />
+                        <span className="font-medium">Qualibat</span>
+                      </div>
+                    </label>
+                    <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-brand-orange/50">
+                      <input
+                        type="checkbox"
+                        checked={form.rge}
+                        onChange={(e) => update("rge", e.target.checked)}
+                        className="h-5 w-5 accent-[var(--brand-orange)]"
+                      />
+                      <div className="flex items-center gap-2 text-sm">
+                        <Award className="h-4 w-4 text-brand-orange" />
+                        <span className="font-medium">RGE</span>
+                      </div>
+                    </label>
+                  </div>
+                </section>
 
                 <div className="flex items-start gap-3 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-900">
                   <Lock className="mt-0.5 h-4 w-4 shrink-0" />
                   <p>
-                    Vos données ne sont jamais revendues. Elles servent uniquement
-                    à vérifier votre profil et à vous mettre en relation avec des clients
-                    qualifiés.
+                    Vos documents sont chiffrés et ne servent qu'à vérifier votre profil.
+                    Ils ne sont jamais partagés avec les clients ni revendus.
                   </p>
                 </div>
               </div>
             )}
+
+            {/* Étape 6 — Récapitulatif */}
+            {step === 6 && (
+              <div className="space-y-6">
+                <header>
+                  <h2 className="font-serif text-2xl tracking-tight">Récapitulatif de votre candidature</h2>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Vérifiez vos informations avant envoi. Cliquez sur ✎ pour modifier une section.
+                  </p>
+                </header>
+
+                <RecapSection title="Identité" stepId={1} onEdit={setStep}>
+                  <RecapRow label="Raison sociale" value={form.raisonSociale} />
+                  <RecapRow label="Représentant" value={form.representant} />
+                  <RecapRow label="Email" value={form.email} />
+                  <RecapRow label="Téléphone" value={form.telephone} />
+                  <RecapRow label="SIRET" value={form.siret} />
+                  <RecapRow
+                    label="Expérience"
+                    value={form.anneesExperience || "—"}
+                  />
+                </RecapSection>
+
+                <RecapSection title="Zone d'intervention" stepId={2} onEdit={setStep}>
+                  <RecapRow label="Adresse" value={form.adresse || "—"} />
+                  <RecapRow label="Ville" value={`${form.codePostal} ${form.ville}`} />
+                  <RecapRow label="Rayon" value={`${form.rayonKm} km autour de l'atelier`} />
+                </RecapSection>
+
+                <RecapSection title="Savoir-faire" stepId={3} onEdit={setStep}>
+                  <RecapRow
+                    label="Prestations"
+                    value={form.specialites.map((s) => SPECIALITE_LABELS[s]).join(", ")}
+                  />
+                  <RecapRow
+                    label="Essences"
+                    value={form.essences.map((e) => ESSENCE_LABELS[e]).join(", ")}
+                  />
+                  <RecapRow
+                    label="Finitions"
+                    value={form.finitions.map((f) => FINITION_LABELS[f]).join(", ")}
+                  />
+                  <RecapRow
+                    label="Surface min."
+                    value={form.poseMin ? `${form.poseMin} m²` : "Aucun minimum"}
+                  />
+                  <RecapRow label="Capacité" value={form.capaciteMois || "—"} />
+                  <RecapRow label="Délai démarrage" value={form.delaiDemarrage || "—"} />
+                  <RecapRow
+                    label="Tarif indicatif"
+                    value={form.tarifIndicatif ? `${form.tarifIndicatif} € HT / m²` : "—"}
+                  />
+                </RecapSection>
+
+                <RecapSection title="Vitrine" stepId={4} onEdit={setStep}>
+                  <RecapRow label="Photos" value={`${form.photos.length} ajoutée(s)`} />
+                  {form.photos.length > 0 && (
+                    <div className="col-span-2 mt-2 flex flex-wrap gap-2">
+                      {form.photos.slice(0, 6).map((p, i) => (
+                        <img
+                          key={i}
+                          src={p.dataUrl}
+                          alt=""
+                          className="h-14 w-14 rounded-md object-cover ring-1 ring-border"
+                        />
+                      ))}
+                    </div>
+                  )}
+                  <RecapRow label="Année de création" value={form.anneeCreation} />
+                  <RecapRow label="Effectif" value={form.effectif || "—"} />
+                  <RecapRow label="Bio" value={form.bio} multiline />
+                  {form.chantierSignature && (
+                    <RecapRow label="Chantier signature" value={form.chantierSignature} multiline />
+                  )}
+                  {(form.siteWeb || form.instagram) && (
+                    <RecapRow
+                      label="Web"
+                      value={[form.siteWeb, form.instagram].filter(Boolean).join(" · ")}
+                    />
+                  )}
+                </RecapSection>
+
+                <RecapSection title="Statut & assurances" stepId={5} onEdit={setStep}>
+                  <RecapRow
+                    label="Forme juridique"
+                    value={form.formeJuridique ? FORME_LABELS[form.formeJuridique] : "—"}
+                  />
+                  <RecapRow
+                    label={labelJustificatif}
+                    value={form.justificatif?.name ?? "—"}
+                  />
+                  <RecapRow
+                    label="Décennale"
+                    value={`${form.decennaleCompagnie} — n° ${form.decennaleNumero}`}
+                  />
+                  <RecapRow
+                    label="Validité décennale"
+                    value={
+                      form.decennaleValidite
+                        ? new Date(form.decennaleValidite).toLocaleDateString("fr-FR")
+                        : "—"
+                    }
+                  />
+                  <RecapRow label="Attestation" value={form.decennaleAttestation?.name ?? "—"} />
+                  <RecapRow
+                    label="RC Pro"
+                    value={`${form.rcProCompagnie} — n° ${form.rcProNumero}`}
+                  />
+                  <RecapRow
+                    label="Labels"
+                    value={
+                      [form.qualibat && "Qualibat", form.rge && "RGE"]
+                        .filter(Boolean)
+                        .join(", ") || "—"
+                    }
+                  />
+                </RecapSection>
+
+                <div className="space-y-3 pt-2">
+                  <CheckBlock
+                    checked={form.exactitude}
+                    onChange={(v) => update("exactitude", v)}
+                  >
+                    Je certifie sur l'honneur l'exactitude des informations transmises et l'authenticité
+                    des justificatifs fournis.
+                  </CheckBlock>
+                  <CheckBlock
+                    checked={form.chartQualite}
+                    onChange={(v) => update("chartQualite", v)}
+                  >
+                    J'adhère à la{" "}
+                    <Link to="/" className="font-semibold text-brand-orange-deep underline">
+                      charte qualité Parqueto
+                    </Link>{" "}
+                    : transparence des devis, respect des délais, garantie parfait achèvement.
+                  </CheckBlock>
+                  <CheckBlock checked={form.cgu} onChange={(v) => update("cgu", v)}>
+                    J'accepte les{" "}
+                    <Link to="/" className="font-semibold text-brand-orange-deep underline">
+                      conditions générales
+                    </Link>{" "}
+                    du réseau artisan Parqueto.
+                  </CheckBlock>
+                </div>
+
+                <div className="flex items-start gap-3 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-900">
+                  <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" />
+                  <p>
+                    Après envoi, notre équipe contrôle vos documents sous 48 h ouvrées,
+                    puis vous appelle pour finaliser votre intégration et activer vos
+                    3 premiers projets offerts.
+                  </p>
+                </div>
+              </div>
+            )}
+
 
             {/* Navigation */}
             <div className="mt-10 flex items-center justify-between gap-3 border-t border-border pt-6">
@@ -796,6 +1364,142 @@ function Field({
         {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
       </span>
       {children}
+    </label>
+  );
+}
+
+function DocUpload({
+  file,
+  onSelect,
+  onClear,
+  placeholder,
+  compact,
+}: {
+  file: { name: string; size: number } | null;
+  onSelect: (file: File | null) => void;
+  onClear: () => void;
+  placeholder: string;
+  compact?: boolean;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  if (file) {
+    return (
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+        <div className="flex items-center gap-3 truncate">
+          <FileText className="h-5 w-5 shrink-0 text-emerald-700" />
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium text-emerald-900">{file.name}</p>
+            <p className="text-xs text-emerald-700">{Math.round(file.size / 1024)} ko</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onClear}
+          className="rounded-full p-1.5 text-emerald-800 transition hover:bg-emerald-100"
+          aria-label="Supprimer le document"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+    );
+  }
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => ref.current?.click()}
+        className={`flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground transition hover:border-brand-orange hover:bg-brand-orange/5 hover:text-foreground ${
+          compact ? "py-3" : "py-6"
+        }`}
+      >
+        <Upload className="h-4 w-4" />
+        {placeholder}
+      </button>
+      <input
+        ref={ref}
+        type="file"
+        accept="application/pdf,image/jpeg,image/png,image/webp"
+        onChange={(e) => {
+          onSelect(e.target.files?.[0] ?? null);
+          e.target.value = "";
+        }}
+        className="hidden"
+      />
+    </>
+  );
+}
+
+function RecapSection({
+  title,
+  stepId,
+  onEdit,
+  children,
+}: {
+  title: string;
+  stepId: number;
+  onEdit: (s: number) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-2xl border border-border bg-background p-5 shadow-soft">
+      <div className="mb-3 flex items-center justify-between gap-3 border-b border-border/60 pb-3">
+        <h3 className="font-serif text-lg tracking-tight">{title}</h3>
+        <button
+          type="button"
+          onClick={() => onEdit(stepId)}
+          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground transition hover:border-brand-orange hover:text-brand-orange-deep"
+        >
+          <Pencil className="h-3 w-3" /> Modifier
+        </button>
+      </div>
+      <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2">{children}</dl>
+    </div>
+  );
+}
+
+function RecapRow({
+  label,
+  value,
+  multiline,
+}: {
+  label: string;
+  value: string;
+  multiline?: boolean;
+}) {
+  return (
+    <div
+      className={`flex flex-col gap-0.5 py-1 ${
+        multiline ? "sm:col-span-2" : ""
+      }`}
+    >
+      <dt className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </dt>
+      <dd className={`text-sm text-foreground ${multiline ? "whitespace-pre-line" : "truncate"}`}>
+        {value || "—"}
+      </dd>
+    </div>
+  );
+}
+
+function CheckBlock({
+  checked,
+  onChange,
+  children,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border bg-muted/30 p-4 transition hover:bg-muted/50">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="mt-0.5 h-5 w-5 accent-[var(--brand-orange)]"
+      />
+      <span className="text-sm leading-relaxed">{children}</span>
     </label>
   );
 }
