@@ -64,6 +64,7 @@ function VerifyEmailPage() {
   }, [cooldown]);
 
   const onResend = async () => {
+    if (resending || cooldown > 0) return;
     const parsed = z.string().trim().email("Email invalide").max(255).safeParse(email);
     if (!parsed.success) {
       authToast.error(parsed.error.issues[0]?.message ?? "Email invalide");
