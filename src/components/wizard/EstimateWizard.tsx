@@ -524,29 +524,45 @@ export function EstimateWizard() {
   const shareQuote = async () => {
     setShareMsg("");
     const text = buildShareText();
-    const shareData: ShareData = { title: "Mon estimation Parqueto", text };
+    const nav = typeof navigator !== "undefined" ? navigator : undefined;
     try {
-      if (typeof navigator !== "undefined" && (navigator as Navigator).share) {
-        await (navigator as Navigator).share(shareData);
+      // 1) Try sharing with PDF file (best on iOS/Android)
+      if (nav?.share && nav.canShare) {
+        try {
+          const { doc, filename } = buildWizardPDF(s);
+          const blob = doc.output("blob");
+          const file = new File([blob], filename, { type: "application/pdf" });
+          const fileData: ShareData = { title: "Mon estimation Parqueto", text, files: [file] };
+          if (nav.canShare(fileData)) {
+            await nav.share(fileData);
+            return;
+          }
+        } catch { /* fall through to text share */ }
+      }
+      // 2) Text share
+      if (nav?.share) {
+        await nav.share({ title: "Mon estimation Parqueto", text });
         return;
       }
-      if (typeof navigator !== "undefined" && navigator.clipboard) {
-        await navigator.clipboard.writeText(text);
+      // 3) Clipboard fallback
+      if (nav?.clipboard) {
+        await nav.clipboard.writeText(text);
         setShareMsg("Résumé copié dans le presse-papiers.");
         return;
       }
-      setShareMsg("Partage indisponible sur ce navigateur.");
+      setShareMsg("Partage indisponible sur ce navigateur — utilisez le PDF.");
     } catch (err) {
       const name = (err as DOMException)?.name;
       if (name === "AbortError") return; // user cancelled
       try {
-        await navigator.clipboard.writeText(text);
+        await nav!.clipboard.writeText(text);
         setShareMsg("Partage refusé — résumé copié à la place.");
       } catch {
-        setShareMsg("Impossible de partager. Réessayez ou téléchargez le PDF.");
+        setShareMsg("Impossible de partager. Téléchargez le PDF.");
       }
     }
   };
+
 
   const submit = () => {
     if (!validateStep(4)) return;
