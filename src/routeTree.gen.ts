@@ -38,6 +38,7 @@ import { Route as AdminArtisansRouteImport } from './routes/admin.artisans'
 import { Route as AuthenticatedProRouteImport } from './routes/_authenticated/pro'
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
+import { Route as ProDevisNouveauRouteImport } from './routes/pro.devis.nouveau'
 
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
@@ -184,6 +185,11 @@ const AuthenticatedDevisRoute = AuthenticatedDevisRouteImport.update({
   path: '/devis',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const ProDevisNouveauRoute = ProDevisNouveauRouteImport.update({
+  id: '/pro/devis/nouveau',
+  path: '/pro/devis/nouveau',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
+  '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -243,6 +250,7 @@ export interface FileRoutesByTo {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
+  '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
+  '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
+    | '/pro/devis/nouveau'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -336,6 +346,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin'
+    | '/pro/devis/nouveau'
   id:
     | '__root__'
     | '/'
@@ -367,6 +378,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
+    | '/pro/devis/nouveau'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -386,6 +398,7 @@ export interface RootRouteChildren {
   DemoMicroReassuranceRoute: typeof DemoMicroReassuranceRoute
   ProFacturationRoute: typeof ProFacturationRoute
   ProOffresRoute: typeof ProOffresRoute
+  ProDevisNouveauRoute: typeof ProDevisNouveauRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -593,6 +606,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDevisRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/pro/devis/nouveau': {
+      id: '/pro/devis/nouveau'
+      path: '/pro/devis/nouveau'
+      fullPath: '/pro/devis/nouveau'
+      preLoaderRoute: typeof ProDevisNouveauRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -667,17 +687,8 @@ const rootRouteChildren: RootRouteChildren = {
   DemoMicroReassuranceRoute: DemoMicroReassuranceRoute,
   ProFacturationRoute: ProFacturationRoute,
   ProOffresRoute: ProOffresRoute,
+  ProDevisNouveauRoute: ProDevisNouveauRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
