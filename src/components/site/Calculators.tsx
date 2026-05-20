@@ -625,7 +625,7 @@ function DiagnosticTool() {
             href={contactHref}
             className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            {verdict === "expertise" ? "Demander une expertise" : "Recevoir 3 devis fermes"}
+            {verdict === "expertise" ? "Demander une expertise" : "Être mis en relation avec un artisan"}
             <ArrowRight className="h-4 w-4" aria-hidden />
           </a>
 
