@@ -20,6 +20,7 @@ function ForgotPage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading || sent) return;
     const parsed = schema.safeParse({ email });
     if (!parsed.success) {
       authToast.error(parsed.error.issues[0]?.message ?? "Email invalide");

@@ -38,6 +38,7 @@ function SignupPage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading || social || sent) return;
     const parsed = schema.safeParse({ email, password });
     if (!parsed.success) {
       authToast.error(parsed.error.issues[0]?.message ?? "Champs invalides");
@@ -63,6 +64,7 @@ function SignupPage() {
   };
 
   const onProvider = async (provider: "google" | "apple") => {
+    if (loading || social) return;
     setSocial(provider);
     const result = await lovable.auth.signInWithOAuth(provider, {
       redirect_uri: window.location.origin + target,
