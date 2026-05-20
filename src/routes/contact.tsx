@@ -244,24 +244,64 @@ function ContactPage() {
     toast.success("Demande envoyée. Nous revenons vers vous très vite.");
   };
 
+  const formRef = useRef<HTMLFormElement>(null);
   const successHeadingRef = useRef<HTMLHeadingElement>(null);
+  const wasSent = useRef(false);
+
+  // Move focus to the success heading after the success view mounts.
   useEffect(() => {
-    if (sent) successHeadingRef.current?.focus();
+    if (!sent) return;
+    const raf = requestAnimationFrame(() => {
+      successHeadingRef.current?.focus();
+      // Notify assistive tech with smooth scroll for sighted users too.
+      successHeadingRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+    });
+    return () => cancelAnimationFrame(raf);
   }, [sent]);
+
+  // When returning from success → form, restore focus to the first field.
+  useEffect(() => {
+    if (sent) {
+      wasSent.current = true;
+      return;
+    }
+    if (wasSent.current && !sent) {
+      wasSent.current = false;
+      const raf = requestAnimationFrame(() => {
+        const first = formRef.current?.querySelector<HTMLElement>(
+          'input[name="nom"]'
+        );
+        first?.focus();
+      });
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [sent]);
+
+  const resetForm = () => {
+    setPreviewIdx(null);
+    setSent(false);
+  };
 
   if (sent) {
     return (
       <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
         <Header />
+
+        {/* Dedicated visually-hidden live region for assistive tech.
+            Kept separate from visible content so the announcement is concise. */}
+        <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          Demande envoyée avec succès. Un interlocuteur humain vous répondra sous 24 à 48 heures ouvrées.
+        </div>
+
         <section
-          role="status"
-          aria-live="polite"
+          aria-labelledby="contact-success-title"
           className="mx-auto max-w-2xl px-6 py-24 text-center"
         >
-          <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange" aria-hidden>
             <CheckCircle2 className="h-7 w-7" />
           </div>
           <h1
+            id="contact-success-title"
             ref={successHeadingRef}
             tabIndex={-1}
             className="mt-6 font-display text-4xl text-foreground sm:text-5xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background rounded-lg"
@@ -270,28 +310,38 @@ function ContactPage() {
           </h1>
           <p className="mt-4 text-muted-foreground">
             Un interlocuteur humain vous répondra sous 24 à 48&nbsp;h ouvrées. En attendant,
-            vous pouvez nous joindre directement :
+            vous pouvez nous joindre directement&nbsp;:
           </p>
           <div className="mt-6 flex flex-col items-center gap-2 text-sm">
-            <a href="mailto:contact@parqueto.fr" className="inline-flex items-center gap-2 text-foreground hover:text-brand-orange">
-              <Mail className="h-4 w-4" /> contact@parqueto.fr
+            <a href="mailto:contact@parqueto.fr" className="inline-flex items-center gap-2 text-foreground hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded">
+              <Mail className="h-4 w-4" aria-hidden /> contact@parqueto.fr
             </a>
-            <a href="tel:+33184606061" className="inline-flex items-center gap-2 text-foreground hover:text-brand-orange">
-              <Phone className="h-4 w-4" /> 01 84 60 60 61
+            <a href="tel:+33184606061" className="inline-flex items-center gap-2 text-foreground hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded">
+              <Phone className="h-4 w-4" aria-hidden /> 01 84 60 60 61
             </a>
           </div>
-          <Link
-            to="/"
-            className="mt-10 inline-flex items-center justify-center rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
-          >
-            Retour à l'accueil
-          </Link>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={resetForm}
+              className="inline-flex items-center justify-center rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Envoyer une nouvelle demande
+            </button>
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground transition hover:border-brand-orange/50 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Retour à l'accueil
+            </Link>
+          </div>
         </section>
         <Footer />
         <FloatingNav />
       </main>
     );
   }
+
 
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
@@ -325,6 +375,7 @@ function ContactPage() {
       <section className="mx-auto max-w-6xl px-6 pb-24">
         <div className="grid gap-8 lg:grid-cols-12">
           <form
+            ref={formRef}
             onSubmit={handleSubmit}
             noValidate
             aria-labelledby="contact-form-title"
