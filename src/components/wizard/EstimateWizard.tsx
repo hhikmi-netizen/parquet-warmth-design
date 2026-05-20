@@ -644,10 +644,13 @@ export function EstimateWizard() {
         )}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
-            onClick={() => generateWizardPDF(s)}
-            className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background transition hover:opacity-90"
+            onClick={handlePdf}
+            disabled={pdfLoading}
+            aria-busy={pdfLoading}
+            className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <FileDown className="h-4 w-4" /> Télécharger le récap PDF
+            {pdfLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileDown className="h-4 w-4" />}
+            {pdfLoading ? "Génération…" : "Télécharger le récap PDF"}
           </button>
           <Link
             to="/"
