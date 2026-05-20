@@ -11,7 +11,6 @@ import {
   ChevronDown,
   Clock,
   FileDown,
-  FileDown,
   Loader2,
   Mail,
   MapPin,
