@@ -266,108 +266,126 @@ function computeRange(s: WizardState): { min: number; max: number } | null {
    PDF (générateur dédié au wizard ; ne touche pas l'existant)
    ========================================================================= */
 
-function generateWizardPDF(s: WizardState) {
+function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: string } {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const W = 210;
   const M = 14;
   const RIGHT = W - M;
-  let y = 14;
+  const INNER = RIGHT - M;
+  let y = 0;
 
+  // Header band
   doc.setFillColor(229, 101, 28);
-  doc.rect(0, 0, W, 6, "F");
-  y += 8;
+  doc.rect(0, 0, W, 24, "F");
+  doc.setFont("helvetica", "bold").setFontSize(20).setTextColor(255, 255, 255);
+  doc.text("Parqueto", M, 15);
+  doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(255, 240, 232);
+  doc.text("Demande d'estimation parquet", M, 20);
 
   const ref = `PQ-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`;
-  doc.setFont("helvetica", "bold").setFontSize(22).setTextColor(20);
-  doc.text("Parqueto", M, y);
-  doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(120);
-  doc.text("Demande d'estimation détaillée", M, y + 5);
+  doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(255, 255, 255);
+  doc.text(`Réf. ${ref}`, RIGHT, 15, { align: "right" });
+  doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(255, 240, 232);
+  doc.text(new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" }), RIGHT, 20, { align: "right" });
 
-  doc.setFontSize(9).setTextColor(60);
-  doc.text(`Devis ${ref}`, RIGHT, y, { align: "right" });
-  doc.setTextColor(120);
-  doc.text(new Date().toLocaleDateString("fr-FR"), RIGHT, y + 5, { align: "right" });
+  y = 34;
 
-  y += 14;
-  doc.setDrawColor(229, 101, 28).setLineWidth(0.6);
-  doc.line(M, y, RIGHT, y);
-  doc.setLineWidth(0.2);
-  y += 8;
+  // Fourchette prominent
+  const range = computeRange(s);
+  if (range) {
+    doc.setFillColor(255, 244, 238);
+    doc.setDrawColor(229, 101, 28).setLineWidth(0.4);
+    doc.roundedRect(M, y, INNER, 30, 4, 4, "FD");
+    doc.setFont("helvetica", "bold").setFontSize(8).setTextColor(229, 101, 28);
+    doc.text("FOURCHETTE INDICATIVE TTC", M + 5, y + 8);
+    doc.setFont("helvetica", "bold").setFontSize(24).setTextColor(25, 25, 25);
+    doc.text(`${fmt(range.min)} - ${fmt(range.max)} EUR`, M + 5, y + 21);
+    doc.setFont("helvetica", "italic").setFontSize(8).setTextColor(120);
+    doc.text("Non contractuelle - affinee apres visite technique", M + 5, y + 27);
+    doc.setLineWidth(0.2);
+    y += 38;
+  }
 
   const section = (title: string) => {
-    doc.setFont("helvetica", "bold").setFontSize(11).setTextColor(20);
-    doc.text(title, M, y);
-    y += 6;
-    doc.setFont("helvetica", "normal").setFontSize(10).setTextColor(60);
+    if (y > 250) { doc.addPage(); y = 20; }
+    doc.setFillColor(247, 244, 239);
+    doc.roundedRect(M, y - 4, INNER, 8, 1.5, 1.5, "F");
+    doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(229, 101, 28);
+    doc.text(title.toUpperCase(), M + 3, y + 1.5);
+    y += 9;
   };
 
   const row = (k: string, v: string) => {
     if (!v) return;
-    doc.setTextColor(110); doc.text(k, M, y);
-    doc.setTextColor(20); doc.text(v, M + 60, y);
-    y += 6;
+    if (y > 275) { doc.addPage(); y = 20; }
+    doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(120);
+    doc.text(k, M + 1, y);
+    doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(30);
+    const lines = doc.splitTextToSize(v, INNER - 55);
+    doc.text(lines, M + 55, y);
+    y += Math.max(5.5, lines.length * 5);
   };
+
+  section("Projet");
+  row("Type de prestation", projets.find((p) => p.key === s.projet)?.label ?? "");
+  row("Materiau", s.materiau ? materiaux[s.materiau].label : "");
+  row("Surface", `${s.surface} m2`);
+  const piecesStr = s.pieces.filter((p) => p.count > 0).map((p) => `${p.label} x${p.count}`).join(", ");
+  if (piecesStr) row("Pieces concernees", piecesStr);
+  if (s.escalier) row("Escalier", "Oui, a traiter");
+  if (s.autrePiece) row("Autres pieces", s.autrePiece);
+  y += 3;
+
+  section("Chantier");
+  row("Adresse", `${s.adresse}${s.complement ? " - " + s.complement : ""}`);
+  row("Ville", `${s.cp} ${s.ville}`);
+  row("Logement", labelOf(LOGEMENTS, s.logement));
+  row("Etage", labelOf(ETAGES, s.etage));
+  row("Etat du logement", labelOf(MEUBLES, s.etatMeuble));
+  row("Zone degagee J0", labelOf(ZONES, s.zoneDegagee));
+  row("Manutention lourde", labelOf(YESNOMAYBE, s.manutention));
+  row("Chauffage au sol", labelOf(YESNOMAYBE, s.chauffage));
+  row("Delai souhaite", labelOf(DELAIS, s.delai));
+  y += 3;
 
   section("Client");
   row("Profil", s.profil === "pro" ? "Professionnel" : "Particulier");
-  row("Nom", `${s.civilite === "m" ? "M." : s.civilite === "mme" ? "Mme" : ""} ${s.prenom} ${s.nom}`.trim());
-  if (s.entreprise) row("Société", s.entreprise);
+  const nom = `${s.civilite === "m" ? "M." : s.civilite === "mme" ? "Mme" : ""} ${s.prenom} ${s.nom}`.trim();
+  row("Nom", nom);
+  if (s.entreprise) row("Societe", s.entreprise);
   if (s.siret) row("SIRET", s.siret);
   row("Email", s.email);
-  row("Téléphone", s.telephone);
-  y += 4;
-
-  section("Chantier");
-  row("Adresse", `${s.adresse}${s.complement ? " — " + s.complement : ""}`);
-  row("Ville", `${s.cp} ${s.ville}`);
-  row("Logement", labelOf(LOGEMENTS, s.logement));
-  row("Étage", labelOf(ETAGES, s.etage));
-  row("Chauffage au sol", labelOf(YESNOMAYBE, s.chauffage));
-  row("Délai souhaité", labelOf(DELAIS, s.delai));
-  y += 4;
-
-  section("Projet");
-  row("Type", projets.find((p) => p.key === s.projet)?.label ?? "");
-  row("Matériau", s.materiau ? materiaux[s.materiau].label : "");
-  row("Surface", `${s.surface} m²`);
-  const piecesStr = s.pieces.filter((p) => p.count > 0).map((p) => `${p.label} ×${p.count}`).join(", ");
-  if (piecesStr) row("Pièces", piecesStr);
-  if (s.escalier) row("Escalier", "Oui");
-  if (s.autrePiece) row("Autres pièces", s.autrePiece);
-  row("État du logement", labelOf(MEUBLES, s.etatMeuble));
-  row("Zone dégagée J0", labelOf(ZONES, s.zoneDegagee));
-  row("Manutention lourde", labelOf(YESNOMAYBE, s.manutention));
-  y += 4;
-
-  const range = computeRange(s);
-  if (range) {
-    doc.setFillColor(255, 244, 238);
-    doc.roundedRect(M, y, RIGHT - M, 22, 3, 3, "F");
-    doc.setFont("helvetica", "bold").setFontSize(9).setTextColor(229, 101, 28);
-    doc.text("FOURCHETTE INDICATIVE TTC", M + 4, y + 7);
-    doc.setFontSize(17).setTextColor(20);
-    doc.text(`${fmt(range.min)} – ${fmt(range.max)} €`, RIGHT - 4, y + 14, { align: "right" });
-    y += 28;
-  }
+  row("Telephone", s.telephone);
 
   if (s.message) {
+    y += 3;
     section("Message");
-    const lines = doc.splitTextToSize(s.message, RIGHT - M);
-    doc.setFontSize(10).setTextColor(40);
-    doc.text(lines, M, y);
-    y += lines.length * 5 + 4;
+    const lines = doc.splitTextToSize(s.message, INNER - 2);
+    doc.setFont("helvetica", "normal").setFontSize(10).setTextColor(40);
+    doc.text(lines, M + 1, y);
+    y += lines.length * 5 + 3;
   }
 
-  doc.setFont("helvetica", "italic").setFontSize(8).setTextColor(130);
-  const note = "Estimation indicative non contractuelle. Un devis définitif sera établi après visite technique sur place. Validité 30 jours.";
-  doc.text(doc.splitTextToSize(note, RIGHT - M), M, Math.max(y, 270));
+  const pages = doc.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i);
+    doc.setDrawColor(220).setLineWidth(0.2);
+    doc.line(M, 280, RIGHT, 280);
+    doc.setFont("helvetica", "italic").setFontSize(7).setTextColor(130);
+    doc.text("Estimation indicative non contractuelle - Devis definitif apres visite - Validite 30 jours", M, 284);
+    doc.setFont("helvetica", "normal").setFontSize(7).setTextColor(160);
+    doc.text("contact@parqueto.fr  ·  parqueto.fr", M, 289);
+    doc.text(`${ref}  ·  Page ${i}/${pages}`, RIGHT, 289, { align: "right" });
+  }
 
-  doc.setFont("helvetica", "normal").setTextColor(160).setFontSize(8);
-  doc.text("contact@parqueto.fr  ·  parqueto.fr", M, 287);
-  doc.text(ref, RIGHT, 287, { align: "right" });
-
-  doc.save(`devis-parqueto-${ref}.pdf`);
+  return { doc, ref, filename: `devis-parqueto-${ref}.pdf` };
 }
+
+function generateWizardPDF(s: WizardState) {
+  const { doc, filename } = buildWizardPDF(s);
+  doc.save(filename);
+}
+
 
 /* =========================================================================
    Référentiels d'options (libellés)
