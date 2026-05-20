@@ -209,6 +209,10 @@ function ArtisanOnboarding() {
   const [form, setForm] = useState<FormState>(initialState);
   const [submitted, setSubmitted] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const MAX_PHOTOS = 6;
+  const MAX_PHOTO_MB = 5;
 
   // Hydratation depuis localStorage
   useEffect(() => {
