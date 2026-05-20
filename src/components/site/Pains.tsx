@@ -1,4 +1,4 @@
-import { Wallet, Clock, AlertTriangle, Users, ArrowRight } from "lucide-react";
+import { Wallet, Clock, AlertTriangle, ShieldCheck, ArrowRight } from "lucide-react";
 
 const pains = [
   {
@@ -20,10 +20,10 @@ const pains = [
     tag: "Qualité",
   },
   {
-    icon: Users,
-    title: "Aucun moyen de comparer",
-    body: "Trouver trois artisans sérieux, comparer leurs offres, vérifier leurs avis — un parcours du combattant.",
-    tag: "Confiance",
+    icon: ShieldCheck,
+    title: "Un projet mal cadré",
+    body: "Sans estimation claire ni interlocuteur de confiance, on avance à l'aveugle — et on subit le démarchage.",
+    tag: "Sérénité",
   },
 ];
 
