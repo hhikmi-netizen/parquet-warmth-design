@@ -39,6 +39,7 @@ import { Route as AuthenticatedProRouteImport } from './routes/_authenticated/pr
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
 import { Route as ProDevisNouveauRouteImport } from './routes/pro.devis.nouveau'
+import { Route as AuthenticatedProOnboardingRouteImport } from './routes/_authenticated/pro.onboarding'
 
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
@@ -190,6 +191,12 @@ const ProDevisNouveauRoute = ProDevisNouveauRouteImport.update({
   path: '/pro/devis/nouveau',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedProOnboardingRoute =
+  AuthenticatedProOnboardingRouteImport.update({
+    id: '/onboarding',
+    path: '/onboarding',
+    getParentRoute: () => AuthenticatedProRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -206,7 +213,7 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
-  '/pro': typeof AuthenticatedProRoute
+  '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
   '/admin/logs': typeof AdminLogsRoute
@@ -220,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
+  '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesByTo {
@@ -236,7 +244,7 @@ export interface FileRoutesByTo {
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
-  '/pro': typeof AuthenticatedProRoute
+  '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
   '/admin/logs': typeof AdminLogsRoute
@@ -250,6 +258,7 @@ export interface FileRoutesByTo {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
+  '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesById {
@@ -269,7 +278,7 @@ export interface FileRoutesById {
   '/verify-email': typeof VerifyEmailRoute
   '/_authenticated/devis': typeof AuthenticatedDevisRoute
   '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
-  '/_authenticated/pro': typeof AuthenticatedProRoute
+  '/_authenticated/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
   '/admin/logs': typeof AdminLogsRoute
@@ -283,6 +292,7 @@ export interface FileRoutesById {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
+  '/_authenticated/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRouteTypes {
@@ -316,6 +326,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
+    | '/pro/onboarding'
     | '/pro/devis/nouveau'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -346,6 +357,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin'
+    | '/pro/onboarding'
     | '/pro/devis/nouveau'
   id:
     | '__root__'
@@ -378,6 +390,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
+    | '/_authenticated/pro/onboarding'
     | '/pro/devis/nouveau'
   fileRoutesById: FileRoutesById
 }
@@ -613,19 +626,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProDevisNouveauRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/pro/onboarding': {
+      id: '/_authenticated/pro/onboarding'
+      path: '/onboarding'
+      fullPath: '/pro/onboarding'
+      preLoaderRoute: typeof AuthenticatedProOnboardingRouteImport
+      parentRoute: typeof AuthenticatedProRoute
+    }
   }
 }
+
+interface AuthenticatedProRouteChildren {
+  AuthenticatedProOnboardingRoute: typeof AuthenticatedProOnboardingRoute
+}
+
+const AuthenticatedProRouteChildren: AuthenticatedProRouteChildren = {
+  AuthenticatedProOnboardingRoute: AuthenticatedProOnboardingRoute,
+}
+
+const AuthenticatedProRouteWithChildren =
+  AuthenticatedProRoute._addFileChildren(AuthenticatedProRouteChildren)
 
 interface AuthenticatedRouteChildren {
   AuthenticatedDevisRoute: typeof AuthenticatedDevisRoute
   AuthenticatedHistoriqueRoute: typeof AuthenticatedHistoriqueRoute
-  AuthenticatedProRoute: typeof AuthenticatedProRoute
+  AuthenticatedProRoute: typeof AuthenticatedProRouteWithChildren
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDevisRoute: AuthenticatedDevisRoute,
   AuthenticatedHistoriqueRoute: AuthenticatedHistoriqueRoute,
-  AuthenticatedProRoute: AuthenticatedProRoute,
+  AuthenticatedProRoute: AuthenticatedProRouteWithChildren,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
