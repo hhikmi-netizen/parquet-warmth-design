@@ -79,8 +79,8 @@ export function Header() {
         <div className="border-t border-border bg-background lg:hidden">
           <div className="flex flex-col gap-1 px-6 py-4">
             {nav.map((n) =>
-              n.to.startsWith("/#") ? (
-                <a key={n.to} href={n.to} className="py-2 text-sm font-medium" onClick={() => setOpen(false)}>
+              isHashItem(n.to) ? (
+                <a key={n.to} href={hashHref(n.to)} className="py-2 text-sm font-medium" onClick={() => setOpen(false)}>
                   {n.label}
                 </a>
               ) : (
