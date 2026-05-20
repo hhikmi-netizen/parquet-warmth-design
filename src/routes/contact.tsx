@@ -429,6 +429,24 @@ function ContactPage() {
             <h2 id="contact-form-title" className="sr-only">
               Formulaire de contact Parqueto
             </h2>
+
+            {/* Honeypot anti-spam — hidden from humans (visually + a11y tree),
+                bots fill it and we silently reject. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden opacity-0"
+            >
+              <label htmlFor="company_website">
+                Site web de votre entreprise (laisser vide)
+              </label>
+              <input
+                id="company_website"
+                name="company_website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
             <p className="mb-6 text-xs text-muted-foreground">
               Les champs marqués d'un <span className="text-brand-orange" aria-hidden>*</span>{" "}
               <span className="sr-only">astérisque</span> sont obligatoires.
