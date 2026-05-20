@@ -544,19 +544,42 @@ function ContactPage() {
               )}
             </div>
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-7 py-4 text-[15px] font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
-            >
-              {submitting ? (
+            {(() => {
+              const hasErrors = Object.keys(errors).length > 0;
+              const messageTooShort = messageLen < 10;
+              const disabled = submitting || hasErrors || messageTooShort;
+              const reason = submitting
+                ? "Envoi en cours."
+                : hasErrors
+                ? "Corrigez les champs en erreur pour activer l'envoi."
+                : messageTooShort
+                ? `Décrivez votre projet (${messageLen}/10 caractères minimum) pour activer l'envoi.`
+                : undefined;
+              return (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> Envoi en cours…
+                  <button
+                    type="submit"
+                    disabled={disabled}
+                    aria-disabled={disabled}
+                    aria-describedby={reason ? "submit-reason" : undefined}
+                    className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-7 py-4 text-[15px] font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:bg-brand-orange sm:w-auto"
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" /> Envoi en cours…
+                      </>
+                    ) : (
+                      "Envoyer ma demande"
+                    )}
+                  </button>
+                  {reason && (
+                    <p id="submit-reason" className="mt-2 text-xs text-muted-foreground" aria-live="polite">
+                      {reason}
+                    </p>
+                  )}
                 </>
-              ) : (
-                "Envoyer ma demande"
-              )}
-            </button>
+              );
+            })()}
 
             <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
               <ShieldCheck className="h-3.5 w-3.5 text-brand-orange" />
