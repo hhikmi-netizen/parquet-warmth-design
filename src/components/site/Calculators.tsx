@@ -1002,9 +1002,34 @@ export function Calculators() {
           </div>
         </div>
 
+        {/* Visualiseur de teintes — bonus visuel */}
+        <div className="mt-6 overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-cream/60 to-background p-6 sm:p-8">
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div className="max-w-xl">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-orange-deep">
+                Bonus — sans calcul
+              </p>
+              <h3 className="mt-2 font-display text-2xl sm:text-3xl">
+                Visualiseur de teintes parquet
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                8 finitions photographiées en lumière naturelle : chêne naturel, blanchi, miel, doré, fumé, noyer, wengé, ébène. Comparez deux teintes côte à côte avant de décider.
+              </p>
+            </div>
+            <a
+              href="/teintes"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-brand-orange bg-background px-6 py-3 text-sm font-semibold text-brand-orange-deep transition hover:-translate-y-0.5 hover:bg-brand-orange hover:text-primary-foreground"
+            >
+              Explorer les teintes
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </a>
+          </div>
+        </div>
+
         <p className="mt-6 text-center text-xs text-muted-foreground">
           Valeurs indicatives basées sur les usages métier courants. Pour un chiffrage précis, demandez un devis artisan.
         </p>
+
       </div>
     </section>
   );
