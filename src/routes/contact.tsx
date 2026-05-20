@@ -108,6 +108,9 @@ function ContactPage() {
   const [previewIdx, setPreviewIdx] = useState<number | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const dragCounter = useRef(0);
+  // Anti-spam: timestamp set on mount; any submit before MIN_FILL_MS is rejected.
+  const mountedAt = useRef<number>(Date.now());
+  const MIN_FILL_MS = 2500;
 
   // Object URLs for previews — memoized + revoked on change/unmount.
   const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
@@ -203,6 +206,22 @@ function ContactPage() {
     e.preventDefault();
     const form = e.currentTarget;
     const fd = new FormData(form);
+
+    // Anti-spam — honeypot: real users can't see/fill this field.
+    const honeypot = String(fd.get("company_website") ?? "").trim();
+    if (honeypot.length > 0) {
+      // Fake a success to not give bots feedback.
+      setSent(true);
+      return;
+    }
+
+    // Anti-spam — minimum fill delay. Humans take >2.5s to fill the form.
+    const elapsed = Date.now() - mountedAt.current;
+    if (elapsed < MIN_FILL_MS) {
+      toast.error("Merci de prendre un instant pour vérifier vos informations avant l'envoi.");
+      return;
+    }
+
     const parsed = contactSchema.safeParse({
       nom: fd.get("nom"),
       email: fd.get("email"),
@@ -304,6 +323,7 @@ function ContactPage() {
 
   const resetForm = () => {
     setPreviewIdx(null);
+    mountedAt.current = Date.now();
     setSent(false);
   };
 
@@ -409,6 +429,24 @@ function ContactPage() {
             <h2 id="contact-form-title" className="sr-only">
               Formulaire de contact Parqueto
             </h2>
+
+            {/* Honeypot anti-spam — hidden from humans (visually + a11y tree),
+                bots fill it and we silently reject. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden opacity-0"
+            >
+              <label htmlFor="company_website">
+                Site web de votre entreprise (laisser vide)
+              </label>
+              <input
+                id="company_website"
+                name="company_website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
             <p className="mb-6 text-xs text-muted-foreground">
               Les champs marqués d'un <span className="text-brand-orange" aria-hidden>*</span>{" "}
               <span className="sr-only">astérisque</span> sont obligatoires.
