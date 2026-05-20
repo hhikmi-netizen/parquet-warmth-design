@@ -340,21 +340,33 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
     }
   };
 
+  const VALUE_LINE_H = 6;
   const row = (k: string, v: string) => {
     if (!v) return;
-    doc.setFont("helvetica", "bold").setFontSize(10);
-    const valueLines = doc.splitTextToSize(v, VALUE_W) as string[];
-    doc.setFont("helvetica", "normal").setFontSize(9);
-    const labelLines = doc.splitTextToSize(k, LABEL_W - 2) as string[];
-    const blockH = Math.max(LINE_H + 1, valueLines.length * LINE_H, labelLines.length * LINE_H);
-    ensureSpace(blockH);
 
-    doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(110);
-    doc.text(labelLines, M + 1, y);
-    doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(25);
-    doc.text(valueLines, M + LABEL_W + 4, y);
-    y += blockH + 1;
+    // Présentation empilée : libellé en kicker majuscule + valeur en grand caractère gras.
+    // Meilleur contraste et hiérarchie typographique claire sur mobile.
+    doc.setFont("helvetica", "bold").setFontSize(13);
+    const valueLines = doc.splitTextToSize(v, INNER - 4) as string[];
+    const blockH = 5 + valueLines.length * VALUE_LINE_H + 4;
+    ensureSpace(blockH + 2);
+
+    // Kicker libellé (orange, petit, lettres espacées)
+    doc.setFont("helvetica", "bold").setFontSize(7.5).setTextColor(229, 101, 28);
+    doc.text(k.toUpperCase(), M + 1, y);
+
+    // Valeur (noir profond, gras, grande taille)
+    doc.setFont("helvetica", "bold").setFontSize(13).setTextColor(20, 20, 20);
+    doc.text(valueLines, M + 1, y + 6);
+
+    // Filet de séparation discret
+    const lineY = y + 6 + valueLines.length * VALUE_LINE_H + 1.5;
+    doc.setDrawColor(232, 226, 216).setLineWidth(0.2);
+    doc.line(M + 1, lineY, RIGHT - 1, lineY);
+
+    y += blockH;
   };
+
 
   section("Projet");
   row("Type de prestation", projets.find((p) => p.key === s.projet)?.label ?? "");
