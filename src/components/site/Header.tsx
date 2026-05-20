@@ -21,9 +21,15 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-md">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-6 sm:h-28">
         <a href="/" className="flex items-center gap-2">
-          <img src={logo} alt="Parqueto" className="h-12 w-auto" width={48} height={48} />
+          <img
+            src={logo}
+            alt="Parqueto"
+            className="h-16 w-auto sm:h-20 lg:h-24"
+            width={96}
+            height={96}
+          />
           <span className="sr-only">Parqueto</span>
         </a>
         <nav className="hidden items-center gap-8 lg:flex">
