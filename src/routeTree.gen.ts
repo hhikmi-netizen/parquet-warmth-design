@@ -13,6 +13,9 @@ import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as TeintesRouteImport } from './routes/teintes'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RealisationsRouteImport } from './routes/realisations'
+import { Route as PartenairesRouteImport } from './routes/partenaires'
+import { Route as OutilsRouteImport } from './routes/outils'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as EstimationRouteImport } from './routes/estimation'
@@ -20,6 +23,8 @@ import { Route as DevenirArtisanRouteImport } from './routes/devenir-artisan'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CharteQualiteRouteImport } from './routes/charte-qualite'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as ArtisansRouteImport } from './routes/artisans'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
@@ -67,6 +72,21 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RealisationsRoute = RealisationsRouteImport.update({
+  id: '/realisations',
+  path: '/realisations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartenairesRoute = PartenairesRouteImport.update({
+  id: '/partenaires',
+  path: '/partenaires',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OutilsRoute = OutilsRouteImport.update({
+  id: '/outils',
+  path: '/outils',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -100,6 +120,16 @@ const ContactRoute = ContactRouteImport.update({
 const CharteQualiteRoute = CharteQualiteRouteImport.update({
   id: '/charte-qualite',
   path: '/charte-qualite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtisansRoute = ArtisansRouteImport.update({
+  id: '/artisans',
+  path: '/artisans',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -241,6 +271,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
   '/admin': typeof AdminRouteWithChildren
+  '/artisans': typeof ArtisansRoute
+  '/blog': typeof BlogRoute
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
@@ -248,6 +280,9 @@ export interface FileRoutesByFullPath {
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/outils': typeof OutilsRoute
+  '/partenaires': typeof PartenairesRoute
+  '/realisations': typeof RealisationsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/teintes': typeof TeintesRoute
@@ -278,6 +313,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/artisans': typeof ArtisansRoute
+  '/blog': typeof BlogRoute
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
@@ -285,6 +322,9 @@ export interface FileRoutesByTo {
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/outils': typeof OutilsRoute
+  '/partenaires': typeof PartenairesRoute
+  '/realisations': typeof RealisationsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/teintes': typeof TeintesRoute
@@ -318,6 +358,8 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/a-propos': typeof AProposRoute
   '/admin': typeof AdminRouteWithChildren
+  '/artisans': typeof ArtisansRoute
+  '/blog': typeof BlogRoute
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
@@ -325,6 +367,9 @@ export interface FileRoutesById {
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/outils': typeof OutilsRoute
+  '/partenaires': typeof PartenairesRoute
+  '/realisations': typeof RealisationsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/teintes': typeof TeintesRoute
@@ -358,6 +403,8 @@ export interface FileRouteTypes {
     | '/'
     | '/a-propos'
     | '/admin'
+    | '/artisans'
+    | '/blog'
     | '/charte-qualite'
     | '/contact'
     | '/design-system'
@@ -365,6 +412,9 @@ export interface FileRouteTypes {
     | '/estimation'
     | '/forgot-password'
     | '/login'
+    | '/outils'
+    | '/partenaires'
+    | '/realisations'
     | '/reset-password'
     | '/signup'
     | '/teintes'
@@ -395,6 +445,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/a-propos'
+    | '/artisans'
+    | '/blog'
     | '/charte-qualite'
     | '/contact'
     | '/design-system'
@@ -402,6 +454,9 @@ export interface FileRouteTypes {
     | '/estimation'
     | '/forgot-password'
     | '/login'
+    | '/outils'
+    | '/partenaires'
+    | '/realisations'
     | '/reset-password'
     | '/signup'
     | '/teintes'
@@ -434,6 +489,8 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/a-propos'
     | '/admin'
+    | '/artisans'
+    | '/blog'
     | '/charte-qualite'
     | '/contact'
     | '/design-system'
@@ -441,6 +498,9 @@ export interface FileRouteTypes {
     | '/estimation'
     | '/forgot-password'
     | '/login'
+    | '/outils'
+    | '/partenaires'
+    | '/realisations'
     | '/reset-password'
     | '/signup'
     | '/teintes'
@@ -474,6 +534,8 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AProposRoute: typeof AProposRoute
   AdminRoute: typeof AdminRouteWithChildren
+  ArtisansRoute: typeof ArtisansRoute
+  BlogRoute: typeof BlogRoute
   CharteQualiteRoute: typeof CharteQualiteRoute
   ContactRoute: typeof ContactRoute
   DesignSystemRoute: typeof DesignSystemRoute
@@ -481,6 +543,9 @@ export interface RootRouteChildren {
   EstimationRoute: typeof EstimationRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  OutilsRoute: typeof OutilsRoute
+  PartenairesRoute: typeof PartenairesRoute
+  RealisationsRoute: typeof RealisationsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   TeintesRoute: typeof TeintesRoute
@@ -519,6 +584,27 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/realisations': {
+      id: '/realisations'
+      path: '/realisations'
+      fullPath: '/realisations'
+      preLoaderRoute: typeof RealisationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partenaires': {
+      id: '/partenaires'
+      path: '/partenaires'
+      fullPath: '/partenaires'
+      preLoaderRoute: typeof PartenairesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/outils': {
+      id: '/outils'
+      path: '/outils'
+      fullPath: '/outils'
+      preLoaderRoute: typeof OutilsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -568,6 +654,20 @@ declare module '@tanstack/react-router' {
       path: '/charte-qualite'
       fullPath: '/charte-qualite'
       preLoaderRoute: typeof CharteQualiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artisans': {
+      id: '/artisans'
+      path: '/artisans'
+      fullPath: '/artisans'
+      preLoaderRoute: typeof ArtisansRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -833,6 +933,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AProposRoute: AProposRoute,
   AdminRoute: AdminRouteWithChildren,
+  ArtisansRoute: ArtisansRoute,
+  BlogRoute: BlogRoute,
   CharteQualiteRoute: CharteQualiteRoute,
   ContactRoute: ContactRoute,
   DesignSystemRoute: DesignSystemRoute,
@@ -840,6 +942,9 @@ const rootRouteChildren: RootRouteChildren = {
   EstimationRoute: EstimationRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  OutilsRoute: OutilsRoute,
+  PartenairesRoute: PartenairesRoute,
+  RealisationsRoute: RealisationsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   TeintesRoute: TeintesRoute,
