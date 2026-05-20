@@ -40,6 +40,7 @@ import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authentic
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
 import { Route as ProDevisNouveauRouteImport } from './routes/pro.devis.nouveau'
 import { Route as AuthenticatedProOnboardingRouteImport } from './routes/_authenticated/pro.onboarding'
+import { Route as AuthenticatedProCalendrierRouteImport } from './routes/_authenticated/pro.calendrier'
 
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
@@ -197,6 +198,12 @@ const AuthenticatedProOnboardingRoute =
     path: '/onboarding',
     getParentRoute: () => AuthenticatedProRoute,
   } as any)
+const AuthenticatedProCalendrierRoute =
+  AuthenticatedProCalendrierRouteImport.update({
+    id: '/calendrier',
+    path: '/calendrier',
+    getParentRoute: () => AuthenticatedProRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -227,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
+  '/pro/calendrier': typeof AuthenticatedProCalendrierRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
@@ -258,6 +266,7 @@ export interface FileRoutesByTo {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
+  '/pro/calendrier': typeof AuthenticatedProCalendrierRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
@@ -292,6 +301,7 @@ export interface FileRoutesById {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
+  '/_authenticated/pro/calendrier': typeof AuthenticatedProCalendrierRoute
   '/_authenticated/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
@@ -326,6 +336,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
+    | '/pro/calendrier'
     | '/pro/onboarding'
     | '/pro/devis/nouveau'
   fileRoutesByTo: FileRoutesByTo
@@ -357,6 +368,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin'
+    | '/pro/calendrier'
     | '/pro/onboarding'
     | '/pro/devis/nouveau'
   id:
@@ -390,6 +402,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
+    | '/_authenticated/pro/calendrier'
     | '/_authenticated/pro/onboarding'
     | '/pro/devis/nouveau'
   fileRoutesById: FileRoutesById
@@ -633,14 +646,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProOnboardingRouteImport
       parentRoute: typeof AuthenticatedProRoute
     }
+    '/_authenticated/pro/calendrier': {
+      id: '/_authenticated/pro/calendrier'
+      path: '/calendrier'
+      fullPath: '/pro/calendrier'
+      preLoaderRoute: typeof AuthenticatedProCalendrierRouteImport
+      parentRoute: typeof AuthenticatedProRoute
+    }
   }
 }
 
 interface AuthenticatedProRouteChildren {
+  AuthenticatedProCalendrierRoute: typeof AuthenticatedProCalendrierRoute
   AuthenticatedProOnboardingRoute: typeof AuthenticatedProOnboardingRoute
 }
 
 const AuthenticatedProRouteChildren: AuthenticatedProRouteChildren = {
+  AuthenticatedProCalendrierRoute: AuthenticatedProCalendrierRoute,
   AuthenticatedProOnboardingRoute: AuthenticatedProOnboardingRoute,
 }
 
@@ -723,3 +745,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
