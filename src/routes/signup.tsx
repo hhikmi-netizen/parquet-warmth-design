@@ -40,7 +40,7 @@ function SignupPage() {
     e.preventDefault();
     const parsed = schema.safeParse({ email, password });
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Champs invalides");
+      authToast.error(parsed.error.issues[0]?.message ?? "Champs invalides");
       return;
     }
     setLoading(true);
@@ -50,9 +50,10 @@ function SignupPage() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      authToast.error(error.message);
       return;
     }
+    authToast.dismiss();
     if (data.session) {
       navigate({ to: target });
       return;
@@ -68,7 +69,7 @@ function SignupPage() {
     });
     if (result.error) {
       setSocial(null);
-      toast.error("Connexion impossible : " + (result.error.message ?? "erreur"));
+      authToast.error(result.error.message);
       return;
     }
     if (result.redirected) return;
