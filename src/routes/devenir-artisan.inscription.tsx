@@ -263,6 +263,42 @@ function ArtisanOnboarding() {
   const removePhoto = (i: number) =>
     setForm((prev) => ({ ...prev, photos: prev.photos.filter((_, idx) => idx !== i) }));
 
+  const toggleEssence = (e: Essence) =>
+    setForm((prev) => ({
+      ...prev,
+      essences: prev.essences.includes(e)
+        ? prev.essences.filter((x) => x !== e)
+        : [...prev.essences, e],
+    }));
+
+  const toggleFinition = (f: Finition) =>
+    setForm((prev) => ({
+      ...prev,
+      finitions: prev.finitions.includes(f)
+        ? prev.finitions.filter((x) => x !== f)
+        : [...prev.finitions, f],
+    }));
+
+  const onDoc = (key: "justificatif" | "decennaleAttestation", file: File | null) => {
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) return;
+    const ok = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
+    if (!ok.includes(file.type)) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setForm((prev) => ({
+        ...prev,
+        [key]: { name: file.name, dataUrl: reader.result as string, size: file.size },
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const labelJustificatif =
+    form.formeJuridique === "auto_entrepreneur" || form.formeJuridique === "ei"
+      ? "Certificat d'immatriculation INSEE / extrait Sirene"
+      : "Extrait Kbis (moins de 3 mois)";
+
   const validity = useMemo(() => {
     const v: Record<number, boolean> = {
       1:
@@ -275,13 +311,27 @@ function ArtisanOnboarding() {
         form.ville.trim().length > 1 &&
         /^\d{5}$/.test(form.codePostal) &&
         form.rayonKm >= 5,
-      3: form.specialites.length >= 1,
-      4: form.photos.length >= 1 && form.bio.trim().length >= 40,
+      3:
+        form.specialites.length >= 1 &&
+        form.essences.length >= 1 &&
+        form.finitions.length >= 1,
+      4:
+        form.photos.length >= 1 &&
+        form.bio.trim().length >= 40 &&
+        /^\d{4}$/.test(form.anneeCreation) &&
+        Number(form.anneeCreation) >= 1900 &&
+        Number(form.anneeCreation) <= new Date().getFullYear(),
       5:
-        form.assuranceDecennale.trim().length > 1 &&
-        form.numeroDecennale.trim().length > 3 &&
-        form.rcPro &&
-        form.cgu,
+        form.formeJuridique !== "" &&
+        form.justificatif !== null &&
+        form.decennaleCompagnie.trim().length > 1 &&
+        form.decennaleNumero.trim().length > 3 &&
+        /^\d{4}-\d{2}-\d{2}$/.test(form.decennaleValidite) &&
+        new Date(form.decennaleValidite) > new Date() &&
+        form.decennaleAttestation !== null &&
+        form.rcProCompagnie.trim().length > 1 &&
+        form.rcProNumero.trim().length > 3,
+      6: form.cgu && form.chartQualite && form.exactitude,
     };
     return v;
   }, [form]);
