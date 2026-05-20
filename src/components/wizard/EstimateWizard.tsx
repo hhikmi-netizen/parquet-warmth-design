@@ -1049,12 +1049,18 @@ function Step4({
   errors,
   range,
   photos,
+  onPdf,
+  onShare,
+  shareMsg,
 }: {
   s: WizardState;
   set: <K extends keyof WizardState>(k: K, v: WizardState[K]) => void;
   errors: Errors;
   range: { min: number; max: number } | null;
   photos: number;
+  onPdf: () => void;
+  onShare: () => void | Promise<void>;
+  shareMsg: string;
 }) {
   return (
     <section>
