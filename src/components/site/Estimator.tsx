@@ -19,6 +19,7 @@ import {
   Calculator,
   Send,
 } from "lucide-react";
+import { buildEstimationPayload, submitEstimationStub } from "@/lib/estimation-types";
 
 
 // ---------- Modèle de calcul ----------
