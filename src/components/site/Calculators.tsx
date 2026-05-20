@@ -286,18 +286,17 @@ function BudgetTool() {
   const [surface, setSurface] = useState(35);
   const [support, setSupport] = useState<BudgetSupport>("plat");
   const [customize, setCustomize] = useState(false);
-  const defaults = POSE_RANGES[pose];
-  const [priceMin, setPriceMin] = useState<number>(defaults.min);
-  const [priceMax, setPriceMax] = useState<number>(defaults.max);
+  const [priceMin, setPriceMin] = useState<number>(POSE_RANGES["collee"].min);
+  const [priceMax, setPriceMax] = useState<number>(POSE_RANGES["collee"].max);
 
-  // Reset prix custom quand on change de type de pose (sauf si l'utilisateur a activé le mode perso)
-  const lastPoseRef = useMemo(() => ({ v: pose }), []); // eslint-disable-line react-hooks/exhaustive-deps
-  if (lastPoseRef.v !== pose && !customize) {
-    lastPoseRef.v = pose;
-    // sync defaults
-    if (priceMin !== defaults.min) setPriceMin(defaults.min);
-    if (priceMax !== defaults.max) setPriceMax(defaults.max);
-  }
+  // Synchronise les valeurs par défaut quand on change de type de pose,
+  // sauf si l'utilisateur a activé le mode tarif personnalisé.
+  useEffect(() => {
+    if (!customize) {
+      setPriceMin(POSE_RANGES[pose].min);
+      setPriceMax(POSE_RANGES[pose].max);
+    }
+  }, [pose, customize]);
 
   const { low, high } = useMemo(() => {
     const baseMin = customize ? priceMin : POSE_RANGES[pose].min;
