@@ -351,9 +351,25 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
     const blockH = 5 + valueLines.length * VALUE_LINE_H + 4;
     ensureSpace(blockH + 2);
 
-    // Kicker libellé (orange, petit, lettres espacées)
-    doc.setFont("helvetica", "bold").setFontSize(7.5).setTextColor(229, 101, 28);
-    doc.text(k.toUpperCase(), M + 1, y);
+    // Kicker libellé (orange, petit, lettres espacées) — ajusté pour rester sur 1 seule ligne.
+    // On réduit progressivement la taille de police, puis on tronque proprement si vraiment trop long.
+    const maxLabelW = INNER - 2;
+    const labelUpper = k.toUpperCase();
+    let labelSize = 7.5;
+    doc.setFont("helvetica", "bold").setFontSize(labelSize);
+    while (doc.getTextWidth(labelUpper) > maxLabelW && labelSize > 6) {
+      labelSize -= 0.25;
+      doc.setFontSize(labelSize);
+    }
+    let labelDisplay = labelUpper;
+    if (doc.getTextWidth(labelDisplay) > maxLabelW) {
+      while (labelDisplay.length > 1 && doc.getTextWidth(labelDisplay + "…") > maxLabelW) {
+        labelDisplay = labelDisplay.slice(0, -1);
+      }
+      labelDisplay += "…";
+    }
+    doc.setTextColor(229, 101, 28);
+    doc.text(labelDisplay, M + 1, y);
 
     // Valeur (noir profond, gras, grande taille)
     doc.setFont("helvetica", "bold").setFontSize(13).setTextColor(20, 20, 20);
