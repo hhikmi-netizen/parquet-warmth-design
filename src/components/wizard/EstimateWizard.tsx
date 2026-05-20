@@ -1378,7 +1378,18 @@ function Step4({
             </button>
           </div>
           {shareMsg && (
-            <p className="mt-2 text-xs text-muted-foreground">{shareMsg}</p>
+            <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5">
+              <p className="flex-1 text-xs text-muted-foreground">{shareMsg}</p>
+              {shareFallback && (
+                <button
+                  type="button"
+                  onClick={onPdf}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
+                >
+                  <FileDown className="h-3.5 w-3.5" /> Télécharger le PDF
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>
