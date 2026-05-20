@@ -388,12 +388,14 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   row("Telephone", s.telephone);
 
   if (s.message) {
-    y += 5;
     section("Message");
-    const lines = doc.splitTextToSize(s.message, INNER - 2);
     doc.setFont("helvetica", "normal").setFontSize(10).setTextColor(40);
-    doc.text(lines, M + 1, y);
-    y += lines.length * 5 + 3;
+    const msgLines = doc.splitTextToSize(s.message, INNER - 2) as string[];
+    for (const line of msgLines) {
+      ensureSpace(LINE_H);
+      doc.text(line, M + 1, y);
+      y += LINE_H;
+    }
   }
 
 
