@@ -64,6 +64,7 @@ function SignupPage() {
   };
 
   const onProvider = async (provider: "google" | "apple") => {
+    if (loading || social) return;
     setSocial(provider);
     const result = await lovable.auth.signInWithOAuth(provider, {
       redirect_uri: window.location.origin + target,
