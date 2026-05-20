@@ -105,13 +105,24 @@ function ContactPage() {
 
   const addFiles = (incoming: FileList | File[] | null) => {
     if (!incoming) return;
+    if (files.length >= MAX_FILES) {
+      toast.error(`Limite atteinte : ${MAX_FILES} photos maximum.`);
+      return;
+    }
     const list = Array.from(incoming);
+    const remaining = MAX_FILES - files.length;
+    if (list.length > remaining) {
+      toast.error(
+        `Vous pouvez encore ajouter ${remaining} photo${remaining > 1 ? "s" : ""} (${list.length} sélectionnée${list.length > 1 ? "s" : ""}).`
+      );
+    }
     const next = [...files];
     let accepted = 0;
+    let skippedOverflow = 0;
     for (const f of list) {
       if (next.length >= MAX_FILES) {
-        toast.error(`Maximum ${MAX_FILES} photos.`);
-        break;
+        skippedOverflow++;
+        continue;
       }
       const isImage =
         f.type.startsWith("image/") || /\.(jpe?g|png|webp|heic)$/i.test(f.name);
@@ -131,7 +142,12 @@ function ContactPage() {
     if (accepted > 0) {
       toast.success(`${accepted} photo${accepted > 1 ? "s" : ""} ajoutée${accepted > 1 ? "s" : ""}.`);
     }
+    if (skippedOverflow > 0 && accepted > 0) {
+      toast.error(`${skippedOverflow} photo${skippedOverflow > 1 ? "s" : ""} ignorée${skippedOverflow > 1 ? "s" : ""} (max ${MAX_FILES}).`);
+    }
   };
+
+  const filesFull = files.length >= MAX_FILES;
 
   const removeFile = (idx: number) =>
     setFiles((prev) => prev.filter((_, i) => i !== idx));
