@@ -40,6 +40,7 @@ import { MOCK_INBOX as _UNUSED_MOCK, type InboxMatch, type MatchStatus } from "@
 void _UNUSED_MOCK;
 import { OutilsTab } from "@/components/pro/OutilsTab";
 import { QuickActions } from "@/components/pro/QuickActions";
+import { AddToCalendar } from "@/components/calendar/AddToCalendar";
 
 export const Route = createFileRoute("/_authenticated/pro")({
   component: ProDashboard,
@@ -600,9 +601,23 @@ function ProjectDrawer({
 }) {
   const [acceptOpen, setAcceptOpen] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
+  const defaultRdvDate = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 3);
+    return d.toISOString().slice(0, 10);
+  }, []);
+  const [rdvDate, setRdvDate] = useState(defaultRdvDate);
+  const [rdvTime, setRdvTime] = useState("10:00");
   const p = match.project;
   const unlocked = match.status === "accepted";
   const isPending = match.status === "pending";
+
+  const rdvStart = useMemo(() => {
+    const [y, mo, d] = rdvDate.split("-").map(Number);
+    const [h, mi] = rdvTime.split(":").map(Number);
+    return new Date(y, (mo ?? 1) - 1, d ?? 1, h ?? 10, mi ?? 0);
+  }, [rdvDate, rdvTime]);
+  const rdvEnd = useMemo(() => new Date(rdvStart.getTime() + 60 * 60 * 1000), [rdvStart]);
 
   return (
     <>
@@ -741,6 +756,43 @@ function ProjectDrawer({
 
             {unlocked && (
               <div className="space-y-3">
+                <div className="rounded-2xl border border-border bg-background p-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-semibold">Planifier un rendez-vous</p>
+                      <p className="text-xs text-muted-foreground">
+                        Synchronisez avec votre agenda et partagez le lien au client.
+                      </p>
+                    </div>
+                    <Calendar className="h-5 w-5 text-brand-orange-deep" />
+                  </div>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <input
+                      type="date"
+                      value={rdvDate}
+                      onChange={(e) => setRdvDate(e.target.value)}
+                      className="rounded-lg border border-border bg-background px-2 py-1.5 text-sm"
+                    />
+                    <input
+                      type="time"
+                      value={rdvTime}
+                      onChange={(e) => setRdvTime(e.target.value)}
+                      className="rounded-lg border border-border bg-background px-2 py-1.5 text-sm"
+                    />
+                    <AddToCalendar
+                      variant="primary"
+                      label="Ajouter à mon agenda"
+                      icsFilename={`parqueto-${p.reference}.ics`}
+                      event={{
+                        title: `RDV chantier · ${p.client_name} (${p.reference})`,
+                        description: `Projet Parqueto ${p.reference}\nClient : ${p.client_name}\n${p.type_pose} · ${p.type_bois} · ${p.surface_m2} m²`,
+                        location: `${p.ville} (${p.code_postal})`,
+                        start: rdvStart,
+                        end: rdvEnd,
+                      }}
+                    />
+                  </div>
+                </div>
                 <Link
                   to="/devis"
                   className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background transition hover:opacity-90"

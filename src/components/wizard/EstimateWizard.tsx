@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { submitEstimationProject } from "@/lib/projects.functions";
+import { AddToCalendar } from "@/components/calendar/AddToCalendar";
 import { z } from "zod";
 import jsPDF from "jspdf";
 import {
@@ -838,6 +839,18 @@ export function EstimateWizard() {
             {pdfLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileDown className="h-4 w-4" />}
             {pdfLoading ? "Génération…" : "Télécharger le récap PDF"}
           </button>
+          <AddToCalendar
+            variant="outline"
+            label="Rappel dans mon agenda"
+            icsFilename="parqueto-suivi.ics"
+            event={{
+              title: "Parqueto — réponse artisan attendue",
+              description: `Suivi de votre demande pour le chantier ${s.cp} ${s.ville}.\nUn artisan vérifié doit vous recontacter sous 24 h ouvrées.`,
+              location: `${s.adresse}, ${s.cp} ${s.ville}`,
+              start: (() => { const d = new Date(); d.setHours(d.getHours() + 24); d.setMinutes(0, 0, 0); return d; })(),
+              end: (() => { const d = new Date(); d.setHours(d.getHours() + 25); d.setMinutes(0, 0, 0); return d; })(),
+            }}
+          />
           <Link
             to="/"
             className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"

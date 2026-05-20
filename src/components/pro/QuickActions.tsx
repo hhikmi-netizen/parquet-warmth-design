@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { FileText, Ruler, FolderPlus, Calculator, Inbox, ArrowRight } from "lucide-react";
+import { FileText, Ruler, CalendarDays, Calculator, Inbox, ArrowRight } from "lucide-react";
 
 const ACTIONS = [
   { id: "devis", label: "Générer un devis", icon: FileText, to: "/devis" as const, tone: "primary" as const },
   { id: "surface", label: "Calculer surface", icon: Ruler, to: "/devis" as const },
-  { id: "projet", label: "Nouveau projet", icon: FolderPlus, to: "/devis" as const },
+  { id: "agenda", label: "Mon calendrier", icon: CalendarDays, to: "/pro/calendrier" as const },
   { id: "estim", label: "Estimation rapide", icon: Calculator, to: "/estimation" as const },
   { id: "leads", label: "Voir projets reçus", icon: Inbox, to: "/pro" as const },
 ];
