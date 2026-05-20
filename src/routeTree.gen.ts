@@ -16,6 +16,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as EstimationRouteImport } from './routes/estimation'
 import { Route as DevenirArtisanRouteImport } from './routes/devenir-artisan'
+import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CharteQualiteRouteImport } from './routes/charte-qualite'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -70,6 +71,11 @@ const EstimationRoute = EstimationRouteImport.update({
 const DevenirArtisanRoute = DevenirArtisanRouteImport.update({
   id: '/devenir-artisan',
   path: '/devenir-artisan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DesignSystemRoute = DesignSystemRouteImport.update({
+  id: '/design-system',
+  path: '/design-system',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -178,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
+  '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -205,6 +212,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
+  '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -235,6 +243,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
+  '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -265,6 +274,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/charte-qualite'
     | '/contact'
+    | '/design-system'
     | '/devenir-artisan'
     | '/estimation'
     | '/forgot-password'
@@ -292,6 +302,7 @@ export interface FileRouteTypes {
     | '/'
     | '/charte-qualite'
     | '/contact'
+    | '/design-system'
     | '/devenir-artisan'
     | '/estimation'
     | '/forgot-password'
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/charte-qualite'
     | '/contact'
+    | '/design-system'
     | '/devenir-artisan'
     | '/estimation'
     | '/forgot-password'
@@ -351,6 +363,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   CharteQualiteRoute: typeof CharteQualiteRoute
   ContactRoute: typeof ContactRoute
+  DesignSystemRoute: typeof DesignSystemRoute
   DevenirArtisanRoute: typeof DevenirArtisanRouteWithChildren
   EstimationRoute: typeof EstimationRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
@@ -411,6 +424,13 @@ declare module '@tanstack/react-router' {
       path: '/devenir-artisan'
       fullPath: '/devenir-artisan'
       preLoaderRoute: typeof DevenirArtisanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/design-system': {
+      id: '/design-system'
+      path: '/design-system'
+      fullPath: '/design-system'
+      preLoaderRoute: typeof DesignSystemRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -616,6 +636,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   CharteQualiteRoute: CharteQualiteRoute,
   ContactRoute: ContactRoute,
+  DesignSystemRoute: DesignSystemRoute,
   DevenirArtisanRoute: DevenirArtisanRouteWithChildren,
   EstimationRoute: EstimationRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
