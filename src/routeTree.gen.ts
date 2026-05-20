@@ -15,9 +15,11 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as EstimationRouteImport } from './routes/estimation'
+import { Route as DevenirArtisanRouteImport } from './routes/devenir-artisan'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProOffresRouteImport } from './routes/pro.offres'
 import { Route as DemoMicroReassuranceRouteImport } from './routes/demo.micro-reassurance'
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
@@ -52,6 +54,11 @@ const EstimationRoute = EstimationRouteImport.update({
   path: '/estimation',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevenirArtisanRoute = DevenirArtisanRouteImport.update({
+  id: '/devenir-artisan',
+  path: '/devenir-artisan',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -64,6 +71,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProOffresRoute = ProOffresRouteImport.update({
+  id: '/pro/offres',
+  path: '/pro/offres',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoMicroReassuranceRoute = DemoMicroReassuranceRouteImport.update({
@@ -85,6 +97,7 @@ const AuthenticatedDevisRoute = AuthenticatedDevisRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/contact': typeof ContactRoute
+  '/devenir-artisan': typeof DevenirArtisanRoute
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -94,10 +107,12 @@ export interface FileRoutesByFullPath {
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
+  '/pro/offres': typeof ProOffresRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contact': typeof ContactRoute
+  '/devenir-artisan': typeof DevenirArtisanRoute
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -107,12 +122,14 @@ export interface FileRoutesByTo {
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
+  '/pro/offres': typeof ProOffresRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/contact': typeof ContactRoute
+  '/devenir-artisan': typeof DevenirArtisanRoute
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -122,12 +139,14 @@ export interface FileRoutesById {
   '/_authenticated/devis': typeof AuthenticatedDevisRoute
   '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
+  '/pro/offres': typeof ProOffresRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/contact'
+    | '/devenir-artisan'
     | '/estimation'
     | '/forgot-password'
     | '/login'
@@ -137,10 +156,12 @@ export interface FileRouteTypes {
     | '/devis'
     | '/historique'
     | '/demo/micro-reassurance'
+    | '/pro/offres'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/contact'
+    | '/devenir-artisan'
     | '/estimation'
     | '/forgot-password'
     | '/login'
@@ -150,11 +171,13 @@ export interface FileRouteTypes {
     | '/devis'
     | '/historique'
     | '/demo/micro-reassurance'
+    | '/pro/offres'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/contact'
+    | '/devenir-artisan'
     | '/estimation'
     | '/forgot-password'
     | '/login'
@@ -164,12 +187,14 @@ export interface FileRouteTypes {
     | '/_authenticated/devis'
     | '/_authenticated/historique'
     | '/demo/micro-reassurance'
+    | '/pro/offres'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   ContactRoute: typeof ContactRoute
+  DevenirArtisanRoute: typeof DevenirArtisanRoute
   EstimationRoute: typeof EstimationRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
@@ -177,6 +202,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   DemoMicroReassuranceRoute: typeof DemoMicroReassuranceRoute
+  ProOffresRoute: typeof ProOffresRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -223,6 +249,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstimationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/devenir-artisan': {
+      id: '/devenir-artisan'
+      path: '/devenir-artisan'
+      fullPath: '/devenir-artisan'
+      preLoaderRoute: typeof DevenirArtisanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -242,6 +275,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pro/offres': {
+      id: '/pro/offres'
+      path: '/pro/offres'
+      fullPath: '/pro/offres'
+      preLoaderRoute: typeof ProOffresRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/micro-reassurance': {
@@ -286,6 +326,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   ContactRoute: ContactRoute,
+  DevenirArtisanRoute: DevenirArtisanRoute,
   EstimationRoute: EstimationRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
@@ -293,7 +334,18 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   DemoMicroReassuranceRoute: DemoMicroReassuranceRoute,
+  ProOffresRoute: ProOffresRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
