@@ -431,7 +431,7 @@ function SegmentedGroup({
 }
 
 export function Calculators() {
-  const [active, setActive] = useState<ToolKey>("surface");
+  const [active, setActive] = useState<ToolKey>("budget");
   const current = tools.find((t) => t.key === active)!;
 
   return (
