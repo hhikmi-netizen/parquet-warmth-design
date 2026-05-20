@@ -18,7 +18,6 @@ import {
   Plus,
   ShieldCheck,
   Sparkles,
-  Sparkles,
   Upload,
   X,
 } from "lucide-react";
