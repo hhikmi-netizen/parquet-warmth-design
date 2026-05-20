@@ -21,6 +21,7 @@ import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CharteQualiteRouteImport } from './routes/charte-qualite'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
@@ -103,6 +104,11 @@ const CharteQualiteRoute = CharteQualiteRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AProposRoute = AProposRouteImport.update({
+  id: '/a-propos',
+  path: '/a-propos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -226,6 +232,7 @@ const AuthenticatedProCalendrierRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
   '/admin': typeof AdminRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
@@ -262,6 +269,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
@@ -299,6 +307,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/a-propos': typeof AProposRoute
   '/admin': typeof AdminRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
@@ -337,6 +346,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/a-propos'
     | '/admin'
     | '/charte-qualite'
     | '/contact'
@@ -373,6 +383,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/a-propos'
     | '/charte-qualite'
     | '/contact'
     | '/design-system'
@@ -409,6 +420,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/a-propos'
     | '/admin'
     | '/charte-qualite'
     | '/contact'
@@ -447,6 +459,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AProposRoute: typeof AProposRoute
   AdminRoute: typeof AdminRouteWithChildren
   CharteQualiteRoute: typeof CharteQualiteRoute
   ContactRoute: typeof ContactRoute
@@ -549,6 +562,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/a-propos': {
+      id: '/a-propos'
+      path: '/a-propos'
+      fullPath: '/a-propos'
+      preLoaderRoute: typeof AProposRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -789,6 +809,7 @@ const DevenirArtisanRouteWithChildren = DevenirArtisanRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AProposRoute: AProposRoute,
   AdminRoute: AdminRouteWithChildren,
   CharteQualiteRoute: CharteQualiteRoute,
   ContactRoute: ContactRoute,

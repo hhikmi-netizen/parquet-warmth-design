@@ -51,7 +51,8 @@ function TeintesPage() {
             <h1 className="mt-1 font-serif text-3xl sm:text-4xl">Trouvez la teinte parfaite</h1>
             <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
               8 finitions photographiées en lumière naturelle. Filtrez par famille de tons,
-              comparez deux teintes côte à côte, demandez un échantillon physique en deux clics.
+              comparez deux teintes côte à côte, puis demandez à l'artisan une démonstration
+              directement sur votre parquet.
             </p>
           </div>
         </div>
