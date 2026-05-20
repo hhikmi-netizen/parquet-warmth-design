@@ -13,11 +13,13 @@ import {
   Loader2,
   CheckCircle2,
   FileDown,
+  Share2,
   Ruler,
   ClipboardList,
   Calculator,
   Send,
 } from "lucide-react";
+import { toast } from "sonner";
 
 // ---------- Modèle de calcul ----------
 type ServiceKey = "poncage" | "vitrification" | "pose" | "renovation";
