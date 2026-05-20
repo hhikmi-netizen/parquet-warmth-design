@@ -449,9 +449,9 @@ export function Estimator() {
         </p>
       </div>
 
-      {/* CTA principal + PDF */}
+      {/* CTA principal + PDF + Partage */}
       {!showContact ? (
-        <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
+        <div className="mt-4 space-y-2">
           <button
             onClick={() => setShowContact(true)}
             className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep active:scale-[0.98]"
@@ -459,14 +459,37 @@ export function Estimator() {
             Être recontacté avec ce devis
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
           </button>
-          <button
-            onClick={() => generateQuotePDF(s, totals, initialContact)}
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-background/25 bg-background/5 px-4 py-3 text-xs font-semibold text-background transition hover:bg-background/10 active:scale-[0.98]"
-            aria-label="Télécharger le devis PDF"
-          >
-            <FileDown className="h-4 w-4 text-brand-orange" />
-            Devis PDF
-          </button>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => generateQuotePDF(s, totals, initialContact)}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-background/25 bg-background/5 px-4 py-3 text-xs font-semibold text-background transition hover:bg-background/10 active:scale-[0.98]"
+              aria-label="Télécharger le devis PDF"
+            >
+              <FileDown className="h-4 w-4 text-brand-orange" />
+              Devis PDF
+            </button>
+            <button
+              onClick={async () => {
+                const r = await shareQuote(s, totals, initialContact);
+                if (r === "copied") setShareMsg("Résumé copié dans le presse-papier");
+                else if (r === "shared") setShareMsg("Devis partagé");
+                else if (r === "error") setShareMsg("Partage indisponible");
+                if (r === "copied" || r === "shared" || r === "error") {
+                  setTimeout(() => setShareMsg(null), 2500);
+                }
+              }}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-background/25 bg-background/5 px-4 py-3 text-xs font-semibold text-background transition hover:bg-background/10 active:scale-[0.98]"
+              aria-label="Partager le devis"
+            >
+              <Share2 className="h-4 w-4 text-brand-orange" />
+              Partager
+            </button>
+          </div>
+          {shareMsg && (
+            <p className="text-center text-[11px] text-background/70" role="status" aria-live="polite">
+              {shareMsg}
+            </p>
+          )}
         </div>
       ) : (
         <ContactForm
