@@ -13,6 +13,11 @@ import {
   X,
   Sparkles,
   Lock,
+  FileText,
+  Award,
+  Pencil,
+  ClipboardCheck,
+  Info,
 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
