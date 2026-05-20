@@ -112,6 +112,19 @@ function VerifyEmailPage() {
           </div>
         </div>
 
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-brand-orange/30 bg-brand-orange/5 p-4 text-sm">
+          <div className="min-w-0">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Après confirmation</p>
+            <p className="mt-0.5 truncate font-medium text-foreground" title={target}>
+              {labelFor(target)}
+            </p>
+            <p className="truncate text-xs text-muted-foreground" title={target}>
+              {target}
+            </p>
+          </div>
+          <ArrowRight className="h-4 w-4 flex-shrink-0 text-brand-orange" aria-hidden="true" />
+        </div>
+
         <div className="grid gap-2">
           <label htmlFor="email" className="text-sm font-medium">Email</label>
           <input
