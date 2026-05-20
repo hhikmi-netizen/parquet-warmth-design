@@ -978,39 +978,75 @@ function Step3({
   setPhotoError: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [lightbox, setLightbox] = useState<number | null>(null);
   const MAX = 5;
   const MAX_SIZE = 8 * 1024 * 1024; // 8 MB
+  const MIN_DIM = 400; // px (shortest side)
   const ACCEPT = ["image/jpeg", "image/png", "image/webp"];
 
-  const onFiles = (list: FileList | null) => {
+  const readDimensions = (url: string) =>
+    new Promise<{ w: number; h: number } | null>((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
+      img.onerror = () => resolve(null);
+      img.src = url;
+    });
+
+  const onFiles = async (list: FileList | null) => {
     setPhotoError("");
     if (!list || list.length === 0) return;
     const remaining = MAX - photos.length;
     if (remaining <= 0) {
-      setPhotoError(`Vous avez atteint la limite de ${MAX} photos. Retirez-en une pour en ajouter d'autres.`);
+      setPhotoError(`Limite de ${MAX} photos atteinte. Retirez-en une pour en ajouter d'autres.`);
       return;
     }
     const incoming = Array.from(list);
     const rejected: string[] = [];
-    const accepted: File[] = [];
+    const candidates: File[] = [];
     for (const f of incoming) {
-      if (!ACCEPT.includes(f.type)) { rejected.push(`${f.name} (format non supporté)`); continue; }
-      if (f.size > MAX_SIZE) { rejected.push(`${f.name} (> 8 Mo)`); continue; }
-      accepted.push(f);
+      if (!ACCEPT.includes(f.type)) { rejected.push(`${f.name} : format non supporté`); continue; }
+      if (f.size > MAX_SIZE) { rejected.push(`${f.name} : trop volumineuse (> 8 Mo)`); continue; }
+      if (f.size < 5 * 1024) { rejected.push(`${f.name} : fichier vide ou corrompu`); continue; }
+      candidates.push(f);
     }
-    const trimmed = accepted.slice(0, remaining);
-    const skipped = accepted.length - trimmed.length;
-    const next = trimmed.map((f) => ({
-      id: `${f.name}-${f.size}-${Date.now()}-${Math.random()}`,
-      name: f.name,
-      url: URL.createObjectURL(f),
-    }));
-    setPhotos((p) => [...p, ...next].slice(0, MAX));
+    const trimmed = candidates.slice(0, remaining);
+    const skipped = candidates.length - trimmed.length;
+
+    const accepted: { id: string; name: string; url: string; size: number; w: number; h: number }[] = [];
+    for (const f of trimmed) {
+      const url = URL.createObjectURL(f);
+      const dim = await readDimensions(url);
+      if (!dim) {
+        rejected.push(`${f.name} : image illisible`);
+        URL.revokeObjectURL(url);
+        continue;
+      }
+      if (Math.min(dim.w, dim.h) < MIN_DIM) {
+        rejected.push(`${f.name} : résolution trop faible (min ${MIN_DIM}px)`);
+        URL.revokeObjectURL(url);
+        continue;
+      }
+      accepted.push({
+        id: `${f.name}-${f.size}-${Date.now()}-${Math.random()}`,
+        name: f.name, url, size: f.size, w: dim.w, h: dim.h,
+      });
+    }
+    setPhotos((p) => [...p, ...accepted].slice(0, MAX));
     const msgs: string[] = [];
-    if (rejected.length) msgs.push(`Refusé(s) : ${rejected.join(", ")}`);
-    if (skipped > 0) msgs.push(`${skipped} photo(s) ignorée(s) — limite de ${MAX} atteinte.`);
+    if (rejected.length) msgs.push(rejected.join(" · "));
+    if (skipped > 0) msgs.push(`${skipped} photo(s) ignorée(s) — limite de ${MAX}.`);
     if (msgs.length) setPhotoError(msgs.join(" "));
   };
+
+  const removePhoto = (id: string) => {
+    setPhotos((arr) => {
+      const found = arr.find((x) => x.id === id);
+      if (found) URL.revokeObjectURL(found.url);
+      return arr.filter((x) => x.id !== id);
+    });
+    setLightbox(null);
+  };
+
 
 
   return (
