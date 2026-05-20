@@ -24,6 +24,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProOffresRouteImport } from './routes/pro.offres'
+import { Route as ProFacturationRouteImport } from './routes/pro.facturation'
 import { Route as DevenirArtisanInscriptionRouteImport } from './routes/devenir-artisan.inscription'
 import { Route as DemoMicroReassuranceRouteImport } from './routes/demo.micro-reassurance'
 import { Route as AdminSupportRouteImport } from './routes/admin.support'
@@ -110,6 +111,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const ProOffresRoute = ProOffresRouteImport.update({
   id: '/pro/offres',
   path: '/pro/offres',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProFacturationRoute = ProFacturationRouteImport.update({
+  id: '/pro/facturation',
+  path: '/pro/facturation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DevenirArtisanInscriptionRoute =
@@ -205,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/admin/support': typeof AdminSupportRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
+  '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -233,6 +240,7 @@ export interface FileRoutesByTo {
   '/admin/support': typeof AdminSupportRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
+  '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
 }
@@ -264,6 +272,7 @@ export interface FileRoutesById {
   '/admin/support': typeof AdminSupportRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
+  '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -295,6 +304,7 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
+    | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -323,6 +333,7 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
+    | '/pro/facturation'
     | '/pro/offres'
     | '/admin'
   id:
@@ -353,6 +364,7 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
+    | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
   fileRoutesById: FileRoutesById
@@ -372,6 +384,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   DemoMicroReassuranceRoute: typeof DemoMicroReassuranceRoute
+  ProFacturationRoute: typeof ProFacturationRoute
   ProOffresRoute: typeof ProOffresRoute
 }
 
@@ -480,6 +493,13 @@ declare module '@tanstack/react-router' {
       path: '/pro/offres'
       fullPath: '/pro/offres'
       preLoaderRoute: typeof ProOffresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pro/facturation': {
+      id: '/pro/facturation'
+      path: '/pro/facturation'
+      fullPath: '/pro/facturation'
+      preLoaderRoute: typeof ProFacturationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/devenir-artisan/inscription': {
@@ -645,6 +665,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   DemoMicroReassuranceRoute: DemoMicroReassuranceRoute,
+  ProFacturationRoute: ProFacturationRoute,
   ProOffresRoute: ProOffresRoute,
 }
 export const routeTree = rootRouteImport
