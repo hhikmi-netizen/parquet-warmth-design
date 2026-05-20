@@ -4,7 +4,7 @@ const pains = [
   {
     icon: Wallet,
     title: "Un budget toujours flou",
-    body: "Devis vagues, écarts du simple au triple, lignes obscures. Impossible de savoir si le prix est juste.",
+    body: "Pas de repère de prix fiable, des estimations floues, des lignes obscures. Impossible de savoir où on met les pieds.",
     tag: "Tarification",
   },
   {
