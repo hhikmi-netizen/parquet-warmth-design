@@ -483,6 +483,8 @@ export function Estimator() {
       perimetre,
       plinthesCost,
       seuilsCost,
+      laborMin: baseMin,
+      laborMax: baseMax,
     };
   }, [s, surface, perimetre]);
 
