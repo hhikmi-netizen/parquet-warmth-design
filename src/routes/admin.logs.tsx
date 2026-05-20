@@ -36,7 +36,7 @@ function LogsPage() {
       subtitle="Lisible pour un dirigeant : qui a fait quoi, quand, et ce qui mérite attention."
     >
       <div className="flex flex-wrap items-center gap-2">
-        <div className="flex flex-1 items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-sm sm:max-w-sm">
+        <div className="flex w-full items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-sm transition focus-within:border-brand-orange/40 sm:w-auto sm:max-w-sm sm:flex-1">
           <Search className="h-3.5 w-3.5 text-muted-foreground" />
           <input
             value={q}
@@ -45,15 +45,15 @@ function LogsPage() {
             className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
           />
         </div>
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Filter className="h-3.5 w-3.5 text-muted-foreground" />
+        <div className="-mx-3 flex items-center gap-1.5 overflow-x-auto px-3 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+          <Filter className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
           {CHANNELS.map((c) => (
             <button
               key={c}
               onClick={() => setChannel(c)}
-              className={`rounded-full border px-3 py-1 text-[11px] transition ${
+              className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-[11px] transition ${
                 channel === c
-                  ? "border-brand-orange bg-brand-orange text-primary-foreground"
+                  ? "border-brand-orange bg-brand-orange text-primary-foreground shadow-soft"
                   : "border-border bg-card text-foreground hover:border-brand-orange/40"
               }`}
             >

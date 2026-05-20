@@ -49,11 +49,11 @@ function NotificationsPage() {
                   <p className="mt-0.5 text-xs text-muted-foreground">{n.detail}</p>
                   <p className="mt-0.5 text-[11px] text-muted-foreground">{n.quand}</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button className="rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground hover:border-brand-orange/40">
+                <div className="flex w-full items-center gap-2 sm:w-auto">
+                  <button className="flex-1 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground transition hover:border-brand-orange/40 sm:flex-none">
                     Reporter
                   </button>
-                  <button className="rounded-full bg-brand-orange px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-brand-orange-deep">
+                  <button className="flex-1 rounded-full bg-brand-orange px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-brand-orange-deep sm:flex-none">
                     Traiter
                   </button>
                 </div>
