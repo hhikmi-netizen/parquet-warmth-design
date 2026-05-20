@@ -416,7 +416,7 @@ function CalendrierPage() {
                 <PqSurface key={r.id} padding="md" tone="card">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <PqPill tone={typeTone as never}>{typeLabel}</PqPill>
+                      <PqPill tone={typeTone}>{typeLabel}</PqPill>
                       <p className="mt-2 font-serif text-lg">{r.client}</p>
                       <p className="text-xs text-muted-foreground">Réf. {r.ref}</p>
                     </div>
