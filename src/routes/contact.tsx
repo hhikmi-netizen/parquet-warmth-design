@@ -225,7 +225,11 @@ function ContactPage() {
           <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange">
             <CheckCircle2 className="h-7 w-7" />
           </div>
-          <h1 className="mt-6 font-display text-4xl text-foreground sm:text-5xl">
+          <h1
+            ref={successHeadingRef}
+            tabIndex={-1}
+            className="mt-6 font-display text-4xl text-foreground sm:text-5xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background rounded-lg"
+          >
             Merci, votre demande est partie.
           </h1>
           <p className="mt-4 text-muted-foreground">
