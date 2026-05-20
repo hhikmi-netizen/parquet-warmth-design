@@ -5,6 +5,8 @@ import { Process } from "@/components/site/Process";
 import { Pains } from "@/components/site/Pains";
 import { Expertise } from "@/components/site/Expertise";
 import { Artisan } from "@/components/site/Artisan";
+import { ArtisansShowcase } from "@/components/site/ArtisansShowcase";
+import { Calculators } from "@/components/site/Calculators";
 import { Blog } from "@/components/site/Blog";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { Footer } from "@/components/site/Footer";
@@ -31,6 +33,8 @@ function Index() {
       <Process />
       <Pains />
       <Expertise />
+      <ArtisansShowcase />
+      <Calculators />
       <Artisan />
       <Blog />
       <FinalCTA />
