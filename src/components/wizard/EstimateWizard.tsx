@@ -448,6 +448,7 @@ export function EstimateWizard() {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [shareMsg, setShareMsg] = useState<string>("");
+  const [shareFallback, setShareFallback] = useState(false);
 
   useEffect(() => {
     setS(loadWizardState());
@@ -522,6 +523,7 @@ export function EstimateWizard() {
 
   const shareQuote = async () => {
     setShareMsg("");
+    setShareFallback(false);
     const text = buildShareText();
     const nav = typeof navigator !== "undefined" ? navigator : undefined;
     try {
@@ -538,18 +540,22 @@ export function EstimateWizard() {
           }
         } catch { /* fall through to text share */ }
       }
-      // 2) Text share
+      // 2) Text share (PDF files not supported here → propose fallback)
       if (nav?.share) {
         await nav.share({ title: "Mon estimation Parqueto", text });
+        setShareMsg("Résumé partagé. Le PDF n'a pas pu être joint sur ce navigateur.");
+        setShareFallback(true);
         return;
       }
       // 3) Clipboard fallback
       if (nav?.clipboard) {
         await nav.clipboard.writeText(text);
         setShareMsg("Résumé copié dans le presse-papiers.");
+        setShareFallback(true);
         return;
       }
-      setShareMsg("Partage indisponible sur ce navigateur — utilisez le PDF.");
+      setShareMsg("Partage indisponible sur ce navigateur.");
+      setShareFallback(true);
     } catch (err) {
       const name = (err as DOMException)?.name;
       if (name === "AbortError") return; // user cancelled
@@ -557,8 +563,9 @@ export function EstimateWizard() {
         await nav!.clipboard.writeText(text);
         setShareMsg("Partage refusé — résumé copié à la place.");
       } catch {
-        setShareMsg("Impossible de partager. Téléchargez le PDF.");
+        setShareMsg("Impossible de partager.");
       }
+      setShareFallback(true);
     }
   };
 
@@ -673,6 +680,7 @@ export function EstimateWizard() {
             onPdf={() => generateWizardPDF(s)}
             onShare={shareQuote}
             shareMsg={shareMsg}
+            shareFallback={shareFallback}
           />
         )}
       </main>
@@ -1231,6 +1239,7 @@ function Step4({
   onPdf,
   onShare,
   shareMsg,
+  shareFallback,
 }: {
   s: WizardState;
   set: <K extends keyof WizardState>(k: K, v: WizardState[K]) => void;
@@ -1240,6 +1249,7 @@ function Step4({
   onPdf: () => void;
   onShare: () => void | Promise<void>;
   shareMsg: string;
+  shareFallback: boolean;
 }) {
   return (
     <section>
@@ -1368,7 +1378,18 @@ function Step4({
             </button>
           </div>
           {shareMsg && (
-            <p className="mt-2 text-xs text-muted-foreground">{shareMsg}</p>
+            <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5">
+              <p className="flex-1 text-xs text-muted-foreground">{shareMsg}</p>
+              {shareFallback && (
+                <button
+                  type="button"
+                  onClick={onPdf}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
+                >
+                  <FileDown className="h-3.5 w-3.5" /> Télécharger le PDF
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>
