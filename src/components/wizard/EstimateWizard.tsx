@@ -742,10 +742,46 @@ export function EstimateWizard() {
     setTimeout(() => { setSending(false); setSent(true); window.scrollTo({ top: 0, behavior: "smooth" }); }, 700);
   };
 
+  /* --------------------------- Barre de progression PDF --------------------------- */
+  const PdfProgress = ({ visible }: { visible: boolean }) => {
+    if (!visible) return null;
+    return (
+      <>
+        <style>{`@keyframes pq-pdf-indeterminate {
+          0%   { transform: translateX(-100%); }
+          50%  { transform: translateX(40%); }
+          100% { transform: translateX(220%); }
+        }`}</style>
+        <div
+          role="status"
+          aria-live="polite"
+          aria-label="Génération du PDF en cours"
+          className="fixed inset-x-0 top-0 z-50 pointer-events-none"
+        >
+          {/* Barre fine indéterminée en haut d'écran */}
+          <div className="h-1 w-full overflow-hidden bg-brand-orange/15">
+            <div
+              className="h-full w-1/3 rounded-r-full bg-brand-orange"
+              style={{ animation: "pq-pdf-indeterminate 1.2s ease-in-out infinite" }}
+            />
+          </div>
+          {/* Pastille statut, plus visible sur mobile */}
+          <div className="flex justify-center px-4 pt-3 sm:pt-4">
+            <div className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-background/95 px-4 py-2 text-xs font-semibold text-foreground shadow-lg backdrop-blur">
+              <Loader2 className="h-4 w-4 animate-spin text-brand-orange" />
+              Génération du PDF…
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
+
   /* ----------------------------- Écran final ----------------------------- */
   if (sent) {
     return (
       <div className="mx-auto max-w-2xl px-5 py-20 text-center">
+        <PdfProgress visible={pdfLoading} />
         <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-brand-orange/15">
           <CheckCircle2 className="h-8 w-8 text-brand-orange" />
         </div>
