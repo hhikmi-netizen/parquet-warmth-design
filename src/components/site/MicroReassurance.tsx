@@ -55,7 +55,9 @@ function Sep({
       aria-hidden="true"
       className={`inline-block shrink-0 ${sizeCls} ${shapeCls}`}
       style={{
-        backgroundColor: `hsl(var(--${colorToken}) / ${(solid ? 100 : opacity) / 100})`,
+        backgroundColor: `color-mix(in oklab, var(--${colorToken}) ${
+          solid ? 100 : opacity
+        }%, transparent)`,
       }}
     />
   );
