@@ -143,10 +143,13 @@ function SurfaceTool() {
 function ColleTool() {
   const [surface, setSurface] = useState(35);
   const [type, setType] = useState<"contrecolle" | "massif" | "ancien">("contrecolle");
+  const [kgSeau, setKgSeau] = useState(15);
+  const [prixSeau, setPrixSeau] = useState(85);
   const ratios = { contrecolle: 0.9, massif: 1.1, ancien: 1.3 };
   const labels = { contrecolle: "Contrecollé", massif: "Massif", ancien: "Parquet ancien" } as const;
   const kg = surface * ratios[type];
-  const seaux = Math.ceil(kg / 15);
+  const seaux = kgSeau > 0 ? Math.ceil(kg / kgSeau) : 0;
+  const cout = seaux * prixSeau;
   return (
     <div className="grid gap-5 md:grid-cols-2">
       <div className="space-y-4">
@@ -171,11 +174,16 @@ function ColleTool() {
             ))}
           </div>
         </div>
+        <div className="grid grid-cols-2 gap-3">
+          <NumberField label="Contenance seau" value={kgSeau} onChange={setKgSeau} unit="kg" step={1} />
+          <NumberField label="Prix par seau" value={prixSeau} onChange={setPrixSeau} unit="€" step={1} />
+        </div>
       </div>
-      <ResultBox hint="Base : 900 g/m² (contrecollé) à 1,3 kg/m² (ancien). Seaux standard 15 kg.">
+      <ResultBox hint="Base : 900 g/m² (contrecollé) à 1,3 kg/m² (ancien). Personnalisez la contenance et le prix de vos seaux.">
         {fmt(kg)} <span className="text-lg text-muted-foreground">kg</span>
-        <div className="mt-1 text-xs text-muted-foreground">
-          Soit {seaux} seau{seaux > 1 ? "x" : ""} de 15 kg
+        <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+          <div>Soit {seaux} seau{seaux > 1 ? "x" : ""} de {kgSeau} kg</div>
+          <div className="pt-1 font-display text-base text-foreground">Budget colle : {eur(cout)}</div>
         </div>
       </ResultBox>
     </div>
