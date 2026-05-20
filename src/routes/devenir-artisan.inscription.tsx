@@ -18,6 +18,9 @@ import {
   Pencil,
   ClipboardCheck,
   Info,
+  ImagePlus,
+  Star,
+  AlertCircle,
 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -206,6 +209,10 @@ function ArtisanOnboarding() {
   const [form, setForm] = useState<FormState>(initialState);
   const [submitted, setSubmitted] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const MAX_PHOTOS = 6;
+  const MAX_PHOTO_MB = 5;
 
   // Hydratation depuis localStorage
   useEffect(() => {
@@ -242,12 +249,22 @@ function ArtisanOnboarding() {
     }));
 
   const onPhotos = (files: FileList | null) => {
-    if (!files) return;
-    const limit = 6 - form.photos.length;
-    const slice = Array.from(files).slice(0, Math.max(0, limit));
+    if (!files || files.length === 0) return;
+    const arr = Array.from(files);
+    const remaining = MAX_PHOTOS - form.photos.length;
+    const tooMany = arr.length > remaining;
+    const slice = arr.slice(0, Math.max(0, remaining));
+    let rejectedType = 0;
+    let rejectedSize = 0;
     slice.forEach((file) => {
-      if (!file.type.startsWith("image/")) return;
-      if (file.size > 5 * 1024 * 1024) return;
+      if (!file.type.startsWith("image/")) {
+        rejectedType += 1;
+        return;
+      }
+      if (file.size > MAX_PHOTO_MB * 1024 * 1024) {
+        rejectedSize += 1;
+        return;
+      }
       const reader = new FileReader();
       reader.onload = () => {
         const dataUrl = reader.result as string;
@@ -258,10 +275,28 @@ function ArtisanOnboarding() {
       };
       reader.readAsDataURL(file);
     });
+
+    const msgs: string[] = [];
+    if (tooMany) msgs.push(`Limite de ${MAX_PHOTOS} photos atteinte.`);
+    if (rejectedType > 0) msgs.push(`${rejectedType} fichier(s) ignoré(s) — format non supporté.`);
+    if (rejectedSize > 0) msgs.push(`${rejectedSize} photo(s) > ${MAX_PHOTO_MB} Mo ignorée(s).`);
+    setPhotoError(msgs.length ? msgs.join(" ") : null);
+    if (msgs.length) {
+      setTimeout(() => setPhotoError(null), 5000);
+    }
   };
 
   const removePhoto = (i: number) =>
     setForm((prev) => ({ ...prev, photos: prev.photos.filter((_, idx) => idx !== i) }));
+
+  const makeCover = (i: number) =>
+    setForm((prev) => {
+      if (i === 0) return prev;
+      const next = [...prev.photos];
+      const [picked] = next.splice(i, 1);
+      next.unshift(picked);
+      return { ...prev, photos: next };
+    });
 
   const toggleEssence = (e: Essence) =>
     setForm((prev) => ({
@@ -848,43 +883,80 @@ function ArtisanOnboarding() {
                 </header>
 
                 <div>
-                  <div className="mb-2 flex items-baseline justify-between">
+                  <div className="mb-3 flex items-baseline justify-between">
                     <h3 className="text-sm font-semibold">Photos de chantiers</h3>
-                    <span className="text-xs text-muted-foreground">{form.photos.length}/6 — min. 1</span>
+                    <span
+                      className={`text-xs font-medium ${
+                        form.photos.length >= MAX_PHOTOS
+                          ? "text-brand-orange-deep"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      {form.photos.length}/{MAX_PHOTOS} · min. 1
+                    </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                    {form.photos.map((p, i) => (
-                      <div
-                        key={i}
-                        className="relative aspect-square overflow-hidden rounded-xl border border-border bg-muted"
-                      >
-                        <img src={p.dataUrl} alt={p.name} className="h-full w-full object-cover" />
-                        {i === 0 && (
-                          <span className="absolute left-1.5 top-1.5 rounded-full bg-brand-orange px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
-                            Couverture
-                          </span>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => removePhoto(i)}
-                          className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-foreground/80 text-background backdrop-blur transition hover:bg-foreground"
-                          aria-label="Supprimer la photo"
-                        >
-                          <X className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    ))}
-                    {form.photos.length < 6 && (
-                      <button
-                        type="button"
-                        onClick={() => fileRef.current?.click()}
-                        className="flex aspect-square flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-muted/30 text-xs text-muted-foreground transition hover:border-brand-orange hover:bg-brand-orange/5 hover:text-foreground"
-                      >
-                        <Upload className="h-5 w-5" />
-                        Ajouter
-                      </button>
-                    )}
+
+                  {/* Dropzone */}
+                  <div
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      if (form.photos.length < MAX_PHOTOS) setIsDragging(true);
+                    }}
+                    onDragLeave={(e) => {
+                      e.preventDefault();
+                      setIsDragging(false);
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setIsDragging(false);
+                      if (form.photos.length >= MAX_PHOTOS) {
+                        setPhotoError(`Limite de ${MAX_PHOTOS} photos atteinte.`);
+                        setTimeout(() => setPhotoError(null), 5000);
+                        return;
+                      }
+                      onPhotos(e.dataTransfer.files);
+                    }}
+                    onClick={() => form.photos.length < MAX_PHOTOS && fileRef.current?.click()}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if ((e.key === "Enter" || e.key === " ") && form.photos.length < MAX_PHOTOS) {
+                        e.preventDefault();
+                        fileRef.current?.click();
+                      }
+                    }}
+                    className={`group flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed px-6 py-10 text-center transition ${
+                      form.photos.length >= MAX_PHOTOS
+                        ? "cursor-not-allowed border-border bg-muted/20 opacity-60"
+                        : isDragging
+                          ? "border-brand-orange bg-brand-orange/10 scale-[1.01]"
+                          : "border-border bg-muted/30 hover:border-brand-orange hover:bg-brand-orange/5"
+                    }`}
+                  >
+                    <div
+                      className={`flex h-12 w-12 items-center justify-center rounded-full transition ${
+                        isDragging
+                          ? "bg-brand-orange text-primary-foreground"
+                          : "bg-background text-brand-orange-deep ring-1 ring-border group-hover:bg-brand-orange group-hover:text-primary-foreground"
+                      }`}
+                    >
+                      <ImagePlus className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">
+                        {form.photos.length >= MAX_PHOTOS
+                          ? "Limite atteinte"
+                          : isDragging
+                            ? "Déposez vos photos ici"
+                            : "Glissez vos photos ou cliquez pour parcourir"}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        JPG · PNG · WebP — jusqu'à {MAX_PHOTO_MB} Mo par photo ·{" "}
+                        {MAX_PHOTOS} photos max.
+                      </p>
+                    </div>
                   </div>
+
                   <input
                     ref={fileRef}
                     type="file"
@@ -896,10 +968,66 @@ function ArtisanOnboarding() {
                     }}
                     className="hidden"
                   />
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    JPG, PNG ou WebP — 5 Mo max par photo. La première photo sert de couverture.
+
+                  {photoError && (
+                    <div
+                      role="alert"
+                      className="mt-3 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900"
+                    >
+                      <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                      <span>{photoError}</span>
+                    </div>
+                  )}
+
+                  {/* Grille de prévisualisations */}
+                  {form.photos.length > 0 && (
+                    <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                      {form.photos.map((p, i) => (
+                        <div
+                          key={`${p.name}-${i}`}
+                          className="group/photo relative aspect-square overflow-hidden rounded-xl border border-border bg-muted shadow-soft"
+                        >
+                          <img
+                            src={p.dataUrl}
+                            alt={p.name}
+                            className="h-full w-full object-cover transition group-hover/photo:scale-105"
+                          />
+                          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/70 via-transparent to-transparent opacity-0 transition group-hover/photo:opacity-100" />
+                          {i === 0 ? (
+                            <span className="absolute left-1.5 top-1.5 inline-flex items-center gap-1 rounded-full bg-brand-orange px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground shadow">
+                              <Star className="h-2.5 w-2.5 fill-current" /> Couverture
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => makeCover(i)}
+                              className="absolute left-1.5 top-1.5 inline-flex items-center gap-1 rounded-full bg-background/90 px-2 py-0.5 text-[10px] font-medium text-foreground opacity-0 backdrop-blur transition hover:bg-background group-hover/photo:opacity-100"
+                            >
+                              <Star className="h-2.5 w-2.5" /> Couverture
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => removePhoto(i)}
+                            className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-foreground/80 text-background backdrop-blur transition hover:bg-destructive"
+                            aria-label={`Supprimer la photo ${i + 1}`}
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </button>
+                          <p className="absolute inset-x-2 bottom-1.5 truncate text-[10px] text-background opacity-0 transition group-hover/photo:opacity-100">
+                            {p.name}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    La première photo sert de couverture sur votre fiche publique —
+                    survolez une vignette pour la définir comme couverture.
                   </p>
                 </div>
+
 
                 <Field
                   label="Présentation de votre atelier"
