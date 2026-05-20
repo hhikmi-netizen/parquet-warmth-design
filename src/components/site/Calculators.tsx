@@ -71,14 +71,25 @@ function SurfaceTool() {
   const [l, setL] = useState(5);
   const [w, setW] = useState(4);
   const [chute, setChute] = useState(8);
+  // Dimensions lame (mm) + surface botte (m²) + prix au m² personnalisables
+  const [lameL, setLameL] = useState(1200);
+  const [lameW, setLameW] = useState(190);
+  const [botteSurface, setBotteSurface] = useState(2.2);
+  const [prixM2, setPrixM2] = useState(45);
+
   const surface = l * w;
   const total = surface * (1 + chute / 100);
+  const lameM2 = (lameL * lameW) / 1_000_000; // mm² → m²
+  const nbLames = lameM2 > 0 ? Math.ceil(total / lameM2) : 0;
+  const nbBottes = botteSurface > 0 ? Math.ceil(total / botteSurface) : 0;
+  const coutTotal = total * prixM2;
+
   return (
     <div className="grid gap-5 md:grid-cols-2">
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <NumberField label="Longueur" value={l} onChange={setL} unit="m" step={0.1} />
-          <NumberField label="Largeur" value={w} onChange={setW} unit="m" step={0.1} />
+          <NumberField label="Longueur pièce" value={l} onChange={setL} unit="m" step={0.1} />
+          <NumberField label="Largeur pièce" value={w} onChange={setW} unit="m" step={0.1} />
         </div>
         <div>
           <div className="mb-2 flex items-baseline justify-between">
@@ -103,10 +114,27 @@ function SurfaceTool() {
             <span>Chevron · 12-15%</span>
           </div>
         </div>
+
+        <div className="rounded-xl border border-dashed border-border bg-secondary/30 p-3">
+          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Dimensions des lames & conditionnement
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <NumberField label="Longueur lame" value={lameL} onChange={setLameL} unit="mm" step={10} />
+            <NumberField label="Largeur lame" value={lameW} onChange={setLameW} unit="mm" step={5} />
+            <NumberField label="Surface / botte" value={botteSurface} onChange={setBotteSurface} unit="m²" step={0.1} />
+            <NumberField label="Prix au m²" value={prixM2} onChange={setPrixM2} unit="€" step={1} />
+          </div>
+        </div>
       </div>
       <ResultBox hint="Quantité à commander, marge de découpe incluse. Comptez +2 lames par pièce pour les réserves.">
         {fmt(total, 2)} <span className="text-lg text-muted-foreground">m²</span>
-        <div className="mt-1 text-xs text-muted-foreground">Surface nette : {fmt(surface, 2)} m²</div>
+        <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+          <div>Surface nette : {fmt(surface, 2)} m²</div>
+          <div>≈ {nbLames} lame{nbLames > 1 ? "s" : ""} ({lameL}×{lameW} mm)</div>
+          <div>≈ {nbBottes} botte{nbBottes > 1 ? "s" : ""} de {fmt(botteSurface, 2)} m²</div>
+          <div className="pt-1 font-display text-base text-foreground">Budget fourniture : {eur(coutTotal)}</div>
+        </div>
       </ResultBox>
     </div>
   );
