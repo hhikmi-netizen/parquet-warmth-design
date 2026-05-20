@@ -18,8 +18,8 @@ export function Hero() {
             <span className="block italic text-brand-orange">estimé en quelques minutes.</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            Ponçage, pose, vitrification, rénovation de parquet ancien — recevez une estimation claire
-            et soyez mis en relation avec des artisans vérifiés près de chez vous.
+            Ponçage, pose, vitrification, rénovation de parquet ancien — obtenez une estimation
+            claire en quelques minutes et un artisan partenaire référent pour cadrer votre projet.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -33,7 +33,7 @@ export function Hero() {
           </div>
 
           <ul className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-sm text-muted-foreground">
-            {["Estimation instantanée", "Sans engagement", "Artisans vérifiés"].map((p) => (
+            {["Estimation instantanée", "Sans démarchage", "Artisan partenaire vérifié"].map((p) => (
               <li key={p} className="flex items-center gap-2">
                 <Check className="h-4 w-4 text-brand-orange" />
                 {p}

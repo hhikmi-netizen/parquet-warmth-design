@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Estimation parquet en ligne : ponçage, vitrification, pose, rénovation. Artisans vérifiés près de chez vous. Sans engagement.",
+          "Estimation parquet en ligne claire et immédiate : ponçage, vitrification, pose, rénovation. Un artisan partenaire vérifié pour cadrer votre projet, sans démarchage.",
       },
     ],
   }),
