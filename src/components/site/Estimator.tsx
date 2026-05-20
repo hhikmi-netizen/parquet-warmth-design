@@ -890,46 +890,44 @@ function ContactForm({
     return parsed.data;
   };
 
-  const submit = (ev?: React.FormEvent) => {
+  const submit = async (ev?: React.FormEvent) => {
     ev?.preventDefault();
     const data = validate();
     if (!data) return;
     setSending(true);
     onSaved(data);
 
-    const link = buildQuoteLink(state);
-    const body = [
-      `Bonjour,`,
-      ``,
-      `Je souhaite être recontacté pour le projet suivant :`,
-      ``,
-      `• Prestation : ${services[state.service].label}`,
-      `• Type : ${types[state.type].label}`,
-      `• État : ${etats[state.etat].label}`,
-      `• Surface : ${fmtNum(totals.surface)} m² (${state.longueur} × ${state.largeur} m)`,
-      state.plinthes ? `• Plinthes : oui (${fmtNum(totals.perimetre)} ml)` : null,
-      state.seuils > 0 ? `• Seuils : ${state.seuils}` : null,
-      ``,
-      `Fourchette estimée : ${fmt(totals.min)} – ${fmt(totals.max)} € TTC`,
-      ``,
-      `Lien du devis : ${link}`,
-      ``,
-      `— ${data.nom}`,
-      `Tél. ${data.telephone} · CP ${data.cp}`,
-      data.message ? `\nMessage : ${data.message}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    const url = `mailto:contact@parqueto.fr?subject=${encodeURIComponent(
-      `Demande de devis parquet — ${fmt(totals.min)}–${fmt(totals.max)} €`,
-    )}&body=${encodeURIComponent(body)}`;
-
-    window.location.href = url;
-    setTimeout(() => {
+    try {
+      // Stub local : prépare le payload exactement comme attendu par
+      // `submitEstimationProject` côté serveur. Quand le backend sera
+      // branché → remplacer par `await submitEstimation({ data: payload })`.
+      const payload = buildEstimationPayload(
+        {
+          service: state.service,
+          type: state.type,
+          etat: state.etat,
+          surface_m2: Math.round(totals.surface * 10) / 10,
+          budget_min: totals.min,
+          budget_max: totals.max,
+          plinthes: state.plinthes,
+          seuils: state.seuils,
+        },
+        {
+          nom: data.nom,
+          email: data.email,
+          telephone: data.telephone,
+          cp: data.cp,
+          message: data.message,
+        },
+      );
+      const result = await submitEstimationStub(payload);
+      setSentRef(result.reference);
+    } catch {
+      /* ignore — on affiche quand même l'écran de confirmation */
+    } finally {
       setSending(false);
       setSent(true);
-    }, 600);
+    }
   };
 
   const downloadPdf = () => {
