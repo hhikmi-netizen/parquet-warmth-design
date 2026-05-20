@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { PqButton, PqSurface, PqPill } from "@/components/parqueto";
 
-export const Route = createFileRoute("/_authenticated/pro/offres")({
+export const Route = createFileRoute("/pro/offres")({
   component: OffresPage,
 });
 
