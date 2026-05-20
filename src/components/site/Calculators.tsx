@@ -921,7 +921,7 @@ export function Calculators() {
         </div>
 
         {/* Tabs */}
-        <div className="mt-12 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="mt-12 grid gap-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
           {tools.map((t) => {
             const isActive = t.key === active;
             return (
