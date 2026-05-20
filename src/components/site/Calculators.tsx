@@ -248,18 +248,22 @@ function BudgetTool() {
     };
   }, [projet, pose, surface, support]);
 
-  const ctaSearch = {
-    projet:
-      pose === "flottante"
-        ? "Pose parquet"
-        : pose === "massif"
-        ? "Pose parquet"
-        : projet === "renovation"
-        ? "Rénovation"
-        : "Pose parquet",
-    surface: String(surface),
-    budget: `${Math.round(low / 10) * 10}-${Math.round(high / 10) * 10}€`,
-  };
+  // Build a plain query string so /contact can prefill later without
+  // forcing a typed search schema on the route.
+  const contactHref = useMemo(() => {
+    const params = new URLSearchParams({
+      projet:
+        pose === "massif" || pose === "flottante"
+          ? "Pose parquet"
+          : projet === "renovation"
+          ? "Rénovation"
+          : "Pose parquet",
+      surface: String(surface),
+      budget: `${Math.round(low / 10) * 10}-${Math.round(high / 10) * 10}€`,
+      pose: POSE_RANGES[pose].label,
+    });
+    return `/contact?${params.toString()}`;
+  }, [pose, projet, surface, low, high]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-5">
