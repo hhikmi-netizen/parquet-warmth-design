@@ -35,7 +35,13 @@ function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword(parsed.data);
     setLoading(false);
     if (error) {
-      const msg = error.message.toLowerCase().includes("invalid")
+      const lower = error.message.toLowerCase();
+      if (lower.includes("not confirmed") || lower.includes("email_not_confirmed")) {
+        toast.info("Confirmez votre email pour continuer.");
+        navigate({ to: "/verify-email", search: { email: parsed.data.email } });
+        return;
+      }
+      const msg = lower.includes("invalid")
         ? "Email ou mot de passe incorrect."
         : error.message;
       toast.error(msg);
