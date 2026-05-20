@@ -1138,28 +1138,62 @@ function Step4({
         />
       </FieldGroup>
 
-      {/* Récap */}
-      <div className="mt-8 rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-6">
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-brand-orange">Récapitulatif</div>
-        <h3 className="mt-1 font-display text-xl text-foreground">{projets.find((p) => p.key === s.projet)?.label ?? "Projet"}</h3>
-        <dl className="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
-          <RecapLine k="Matériau" v={s.materiau ? materiaux[s.materiau].label : "—"} />
-          <RecapLine k="Surface" v={s.surface ? `${s.surface} m²` : "—"} />
-          <RecapLine k="Logement" v={labelOf(LOGEMENTS, s.logement) || "—"} />
-          <RecapLine k="Étage" v={labelOf(ETAGES, s.etage) || "—"} />
-          <RecapLine k="Délai" v={labelOf(DELAIS, s.delai) || "—"} />
-          <RecapLine k="Chauffage sol" v={labelOf(YESNOMAYBE, s.chauffage) || "—"} />
-          <RecapLine k="Ville" v={s.ville && s.cp ? `${s.cp} ${s.ville}` : "—"} />
-          <RecapLine k="Photos" v={photos ? `${photos} photo(s)` : "—"} />
-        </dl>
-        {range && (
-          <div className="mt-5 rounded-xl bg-brand-orange/10 px-4 py-4">
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-brand-orange">Fourchette indicative</div>
-            <div className="mt-1 font-display text-2xl text-foreground">{fmt(range.min)} – {fmt(range.max)} <span className="text-base text-muted-foreground">€ TTC</span></div>
-            <div className="mt-1 text-[11px] text-muted-foreground">Non contractuelle — un artisan affinera après visite.</div>
+      {/* Récap final avant envoi */}
+      <div className="mt-8 overflow-hidden rounded-2xl border-2 border-brand-orange/30 bg-card shadow-soft">
+        <div className="flex items-center justify-between gap-3 border-b border-border bg-brand-orange/[0.06] px-5 py-3 sm:px-6">
+          <div>
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-brand-orange">Récapitulatif avant envoi</div>
+            <h3 className="mt-0.5 font-display text-lg text-foreground sm:text-xl">
+              {projets.find((p) => p.key === s.projet)?.label ?? "Projet"}
+            </h3>
           </div>
-        )}
+          <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-brand-orange" />
+        </div>
+
+        <div className="p-5 sm:p-6">
+          <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+            <RecapLine k="Matériau" v={s.materiau ? materiaux[s.materiau].label : "—"} />
+            <RecapLine k="Surface" v={s.surface ? `${s.surface} m²` : "—"} />
+            <RecapLine k="Logement" v={labelOf(LOGEMENTS, s.logement) || "—"} />
+            <RecapLine k="Étage" v={labelOf(ETAGES, s.etage) || "—"} />
+            <RecapLine k="Délai" v={labelOf(DELAIS, s.delai) || "—"} />
+            <RecapLine k="Chauffage sol" v={labelOf(YESNOMAYBE, s.chauffage) || "—"} />
+            <RecapLine k="Ville" v={s.ville && s.cp ? `${s.cp} ${s.ville}` : "—"} />
+            <RecapLine k="Photos" v={photos ? `${photos} photo(s)` : "—"} />
+          </dl>
+
+          {range && (
+            <div className="mt-5 rounded-xl bg-brand-orange/10 px-4 py-4">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-brand-orange">Fourchette indicative TTC</div>
+              <div className="mt-1 font-display text-2xl text-foreground sm:text-3xl">
+                {fmt(range.min)} – {fmt(range.max)} <span className="text-base text-muted-foreground">€</span>
+              </div>
+              <div className="mt-1 text-[11px] text-muted-foreground">Non contractuelle — un artisan affinera après visite.</div>
+            </div>
+          )}
+
+          <div className="mt-5 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={onPdf}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-brand-orange hover:bg-brand-orange/5 sm:flex-none"
+            >
+              <FileDown className="h-4 w-4" /> Télécharger le PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => onShare()}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-brand-orange hover:bg-brand-orange/5 sm:flex-none"
+            >
+              <Share2 className="h-4 w-4" /> Partager
+            </button>
+          </div>
+          {shareMsg && (
+            <p className="mt-2 text-xs text-muted-foreground">{shareMsg}</p>
+          )}
+        </div>
       </div>
+
 
       {/* Consentement */}
       <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-brand-orange/40">
