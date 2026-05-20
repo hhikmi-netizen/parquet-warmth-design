@@ -213,16 +213,41 @@ function ContactPage() {
     });
     if (!parsed.success) {
       const fe: FormErrors = {};
+      const orderedKeys: string[] = [];
       parsed.error.issues.forEach((i) => {
         const k = i.path[0] as keyof FormErrors;
-        if (!fe[k]) fe[k] = i.message;
+        if (!fe[k]) {
+          fe[k] = i.message;
+          orderedKeys.push(k as string);
+        }
       });
       setErrors(fe);
       toast.error("Merci de corriger les champs en rouge.");
-      const firstKey = Object.keys(fe)[0];
+
+      // Find first invalid field in DOM order (more reliable than schema order
+      // since the user sees fields top-to-bottom).
+      const fieldOrder = ["nom", "email", "telephone", "ville", "projet", "message"];
+      const firstKey =
+        fieldOrder.find((k) => k in fe) ?? orderedKeys[0];
+
       if (firstKey) {
-        const el = form.querySelector<HTMLElement>(`[name="${firstKey}"]`);
-        el?.focus();
+        requestAnimationFrame(() => {
+          // Radio groups expose multiple [name="projet"] inputs — focus the first.
+          const el =
+            form.querySelector<HTMLElement>(
+              `[name="${firstKey}"]:not([type="hidden"])`
+            ) ?? form.querySelector<HTMLElement>(`[name="${firstKey}"]`);
+          if (!el) return;
+          // Scroll into view first, then focus without re-scrolling.
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          try {
+            (el as HTMLElement & { focus: (opts?: FocusOptions) => void }).focus({
+              preventScroll: true,
+            });
+          } catch {
+            el.focus();
+          }
+        });
       }
       return;
     }
