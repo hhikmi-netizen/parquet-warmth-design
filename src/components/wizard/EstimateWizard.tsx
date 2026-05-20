@@ -612,53 +612,114 @@ export function EstimateWizard() {
         <ProgressBar step={step} />
       </header>
 
-      <main className="mx-auto max-w-3xl px-5 pb-40 pt-8 sm:pt-12">
+      <main className="mx-auto max-w-3xl px-5 pb-44 pt-8 sm:pt-12">
         <ReassuranceStrip />
+
+        <StepErrors errors={errors} />
 
         {step === 1 && <Step1 s={s} set={set} errors={errors} />}
         {step === 2 && <Step2 s={s} set={set} errors={errors} />}
-        {step === 3 && <Step3 s={s} set={set} errors={errors} photos={photos} setPhotos={setPhotos} />}
-        {step === 4 && <Step4 s={s} set={set} errors={errors} range={range} photos={photos.length} />}
+        {step === 3 && (
+          <Step3
+            s={s}
+            set={set}
+            errors={errors}
+            photos={photos}
+            setPhotos={setPhotos}
+            photoError={photoError}
+            setPhotoError={setPhotoError}
+          />
+        )}
+        {step === 4 && (
+          <Step4
+            s={s}
+            set={set}
+            errors={errors}
+            range={range}
+            photos={photos.length}
+            onPdf={() => generateWizardPDF(s)}
+            onShare={shareQuote}
+            shareMsg={shareMsg}
+          />
+        )}
       </main>
 
       {/* Bottom navigation bar */}
       <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-5 py-3 sm:py-4">
-          <button
-            onClick={prev}
-            disabled={step === 1}
-            className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-foreground/70 transition hover:text-foreground disabled:opacity-30"
-          >
-            <ArrowLeft className="h-4 w-4" /> Retour
-          </button>
-
-          <div className="hidden text-xs text-muted-foreground sm:block">
-            Étape <span className="font-semibold text-foreground">{step}</span> / 4
-            {range && step < 4 && (
-              <span className="ml-3 inline-flex items-center gap-1.5 rounded-full bg-brand-orange/10 px-2.5 py-1 font-semibold text-brand-orange">
+        <div className="mx-auto max-w-3xl px-4 py-2.5 sm:px-5 sm:py-4">
+          {/* Mobile range chip */}
+          {range && step < 4 && (
+            <div className="mb-2 flex items-center justify-center sm:hidden">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange/10 px-3 py-1 text-[11px] font-semibold text-brand-orange">
                 <Sparkles className="h-3 w-3" /> {fmt(range.min)}–{fmt(range.max)} € indicatif
               </span>
+            </div>
+          )}
+          <div className="flex items-center justify-between gap-2">
+            <button
+              onClick={prev}
+              disabled={step === 1}
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-foreground/70 transition hover:text-foreground disabled:opacity-30"
+            >
+              <ArrowLeft className="h-4 w-4" /> Retour
+            </button>
+
+            <div className="hidden text-xs text-muted-foreground sm:block">
+              Étape <span className="font-semibold text-foreground">{step}</span> / 4
+              {range && step < 4 && (
+                <span className="ml-3 inline-flex items-center gap-1.5 rounded-full bg-brand-orange/10 px-2.5 py-1 font-semibold text-brand-orange">
+                  <Sparkles className="h-3 w-3" /> {fmt(range.min)}–{fmt(range.max)} € indicatif
+                </span>
+              )}
+            </div>
+
+            <span className="text-[11px] font-semibold text-muted-foreground sm:hidden">
+              {step}/4
+            </span>
+
+            {step < 4 ? (
+              <button
+                onClick={next}
+                className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-brand-orange-deep active:scale-[0.98] sm:px-6"
+              >
+                Continuer <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+              </button>
+            ) : (
+              <button
+                onClick={submit}
+                disabled={sending}
+                className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-brand-orange-deep active:scale-[0.98] disabled:opacity-70 sm:px-6"
+              >
+                {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+                Envoyer
+              </button>
             )}
           </div>
-
-          {step < 4 ? (
-            <button
-              onClick={next}
-              className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-brand-orange-deep active:scale-[0.98]"
-            >
-              Continuer <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-            </button>
-          ) : (
-            <button
-              onClick={submit}
-              disabled={sending}
-              className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-brand-orange-deep active:scale-[0.98] disabled:opacity-70"
-            >
-              {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-              Envoyer ma demande
-            </button>
-          )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function StepErrors({ errors }: { errors: Errors }) {
+  const list = Object.values(errors).filter(Boolean);
+  if (list.length === 0) return null;
+  return (
+    <div
+      role="alert"
+      className="mb-6 flex items-start gap-3 rounded-2xl border border-destructive/30 bg-destructive/5 p-4"
+    >
+      <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
+      <div>
+        <div className="text-sm font-semibold text-destructive">
+          {list.length === 1 ? "1 champ à corriger" : `${list.length} champs à corriger`}
+        </div>
+        <ul className="mt-1 list-disc pl-5 text-xs text-destructive/90">
+          {list.slice(0, 4).map((m, i) => (
+            <li key={i}>{m}</li>
+          ))}
+          {list.length > 4 && <li>…et {list.length - 4} autre(s)</li>}
+        </ul>
       </div>
     </div>
   );
