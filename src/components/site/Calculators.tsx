@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Ruler, Droplet, Layers, Paintbrush, Info, Wallet, ArrowRight, ShieldCheck } from "lucide-react";
 
