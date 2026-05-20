@@ -1219,6 +1219,10 @@ function Step3({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [lightbox, setLightbox] = useState<number | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  useEffect(() => {
+    setConfirmDelete(false);
+  }, [lightbox]);
   const MAX = 5;
   const MAX_SIZE = 8 * 1024 * 1024; // 8 MB
   const MIN_DIM = 400; // px (shortest side)
