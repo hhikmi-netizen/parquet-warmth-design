@@ -314,8 +314,8 @@ function buildWizardPDF(s: WizardState): { doc: jsPDF; ref: string; filename: st
   let sectionCount = 0;
   const section = (title: string) => {
     if (sectionCount > 0) y += SECTION_GAP;
-    // Si le titre ne tient pas, on bascule sur la page suivante
-    if (y + SECTION_HEADER_H > 268) {
+    // Évite les titres orphelins en bas de page : on réserve la place pour le titre + 1 ligne (~26 mm)
+    if (y + SECTION_HEADER_H + 26 > 268) {
       doc.addPage();
       y = 20;
     }
