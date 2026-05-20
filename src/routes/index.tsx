@@ -13,6 +13,7 @@ import { Blog } from "@/components/site/Blog";
 import { FAQ } from "@/components/site/FAQ";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { Footer } from "@/components/site/Footer";
+import { FloatingNav } from "@/components/site/FloatingNav";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -45,6 +46,7 @@ function Index() {
         <FAQ />
         <FinalCTA />
       <Footer />
+      <FloatingNav />
     </main>
   );
 }
