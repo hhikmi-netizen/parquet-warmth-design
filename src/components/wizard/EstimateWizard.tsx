@@ -492,6 +492,44 @@ export function EstimateWizard() {
     }
   };
 
+  const buildShareText = () => {
+    const lines = [
+      `Demande Parqueto — ${projets.find((p) => p.key === s.projet)?.label ?? ""}`,
+      s.materiau ? `Matériau : ${materiaux[s.materiau].label}` : "",
+      s.surface ? `Surface : ${s.surface} m²` : "",
+      s.cp || s.ville ? `Lieu : ${s.cp} ${s.ville}` : "",
+      range ? `Fourchette indicative : ${fmt(range.min)} – ${fmt(range.max)} € TTC` : "",
+    ].filter(Boolean);
+    return lines.join("\n");
+  };
+
+  const shareQuote = async () => {
+    setShareMsg("");
+    const text = buildShareText();
+    const shareData: ShareData = { title: "Mon estimation Parqueto", text };
+    try {
+      if (typeof navigator !== "undefined" && (navigator as Navigator).share) {
+        await (navigator as Navigator).share(shareData);
+        return;
+      }
+      if (typeof navigator !== "undefined" && navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+        setShareMsg("Résumé copié dans le presse-papiers.");
+        return;
+      }
+      setShareMsg("Partage indisponible sur ce navigateur.");
+    } catch (err) {
+      const name = (err as DOMException)?.name;
+      if (name === "AbortError") return; // user cancelled
+      try {
+        await navigator.clipboard.writeText(text);
+        setShareMsg("Partage refusé — résumé copié à la place.");
+      } catch {
+        setShareMsg("Impossible de partager. Réessayez ou téléchargez le PDF.");
+      }
+    }
+  };
+
   const submit = () => {
     if (!validateStep(4)) return;
     setSending(true);
