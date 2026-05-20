@@ -208,11 +208,20 @@ function ContactPage() {
     toast.success("Demande envoyée. Nous revenons vers vous très vite.");
   };
 
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (sent) successHeadingRef.current?.focus();
+  }, [sent]);
+
   if (sent) {
     return (
-      <main className="min-h-screen bg-background text-foreground">
+      <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
         <Header />
-        <section className="mx-auto max-w-2xl px-6 py-24 text-center">
+        <section
+          role="status"
+          aria-live="polite"
+          className="mx-auto max-w-2xl px-6 py-24 text-center"
+        >
           <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange">
             <CheckCircle2 className="h-7 w-7" />
           </div>
