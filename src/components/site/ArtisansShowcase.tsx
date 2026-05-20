@@ -49,15 +49,16 @@ export function ArtisansShowcase() {
               Des visages, des mains, <span className="italic text-brand-orange">un savoir-faire.</span>
             </h2>
             <p className="mt-4 max-w-xl text-muted-foreground">
-              Tous nos partenaires sont sélectionnés sur dossier, vérifiés et notés par les particuliers.
-              Vous savez avec qui vous travaillez avant de signer.
+              Voici le type d'artisans avec qui nous travaillons : sélectionnés sur dossier, vérifiés
+              et notés par les particuliers. Vous n'avez pas à les démarcher — on cadre votre projet,
+              puis on vous oriente vers celui dont le savoir-faire correspond.
             </p>
           </div>
           <a
-            href="#artisan"
+            href="#estimate"
             className="group hidden items-center gap-2 text-sm font-semibold text-foreground transition hover:text-brand-orange sm:inline-flex"
           >
-            Voir tous les artisans
+            Estimer mon projet
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
           </a>
         </div>
@@ -108,7 +109,7 @@ export function ArtisansShowcase() {
                 <div className="mt-5 flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground">
                   <span>{a.reviews} avis vérifiés</span>
                   <a href="#estimate" className="font-semibold text-brand-orange">
-                    Demander un devis →
+                    Estimer mon projet →
                   </a>
                 </div>
               </div>

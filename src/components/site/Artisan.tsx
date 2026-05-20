@@ -15,8 +15,8 @@ export function Artisan() {
               Rejoignez un réseau qui respecte le métier.
             </h2>
             <p className="mt-6 text-muted-foreground">
-              Parqueto met en relation des particuliers sérieux avec des artisans parqueteurs vérifiés.
-              Pas de mises aux enchères, pas de course au prix : seulement des projets qualifiés, près de chez vous.
+              Parqueto confie chaque projet à un seul artisan partenaire, déjà cadré et chiffré.
+              Pas d'enchères, pas de course au prix, pas de leads partagés : un client qualifié, un interlocuteur — vous.
             </p>
             <ul className="mt-6 space-y-3 text-sm">
               {[
