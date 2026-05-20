@@ -193,21 +193,27 @@ function ColleTool() {
 function SousCoucheTool() {
   const [surface, setSurface] = useState(35);
   const [rouleau, setRouleau] = useState(15);
+  const [prixRouleau, setPrixRouleau] = useState(35);
   const surfaceUtile = surface * 1.05;
-  const rouleaux = Math.ceil(surfaceUtile / rouleau);
+  const rouleaux = rouleau > 0 ? Math.ceil(surfaceUtile / rouleau) : 0;
+  const cout = rouleaux * prixRouleau;
   return (
     <div className="grid gap-5 md:grid-cols-2">
       <div className="space-y-4">
         <NumberField label="Surface à couvrir" value={surface} onChange={setSurface} unit="m²" />
-        <NumberField label="Surface d'un rouleau" value={rouleau} onChange={setRouleau} unit="m²" />
+        <div className="grid grid-cols-2 gap-3">
+          <NumberField label="Surface d'un rouleau" value={rouleau} onChange={setRouleau} unit="m²" />
+          <NumberField label="Prix par rouleau" value={prixRouleau} onChange={setPrixRouleau} unit="€" step={1} />
+        </div>
         <p className="text-xs text-muted-foreground">
           Marge automatique de 5 % pour les recouvrements et chutes.
         </p>
       </div>
       <ResultBox hint="Rouleaux courants : 10 m² (mousse), 15 m² (liège), 20 m² (fibre de bois).">
         {rouleaux} <span className="text-lg text-muted-foreground">rouleau{rouleaux > 1 ? "x" : ""}</span>
-        <div className="mt-1 text-xs text-muted-foreground">
-          ≈ {fmt(surfaceUtile)} m² de sous-couche
+        <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+          <div>≈ {fmt(surfaceUtile)} m² de sous-couche</div>
+          <div className="pt-1 font-display text-base text-foreground">Budget sous-couche : {eur(cout)}</div>
         </div>
       </ResultBox>
     </div>
@@ -218,8 +224,11 @@ function VitrifTool() {
   const [surface, setSurface] = useState(35);
   const [couches, setCouches] = useState(3);
   const [rendement, setRendement] = useState(10);
+  const [litreBidon, setLitreBidon] = useState(5);
+  const [prixBidon, setPrixBidon] = useState(95);
   const litres = useMemo(() => (surface * couches) / rendement, [surface, couches, rendement]);
-  const bidons5 = Math.ceil(litres / 5);
+  const bidons = litreBidon > 0 ? Math.ceil(litres / litreBidon) : 0;
+  const cout = bidons * prixBidon;
   return (
     <div className="grid gap-5 md:grid-cols-2">
       <div className="space-y-4">
@@ -228,14 +237,19 @@ function VitrifTool() {
           <NumberField label="Couches" value={couches} onChange={setCouches} unit="" min={1} />
         </div>
         <NumberField label="Rendement" value={rendement} onChange={setRendement} unit="m²/L" />
+        <div className="grid grid-cols-2 gap-3">
+          <NumberField label="Contenance bidon" value={litreBidon} onChange={setLitreBidon} unit="L" step={0.5} />
+          <NumberField label="Prix par bidon" value={prixBidon} onChange={setPrixBidon} unit="€" step={1} />
+        </div>
         <p className="text-xs text-muted-foreground">
           Standard : 3 couches, 10 m²/L. Première couche en fond dur, 2 couches de finition.
         </p>
       </div>
       <ResultBox hint="Bidons courants : 1 L, 2,5 L, 5 L. Prévoir 5-10 % de plus en pose complexe.">
         {fmt(litres)} <span className="text-lg text-muted-foreground">L</span>
-        <div className="mt-1 text-xs text-muted-foreground">
-          Soit {bidons5} bidon{bidons5 > 1 ? "s" : ""} de 5 L
+        <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+          <div>Soit {bidons} bidon{bidons > 1 ? "s" : ""} de {litreBidon} L</div>
+          <div className="pt-1 font-display text-base text-foreground">Budget vitrificateur : {eur(cout)}</div>
         </div>
       </ResultBox>
     </div>
