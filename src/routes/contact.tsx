@@ -355,10 +355,20 @@ function ContactPage() {
             </fieldset>
 
             <div className="mt-6">
-              <label htmlFor="message" className="mb-2 block text-sm font-medium">
-                Votre message <span className="text-brand-orange" aria-hidden>*</span>
-                <span className="sr-only"> (obligatoire)</span>
-              </label>
+              <div className="mb-2 flex items-baseline justify-between gap-2">
+                <label htmlFor="message" className="block text-sm font-medium">
+                  Votre message <span className="text-brand-orange" aria-hidden>*</span>
+                  <span className="sr-only"> (obligatoire)</span>
+                </label>
+                <span
+                  className={`text-[11px] tabular-nums ${
+                    messageLen > 1800 ? "text-brand-orange" : "text-muted-foreground"
+                  }`}
+                  aria-live="polite"
+                >
+                  {messageLen}/2000
+                </span>
+              </div>
               <textarea
                 id="message"
                 name="message"
@@ -369,12 +379,14 @@ function ContactPage() {
                 aria-invalid={!!errors.message}
                 aria-describedby={errors.message ? "message-error" : "message-hint"}
                 placeholder="Décrivez brièvement votre projet : surface, état actuel, délais souhaités…"
+                onInput={(e) => setMessageLen((e.target as HTMLTextAreaElement).value.length)}
+                onBlur={(e) => validateField("message", e.target.value)}
                 className={`w-full resize-y rounded-xl border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   errors.message ? "border-destructive" : "border-border"
                 }`}
               />
               <p id="message-hint" className="mt-1.5 text-xs text-muted-foreground">
-                2000 caractères maximum.
+                Plus c'est précis, plus la réponse sera juste.
               </p>
               {errors.message && (
                 <p id="message-error" className="mt-1.5 text-xs text-destructive">
@@ -383,53 +395,100 @@ function ContactPage() {
               )}
             </div>
 
-            {/* Photos */}
+            {/* Photos — drag & drop zone with previews */}
             <div className="mt-6">
-              <span id="photos-label" className="mb-2 block text-sm font-medium">
-                Photos du projet
-              </span>
+              <div className="mb-2 flex items-baseline justify-between gap-2">
+                <span id="photos-label" className="block text-sm font-medium">
+                  Photos du projet
+                </span>
+                <span className="text-[11px] tabular-nums text-muted-foreground" aria-live="polite">
+                  {files.length}/{MAX_FILES}
+                </span>
+              </div>
               <p id="photos-hint" className="mb-3 text-xs text-muted-foreground">
-                Ajoutez quelques photos si vous le souhaitez (jusqu'à {MAX_FILES}, {MAX_FILE_MB} Mo max chacune).
+                Glissez-déposez vos photos ou cliquez pour parcourir. JPG, PNG, WEBP — {MAX_FILE_MB} Mo max chacune.
               </p>
-              <button
-                type="button"
-                onClick={() => fileInput.current?.click()}
+
+              <div
+                role="button"
+                tabIndex={0}
+                aria-label="Zone de dépôt de photos"
                 aria-describedby="photos-hint"
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-background px-4 py-6 text-sm text-muted-foreground transition hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                onClick={() => fileInput.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    fileInput.current?.click();
+                  }
+                }}
+                onDragEnter={onDragEnter}
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+                onDrop={onDrop}
+                className={`flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-8 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                  isDragging
+                    ? "border-brand-orange bg-brand-orange/5 text-brand-orange scale-[1.01]"
+                    : "border-border bg-background text-muted-foreground hover:border-brand-orange/40 hover:text-brand-orange"
+                }`}
               >
-                <Upload className="h-4 w-4" aria-hidden />
-                Cliquer pour ajouter des photos
-              </button>
+                <span
+                  className={`inline-flex h-10 w-10 items-center justify-center rounded-full transition ${
+                    isDragging ? "bg-brand-orange text-primary-foreground" : "bg-card text-brand-orange shadow-soft"
+                  }`}
+                >
+                  {isDragging ? <ImagePlus className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
+                </span>
+                <span className="font-medium text-foreground">
+                  {isDragging ? "Déposez pour ajouter" : "Glissez vos photos ici"}
+                </span>
+                <span className="text-xs">
+                  ou <span className="underline underline-offset-2">cliquez pour parcourir</span>
+                </span>
+              </div>
+
               <input
                 ref={fileInput}
                 type="file"
-                accept="image/*"
+                accept={ACCEPTED_TYPES.join(",")}
                 multiple
                 aria-labelledby="photos-label"
                 aria-describedby="photos-hint"
                 className="sr-only"
-                onChange={(e) => onFiles(e.target.files)}
+                onChange={(e) => {
+                  addFiles(e.target.files);
+                  e.currentTarget.value = ""; // allow re-selecting same file
+                }}
               />
+
               <p className="sr-only" aria-live="polite">
                 {files.length === 0
                   ? "Aucune photo sélectionnée."
                   : `${files.length} photo${files.length > 1 ? "s" : ""} sélectionnée${files.length > 1 ? "s" : ""}.`}
               </p>
+
               {files.length > 0 && (
                 <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {files.map((f, i) => (
-                    <li key={i} className="group relative overflow-hidden rounded-lg border border-border bg-background">
+                    <li
+                      key={`${f.name}-${f.size}-${i}`}
+                      className="group relative overflow-hidden rounded-lg border border-border bg-background"
+                    >
                       <img
-                        src={URL.createObjectURL(f)}
+                        src={previews[i]}
                         alt=""
                         className="aspect-square w-full object-cover"
+                        loading="lazy"
                       />
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/85 to-transparent px-2 pb-1.5 pt-6 text-[10px] text-background">
+                        <p className="truncate" title={f.name}>{f.name}</p>
+                        <p className="opacity-80">{(f.size / 1024 / 1024).toFixed(2)} Mo</p>
+                      </div>
                       <span className="sr-only">{f.name}</span>
                       <button
                         type="button"
                         onClick={() => removeFile(i)}
                         aria-label={`Retirer ${f.name}`}
-                        className="absolute right-1 top-1 rounded-full bg-background/90 p-1 text-foreground opacity-100 shadow-soft transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
+                        className="absolute right-1 top-1 rounded-full bg-background/95 p-1 text-foreground shadow-soft transition hover:bg-destructive hover:text-destructive-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       >
                         <X className="h-3 w-3" aria-hidden />
                       </button>
