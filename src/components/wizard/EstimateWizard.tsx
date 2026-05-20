@@ -972,29 +972,41 @@ function Step3({
         <TextInput value={s.complement} onChange={(v) => set("complement", v)} placeholder="Bât. B, 3ᵉ étage gauche" />
       </FieldGroup>
 
-      <FieldGroup label="Photos du sol actuel" hint="1 à 5 photos — accélère l'estimation. Stockées localement dans votre navigateur.">
+      <FieldGroup
+        label={`Photos du sol actuel (${photos.length}/${MAX})`}
+        hint="1 à 5 photos — accélère l'estimation. Stockées localement dans votre navigateur."
+        error={photoError}
+      >
         <div
           onClick={() => inputRef.current?.click()}
           onDragOver={(e) => { e.preventDefault(); }}
           onDrop={(e) => { e.preventDefault(); onFiles(e.dataTransfer.files); }}
-          className="group relative cursor-pointer rounded-2xl border-2 border-dashed border-border bg-muted/30 px-6 py-10 text-center transition hover:border-brand-orange hover:bg-brand-orange/5"
+          className={`group relative cursor-pointer rounded-2xl border-2 border-dashed px-6 py-10 text-center transition ${
+            photos.length >= MAX
+              ? "border-border bg-muted/40 opacity-70"
+              : "border-border bg-muted/30 hover:border-brand-orange hover:bg-brand-orange/5"
+          }`}
         >
           <input
             ref={inputRef}
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp"
             multiple
+            disabled={photos.length >= MAX}
             className="sr-only"
-            onChange={(e) => onFiles(e.target.files)}
+            onChange={(e) => { onFiles(e.target.files); e.target.value = ""; }}
           />
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-orange/15 text-brand-orange transition group-hover:bg-brand-orange/25">
             <Upload className="h-5 w-5" />
           </div>
           <div className="mt-3 font-display text-base text-foreground">
-            Glissez-déposez ou <span className="text-brand-orange underline-offset-4 group-hover:underline">parcourez</span>
+            {photos.length >= MAX
+              ? `Maximum atteint (${MAX} photos)`
+              : <>Glissez-déposez ou <span className="text-brand-orange underline-offset-4 group-hover:underline">parcourez</span></>}
           </div>
-          <div className="mt-1 text-xs text-muted-foreground">JPEG, PNG ou WebP · jusqu'à 5 photos</div>
+          <div className="mt-1 text-xs text-muted-foreground">JPEG, PNG ou WebP · max 8 Mo par photo · jusqu'à {MAX} photos</div>
         </div>
+
 
         {photos.length > 0 && (
           <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
