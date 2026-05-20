@@ -9,6 +9,7 @@ import { Artisan } from "@/components/site/Artisan";
 import { ArtisansShowcase } from "@/components/site/ArtisansShowcase";
 import { Calculators } from "@/components/site/Calculators";
 import { Blog } from "@/components/site/Blog";
+import { FAQ } from "@/components/site/FAQ";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { Footer } from "@/components/site/Footer";
 
@@ -38,8 +39,9 @@ function Index() {
       <ArtisansShowcase />
       <Calculators />
       <Artisan />
-      <Blog />
-      <FinalCTA />
+        <Blog />
+        <FAQ />
+        <FinalCTA />
       <Footer />
     </main>
   );
