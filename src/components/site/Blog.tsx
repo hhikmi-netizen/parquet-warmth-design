@@ -58,7 +58,7 @@ export function Blog() {
         {/* Mobile: snap carousel · Desktop: grid */}
         <div className="mt-12 md:hidden">
           <div
-            className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-6 pb-4"
+            className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-6 pb-4"
             style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
           >
             {articles.map((a, i) => (
