@@ -383,9 +383,19 @@ function OnboardingCard({ onClose }: { onClose: () => void }) {
           </li>
         ))}
       </ul>
+      <div className="mt-5 flex justify-end">
+        <Link
+          to="/pro/onboarding"
+          className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-4 py-2 text-xs font-semibold text-primary-foreground shadow-soft transition hover:bg-brand-orange-deep"
+        >
+          Activer mon profil
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
     </div>
   );
 }
+
 
 function ProjectsTab({
   matches,
