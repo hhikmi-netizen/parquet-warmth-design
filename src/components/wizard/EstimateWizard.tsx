@@ -18,7 +18,7 @@ import {
   Plus,
   ShieldCheck,
   Sparkles,
-  Trash2,
+  Sparkles,
   Upload,
   X,
 } from "lucide-react";
