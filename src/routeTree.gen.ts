@@ -21,6 +21,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProOffresRouteImport } from './routes/pro.offres'
 import { Route as DemoMicroReassuranceRouteImport } from './routes/demo.micro-reassurance'
+import { Route as AuthenticatedProRouteImport } from './routes/_authenticated/pro'
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
 
@@ -83,6 +84,11 @@ const DemoMicroReassuranceRoute = DemoMicroReassuranceRouteImport.update({
   path: '/demo/micro-reassurance',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedProRoute = AuthenticatedProRouteImport.update({
+  id: '/pro',
+  path: '/pro',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedHistoriqueRoute = AuthenticatedHistoriqueRouteImport.update({
   id: '/historique',
   path: '/historique',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
+  '/pro': typeof AuthenticatedProRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/pro/offres': typeof ProOffresRoute
 }
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
+  '/pro': typeof AuthenticatedProRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/pro/offres': typeof ProOffresRoute
 }
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/verify-email': typeof VerifyEmailRoute
   '/_authenticated/devis': typeof AuthenticatedDevisRoute
   '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
+  '/_authenticated/pro': typeof AuthenticatedProRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/pro/offres': typeof ProOffresRoute
 }
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/devis'
     | '/historique'
+    | '/pro'
     | '/demo/micro-reassurance'
     | '/pro/offres'
   fileRoutesByTo: FileRoutesByTo
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/devis'
     | '/historique'
+    | '/pro'
     | '/demo/micro-reassurance'
     | '/pro/offres'
   id:
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/_authenticated/devis'
     | '/_authenticated/historique'
+    | '/_authenticated/pro'
     | '/demo/micro-reassurance'
     | '/pro/offres'
   fileRoutesById: FileRoutesById
@@ -291,6 +303,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoMicroReassuranceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/pro': {
+      id: '/_authenticated/pro'
+      path: '/pro'
+      fullPath: '/pro'
+      preLoaderRoute: typeof AuthenticatedProRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/historique': {
       id: '/_authenticated/historique'
       path: '/historique'
@@ -311,11 +330,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedDevisRoute: typeof AuthenticatedDevisRoute
   AuthenticatedHistoriqueRoute: typeof AuthenticatedHistoriqueRoute
+  AuthenticatedProRoute: typeof AuthenticatedProRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDevisRoute: AuthenticatedDevisRoute,
   AuthenticatedHistoriqueRoute: AuthenticatedHistoriqueRoute,
+  AuthenticatedProRoute: AuthenticatedProRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
