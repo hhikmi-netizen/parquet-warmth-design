@@ -206,6 +206,22 @@ function ContactPage() {
     e.preventDefault();
     const form = e.currentTarget;
     const fd = new FormData(form);
+
+    // Anti-spam — honeypot: real users can't see/fill this field.
+    const honeypot = String(fd.get("company_website") ?? "").trim();
+    if (honeypot.length > 0) {
+      // Fake a success to not give bots feedback.
+      setSent(true);
+      return;
+    }
+
+    // Anti-spam — minimum fill delay. Humans take >2.5s to fill the form.
+    const elapsed = Date.now() - mountedAt.current;
+    if (elapsed < MIN_FILL_MS) {
+      toast.error("Merci de prendre un instant pour vérifier vos informations avant l'envoi.");
+      return;
+    }
+
     const parsed = contactSchema.safeParse({
       nom: fd.get("nom"),
       email: fd.get("email"),
