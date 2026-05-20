@@ -539,20 +539,30 @@ function ContactPage() {
                       key={`${f.name}-${f.size}-${i}`}
                       className="group relative overflow-hidden rounded-lg border border-border bg-background"
                     >
-                      <img
-                        src={previews[i]}
-                        alt=""
-                        className="aspect-square w-full object-cover"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/85 to-transparent px-2 pb-1.5 pt-6 text-[10px] text-background">
+                      <button
+                        type="button"
+                        onClick={() => setPreviewIdx(i)}
+                        aria-label={`Agrandir ${f.name}`}
+                        className="block w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      >
+                        <img
+                          src={previews[i]}
+                          alt=""
+                          className="aspect-square w-full object-cover transition group-hover:scale-[1.03]"
+                          loading="lazy"
+                        />
+                      </button>
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/85 to-transparent px-2 pb-1.5 pt-6 text-[10px] text-background">
                         <p className="truncate" title={f.name}>{f.name}</p>
                         <p className="opacity-80">{(f.size / 1024 / 1024).toFixed(2)} Mo</p>
                       </div>
                       <span className="sr-only">{f.name}</span>
                       <button
                         type="button"
-                        onClick={() => removeFile(i)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeFile(i);
+                        }}
                         aria-label={`Retirer ${f.name}`}
                         className="absolute right-1 top-1 rounded-full bg-background/95 p-1 text-foreground shadow-soft transition hover:bg-destructive hover:text-destructive-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       >
