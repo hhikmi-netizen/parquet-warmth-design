@@ -255,8 +255,8 @@ function ProDashboard() {
             <>
               <QuickActions />
               <ProjectsTab
-                matches={matches}
-                stats={inbox.stats}
+                matches={filteredMatches}
+                stats={stats}
                 filter={filter}
                 setFilter={setFilter}
                 onSelect={setSelected}
@@ -264,7 +264,7 @@ function ProDashboard() {
             </>
           )}
           {tab === "outils" && <OutilsTab />}
-          {tab === "historique" && <HistoryTab refunded={inbox.stats.refunded} />}
+          {tab === "historique" && <HistoryTab refunded={stats.refunded} />}
           {tab === "zone" && <ZoneTab />}
           {tab === "compte" && (
             <CompteTab artisanName={inbox.artisan.raison_sociale} balance={inbox.artisan.credits_balance} />
