@@ -890,12 +890,14 @@ function ContactForm({
     return parsed.data;
   };
 
-  const submit = () => {
+  const submit = (ev?: React.FormEvent) => {
+    ev?.preventDefault();
     const data = validate();
     if (!data) return;
     setSending(true);
     onSaved(data);
 
+    const link = buildQuoteLink(state);
     const body = [
       `Bonjour,`,
       ``,
@@ -909,6 +911,8 @@ function ContactForm({
       state.seuils > 0 ? `• Seuils : ${state.seuils}` : null,
       ``,
       `Fourchette estimée : ${fmt(totals.min)} – ${fmt(totals.max)} € TTC`,
+      ``,
+      `Lien du devis : ${link}`,
       ``,
       `— ${data.nom}`,
       `Tél. ${data.telephone} · CP ${data.cp}`,
