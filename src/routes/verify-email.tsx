@@ -1,10 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
-import { Loader2, MailCheck } from "lucide-react";
+import { Loader2, MailCheck, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { authToast } from "@/components/auth/auth-toast";
+
+const TARGET_LABELS: Record<string, string> = {
+  "/historique": "Mon espace — Historique",
+  "/espace-pro": "Espace pro",
+  "/devis": "Mes devis",
+};
+
+function labelFor(path: string): string {
+  if (TARGET_LABELS[path]) return TARGET_LABELS[path];
+  // Strip query/hash and prettify the last segment.
+  const clean = path.split(/[?#]/)[0];
+  const seg = clean.replace(/\/+$/, "").split("/").filter(Boolean).pop() ?? "";
+  if (!seg) return "Accueil";
+  return seg
+    .replace(/[-_]+/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
 
 const searchSchema = z.object({
   email: z.string().email().optional(),
@@ -93,6 +110,19 @@ function VerifyEmailPage() {
               Pensez à vérifier vos spams. Cette page se mettra à jour automatiquement dès la validation.
             </p>
           </div>
+        </div>
+
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-brand-orange/30 bg-brand-orange/5 p-4 text-sm">
+          <div className="min-w-0">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Après confirmation</p>
+            <p className="mt-0.5 truncate font-medium text-foreground" title={target}>
+              {labelFor(target)}
+            </p>
+            <p className="truncate text-xs text-muted-foreground" title={target}>
+              {target}
+            </p>
+          </div>
+          <ArrowRight className="h-4 w-4 flex-shrink-0 text-brand-orange" aria-hidden="true" />
         </div>
 
         <div className="grid gap-2">
