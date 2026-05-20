@@ -1265,6 +1265,7 @@ function Step4({
   range,
   photos,
   onPdf,
+  pdfLoading,
   onShare,
   shareMsg,
   shareFallback,
@@ -1275,6 +1276,7 @@ function Step4({
   range: { min: number; max: number } | null;
   photos: number;
   onPdf: () => void;
+  pdfLoading: boolean;
   onShare: () => void | Promise<void>;
   shareMsg: string;
   shareFallback: boolean;
