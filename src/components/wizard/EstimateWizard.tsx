@@ -427,8 +427,10 @@ export function EstimateWizard() {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [errors, setErrors] = useState<Errors>({});
   const [photos, setPhotos] = useState<{ id: string; name: string; url: string }[]>([]);
+  const [photoError, setPhotoError] = useState<string>("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [shareMsg, setShareMsg] = useState<string>("");
 
   useEffect(() => {
     setS(loadWizardState());
