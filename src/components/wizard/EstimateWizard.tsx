@@ -680,6 +680,7 @@ export function EstimateWizard() {
             onPdf={() => generateWizardPDF(s)}
             onShare={shareQuote}
             shareMsg={shareMsg}
+            shareFallback={shareFallback}
           />
         )}
       </main>
