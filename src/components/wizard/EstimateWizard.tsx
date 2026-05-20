@@ -1239,6 +1239,7 @@ function Step4({
   onPdf,
   onShare,
   shareMsg,
+  shareFallback,
 }: {
   s: WizardState;
   set: <K extends keyof WizardState>(k: K, v: WizardState[K]) => void;
@@ -1248,6 +1249,7 @@ function Step4({
   onPdf: () => void;
   onShare: () => void | Promise<void>;
   shareMsg: string;
+  shareFallback: boolean;
 }) {
   return (
     <section>
