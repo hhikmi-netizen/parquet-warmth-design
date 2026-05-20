@@ -375,6 +375,7 @@ function ContactPage() {
       <section className="mx-auto max-w-6xl px-6 pb-24">
         <div className="grid gap-8 lg:grid-cols-12">
           <form
+            ref={formRef}
             onSubmit={handleSubmit}
             noValidate
             aria-labelledby="contact-form-title"
