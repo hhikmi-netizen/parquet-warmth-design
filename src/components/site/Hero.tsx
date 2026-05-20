@@ -2,6 +2,7 @@ import heroImg from "@/assets/hero-parquet.jpg";
 import detail from "@/assets/detail-wood.jpg";
 import beforeAfter from "@/assets/before-after.jpg";
 import { ArrowRight } from "lucide-react";
+import { MicroReassurance } from "./MicroReassurance";
 
 export function Hero() {
   return (
@@ -43,13 +44,7 @@ export function Hero() {
               </a>
             </div>
 
-            <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[13px] text-muted-foreground">
-              <span>Gratuit</span>
-              <span aria-hidden className="text-brand-orange/60">·</span>
-              <span>Sans engagement</span>
-              <span aria-hidden className="text-brand-orange/60">·</span>
-              <span>Artisan partenaire ensuite</span>
-            </p>
+            <MicroReassurance />
           </div>
         </div>
 
