@@ -735,29 +735,61 @@ export function EstimateWizard() {
   );
 }
 
+const FIELD_LABELS: Record<string, string> = {
+  projet: "Type de projet",
+  materiau: "Matériau",
+  logement: "Type de logement",
+  surface: "Surface",
+  etatMeuble: "État du logement",
+  zoneDegagee: "Zone dégagée",
+  manutention: "Manutention lourde",
+  etage: "Étage",
+  chauffage: "Chauffage au sol",
+  delai: "Délai souhaité",
+  adresse: "Adresse",
+  ville: "Ville",
+  cp: "Code postal",
+  profil: "Profil",
+  civilite: "Civilité",
+  prenom: "Prénom",
+  nom: "Nom",
+  email: "Email",
+  telephone: "Téléphone",
+  entreprise: "Raison sociale",
+  consent: "Consentement",
+};
+
 function StepErrors({ errors }: { errors: Errors }) {
-  const list = Object.values(errors).filter(Boolean);
-  if (list.length === 0) return null;
+  const entries = Object.entries(errors).filter(([, v]) => Boolean(v));
+  if (entries.length === 0) return null;
   return (
     <div
       role="alert"
-      className="mb-6 flex items-start gap-3 rounded-2xl border border-destructive/30 bg-destructive/5 p-4"
+      aria-live="polite"
+      className="mb-6 overflow-hidden rounded-xl border border-destructive/30 bg-destructive/5"
     >
-      <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
-      <div>
+      <div className="flex items-center gap-2.5 border-b border-destructive/20 bg-destructive/10 px-4 py-2.5">
+        <AlertCircle className="h-4 w-4 flex-shrink-0 text-destructive" />
         <div className="text-sm font-semibold text-destructive">
-          {list.length === 1 ? "1 champ à corriger" : `${list.length} champs à corriger`}
+          {entries.length === 1 ? "Un champ à corriger" : `${entries.length} champs à corriger`}
         </div>
-        <ul className="mt-1 list-disc pl-5 text-xs text-destructive/90">
-          {list.slice(0, 4).map((m, i) => (
-            <li key={i}>{m}</li>
-          ))}
-          {list.length > 4 && <li>…et {list.length - 4} autre(s)</li>}
-        </ul>
       </div>
+      <ul className="grid gap-1 px-4 py-2.5 text-[12px] sm:grid-cols-2">
+        {entries.slice(0, 6).map(([k, m]) => (
+          <li key={k} className="flex items-baseline gap-1.5 text-destructive/90">
+            <span className="text-destructive/60">·</span>
+            <span className="font-semibold">{FIELD_LABELS[k] ?? k} :</span>
+            <span className="text-destructive/80">{m}</span>
+          </li>
+        ))}
+        {entries.length > 6 && (
+          <li className="text-[11px] italic text-destructive/70">…et {entries.length - 6} autre(s)</li>
+        )}
+      </ul>
     </div>
   );
 }
+
 
 /* =========================================================================
    Sections (steps)
