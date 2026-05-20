@@ -1444,9 +1444,12 @@ function Step3({
 
         {lightbox !== null && photos[lightbox] && (
           <div
+            ref={lightboxRef}
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-50 flex flex-col bg-foreground/95 backdrop-blur-sm"
+            aria-label={`Aperçu photo ${lightbox + 1} sur ${photos.length}`}
+            tabIndex={-1}
+            className="fixed inset-0 z-50 flex flex-col bg-foreground/95 backdrop-blur-sm outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60"
             onClick={() => setLightbox(null)}
           >
             <div className="flex items-center justify-between gap-3 border-b border-background/10 px-4 py-3 text-background">
