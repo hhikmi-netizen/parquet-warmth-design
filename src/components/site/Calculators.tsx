@@ -257,6 +257,194 @@ function VitrifTool() {
   );
 }
 
+// --- Fournitures & pertes (DTU) ------------------------------------------
+// Coefficients de perte technique selon DTU 51.1 / 51.2 et usages métier.
+type MotifPose = "anglaise" | "coupe_pierre" | "hongrie" | "chevron" | "batons_rompus";
+type SupportType = "collee" | "flottante" | "clouee";
+
+const MOTIFS: Record<MotifPose, { label: string; perte: number; note: string }> = {
+  anglaise: { label: "À l'anglaise (coupe perdue)", perte: 5, note: "Lames décalées librement, coupes réutilisées" },
+  coupe_pierre: { label: "Coupe de pierre (1/2, 1/3)", perte: 8, note: "Décalage régulier, plus de chutes calibrées" },
+  batons_rompus: { label: "Bâtons rompus", perte: 12, note: "Lames à 90°, coupes fréquentes" },
+  hongrie: { label: "Point de Hongrie", perte: 15, note: "Coupes à 45° ou 60°, perte importante" },
+  chevron: { label: "Chevron (à la française)", perte: 15, note: "Symétrie stricte, lames droites/gauches" },
+};
+
+function FournituresTool() {
+  const [surface, setSurface] = useState(35);
+  const [motif, setMotif] = useState<MotifPose>("anglaise");
+  const [support, setSupport] = useState<SupportType>("collee");
+
+  // Conditionnement & prix personnalisables
+  const [botteSurface, setBotteSurface] = useState(2.2);
+  const [prixM2, setPrixM2] = useState(45);
+  const [kgM2, setKgM2] = useState(1.0); // dosage colle
+  const [kgSeau, setKgSeau] = useState(15);
+  const [prixSeau, setPrixSeau] = useState(85);
+  const [m2Rouleau, setM2Rouleau] = useState(15);
+  const [prixRouleau, setPrixRouleau] = useState(35);
+
+  const m = MOTIFS[motif];
+  const surfaceCommande = surface * (1 + m.perte / 100);
+
+  const nbBottes = botteSurface > 0 ? Math.ceil(surfaceCommande / botteSurface) : 0;
+  const coutParquet = surfaceCommande * prixM2;
+
+  const kgColle = support === "collee" ? surfaceCommande * kgM2 : 0;
+  const nbSeaux = support === "collee" && kgSeau > 0 ? Math.ceil(kgColle / kgSeau) : 0;
+  const coutColle = nbSeaux * prixSeau;
+
+  // Sous-couche : utile en pose flottante (et parfois clouée sur lambourdes)
+  const needsSousCouche = support !== "collee";
+  const m2SousCouche = needsSousCouche ? surfaceCommande : 0;
+  const nbRouleaux = needsSousCouche && m2Rouleau > 0 ? Math.ceil(m2SousCouche / m2Rouleau) : 0;
+  const coutSousCouche = nbRouleaux * prixRouleau;
+
+  const totalFournitures = coutParquet + coutColle + coutSousCouche;
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-5">
+      <div className="space-y-5 lg:col-span-3">
+        <NumberField label="Surface nette à poser" value={surface} onChange={setSurface} unit="m²" step={0.5} />
+
+        <div>
+          <span className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Motif de pose (DTU 51)
+          </span>
+          <div className="grid gap-1.5 sm:grid-cols-2">
+            {(Object.keys(MOTIFS) as MotifPose[]).map((k) => {
+              const o = MOTIFS[k];
+              const active = motif === k;
+              return (
+                <button
+                  key={k}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setMotif(k)}
+                  className={`rounded-xl border px-3 py-2.5 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                    active
+                      ? "border-brand-orange bg-brand-orange/10 shadow-soft"
+                      : "border-border bg-background hover:border-brand-orange/40"
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className={`text-sm font-semibold ${active ? "text-brand-orange" : "text-foreground"}`}>
+                      {o.label}
+                    </span>
+                    <span className="rounded-full bg-brand-orange/10 px-2 py-0.5 text-[10px] font-semibold text-brand-orange">
+                      +{o.perte}%
+                    </span>
+                  </div>
+                  <div className="mt-0.5 text-[10px] text-muted-foreground">{o.note}</div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <SegmentedGroup
+          label="Type de support / pose"
+          value={support}
+          options={[
+            { value: "collee", label: "Collée", hint: "Colle plein bain" },
+            { value: "flottante", label: "Flottante", hint: "Sous-couche" },
+            { value: "clouee", label: "Clouée", hint: "Sur lambourdes" },
+          ]}
+          onChange={(v) => setSupport(v as SupportType)}
+        />
+
+        <details className="rounded-xl border border-dashed border-border bg-secondary/30 p-3 [&_summary]:cursor-pointer">
+          <summary className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Personnaliser conditionnement & prix
+          </summary>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <NumberField label="Surface / botte" value={botteSurface} onChange={setBotteSurface} unit="m²" step={0.1} />
+            <NumberField label="Prix parquet" value={prixM2} onChange={setPrixM2} unit="€/m²" step={1} />
+            {support === "collee" && (
+              <>
+                <NumberField label="Dosage colle" value={kgM2} onChange={setKgM2} unit="kg/m²" step={0.1} />
+                <NumberField label="Seau colle" value={kgSeau} onChange={setKgSeau} unit="kg" step={1} />
+                <NumberField label="Prix seau" value={prixSeau} onChange={setPrixSeau} unit="€" step={1} />
+              </>
+            )}
+            {needsSousCouche && (
+              <>
+                <NumberField label="Rouleau" value={m2Rouleau} onChange={setM2Rouleau} unit="m²" step={1} />
+                <NumberField label="Prix rouleau" value={prixRouleau} onChange={setPrixRouleau} unit="€" step={1} />
+              </>
+            )}
+          </div>
+        </details>
+      </div>
+
+      <div className="lg:col-span-2">
+        <div className="rounded-2xl border border-brand-orange/30 bg-gradient-to-br from-brand-orange/10 to-brand-orange/5 p-6">
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Liste de fournitures à acheter
+          </div>
+
+          <div className="mt-3 space-y-3 text-sm">
+            <div className="flex items-baseline justify-between border-b border-border/60 pb-2">
+              <div>
+                <div className="font-semibold text-foreground">Parquet</div>
+                <div className="text-[11px] text-muted-foreground">
+                  {fmt(surfaceCommande, 2)} m² ({surface} m² + {m.perte}% perte)
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="font-display text-base text-foreground">{nbBottes} botte{nbBottes > 1 ? "s" : ""}</div>
+                <div className="text-[11px] text-muted-foreground">{eur(coutParquet)}</div>
+              </div>
+            </div>
+
+            {support === "collee" && (
+              <div className="flex items-baseline justify-between border-b border-border/60 pb-2">
+                <div>
+                  <div className="font-semibold text-foreground">Colle</div>
+                  <div className="text-[11px] text-muted-foreground">{fmt(kgColle)} kg ({kgM2} kg/m²)</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-display text-base text-foreground">{nbSeaux} seau{nbSeaux > 1 ? "x" : ""} de {kgSeau} kg</div>
+                  <div className="text-[11px] text-muted-foreground">{eur(coutColle)}</div>
+                </div>
+              </div>
+            )}
+
+            {needsSousCouche && (
+              <div className="flex items-baseline justify-between border-b border-border/60 pb-2">
+                <div>
+                  <div className="font-semibold text-foreground">Sous-couche</div>
+                  <div className="text-[11px] text-muted-foreground">{fmt(m2SousCouche)} m²</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-display text-base text-foreground">{nbRouleaux} rouleau{nbRouleaux > 1 ? "x" : ""}</div>
+                  <div className="text-[11px] text-muted-foreground">{eur(coutSousCouche)}</div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-baseline justify-between pt-1">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Total fournitures
+              </span>
+              <span className="font-display text-2xl text-brand-orange">{eur(totalFournitures)}</span>
+            </div>
+          </div>
+
+          <p className="mt-4 flex items-start gap-2 text-[11px] leading-relaxed text-muted-foreground">
+            <Info className="mt-0.5 h-3 w-3 flex-shrink-0 text-brand-orange" aria-hidden />
+            Coefficients basés sur les DTU 51.1 (massif cloué) et 51.2 (collé). Hors plinthes, barres
+            de seuil et finition. Pose non incluse.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
 // --- Budget travaux -------------------------------------------------------
 // Fourchettes indicatives TTC (€/m²), pose + fournitures standard.
 // Sources : ordres de grandeur métier 2024-2025 marché parisien/IDF.
