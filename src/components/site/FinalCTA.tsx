@@ -1,4 +1,5 @@
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, FileText } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import detail from "@/assets/detail-wood.jpg";
 import { Estimator } from "./Estimator";
 
