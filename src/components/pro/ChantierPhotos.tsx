@@ -66,9 +66,29 @@ function formatDate(iso: string) {
 export function ChantierPhotos() {
   const [projectRef, setProjectRef] = useState(MOCK_PROJECTS[0].ref);
   const [photos, setPhotos] = useState<Record<string, Photo[]>>({});
+  const [visibleToClient, setVisibleToClient] = useState<Record<string, boolean>>({});
   const [editing, setEditing] = useState<string | null>(null);
   const [draftNote, setDraftNote] = useState("");
   const inputs = useRef<Record<Phase, HTMLInputElement | null>>({ avant: null, pendant: null, apres: null });
+
+  const currentProject = MOCK_PROJECTS.find((p) => p.ref === projectRef)!;
+  const clientShared = !!visibleToClient[projectRef];
+
+  const ttl = useMemo(() => {
+    if (!currentProject.closedAt) {
+      return { status: "active" as const, label: "Projet en cours · conservation illimitée tant qu'il n'est pas clôturé" };
+    }
+    const closed = new Date(currentProject.closedAt).getTime();
+    const expires = closed + TTL_DAYS * 86_400_000;
+    const remaining = Math.ceil((expires - Date.now()) / 86_400_000);
+    if (remaining <= 0) {
+      return { status: "expired" as const, label: `Expirées depuis ${-remaining} j — purge automatique programmée` };
+    }
+    if (remaining <= 14) {
+      return { status: "warning" as const, label: `Expire dans ${remaining} j (le ${new Date(expires).toLocaleDateString("fr-FR")})` };
+    }
+    return { status: "ok" as const, label: `Conservation ${remaining} j restants (jusqu'au ${new Date(expires).toLocaleDateString("fr-FR")})` };
+  }, [currentProject.closedAt]);
 
   const list = photos[projectRef] ?? [];
   const byPhase = useMemo(() => {
