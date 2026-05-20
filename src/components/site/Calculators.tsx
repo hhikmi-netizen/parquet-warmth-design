@@ -360,14 +360,13 @@ function BudgetTool() {
             <li>· Sans engagement, sans démarchage</li>
           </ul>
 
-          <Link
-            to="/contact"
-            search={ctaSearch}
+          <a
+            href={contactHref}
             className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Recevoir mes 3 devis
             <ArrowRight className="h-4 w-4" aria-hidden />
-          </Link>
+          </a>
 
           <p className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
             <ShieldCheck className="h-3 w-3 text-brand-orange" aria-hidden />
