@@ -1,26 +1,38 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Header } from "@/components/site/Header";
+import { Hero } from "@/components/site/Hero";
+import { Process } from "@/components/site/Process";
+import { Pains } from "@/components/site/Pains";
+import { Expertise } from "@/components/site/Expertise";
+import { Artisan } from "@/components/site/Artisan";
+import { FinalCTA } from "@/components/site/FinalCTA";
+import { Footer } from "@/components/site/Footer";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  head: () => ({
+    meta: [
+      { title: "Parqueto — Estimez votre projet parquet en quelques minutes" },
+      {
+        name: "description",
+        content:
+          "Estimation parquet en ligne : ponçage, vitrification, pose, rénovation. Artisans vérifiés près de chez vous. Sans engagement.",
+      },
+    ],
+  }),
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
-
 function Index() {
-  return <PlaceholderIndex />;
+  return (
+    <main className="min-h-screen bg-background text-foreground">
+      <Header />
+      <Hero />
+      <Process />
+      <Pains />
+      <Expertise />
+      <Artisan />
+      <FinalCTA />
+      <Footer />
+    </main>
+  );
 }
