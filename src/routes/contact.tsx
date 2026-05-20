@@ -323,6 +323,7 @@ function ContactPage() {
 
   const resetForm = () => {
     setPreviewIdx(null);
+    mountedAt.current = Date.now();
     setSent(false);
   };
 
