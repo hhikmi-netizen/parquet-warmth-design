@@ -94,28 +94,84 @@ function ContactPage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  const [messageLen, setMessageLen] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const dragCounter = useRef(0);
 
-  const onFiles = (incoming: FileList | null) => {
+  // Object URLs for previews — memoized + revoked on change/unmount.
+  const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
+  useEffect(() => () => previews.forEach((u) => URL.revokeObjectURL(u)), [previews]);
+
+  const addFiles = (incoming: FileList | File[] | null) => {
     if (!incoming) return;
+    const list = Array.from(incoming);
     const next = [...files];
-    Array.from(incoming).forEach((f) => {
-      if (next.length >= MAX_FILES) return;
-      if (!f.type.startsWith("image/")) {
-        toast.error(`${f.name} : seules les images sont acceptées.`);
-        return;
+    let accepted = 0;
+    for (const f of list) {
+      if (next.length >= MAX_FILES) {
+        toast.error(`Maximum ${MAX_FILES} photos.`);
+        break;
+      }
+      const isImage =
+        f.type.startsWith("image/") || /\.(jpe?g|png|webp|heic)$/i.test(f.name);
+      if (!isImage || (f.type && !ACCEPTED_TYPES.includes(f.type))) {
+        toast.error(`${f.name} : format non supporté (JPG, PNG, WEBP).`);
+        continue;
       }
       if (f.size > MAX_FILE_MB * 1024 * 1024) {
         toast.error(`${f.name} dépasse ${MAX_FILE_MB} Mo.`);
-        return;
+        continue;
       }
+      if (next.some((n) => n.name === f.name && n.size === f.size)) continue;
       next.push(f);
-    });
+      accepted++;
+    }
     setFiles(next.slice(0, MAX_FILES));
+    if (accepted > 0) {
+      toast.success(`${accepted} photo${accepted > 1 ? "s" : ""} ajoutée${accepted > 1 ? "s" : ""}.`);
+    }
   };
 
   const removeFile = (idx: number) =>
     setFiles((prev) => prev.filter((_, i) => i !== idx));
+
+  // Drag & drop — counter avoids flicker when entering child nodes.
+  const onDragEnter = (e: React.DragEvent) => {
+    if (!e.dataTransfer?.types?.includes("Files")) return;
+    e.preventDefault();
+    dragCounter.current += 1;
+    setIsDragging(true);
+  };
+  const onDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    dragCounter.current = Math.max(0, dragCounter.current - 1);
+    if (dragCounter.current === 0) setIsDragging(false);
+  };
+  const onDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+  };
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    dragCounter.current = 0;
+    setIsDragging(false);
+    addFiles(e.dataTransfer?.files ?? null);
+  };
+
+  // Per-field validation on blur.
+  const validateField = (name: keyof FormValues, value: string) => {
+    const shape = (contactSchema as unknown as { shape: Record<string, z.ZodTypeAny> }).shape;
+    const fieldSchema = shape[name];
+    if (!fieldSchema) return;
+    const res = fieldSchema.safeParse(value);
+    setErrors((prev) => {
+      const next = { ...prev };
+      if (res.success) delete next[name];
+      else next[name] = res.error.issues[0]?.message ?? "Valeur invalide.";
+      return next;
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -137,7 +193,6 @@ function ContactPage() {
       });
       setErrors(fe);
       toast.error("Merci de corriger les champs en rouge.");
-      // Move focus to the first invalid field for keyboard / SR users.
       const firstKey = Object.keys(fe)[0];
       if (firstKey) {
         const el = form.querySelector<HTMLElement>(`[name="${firstKey}"]`);
@@ -147,7 +202,6 @@ function ContactPage() {
     }
     setErrors({});
     setSubmitting(true);
-    // Simulated submission — wire to a server function when available.
     await new Promise((r) => setTimeout(r, 900));
     setSubmitting(false);
     setSent(true);
