@@ -12,8 +12,17 @@ const schema = z.object({
   password: z.string().min(8, "8 caractères minimum").max(72),
 });
 
+const searchSchema = z.object({ redirect: z.string().optional() });
+
+function safeRedirect(value: string | undefined): string {
+  if (!value) return "/historique";
+  if (!value.startsWith("/") || value.startsWith("//")) return "/historique";
+  return value;
+}
+
 export const Route = createFileRoute("/signup")({
   component: SignupPage,
+  validateSearch: (s) => searchSchema.parse(s),
   head: () => ({ meta: [{ title: "Créer un compte — Parqueto" }] }),
 });
 
