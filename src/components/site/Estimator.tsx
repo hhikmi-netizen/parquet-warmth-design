@@ -261,6 +261,7 @@ export function Estimator() {
   const [showOptions, setShowOptions] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [initialContact, setInitialContact] = useState<ContactInput>(DEFAULT_CONTACT);
+  const [shareMsg, setShareMsg] = useState<string | null>(null);
 
   useEffect(() => {
     setS(loadState());
