@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { z } from "zod";
 import jsPDF from "jspdf";
 import {
+  AlertCircle,
   ArrowLeft,
   ArrowRight,
   Check,
@@ -16,6 +17,7 @@ import {
   MapPin,
   Minus,
   Plus,
+  Share2,
   ShieldCheck,
   Sparkles,
   Upload,
