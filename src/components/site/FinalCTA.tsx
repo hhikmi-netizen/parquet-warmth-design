@@ -1,16 +1,11 @@
-import { ArrowRight, Clock, ShieldCheck, Sparkles, Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import detail from "@/assets/detail-wood.jpg";
+import { Estimator } from "./Estimator";
 
 const miniSteps = [
   "Décrivez la pièce et l'état du parquet",
   "Recevez une fourchette de prix honnête",
   "Échangez avec un artisan vérifié",
-];
-
-const proofs = [
-  { icon: Clock, label: "≈ 3 minutes", sub: "pour remplir" },
-  { icon: ShieldCheck, label: "Sans engagement", sub: "ni carte bancaire" },
-  { icon: Sparkles, label: "Artisans vérifiés", sub: "près de chez vous" },
 ];
 
 export function FinalCTA() {
