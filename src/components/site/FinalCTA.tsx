@@ -54,6 +54,10 @@ export function FinalCTA() {
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <a
                 href="#estimate"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("estimate")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
                 className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-7 py-4 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
               >
                 Estimer mon projet
@@ -66,7 +70,7 @@ export function FinalCTA() {
             </div>
           </div>
 
-          <aside className="lg:col-span-5">
+          <aside id="estimate" className="scroll-mt-24 lg:col-span-5">
             <Estimator />
           </aside>
         </div>

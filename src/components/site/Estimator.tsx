@@ -13,11 +13,13 @@ import {
   Loader2,
   CheckCircle2,
   FileDown,
+  Share2,
   Ruler,
   ClipboardList,
   Calculator,
   Send,
 } from "lucide-react";
+
 
 // ---------- Modèle de calcul ----------
 type ServiceKey = "poncage" | "vitrification" | "pose" | "renovation";
@@ -120,12 +122,11 @@ function loadContact(): ContactInput {
 // ---------- Génération PDF ----------
 type Totals = { min: number; max: number; surface: number; perimetre: number; plinthesCost: number; seuilsCost: number };
 
-function generateQuotePDF(state: EstimateState, totals: Totals, contact?: ContactInput) {
+function buildQuoteDoc(state: EstimateState, totals: Totals, contact?: ContactInput) {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const W = 210;
   let y = 18;
 
-  // Header
   doc.setFillColor(232, 93, 58);
   doc.rect(0, 0, W, 10, "F");
   doc.setFont("helvetica", "bold");
@@ -143,7 +144,6 @@ function generateQuotePDF(state: EstimateState, totals: Totals, contact?: Contac
   doc.line(14, y, W - 14, y);
   y += 8;
 
-  // Client
   if (contact && contact.nom) {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
@@ -160,7 +160,6 @@ function generateQuotePDF(state: EstimateState, totals: Totals, contact?: Contac
     y += 4;
   }
 
-  // Projet
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.setTextColor(20);
@@ -187,7 +186,6 @@ function generateQuotePDF(state: EstimateState, totals: Totals, contact?: Contac
   });
 
   y += 6;
-  // Fourchette
   doc.setFillColor(255, 245, 240);
   doc.roundedRect(14, y, W - 28, 26, 3, 3, "F");
   doc.setFont("helvetica", "bold");
@@ -199,7 +197,6 @@ function generateQuotePDF(state: EstimateState, totals: Totals, contact?: Contac
   doc.text(`${fmt(totals.min)} – ${fmt(totals.max)} € TTC`, 20, y + 18);
   y += 34;
 
-  // Footer
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(120);
@@ -211,7 +208,50 @@ function generateQuotePDF(state: EstimateState, totals: Totals, contact?: Contac
   doc.setTextColor(160);
   doc.text("contact@parqueto.fr · parqueto.fr", 14, 287);
 
-  doc.save(`devis-parqueto-${Date.now()}.pdf`);
+  return doc;
+}
+
+function generateQuotePDF(state: EstimateState, totals: Totals, contact?: ContactInput) {
+  buildQuoteDoc(state, totals, contact).save(`devis-parqueto-${Date.now()}.pdf`);
+}
+
+function buildShareText(state: EstimateState, totals: Totals) {
+  return [
+    `Devis Parqueto — ${services[state.service].label}`,
+    `${types[state.type].label} · ${etats[state.etat].label}`,
+    `Surface : ${fmtNum(totals.surface)} m²${state.plinthes ? " · plinthes" : ""}${state.seuils > 0 ? ` · ${state.seuils} seuil(s)` : ""}`,
+    `Fourchette estimée : ${fmt(totals.min)} – ${fmt(totals.max)} € TTC`,
+    `Demandez le vôtre sur parqueto.fr`,
+  ].join("\n");
+}
+
+async function shareQuote(state: EstimateState, totals: Totals, contact?: ContactInput) {
+  const text = buildShareText(state, totals);
+  const title = "Mon devis Parqueto";
+  try {
+    const doc = buildQuoteDoc(state, totals, contact);
+    const blob = doc.output("blob");
+    const file = new File([blob], `devis-parqueto.pdf`, { type: "application/pdf" });
+    const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean };
+    if (nav.canShare && nav.canShare({ files: [file] })) {
+      await navigator.share({ title, text, files: [file] });
+      return "shared";
+    }
+    if (typeof navigator.share === "function") {
+      await navigator.share({ title, text });
+      return "shared";
+    }
+    await navigator.clipboard.writeText(text);
+    return "copied";
+  } catch (err) {
+    if ((err as DOMException)?.name === "AbortError") return "aborted";
+    try {
+      await navigator.clipboard.writeText(text);
+      return "copied";
+    } catch {
+      return "error";
+    }
+  }
 }
 
 // ---------- Composant ----------
@@ -221,6 +261,7 @@ export function Estimator() {
   const [showOptions, setShowOptions] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [initialContact, setInitialContact] = useState<ContactInput>(DEFAULT_CONTACT);
+  const [shareMsg, setShareMsg] = useState<string | null>(null);
 
   useEffect(() => {
     setS(loadState());
@@ -409,9 +450,9 @@ export function Estimator() {
         </p>
       </div>
 
-      {/* CTA principal + PDF */}
+      {/* CTA principal + PDF + Partage */}
       {!showContact ? (
-        <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
+        <div className="mt-4 space-y-2">
           <button
             onClick={() => setShowContact(true)}
             className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep active:scale-[0.98]"
@@ -419,14 +460,37 @@ export function Estimator() {
             Être recontacté avec ce devis
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
           </button>
-          <button
-            onClick={() => generateQuotePDF(s, totals, initialContact)}
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-background/25 bg-background/5 px-4 py-3 text-xs font-semibold text-background transition hover:bg-background/10 active:scale-[0.98]"
-            aria-label="Télécharger le devis PDF"
-          >
-            <FileDown className="h-4 w-4 text-brand-orange" />
-            Devis PDF
-          </button>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => generateQuotePDF(s, totals, initialContact)}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-background/25 bg-background/5 px-4 py-3 text-xs font-semibold text-background transition hover:bg-background/10 active:scale-[0.98]"
+              aria-label="Télécharger le devis PDF"
+            >
+              <FileDown className="h-4 w-4 text-brand-orange" />
+              Devis PDF
+            </button>
+            <button
+              onClick={async () => {
+                const r = await shareQuote(s, totals, initialContact);
+                if (r === "copied") setShareMsg("Résumé copié dans le presse-papier");
+                else if (r === "shared") setShareMsg("Devis partagé");
+                else if (r === "error") setShareMsg("Partage indisponible");
+                if (r === "copied" || r === "shared" || r === "error") {
+                  setTimeout(() => setShareMsg(null), 2500);
+                }
+              }}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-background/25 bg-background/5 px-4 py-3 text-xs font-semibold text-background transition hover:bg-background/10 active:scale-[0.98]"
+              aria-label="Partager le devis"
+            >
+              <Share2 className="h-4 w-4 text-brand-orange" />
+              Partager
+            </button>
+          </div>
+          {shareMsg && (
+            <p className="text-center text-[11px] text-background/70" role="status" aria-live="polite">
+              {shareMsg}
+            </p>
+          )}
         </div>
       ) : (
         <ContactForm
