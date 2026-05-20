@@ -285,18 +285,32 @@ function BudgetTool() {
   const [pose, setPose] = useState<BudgetPose>("collee");
   const [surface, setSurface] = useState(35);
   const [support, setSupport] = useState<BudgetSupport>("plat");
+  const [customize, setCustomize] = useState(false);
+  const defaults = POSE_RANGES[pose];
+  const [priceMin, setPriceMin] = useState<number>(defaults.min);
+  const [priceMax, setPriceMax] = useState<number>(defaults.max);
+
+  // Reset prix custom quand on change de type de pose (sauf si l'utilisateur a activé le mode perso)
+  const lastPoseRef = useMemo(() => ({ v: pose }), []); // eslint-disable-line react-hooks/exhaustive-deps
+  if (lastPoseRef.v !== pose && !customize) {
+    lastPoseRef.v = pose;
+    // sync defaults
+    if (priceMin !== defaults.min) setPriceMin(defaults.min);
+    if (priceMax !== defaults.max) setPriceMax(defaults.max);
+  }
 
   const { low, high } = useMemo(() => {
-    const poseR = POSE_RANGES[pose];
+    const baseMin = customize ? priceMin : POSE_RANGES[pose].min;
+    const baseMax = customize ? priceMax : POSE_RANGES[pose].max;
     const sup = projet === "renovation" ? SUPPORT_EXTRA[support] : { min: 0, max: 0 };
     // Neuf bénéficie d'une légère décote (pas d'enlèvement/protection existant).
     const neufFactor = projet === "neuf" ? 0.92 : 1;
     const safeSurface = Math.max(1, surface);
     return {
-      low: (poseR.min + sup.min) * safeSurface * neufFactor,
-      high: (poseR.max + sup.max) * safeSurface * neufFactor,
+      low: (baseMin + sup.min) * safeSurface * neufFactor,
+      high: (Math.max(baseMax, baseMin) + sup.max) * safeSurface * neufFactor,
     };
-  }, [projet, pose, surface, support]);
+  }, [projet, pose, surface, support, customize, priceMin, priceMax]);
 
   // Build a plain query string so /contact can prefill later without
   // forcing a typed search schema on the route.
