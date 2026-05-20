@@ -86,7 +86,8 @@ function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
     const parsed = contactSchema.safeParse({
       nom: fd.get("nom"),
       email: fd.get("email"),
@@ -103,6 +104,12 @@ function ContactPage() {
       });
       setErrors(fe);
       toast.error("Merci de corriger les champs en rouge.");
+      // Move focus to the first invalid field for keyboard / SR users.
+      const firstKey = Object.keys(fe)[0];
+      if (firstKey) {
+        const el = form.querySelector<HTMLElement>(`[name="${firstKey}"]`);
+        el?.focus();
+      }
       return;
     }
     setErrors({});
@@ -184,51 +191,108 @@ function ContactPage() {
           <form
             onSubmit={handleSubmit}
             noValidate
+            aria-labelledby="contact-form-title"
             className="lg:col-span-8 rounded-3xl border border-border bg-card p-6 shadow-warm sm:p-10"
           >
+            <h2 id="contact-form-title" className="sr-only">
+              Formulaire de contact Parqueto
+            </h2>
+            <p className="mb-6 text-xs text-muted-foreground">
+              Les champs marqués d'un <span className="text-brand-orange" aria-hidden>*</span>{" "}
+              <span className="sr-only">astérisque</span> sont obligatoires.
+            </p>
+
+            {/* Live region — announces validation errors to screen readers */}
+            <div
+              role="alert"
+              aria-live="assertive"
+              aria-atomic="true"
+              className={`${
+                Object.keys(errors).length > 0
+                  ? "mb-5 rounded-xl border border-destructive/40 bg-destructive/5 p-3"
+                  : "sr-only"
+              }`}
+            >
+              {Object.keys(errors).length > 0 && (
+                <>
+                  <p className="text-sm font-medium text-destructive">
+                    {Object.keys(errors).length} champ
+                    {Object.keys(errors).length > 1 ? "s" : ""} à corriger :
+                  </p>
+                  <ul className="mt-1 list-disc pl-5 text-xs text-destructive">
+                    {Object.entries(errors).map(([k, v]) => (
+                      <li key={k}>{v}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
+
             <div className="grid gap-5 sm:grid-cols-2">
               <Field label="Nom" name="nom" error={errors.nom} required autoComplete="name" />
               <Field label="Email" name="email" type="email" error={errors.email} required autoComplete="email" />
-              <Field label="Téléphone" name="telephone" type="tel" placeholder="Optionnel" error={errors.telephone} autoComplete="tel" />
+              <Field label="Téléphone" name="telephone" type="tel" placeholder="Optionnel" error={errors.telephone} autoComplete="tel" hint="Optionnel" />
               <Field label="Ville" name="ville" error={errors.ville} required autoComplete="address-level2" />
             </div>
 
-            <fieldset className="mt-6">
+            <fieldset
+              className="mt-6"
+              aria-invalid={!!errors.projet}
+              aria-describedby={errors.projet ? "projet-error" : undefined}
+            >
               <legend className="mb-2 text-sm font-medium text-foreground">
-                Type de projet <span className="text-brand-orange">*</span>
+                Type de projet <span className="text-brand-orange" aria-hidden>*</span>
+                <span className="sr-only"> (obligatoire)</span>
               </legend>
-              <div className="flex flex-wrap gap-2">
+              <div role="radiogroup" aria-label="Type de projet" className="flex flex-wrap gap-2">
                 {PROJET_OPTIONS.map((opt) => (
                   <label
                     key={opt}
-                    className="cursor-pointer rounded-full border border-border bg-background px-4 py-2 text-sm text-foreground transition hover:border-brand-orange/50 has-[:checked]:border-brand-orange has-[:checked]:bg-brand-orange has-[:checked]:text-primary-foreground"
+                    className="group cursor-pointer rounded-full border border-border bg-background px-4 py-2 text-sm text-foreground transition hover:border-brand-orange/50 has-[:checked]:border-brand-orange has-[:checked]:bg-brand-orange has-[:checked]:text-primary-foreground has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-orange has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background"
                   >
-                    <input type="radio" name="projet" value={opt} className="sr-only" />
+                    <input
+                      type="radio"
+                      name="projet"
+                      value={opt}
+                      className="sr-only"
+                    />
                     {opt}
                   </label>
                 ))}
               </div>
               {errors.projet && (
-                <p className="mt-2 text-xs text-destructive">{errors.projet}</p>
+                <p id="projet-error" className="mt-2 text-xs text-destructive">
+                  {errors.projet}
+                </p>
               )}
             </fieldset>
 
             <div className="mt-6">
               <label htmlFor="message" className="mb-2 block text-sm font-medium">
-                Votre message <span className="text-brand-orange">*</span>
+                Votre message <span className="text-brand-orange" aria-hidden>*</span>
+                <span className="sr-only"> (obligatoire)</span>
               </label>
               <textarea
                 id="message"
                 name="message"
                 rows={5}
                 maxLength={2000}
+                required
+                aria-required="true"
+                aria-invalid={!!errors.message}
+                aria-describedby={errors.message ? "message-error" : "message-hint"}
                 placeholder="Décrivez brièvement votre projet : surface, état actuel, délais souhaités…"
-                className={`w-full resize-y rounded-xl border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-brand-orange/30 ${
+                className={`w-full resize-y rounded-xl border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   errors.message ? "border-destructive" : "border-border"
                 }`}
               />
+              <p id="message-hint" className="mt-1.5 text-xs text-muted-foreground">
+                2000 caractères maximum.
+              </p>
               {errors.message && (
-                <p className="mt-2 text-xs text-destructive">{errors.message}</p>
+                <p id="message-error" className="mt-1.5 text-xs text-destructive">
+                  {errors.message}
+                </p>
               )}
             </div>
 
