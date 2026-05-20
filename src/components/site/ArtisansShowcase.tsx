@@ -1,4 +1,5 @@
 import { MapPin, Star, ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import a1 from "@/assets/artisan-1.jpg";
 import a2 from "@/assets/artisan-2.jpg";
 import a3 from "@/assets/artisan-3.jpg";
