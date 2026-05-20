@@ -119,94 +119,257 @@ function loadContact(): ContactInput {
   }
 }
 
+// ---------- Lien devis (encodage URL) ----------
+const QUOTE_PARAM = "devis";
+
+function encodeQuote(state: EstimateState): string {
+  try {
+    const payload = JSON.stringify(state);
+    // base64url safe
+    return btoa(unescape(encodeURIComponent(payload)))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  } catch {
+    return "";
+  }
+}
+
+function decodeQuote(token: string): Partial<EstimateState> | null {
+  try {
+    const b64 = token.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = b64 + "===".slice((b64.length + 3) % 4);
+    const json = decodeURIComponent(escape(atob(padded)));
+    const parsed = JSON.parse(json);
+    if (parsed && typeof parsed === "object") return parsed as Partial<EstimateState>;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function buildQuoteLink(state: EstimateState): string {
+  const token = encodeQuote(state);
+  if (typeof window === "undefined") return `https://parqueto.fr/?${QUOTE_PARAM}=${token}#estimate`;
+  const base = `${window.location.origin}${window.location.pathname}`;
+  return `${base}?${QUOTE_PARAM}=${token}#estimate`;
+}
+
 // ---------- Génération PDF ----------
-type Totals = { min: number; max: number; surface: number; perimetre: number; plinthesCost: number; seuilsCost: number };
+type Totals = {
+  min: number;
+  max: number;
+  surface: number;
+  perimetre: number;
+  plinthesCost: number;
+  seuilsCost: number;
+  laborMin: number;
+  laborMax: number;
+};
 
 function buildQuoteDoc(state: EstimateState, totals: Totals, contact?: ContactInput) {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const W = 210;
-  let y = 18;
+  const M = 14;
+  const RIGHT = W - M;
+  let y = 14;
 
+  // Bandeau haut
   doc.setFillColor(232, 93, 58);
-  doc.rect(0, 0, W, 10, "F");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
-  doc.setTextColor(20, 20, 20);
-  doc.text("Parqueto", 14, y + 4);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
-  doc.setTextColor(110);
-  doc.text("Devis indicatif — parquet artisanal", 14, y + 10);
-  doc.text(new Date().toLocaleDateString("fr-FR"), W - 14, y + 10, { align: "right" });
-
-  y += 22;
-  doc.setDrawColor(230);
-  doc.line(14, y, W - 14, y);
+  doc.rect(0, 0, W, 6, "F");
   y += 8;
 
-  if (contact && contact.nom) {
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
-    doc.setTextColor(20);
-    doc.text("Client", 14, y);
-    y += 6;
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(60);
-    doc.text(contact.nom, 14, y); y += 5;
-    if (contact.email) { doc.text(contact.email, 14, y); y += 5; }
-    if (contact.telephone) { doc.text(`Tél. ${contact.telephone}`, 14, y); y += 5; }
-    if (contact.cp) { doc.text(`Code postal ${contact.cp}`, 14, y); y += 5; }
-    y += 4;
+  // En-tête : marque + référence + date
+  const ref = `PQ-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+  doc.setTextColor(20);
+  doc.text("Parqueto", M, y);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(120);
+  doc.text("Estimation parquet artisanal", M, y + 5);
+
+  doc.setFontSize(9);
+  doc.setTextColor(60);
+  doc.text(`Devis ${ref}`, RIGHT, y, { align: "right" });
+  doc.setTextColor(120);
+  doc.text(new Date().toLocaleDateString("fr-FR"), RIGHT, y + 5, { align: "right" });
+  doc.text("Validité 30 jours", RIGHT, y + 10, { align: "right" });
+
+  y += 16;
+  doc.setDrawColor(232, 93, 58);
+  doc.setLineWidth(0.6);
+  doc.line(M, y, RIGHT, y);
+  doc.setLineWidth(0.2);
+  y += 8;
+
+  // Bloc Client / Pour
+  const colW = (RIGHT - M - 6) / 2;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(110);
+  doc.text("ÉMETTEUR", M, y);
+  doc.text("CLIENT", M + colW + 6, y);
+  y += 5;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(30);
+  doc.text("Parqueto", M, y);
+  doc.text("contact@parqueto.fr", M, y + 5);
+  doc.text("parqueto.fr", M, y + 10);
+
+  const cx = M + colW + 6;
+  if (contact && (contact.nom || contact.email)) {
+    if (contact.nom) doc.text(contact.nom, cx, y);
+    if (contact.email) doc.text(contact.email, cx, y + 5);
+    let cy = y + 10;
+    if (contact.telephone) { doc.text(`Tél. ${contact.telephone}`, cx, cy); cy += 5; }
+    if (contact.cp) doc.text(`Code postal ${contact.cp}`, cx, cy);
+  } else {
+    doc.setTextColor(150);
+    doc.text("À compléter", cx, y);
+    doc.setTextColor(30);
   }
 
+  y += 22;
+
+  // Section Projet
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.setTextColor(20);
-  doc.text("Projet", 14, y);
-  y += 7;
+  doc.text("Descriptif du projet", M, y);
+  y += 6;
+
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
-  doc.setTextColor(60);
-
   const rows: [string, string][] = [
     ["Prestation", services[state.service].label],
     ["Type de parquet", types[state.type].label],
     ["État actuel", etats[state.etat].label],
     ["Dimensions", `${state.longueur} × ${state.largeur} m`],
     ["Surface", `${fmtNum(totals.surface)} m²`],
+    ["Périmètre", `${fmtNum(totals.perimetre)} ml`],
   ];
-  if (state.plinthes) rows.push(["Plinthes", `${fmtNum(totals.perimetre)} ml — ${fmt(totals.plinthesCost)} €`]);
-  if (state.seuils > 0) rows.push(["Seuils", `${state.seuils} — ${fmt(totals.seuilsCost)} €`]);
 
-  rows.forEach(([k, v]) => {
-    doc.setTextColor(110); doc.text(k, 14, y);
-    doc.setTextColor(20); doc.text(v, 70, y);
+  rows.forEach(([k, v], i) => {
+    if (i % 2 === 0) {
+      doc.setFillColor(248, 246, 242);
+      doc.rect(M, y - 4, RIGHT - M, 6, "F");
+    }
+    doc.setTextColor(110); doc.text(k, M + 2, y);
+    doc.setTextColor(20); doc.text(v, M + 60, y);
     y += 6;
   });
 
   y += 6;
-  doc.setFillColor(255, 245, 240);
-  doc.roundedRect(14, y, W - 28, 26, 3, 3, "F");
+
+  // Détail chiffré
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(20);
+  doc.text("Détail estimatif", M, y);
+  y += 6;
+
+  // En-têtes colonnes
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(110);
+  doc.text("LIGNE", M + 2, y);
+  doc.text("MIN", RIGHT - 40, y, { align: "right" });
+  doc.text("MAX", RIGHT - 2, y, { align: "right" });
+  y += 2;
+  doc.setDrawColor(220);
+  doc.line(M, y, RIGHT, y);
+  y += 5;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+
+  const lineItems: { label: string; min: number; max: number }[] = [
+    {
+      label: `${services[state.service].label} · ${types[state.type].label}`,
+      min: totals.laborMin,
+      max: totals.laborMax,
+    },
+  ];
+  if (state.plinthes) {
+    lineItems.push({
+      label: `Plinthes (${fmtNum(totals.perimetre)} ml × ${PLINTHE_PRICE} €)`,
+      min: totals.plinthesCost,
+      max: totals.plinthesCost,
+    });
+  }
+  if (state.seuils > 0) {
+    lineItems.push({
+      label: `Seuils (${state.seuils} × ${SEUIL_PRICE} €)`,
+      min: totals.seuilsCost,
+      max: totals.seuilsCost,
+    });
+  }
+
+  lineItems.forEach(({ label, min, max }) => {
+    doc.setTextColor(40);
+    const wrapped = doc.splitTextToSize(label, RIGHT - M - 90);
+    doc.text(wrapped, M + 2, y);
+    doc.setTextColor(20);
+    doc.text(`${fmt(min)} €`, RIGHT - 40, y, { align: "right" });
+    doc.text(`${fmt(max)} €`, RIGHT - 2, y, { align: "right" });
+    y += Math.max(6, wrapped.length * 5);
+  });
+
+  y += 2;
+  doc.setDrawColor(220);
+  doc.line(M, y, RIGHT, y);
+  y += 6;
+
+  // Total / Fourchette
+  doc.setFillColor(255, 244, 238);
+  doc.roundedRect(M, y, RIGHT - M, 22, 3, 3, "F");
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
   doc.setTextColor(232, 93, 58);
-  doc.text("FOURCHETTE ESTIMÉE", 20, y + 8);
-  doc.setFontSize(18);
+  doc.text("FOURCHETTE TOTALE TTC", M + 4, y + 7);
+  doc.setFontSize(17);
   doc.setTextColor(20);
-  doc.text(`${fmt(totals.min)} – ${fmt(totals.max)} € TTC`, 20, y + 18);
-  y += 34;
+  doc.text(`${fmt(totals.min)} – ${fmt(totals.max)} €`, RIGHT - 4, y + 14, { align: "right" });
+  y += 28;
 
+  // Lien devis
+  const link = buildQuoteLink(state);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(110);
+  doc.text("RETROUVER CE DEVIS EN LIGNE", M, y);
+  y += 5;
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(8);
-  doc.setTextColor(120);
-  const note =
-    "Estimation indicative générée à titre informatif, hors fournitures spécifiques. Un devis définitif sera établi après visite technique. Validité 30 jours.";
-  const split = doc.splitTextToSize(note, W - 28);
-  doc.text(split, 14, y);
+  doc.setFontSize(9);
+  doc.setTextColor(232, 93, 58);
+  const linkLines = doc.splitTextToSize(link, RIGHT - M);
+  doc.textWithLink(linkLines[0], M, y, { url: link });
+  if (linkLines.length > 1) {
+    for (let i = 1; i < linkLines.length; i++) {
+      y += 4;
+      doc.textWithLink(linkLines[i], M, y, { url: link });
+    }
+  }
+  y += 8;
 
+  // Note bas
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(8);
+  doc.setTextColor(130);
+  const note =
+    "Estimation indicative générée à titre informatif, hors fournitures spécifiques. Un devis définitif sera établi après visite technique sur place. Validité 30 jours à compter de la date d'émission.";
+  const split = doc.splitTextToSize(note, RIGHT - M);
+  doc.text(split, M, y);
+
+  // Pied de page
+  doc.setFont("helvetica", "normal");
   doc.setTextColor(160);
-  doc.text("contact@parqueto.fr · parqueto.fr", 14, 287);
+  doc.setFontSize(8);
+  doc.text("contact@parqueto.fr  ·  parqueto.fr", M, 287);
+  doc.text(ref, RIGHT, 287, { align: "right" });
 
   return doc;
 }
@@ -221,38 +384,61 @@ function buildShareText(state: EstimateState, totals: Totals) {
     `${types[state.type].label} · ${etats[state.etat].label}`,
     `Surface : ${fmtNum(totals.surface)} m²${state.plinthes ? " · plinthes" : ""}${state.seuils > 0 ? ` · ${state.seuils} seuil(s)` : ""}`,
     `Fourchette estimée : ${fmt(totals.min)} – ${fmt(totals.max)} € TTC`,
-    `Demandez le vôtre sur parqueto.fr`,
+    ``,
+    `Voir le devis : ${buildQuoteLink(state)}`,
   ].join("\n");
 }
 
-async function shareQuote(state: EstimateState, totals: Totals, contact?: ContactInput) {
+type ShareResult = "shared" | "copied" | "aborted" | "unsupported" | "error";
+
+async function shareQuote(state: EstimateState, totals: Totals, contact?: ContactInput): Promise<ShareResult> {
   const text = buildShareText(state, totals);
   const title = "Mon devis Parqueto";
+  const url = buildQuoteLink(state);
+
+  const copyFallback = async (): Promise<ShareResult> => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return "copied";
+      }
+      return "unsupported";
+    } catch {
+      return "error";
+    }
+  };
+
+  if (typeof navigator === "undefined" || typeof navigator.share !== "function") {
+    return copyFallback();
+  }
+
+  // 1) Tentative avec PDF en pièce jointe (mobile compatibles)
   try {
     const doc = buildQuoteDoc(state, totals, contact);
     const blob = doc.output("blob");
     const file = new File([blob], `devis-parqueto.pdf`, { type: "application/pdf" });
     const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean };
-    if (nav.canShare && nav.canShare({ files: [file] })) {
-      await navigator.share({ title, text, files: [file] });
+    if (nav.canShare?.({ files: [file] })) {
+      await navigator.share({ title, text, url, files: [file] });
       return "shared";
     }
-    if (typeof navigator.share === "function") {
-      await navigator.share({ title, text });
-      return "shared";
-    }
-    await navigator.clipboard.writeText(text);
-    return "copied";
   } catch (err) {
-    if ((err as DOMException)?.name === "AbortError") return "aborted";
-    try {
-      await navigator.clipboard.writeText(text);
-      return "copied";
-    } catch {
-      return "error";
-    }
+    const name = (err as DOMException)?.name;
+    if (name === "AbortError") return "aborted";
+    // NotAllowedError, DataError, TypeError → on retombe sur le partage texte
+  }
+
+  // 2) Partage texte + URL (sans fichier)
+  try {
+    await navigator.share({ title, text, url });
+    return "shared";
+  } catch (err) {
+    const name = (err as DOMException)?.name;
+    if (name === "AbortError") return "aborted";
+    return copyFallback();
   }
 }
+
 
 // ---------- Composant ----------
 export function Estimator() {
