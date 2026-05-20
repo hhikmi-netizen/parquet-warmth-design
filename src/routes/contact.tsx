@@ -440,39 +440,55 @@ function ContactPage() {
 
               <div
                 role="button"
-                tabIndex={0}
-                aria-label="Zone de dépôt de photos"
+                tabIndex={filesFull ? -1 : 0}
+                aria-label={filesFull ? `Limite de ${MAX_FILES} photos atteinte` : "Zone de dépôt de photos"}
                 aria-describedby="photos-hint"
-                onClick={() => fileInput.current?.click()}
+                aria-disabled={filesFull}
+                onClick={() => {
+                  if (filesFull) {
+                    toast.error(`Limite atteinte : ${MAX_FILES} photos maximum.`);
+                    return;
+                  }
+                  fileInput.current?.click();
+                }}
                 onKeyDown={(e) => {
+                  if (filesFull) return;
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     fileInput.current?.click();
                   }
                 }}
-                onDragEnter={onDragEnter}
-                onDragOver={onDragOver}
-                onDragLeave={onDragLeave}
-                onDrop={onDrop}
-                className={`flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-8 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
-                  isDragging
-                    ? "border-brand-orange bg-brand-orange/5 text-brand-orange scale-[1.01]"
-                    : "border-border bg-background text-muted-foreground hover:border-brand-orange/40 hover:text-brand-orange"
+                onDragEnter={filesFull ? undefined : onDragEnter}
+                onDragOver={filesFull ? undefined : onDragOver}
+                onDragLeave={filesFull ? undefined : onDragLeave}
+                onDrop={filesFull ? (e) => { e.preventDefault(); toast.error(`Limite atteinte : ${MAX_FILES} photos maximum.`); } : onDrop}
+                className={`flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-8 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                  filesFull
+                    ? "cursor-not-allowed border-border bg-muted/40 text-muted-foreground opacity-70"
+                    : isDragging
+                    ? "cursor-pointer border-brand-orange bg-brand-orange/5 text-brand-orange scale-[1.01]"
+                    : "cursor-pointer border-border bg-background text-muted-foreground hover:border-brand-orange/40 hover:text-brand-orange"
                 }`}
               >
                 <span
                   className={`inline-flex h-10 w-10 items-center justify-center rounded-full transition ${
-                    isDragging ? "bg-brand-orange text-primary-foreground" : "bg-card text-brand-orange shadow-soft"
+                    isDragging && !filesFull ? "bg-brand-orange text-primary-foreground" : "bg-card text-brand-orange shadow-soft"
                   }`}
                 >
-                  {isDragging ? <ImagePlus className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
+                  {isDragging && !filesFull ? <ImagePlus className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
                 </span>
                 <span className="font-medium text-foreground">
-                  {isDragging ? "Déposez pour ajouter" : "Glissez vos photos ici"}
+                  {filesFull
+                    ? `Limite de ${MAX_FILES} photos atteinte`
+                    : isDragging
+                    ? "Déposez pour ajouter"
+                    : "Glissez vos photos ici"}
                 </span>
-                <span className="text-xs">
-                  ou <span className="underline underline-offset-2">cliquez pour parcourir</span>
-                </span>
+                {!filesFull && (
+                  <span className="text-xs">
+                    ou <span className="underline underline-offset-2">cliquez pour parcourir</span>
+                  </span>
+                )}
               </div>
 
               <input
