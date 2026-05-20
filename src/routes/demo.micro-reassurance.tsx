@@ -73,7 +73,7 @@ function DemoPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
       <div className="mx-auto max-w-5xl px-6 py-16">
         <Link to="/" className="text-sm text-muted-foreground hover:text-brand-orange">
           ← Retour à l'accueil

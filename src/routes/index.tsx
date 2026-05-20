@@ -31,7 +31,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
       <Header />
         <Hero />
         <Promise />
