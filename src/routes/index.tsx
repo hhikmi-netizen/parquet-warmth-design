@@ -122,9 +122,12 @@ function Index() {
       <Hero />
       <Promise />
       <AssistantTeaser />
+      <AtelierVideo />
       <Process />
+      <MotionTechnique />
       <ArtisansShowcase />
       <RealisationsTeaser />
+      <BrandFilm />
       <SocialProof />
       <Partners />
       <FinalCTA />
