@@ -89,6 +89,7 @@ export function Footer() {
             <li><Link to="/devenir-artisan" className="hover:text-brand-orange">Devenir artisan partenaire</Link></li>
             <li><Link to="/artisan-verifie" className="hover:text-brand-orange">Badge Artisan Vérifié</Link></li>
             <li><Link to="/confrerie-du-parquet" className="hover:text-brand-orange">La Confrérie du Parquet</Link></li>
+            <li>
               <Link
                 to="/pro"
                 className="inline-flex items-center gap-1.5 font-semibold text-brand-orange hover:text-brand-orange-deep"
