@@ -50,7 +50,8 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function PostPage() {
-  const { post } = Route.useLoaderData();
+  const { post } = Route.useLoaderData() as { post: import("@/lib/blog-posts").BlogPost };
+
   const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   const articleJsonLd = {
