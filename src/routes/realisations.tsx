@@ -9,6 +9,11 @@ import renoMosaique from "@/assets/reno-mosaique.jpg";
 import renoDamierLight from "@/assets/reno-damier-light.jpg";
 import renoPoseChevron from "@/assets/reno-pose-chevron.jpg";
 import parquetAncien from "@/assets/parquet-ancien.jpg";
+import renoPhoto1 from "@/assets/reno-photo-1.jpg";
+import renoPhoto2 from "@/assets/reno-photo-2.jpg";
+import renoPhoto3 from "@/assets/reno-photo-3.jpg";
+import renoPhoto4 from "@/assets/reno-photo-4.jpg";
+import renoPhoto5 from "@/assets/reno-photo-5.jpg";
 
 export const Route = createFileRoute("/realisations")({
   component: RealisationsPage,
@@ -28,6 +33,11 @@ export const Route = createFileRoute("/realisations")({
 });
 
 const projects = [
+  { img: renoPhoto1, title: "Bâtons rompus chêne rénové", city: "Île-de-France", tag: "Ponçage + finition mate" },
+  { img: renoPhoto2, title: "Vitrification brillante exotique", city: "Île-de-France", tag: "Application vitrificateur" },
+  { img: renoPhoto3, title: "Lames larges chêne huilé", city: "Île-de-France", tag: "Pose collée + huile naturelle" },
+  { img: renoPhoto4, title: "Mosaïque chêne avant / après", city: "Île-de-France", tag: "Ponçage en cours" },
+  { img: renoPhoto5, title: "Mosaïque huile Blanchon", city: "Île-de-France", tag: "Huile parquet incolore" },
   { img: renoDamierLight, title: "Damier chêne clair", city: "Île-de-France", tag: "Vitrification mate UV" },
   { img: renoDamier, title: "Damier mosaïque haussmannien", city: "Paris", tag: "Rénovation + finition mate" },
   { img: renoHongrie, title: "Point de Hongrie restauré", city: "Île-de-France", tag: "Ponçage + huile dure" },
