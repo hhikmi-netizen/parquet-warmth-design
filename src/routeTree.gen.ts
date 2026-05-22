@@ -61,6 +61,7 @@ import { Route as AdminGuideRouteImport } from './routes/admin.guide'
 import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminArtisansRouteImport } from './routes/admin.artisans'
 import { Route as AuthenticatedProRouteImport } from './routes/_authenticated/pro'
+import { Route as AuthenticatedMonProjetRouteImport } from './routes/_authenticated/mon-projet'
 import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
@@ -335,6 +336,11 @@ const AuthenticatedProRoute = AuthenticatedProRouteImport.update({
   path: '/pro',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedMonProjetRoute = AuthenticatedMonProjetRouteImport.update({
+  id: '/mon-projet',
+  path: '/mon-projet',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
   id: '/messages',
   path: '/messages',
@@ -436,6 +442,7 @@ export interface FileRoutesByFullPath {
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
   '/messages': typeof AuthenticatedMessagesRoute
+  '/mon-projet': typeof AuthenticatedMonProjetRoute
   '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
@@ -499,6 +506,7 @@ export interface FileRoutesByTo {
   '/devis': typeof AuthenticatedDevisRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
   '/messages': typeof AuthenticatedMessagesRoute
+  '/mon-projet': typeof AuthenticatedMonProjetRoute
   '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
@@ -566,6 +574,7 @@ export interface FileRoutesById {
   '/_authenticated/devis': typeof AuthenticatedDevisRoute
   '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
   '/_authenticated/messages': typeof AuthenticatedMessagesRoute
+  '/_authenticated/mon-projet': typeof AuthenticatedMonProjetRoute
   '/_authenticated/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
@@ -633,6 +642,7 @@ export interface FileRouteTypes {
     | '/devis'
     | '/historique'
     | '/messages'
+    | '/mon-projet'
     | '/pro'
     | '/admin/artisans'
     | '/admin/clients'
@@ -696,6 +706,7 @@ export interface FileRouteTypes {
     | '/devis'
     | '/historique'
     | '/messages'
+    | '/mon-projet'
     | '/pro'
     | '/admin/artisans'
     | '/admin/clients'
@@ -762,6 +773,7 @@ export interface FileRouteTypes {
     | '/_authenticated/devis'
     | '/_authenticated/historique'
     | '/_authenticated/messages'
+    | '/_authenticated/mon-projet'
     | '/_authenticated/pro'
     | '/admin/artisans'
     | '/admin/clients'
@@ -1201,6 +1213,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/mon-projet': {
+      id: '/_authenticated/mon-projet'
+      path: '/mon-projet'
+      fullPath: '/mon-projet'
+      preLoaderRoute: typeof AuthenticatedMonProjetRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/messages': {
       id: '/_authenticated/messages'
       path: '/messages'
@@ -1311,6 +1330,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDevisRoute: typeof AuthenticatedDevisRoute
   AuthenticatedHistoriqueRoute: typeof AuthenticatedHistoriqueRoute
   AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
+  AuthenticatedMonProjetRoute: typeof AuthenticatedMonProjetRoute
   AuthenticatedProRoute: typeof AuthenticatedProRouteWithChildren
 }
 
@@ -1318,6 +1338,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDevisRoute: AuthenticatedDevisRoute,
   AuthenticatedHistoriqueRoute: AuthenticatedHistoriqueRoute,
   AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
+  AuthenticatedMonProjetRoute: AuthenticatedMonProjetRoute,
   AuthenticatedProRoute: AuthenticatedProRouteWithChildren,
 }
 
