@@ -284,24 +284,27 @@ function UpsellCard({
 
 function ResourceLink({
   to,
+  params,
   kicker,
   title,
   text,
 }: {
   to: string;
+  params?: Record<string, string>;
   kicker: string;
   title: string;
   text: string;
 }) {
   return (
     <Link
-      to={to}
+      to={to as never}
+      params={params as never}
       className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition hover:border-brand-orange/40 hover:bg-brand-orange/5"
     >
       <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-orange">
         {kicker}
       </p>
-      <h3 className="mt-2 font-display text-lg text-brand-ink">{title}</h3>
+      <h3 className="mt-2 font-display text-lg text-brand-ink" dangerouslySetInnerHTML={{ __html: title }} />
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
       <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-brand-orange-deep">
         Lire l'article <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
