@@ -11,6 +11,10 @@ import { FinalCTA } from "@/components/site/FinalCTA";
 import { Footer } from "@/components/site/Footer";
 import { MobileStickyCTA } from "@/components/site/MobileStickyCTA";
 import { AssistantTeaser } from "@/components/site/AssistantTeaser";
+import { AtelierVideo } from "@/components/site/AtelierVideo";
+import { MotionTechnique } from "@/components/site/MotionTechnique";
+import { BrandFilm } from "@/components/site/BrandFilm";
+import { videoObjectSchema } from "@/lib/video-schema";
 import beforeAfter from "@/assets/before-after.jpg";
 import detail from "@/assets/detail-wood.jpg";
 import hero from "@/assets/hero-parquet.jpg";
@@ -49,6 +53,15 @@ export const Route = createFileRoute("/")({
           },
         }),
       },
+      videoObjectSchema({
+        name: "Parqueto — Le parquet, sans détour",
+        description:
+          "Film de marque Parqueto : estimation parquet en ligne, assistant IA, et réseau d'artisans parqueteurs vérifiés en France.",
+        thumbnailUrl: "https://parqueto.fr/og-image.jpg",
+        uploadDate: "2026-05-22",
+        contentUrl: "https://parqueto.fr/videos/parqueto-spot.mp4",
+        duration: "PT21S",
+      }),
     ],
   }),
 });
@@ -109,9 +122,12 @@ function Index() {
       <Hero />
       <Promise />
       <AssistantTeaser />
+      <AtelierVideo />
       <Process />
+      <MotionTechnique />
       <ArtisansShowcase />
       <RealisationsTeaser />
+      <BrandFilm />
       <SocialProof />
       <Partners />
       <FinalCTA />
