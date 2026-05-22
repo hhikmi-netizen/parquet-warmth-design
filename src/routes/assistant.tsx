@@ -8,21 +8,39 @@ export const Route = createFileRoute("/assistant")({
   component: AssistantPage,
   head: () => ({
     meta: [
-      { title: "Assistant Parqueto — analyse visuelle de votre parquet" },
+      { title: "Assistant IA Parqueto — première IA française d'analyse parquet en photo" },
       {
         name: "description",
         content:
-          "Analysez votre parquet à partir d'une photo, identifiez l'état, l'usure et obtenez des recommandations adaptées. Outil métier, lecture indicative, à confirmer par un parqueteur.",
+          "Assistant IA Parqueto : la première intelligence artificielle française dédiée au parquet. Analysez une photo de votre sol, identifiez l'essence, la finition, l'usure et obtenez une recommandation (ponçage, vitrification, rénovation après dégât des eaux). Outil métier, photo non conservée.",
       },
-      { property: "og:title", content: "Assistant Parqueto — analyse visuelle" },
+      { property: "og:title", content: "Assistant IA Parqueto — analyse parquet en photo" },
       {
         property: "og:description",
         content:
-          "Une photo, une lecture indicative : essence, finition, usure, recommandations. Outil métier discret, pensé pour les particuliers.",
+          "Première IA française spécialisée parquet. Une photo, une lecture : essence, finition, usure, recommandation. Gratuit, sans inscription.",
       },
       { property: "og:url", content: "/assistant" },
     ],
     links: [{ rel: "canonical", href: "/assistant" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "Assistant IA Parqueto",
+          applicationCategory: "UtilitiesApplication",
+          operatingSystem: "Web",
+          description:
+            "Première intelligence artificielle française dédiée à l'analyse de parquet en photo : identification de l'essence, de la finition, de l'usure et recommandation d'intervention (ponçage, vitrification, rénovation après dégât des eaux).",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+          inLanguage: "fr-FR",
+          url: "/assistant",
+          publisher: { "@type": "Organization", name: "Parqueto" },
+        }),
+      },
+    ],
   }),
 });
 
