@@ -15,19 +15,38 @@ import { Toaster } from "@/components/ui/sonner";
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+      <div className="max-w-lg text-center">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">Erreur 404</p>
+        <h1 className="mt-3 font-display text-6xl text-foreground sm:text-7xl">Page introuvable</h1>
+        <p className="mt-4 text-sm text-muted-foreground">
+          La page que vous cherchez n'existe pas, a été déplacée ou n'est plus disponible.
+          Continuez votre visite via les raccourcis ci-dessous.
         </p>
-        <div className="mt-6">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-full bg-brand-orange px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-warm transition hover:-translate-y-0.5 hover:bg-brand-orange-deep"
           >
-            Go home
+            Retour à l'accueil
           </Link>
+          <Link
+            to="/estimation"
+            className="inline-flex items-center justify-center rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-brand-orange/40 hover:text-brand-orange"
+          >
+            Estimer mon projet
+          </Link>
+          <Link
+            to="/guide"
+            className="inline-flex items-center justify-center rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-brand-orange/40 hover:text-brand-orange"
+          >
+            Le guide du parquet
+          </Link>
+        </div>
+        <div className="mt-8 grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:grid-cols-4">
+          <Link to="/realisations" className="hover:text-brand-orange">Réalisations</Link>
+          <Link to="/artisans" className="hover:text-brand-orange">Nos artisans</Link>
+          <Link to="/teintes" className="hover:text-brand-orange">Teintes</Link>
+          <Link to="/blog" className="hover:text-brand-orange">Blog</Link>
         </div>
       </div>
     </div>
