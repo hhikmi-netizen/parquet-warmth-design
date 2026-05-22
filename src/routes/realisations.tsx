@@ -28,11 +28,10 @@ export const Route = createFileRoute("/realisations")({
 });
 
 const projects = [
-  { img: hero, title: "Chevron chêne en grand salon", city: "Île-de-France", tag: "Pose chevron · vitrification" },
+  { img: renoDamierLight, title: "Damier chêne clair", city: "Île-de-France", tag: "Vitrification mate UV" },
   { img: renoDamier, title: "Damier mosaïque haussmannien", city: "Paris", tag: "Rénovation + finition mate" },
   { img: renoHongrie, title: "Point de Hongrie restauré", city: "Île-de-France", tag: "Ponçage + huile dure" },
   { img: renoMosaique, title: "Mosaïque blanche lumineuse", city: "Île-de-France", tag: "Pose collée + vitrification" },
-  { img: renoDamierLight, title: "Damier chêne clair", city: "Île-de-France", tag: "Vitrification mate UV" },
   { img: renoPoseChevron, title: "Chevron rénové sur ancien", city: "Île-de-France", tag: "Dépose + repose collée" },
   { img: parquetAncien, title: "Parquet ancien revitalisé", city: "Île-de-France", tag: "Ponçage + finition naturelle" },
 ];
