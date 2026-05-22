@@ -170,6 +170,103 @@ export const CITIES: ParquetoCity[] = [
     codePostalPrincipal: "67000",
     geo: { lat: 48.5734, lng: 7.7521 },
   },
+  // ───────── Communes premium Île-de-France (fort pouvoir d'achat) ─────────
+  {
+    slug: "neuilly-sur-seine",
+    name: "Neuilly-sur-Seine",
+    region: "Île-de-France (Hauts-de-Seine)",
+    population: "59 000 habitants",
+    quartiers: ["Sablons", "Saint-James", "Bagatelle", "Pasteur", "Madrid", "Île de la Jatte"],
+    contexte:
+      "Neuilly est l'une des communes les plus huppées de France. Hôtels particuliers, immeubles haussmanniens cossus et appartements de standing exigent un parquet d'excellence : Versailles, point de Hongrie large, chêne sélection Première ou massif vieilli. Les artisans y travaillent souvent en relation avec architectes d'intérieur et décorateurs.",
+    tarifIndicatif: "75 à 140 €/m²",
+    codePostalPrincipal: "92200",
+    geo: { lat: 48.8846, lng: 2.2696 },
+  },
+  {
+    slug: "boulogne-billancourt",
+    name: "Boulogne-Billancourt",
+    region: "Île-de-France (Hauts-de-Seine)",
+    population: "121 000 habitants",
+    quartiers: ["Centre-ville", "Parchamp-Albert Kahn", "Billancourt", "Île Seguin", "Silly-Gallieni", "Les Princes-Marmottan"],
+    contexte:
+      "Boulogne mêle immeubles Art déco classés (Mallet-Stevens, Le Corbusier), résidences haussmanniennes du centre et programmes neufs haut de gamme de l'Île Seguin. La rénovation Art déco demande un savoir-faire pointu (parquets mosaïque, marqueterie d'origine).",
+    tarifIndicatif: "65 à 115 €/m²",
+    codePostalPrincipal: "92100",
+    geo: { lat: 48.8356, lng: 2.2412 },
+  },
+  {
+    slug: "levallois-perret",
+    name: "Levallois-Perret",
+    region: "Île-de-France (Hauts-de-Seine)",
+    population: "65 000 habitants",
+    quartiers: ["Mairie", "Front de Seine", "Eiffel", "Anatole France", "Wilson", "Trébois"],
+    contexte:
+      "Levallois affiche la densité la plus forte d'Europe et un parc immobilier majoritairement post-1990 très qualitatif. Le contrecollé chêne large (180-220 mm) en pose collée domine, avec une forte demande pour les finitions huilées invisibles et les essences blondes.",
+    tarifIndicatif: "62 à 105 €/m²",
+    codePostalPrincipal: "92300",
+    geo: { lat: 48.8939, lng: 2.2877 },
+  },
+  {
+    slug: "antony",
+    name: "Antony",
+    region: "Île-de-France (Hauts-de-Seine)",
+    population: "63 000 habitants",
+    quartiers: ["Centre", "Parc de Sceaux", "Vallée", "Pajeaud", "Fontaine-Michalon", "La Croix-de-Berny"],
+    contexte:
+      "Antony, au sud des Hauts-de-Seine, attire familles CSP+ et cadres en quête de maisons des années 30 et pavillons rénovés. Le marché y est très porteur sur la rénovation complète : ponçage et vitrification de parquets chêne anciens, pose de massif clouée dans les maisons bourgeoises.",
+    tarifIndicatif: "55 à 95 €/m²",
+    codePostalPrincipal: "92160",
+    geo: { lat: 48.7539, lng: 2.2978 },
+  },
+  {
+    slug: "saint-cloud",
+    name: "Saint-Cloud",
+    region: "Île-de-France (Hauts-de-Seine)",
+    population: "30 000 habitants",
+    quartiers: ["Centre", "Coteaux", "Montretout", "Val d'Or", "Hippodrome", "Pasteur"],
+    contexte:
+      "Saint-Cloud, perchée sur les coteaux face à Paris, est l'une des communes les plus aisées d'Île-de-France. Hôtels particuliers, demeures bourgeoises et immeubles de standing y abritent des parquets d'origine (chêne massif, point de Hongrie) que les propriétaires veulent restaurer dans les règles de l'art.",
+    tarifIndicatif: "70 à 125 €/m²",
+    codePostalPrincipal: "92210",
+    geo: { lat: 48.8456, lng: 2.2089 },
+  },
+  {
+    slug: "versailles",
+    name: "Versailles",
+    region: "Île-de-France (Yvelines)",
+    population: "85 000 habitants",
+    quartiers: ["Notre-Dame", "Saint-Louis", "Montreuil", "Clagny-Glatigny", "Chantiers", "Porchefontaine"],
+    contexte:
+      "Versailles, c'est la patrie du parquet Versailles — panneaux d'art posés au Château dès le XVIIᵉ. La ville conserve une demande très haut de gamme : restauration de panneaux Versailles, pose neuve en point de Hongrie chêne massif, finitions traditionnelles à la cire ou à l'huile dure.",
+    tarifIndicatif: "70 à 140 €/m²",
+    codePostalPrincipal: "78000",
+    geo: { lat: 48.8014, lng: 2.1301 },
+  },
+  {
+    slug: "vincennes",
+    name: "Vincennes",
+    region: "Île-de-France (Val-de-Marne)",
+    population: "49 000 habitants",
+    quartiers: ["Centre", "Cœuilly", "Diderot", "République", "Bois", "Domaine du Bois"],
+    contexte:
+      "Vincennes, en lisière du Bois, est l'une des communes les plus prisées de l'Est parisien. Immeubles haussmanniens, Art déco et résidences récentes y accueillent une clientèle CSP+ exigeante : pose de contrecollé large chêne, restauration de parquets anciens en chevron.",
+    tarifIndicatif: "60 à 105 €/m²",
+    codePostalPrincipal: "94300",
+    geo: { lat: 48.8476, lng: 2.4385 },
+  },
+  {
+    slug: "saint-mande",
+    name: "Saint-Mandé",
+    region: "Île-de-France (Val-de-Marne)",
+    population: "23 000 habitants",
+    quartiers: ["Mairie", "Tourelle", "Alouette", "Faidherbe", "Bois"],
+    contexte:
+      "Saint-Mandé, micro-commune ultra-recherchée collée au Bois de Vincennes, affiche l'un des prix au m² les plus élevés d'Île-de-France. Le bâti haussmannien et Art déco abrite des parquets d'origine que les propriétaires souhaitent préserver : ponçage doux, finition huile naturelle, restauration de mosaïques.",
+    tarifIndicatif: "65 à 115 €/m²",
+    codePostalPrincipal: "94160",
+    geo: { lat: 48.8413, lng: 2.4192 },
+  },
 ];
 
 export function getCityBySlug(slug: string): ParquetoCity | undefined {
