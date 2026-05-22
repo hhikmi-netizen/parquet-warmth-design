@@ -203,25 +203,37 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          j2_sent_at: string | null
+          j7_sent_at: string | null
           name: string | null
           opt_in: boolean
+          segment: string | null
           source: string | null
+          unsubscribed_at: string | null
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
+          j2_sent_at?: string | null
+          j7_sent_at?: string | null
           name?: string | null
           opt_in?: boolean
+          segment?: string | null
           source?: string | null
+          unsubscribed_at?: string | null
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
+          j2_sent_at?: string | null
+          j7_sent_at?: string | null
           name?: string | null
           opt_in?: boolean
+          segment?: string | null
           source?: string | null
+          unsubscribed_at?: string | null
         }
         Relationships: []
       }
@@ -409,6 +421,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      tracking_events: {
+        Row: {
+          created_at: string
+          event: string
+          id: string
+          meta: Json | null
+          path: string | null
+          referrer: string | null
+          segment: string | null
+          session_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event: string
+          id?: string
+          meta?: Json | null
+          path?: string | null
+          referrer?: string | null
+          segment?: string | null
+          session_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event?: string
+          id?: string
+          meta?: Json | null
+          path?: string | null
+          referrer?: string | null
+          segment?: string | null
+          session_id?: string | null
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
