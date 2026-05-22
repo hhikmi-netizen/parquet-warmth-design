@@ -27,9 +27,11 @@ import { Route as EstimationRouteImport } from './routes/estimation'
 import { Route as DevenirArtisanRouteImport } from './routes/devenir-artisan'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as ConfrerieDuParquetRouteImport } from './routes/confrerie-du-parquet'
 import { Route as CharteQualiteRouteImport } from './routes/charte-qualite'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as ArtisansRouteImport } from './routes/artisans'
+import { Route as ArtisanVerifieRouteImport } from './routes/artisan-verifie'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
@@ -154,6 +156,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfrerieDuParquetRoute = ConfrerieDuParquetRouteImport.update({
+  id: '/confrerie-du-parquet',
+  path: '/confrerie-du-parquet',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CharteQualiteRoute = CharteQualiteRouteImport.update({
   id: '/charte-qualite',
   path: '/charte-qualite',
@@ -167,6 +174,11 @@ const BlogRoute = BlogRouteImport.update({
 const ArtisansRoute = ArtisansRouteImport.update({
   id: '/artisans',
   path: '/artisans',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtisanVerifieRoute = ArtisanVerifieRouteImport.update({
+  id: '/artisan-verifie',
+  path: '/artisan-verifie',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -344,9 +356,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
   '/admin': typeof AdminRouteWithChildren
+  '/artisan-verifie': typeof ArtisanVerifieRoute
   '/artisans': typeof ArtisansRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
+  '/confrerie-du-parquet': typeof ConfrerieDuParquetRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
@@ -398,9 +412,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/artisan-verifie': typeof ArtisanVerifieRoute
   '/artisans': typeof ArtisansRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
+  '/confrerie-du-parquet': typeof ConfrerieDuParquetRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
@@ -455,9 +471,11 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/a-propos': typeof AProposRoute
   '/admin': typeof AdminRouteWithChildren
+  '/artisan-verifie': typeof ArtisanVerifieRoute
   '/artisans': typeof ArtisansRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
+  '/confrerie-du-parquet': typeof ConfrerieDuParquetRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
@@ -512,9 +530,11 @@ export interface FileRouteTypes {
     | '/'
     | '/a-propos'
     | '/admin'
+    | '/artisan-verifie'
     | '/artisans'
     | '/blog'
     | '/charte-qualite'
+    | '/confrerie-du-parquet'
     | '/contact'
     | '/design-system'
     | '/devenir-artisan'
@@ -566,9 +586,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/a-propos'
+    | '/artisan-verifie'
     | '/artisans'
     | '/blog'
     | '/charte-qualite'
+    | '/confrerie-du-parquet'
     | '/contact'
     | '/design-system'
     | '/devenir-artisan'
@@ -622,9 +644,11 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/a-propos'
     | '/admin'
+    | '/artisan-verifie'
     | '/artisans'
     | '/blog'
     | '/charte-qualite'
+    | '/confrerie-du-parquet'
     | '/contact'
     | '/design-system'
     | '/devenir-artisan'
@@ -679,9 +703,11 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AProposRoute: typeof AProposRoute
   AdminRoute: typeof AdminRouteWithChildren
+  ArtisanVerifieRoute: typeof ArtisanVerifieRoute
   ArtisansRoute: typeof ArtisansRoute
   BlogRoute: typeof BlogRouteWithChildren
   CharteQualiteRoute: typeof CharteQualiteRoute
+  ConfrerieDuParquetRoute: typeof ConfrerieDuParquetRoute
   ContactRoute: typeof ContactRoute
   DesignSystemRoute: typeof DesignSystemRoute
   DevenirArtisanRoute: typeof DevenirArtisanRouteWithChildren
@@ -836,6 +862,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/confrerie-du-parquet': {
+      id: '/confrerie-du-parquet'
+      path: '/confrerie-du-parquet'
+      fullPath: '/confrerie-du-parquet'
+      preLoaderRoute: typeof ConfrerieDuParquetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/charte-qualite': {
       id: '/charte-qualite'
       path: '/charte-qualite'
@@ -855,6 +888,13 @@ declare module '@tanstack/react-router' {
       path: '/artisans'
       fullPath: '/artisans'
       preLoaderRoute: typeof ArtisansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artisan-verifie': {
+      id: '/artisan-verifie'
+      path: '/artisan-verifie'
+      fullPath: '/artisan-verifie'
+      preLoaderRoute: typeof ArtisanVerifieRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -1195,9 +1235,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AProposRoute: AProposRoute,
   AdminRoute: AdminRouteWithChildren,
+  ArtisanVerifieRoute: ArtisanVerifieRoute,
   ArtisansRoute: ArtisansRoute,
   BlogRoute: BlogRouteWithChildren,
   CharteQualiteRoute: CharteQualiteRoute,
+  ConfrerieDuParquetRoute: ConfrerieDuParquetRoute,
   ContactRoute: ContactRoute,
   DesignSystemRoute: DesignSystemRoute,
   DevenirArtisanRoute: DevenirArtisanRouteWithChildren,

@@ -9,6 +9,8 @@ import {
   ArrowRight,
   CheckCircle2,
   Phone,
+  MapPin,
+  Euro,
 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -18,80 +20,106 @@ export const Route = createFileRoute("/renovation-sinistre")({
   component: SinistrePage,
   head: () => ({
     meta: [
-      { title: "Rénovation parquet après sinistre — dégât des eaux, incendie · Parqueto" },
+      {
+        title:
+          "Dégât des eaux parquet — devis assurance parquet sous 24 h · Parqueto",
+      },
       {
         name: "description",
         content:
-          "Parquet gondolé, taché ou brûlé après un sinistre ? Estimation rapide, artisan vérifié, dossier compatible assurance. Intervention sous 48 h en Île-de-France.",
+          "Parquet gondolé après un dégât des eaux ? Devis parquet pour assurance, rapport photo daté, artisan parqueteur vérifié. Intervention 48 h en Île-de-France. Estimation gratuite.",
       },
-      { property: "og:title", content: "Rénovation parquet après sinistre · Parqueto" },
+      {
+        name: "keywords",
+        content:
+          "dégât des eaux parquet, devis assurance parquet, devis parquet suite dégât des eaux, parquet gondolé assurance, rénovation parquet sinistre, expertise parquet assurance, remise en état parquet, parquet brûlé incendie, artisan parqueteur assurance, devis parqueteur Paris, parquet ancien rénovation",
+      },
+      { property: "og:title", content: "Dégât des eaux parquet — devis assurance sous 24 h · Parqueto" },
       {
         property: "og:description",
         content:
-          "Dégât des eaux, incendie, fuite : on cadre votre dossier, on vous oriente vers un artisan vérifié, on documente pour votre assurance.",
+          "Devis parquet compatible assurance, rapport photo daté, artisan vérifié. Premier retour en 24 h ouvrées.",
       },
       { property: "og:image", content: sinistreImg },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: "/renovation-sinistre" },
     ],
+    links: [{ rel: "canonical", href: "/renovation-sinistre" }],
   }),
 });
 
 const TYPES = [
   {
     icon: Droplets,
-    title: "Dégât des eaux",
-    body: "Fuite, infiltration, inondation : lames gondolées, tuilage, taches noires. Diagnostic d'humidité, dépose des zones atteintes, séchage et repose à l'identique.",
+    title: "Dégât des eaux & parquet gondolé",
+    body:
+      "Fuite chaudière, machine à laver, infiltration toiture, voisin du dessus, inondation : lames gondolées, tuilage, taches noires d'humidité. Diagnostic d'hygrométrie, dépose des zones atteintes, séchage profond et repose à l'identique — chêne massif, contrecollé, point de Hongrie ou bâtons rompus.",
   },
   {
     icon: Flame,
-    title: "Incendie & fumée",
-    body: "Brûlures de surface, dépôts de suie, vernis altéré. Ponçage profond, traitement antifumée, nouvelle finition compatible avec l'essence d'origine.",
+    title: "Parquet brûlé — incendie & fumée",
+    body:
+      "Brûlures de surface, dépôts de suie, vernis altéré, odeur persistante. Ponçage profond, traitement antifumée professionnel, nouvelle finition (huile dure, vitrification mat ou satinée) compatible avec l'essence d'origine.",
   },
   {
     icon: AlertTriangle,
-    title: "Choc, rayures, taches",
-    body: "Élément de mobilier tombé, produit corrosif, animal. Reprise localisée, raccord d'essence et de teinte, vitrification de la zone.",
+    title: "Choc, rayures profondes, taches",
+    body:
+      "Mobilier tombé, produit corrosif, brûlure de cigarette, animal. Reprise localisée, raccord d'essence et de teinte, vitrification de la zone — invisible dans la majorité des cas.",
   },
 ];
 
 const STEPS = [
   {
     n: "01",
-    title: "Constat & photos",
-    body: "Vous nous décrivez le sinistre en 2 minutes via l'estimateur, photos comprises. On vous répond sous 24 h ouvrées.",
+    title: "Constat & photos (2 min)",
+    body:
+      "Vous décrivez le sinistre via l'estimateur en ligne, photos comprises. Réponse Parqueto en moins de 24 h ouvrées avec une première fourchette de prix indicative.",
   },
   {
     n: "02",
     title: "Diagnostic sur place",
-    body: "L'artisan partenaire mesure l'humidité, identifie l'essence et la finition d'origine, chiffre la remise en état.",
+    body:
+      "L'artisan parqueteur partenaire mesure l'humidité du support, identifie l'essence et la finition d'origine, chiffre la remise en état au mètre carré.",
   },
   {
     n: "03",
-    title: "Devis & rapport assurance",
-    body: "Devis détaillé ligne par ligne + rapport photo daté, directement transmissible à votre assureur ou expert.",
+    title: "Devis parquet assurance",
+    body:
+      "Devis détaillé ligne par ligne + rapport photo daté + descriptif technique. Document directement transmissible à votre assureur ou à l'expert mandaté, sans rien re-saisir.",
   },
   {
     n: "04",
-    title: "Chantier & garantie",
-    body: "Dépose, séchage, repose, finition. Travaux couverts par la décennale de l'artisan, suivi Parqueto jusqu'à réception.",
+    title: "Chantier & garantie décennale",
+    body:
+      "Dépose, séchage contrôlé, repose, ponçage et finition. Travaux couverts par la décennale de l'artisan, suivi Parqueto jusqu'à réception du chantier.",
   },
 ];
 
 const FAQ = [
   {
-    q: "Mon assurance prend-elle en charge la rénovation ?",
-    a: "Dans la majorité des cas oui : dégât des eaux, incendie et catastrophe naturelle sont couverts par la multirisque habitation. Notre devis détaillé est conçu pour être directement transmis à votre assureur ou à l'expert mandaté.",
+    q: "Mon assurance prend-elle en charge la rénovation du parquet après un dégât des eaux ?",
+    a: "Oui dans la grande majorité des cas. Les contrats multirisque habitation couvrent le dégât des eaux, l'incendie et les catastrophes naturelles. Notre devis assurance parquet est conçu pour être transmis directement à votre assureur ou à l'expert : il détaille chaque poste (dépose, séchage, fourniture, pose, ponçage, finition) au mètre carré, conformément aux barèmes d'expertise courants (convention IRSI).",
   },
   {
-    q: "Faut-il déposer tout le parquet ou seulement la zone abîmée ?",
-    a: "Tout dépend de l'étendue du sinistre, du type de pose (collée, clouée, flottante) et de l'essence. L'artisan privilégie toujours la reprise localisée quand c'est techniquement possible, pour limiter le coût et préserver le caractère du parquet d'origine.",
+    q: "Combien coûte un devis parquet suite à un dégât des eaux ?",
+    a: "Le devis Parqueto est gratuit et sans engagement. Le coût des travaux varie selon la surface atteinte (40 à 90 €/m² pour une reprise localisée, 90 à 180 €/m² pour une dépose-repose complète avec fourniture). L'assurance rembourse généralement la vétusté déduite — notre rapport vous aide à argumenter en cas de litige.",
   },
   {
-    q: "Combien de temps pour intervenir après un sinistre ?",
-    a: "Premier retour en moins de 24 h ouvrées. Diagnostic sur place sous 48 à 72 h en Île-de-France. La durée du chantier varie selon le séchage nécessaire (souvent 7 à 14 jours pour un dégât des eaux).",
+    q: "Faut-il déposer tout le parquet ou seulement la zone abîmée par l'eau ?",
+    a: "L'artisan privilégie toujours la reprise localisée quand c'est techniquement possible : c'est moins coûteux et cela préserve le caractère du parquet d'origine. La dépose totale s'impose quand le tuilage dépasse 30 % de la pièce, quand le support (chape, lambourdes) est gorgé d'eau, ou quand l'essence n'est plus reproductible en raccord.",
   },
   {
-    q: "Et si l'essence d'origine n'existe plus ?",
-    a: "Nos artisans disposent d'un stock de lames anciennes (chêne massif, bâtons rompus, point de Hongrie) et savent rattraper les teintes par mélange d'huiles ou vitrification teintée. Un raccord invisible est presque toujours possible.",
+    q: "Combien de temps pour intervenir après un sinistre parquet ?",
+    a: "Premier retour Parqueto en moins de 24 h ouvrées. Diagnostic sur place sous 48 à 72 h en Île-de-France (Paris 75, Hauts-de-Seine 92, Seine-Saint-Denis 93, Val-de-Marne 94). La durée du chantier dépend du temps de séchage nécessaire — comptez 7 à 21 jours pour un dégât des eaux avec dépose-repose.",
+  },
+  {
+    q: "Et si l'essence d'origine de mon parquet ancien n'existe plus ?",
+    a: "Nos artisans parqueteurs disposent d'un stock de lames anciennes (chêne massif, châtaignier, point de Hongrie, bâtons rompus, parquet de Versailles) et savent rattraper les teintes par mélange d'huiles, teinture ou vitrification teintée. Un raccord invisible est presque toujours possible, même sur un parquet d'avant 1950.",
+  },
+  {
+    q: "Parqueto intervient-il en urgence pour un parquet inondé ?",
+    a: "Oui. Pour un parquet inondé, contactez-nous d'abord par téléphone via la page contact. Nous mobilisons un artisan partenaire pour un diagnostic d'urgence sous 24 à 48 h en Île-de-France, afin d'engager le séchage avant que les lames ne se déforment davantage.",
   },
 ];
 
@@ -107,23 +135,27 @@ function SinistrePage() {
           <div className="lg:col-span-6 lg:pt-6">
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-orange" />
-              Service spécialisé · Sinistre
+              Service spécialisé · Sinistre assurance
             </span>
             <h1 className="mt-6 font-display text-4xl leading-[1.05] text-balance sm:text-5xl lg:text-6xl">
-              Parquet abîmé après un sinistre ?
-              <span className="block italic text-brand-orange">On le remet en état.</span>
+              Dégât des eaux sur votre parquet ?
+              <span className="block italic text-brand-orange">Devis assurance sous 24 h.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-              Dégât des eaux, incendie, fuite, choc : un artisan parqueteur vérifié intervient,
-              chiffre, documente — et vous transmet un dossier compatible assurance. Premier retour
-              sous 24 h ouvrées.
+              Parquet gondolé, taché, brûlé ou inondé : un{" "}
+              <strong className="font-semibold text-foreground">artisan parqueteur vérifié</strong>{" "}
+              intervient, chiffre et vous remet un{" "}
+              <strong className="font-semibold text-foreground">
+                devis parquet compatible assurance
+              </strong>{" "}
+              avec rapport photo daté. Premier retour en moins de 24 h ouvrées, intervention en Île-de-France.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
                 to="/estimation"
                 className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
               >
-                Lancer mon dossier sinistre
+                Obtenir mon devis assurance gratuit
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
@@ -131,14 +163,14 @@ function SinistrePage() {
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-3 text-sm font-semibold text-foreground transition hover:border-brand-orange/40 hover:text-brand-orange"
               >
                 <Phone className="h-4 w-4" />
-                Urgence : nous joindre
+                Urgence parquet inondé
               </Link>
             </div>
             <ul className="mt-8 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
-              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-orange" /> Réponse en moins de 24 h</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-orange" /> Devis détaillé pour l'assureur</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-orange" /> Réponse en moins de 24 h ouvrées</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-orange" /> Devis détaillé pour assurance</li>
               <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-orange" /> Artisans couverts décennale</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-orange" /> Reprise localisée si possible</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-orange" /> Compatible convention IRSI</li>
             </ul>
           </div>
 
@@ -146,15 +178,42 @@ function SinistrePage() {
             <div className="relative overflow-hidden rounded-2xl shadow-warm">
               <img
                 src={sinistreImg}
-                alt="Parquet en chêne gondolé après un dégât des eaux — lames soulevées par l'humidité"
+                alt="Parquet en chêne gondolé après un dégât des eaux, lames soulevées par l'humidité — cas type pris en charge par Parqueto pour devis assurance"
                 className="aspect-[4/5] w-full object-cover"
                 width={1200}
                 height={1500}
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent p-5 text-background">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em]">Cas réel</p>
-                <p className="mt-1 font-display text-xl">Parquet chêne gondolé — dégât des eaux</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em]">Cas réel · Île-de-France</p>
+                <p className="mt-1 font-display text-xl">Parquet chêne gondolé après fuite chaudière</p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick reassurance band — AEO friendly */}
+      <section className="border-b border-border bg-secondary/50 py-8">
+        <div className="mx-auto grid max-w-7xl gap-6 px-6 sm:grid-cols-3">
+          <div className="flex items-start gap-3">
+            <Clock className="mt-0.5 h-5 w-5 text-brand-orange" />
+            <div>
+              <p className="font-display text-sm">Réponse 24 h ouvrées</p>
+              <p className="text-xs text-muted-foreground">Diagnostic sur place sous 48–72 h</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <Euro className="mt-0.5 h-5 w-5 text-brand-orange" />
+            <div>
+              <p className="font-display text-sm">Devis gratuit, sans engagement</p>
+              <p className="text-xs text-muted-foreground">Transmissible à votre assureur</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <MapPin className="mt-0.5 h-5 w-5 text-brand-orange" />
+            <div>
+              <p className="font-display text-sm">Île-de-France (75, 92, 93, 94)</p>
+              <p className="text-xs text-muted-foreground">Paris et 1ère couronne</p>
             </div>
           </div>
         </div>
@@ -165,11 +224,16 @@ function SinistrePage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
-              Types de sinistre
+              Types de sinistre parquet
             </p>
             <h2 className="mt-3 font-display text-3xl sm:text-4xl">
-              Trois familles, <span className="italic text-brand-orange">trois protocoles.</span>
+              Dégât des eaux, incendie, choc :{" "}
+              <span className="italic text-brand-orange">trois protocoles.</span>
             </h2>
+            <p className="mt-4 text-muted-foreground">
+              Chaque type de sinistre demande une approche technique différente. Nos artisans parqueteurs
+              partenaires sont formés à la remise en état après assurance — du diagnostic au procès-verbal de réception.
+            </p>
           </div>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {TYPES.map((t) => (
@@ -194,10 +258,11 @@ function SinistrePage() {
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div className="max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
-                Notre process
+                Notre process sinistre
               </p>
               <h2 className="mt-3 font-display text-3xl sm:text-4xl">
-                Du constat à la <span className="italic text-brand-orange">remise en état.</span>
+                Du constat à la{" "}
+                <span className="italic text-brand-orange">remise en état.</span>
               </h2>
             </div>
             <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
@@ -230,12 +295,14 @@ function SinistrePage() {
               </div>
               <div>
                 <h2 className="font-display text-2xl sm:text-3xl">
-                  Un dossier prêt pour votre assureur
+                  Besoin d'un devis parquet pour votre assurance&nbsp;?
                 </h2>
                 <p className="mt-3 text-muted-foreground">
-                  Chaque intervention sinistre livre un devis détaillé ligne par ligne, un rapport
-                  photo daté et un descriptif technique. Vous transmettez le tout en l'état à votre
-                  assureur ou à l'expert mandaté — sans rien re-saisir.
+                  Chaque intervention sinistre livre un{" "}
+                  <strong className="text-foreground">devis détaillé ligne par ligne</strong>, un
+                  rapport photo daté et un descriptif technique. Vous transmettez le tout en l'état à
+                  votre assureur (MAIF, MAAF, Allianz, AXA, Groupama, MACIF, Matmut…) ou à l'expert
+                  mandaté — sans rien re-saisir, sans relance.
                 </p>
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
                   <div className="flex items-start gap-2 text-sm">
@@ -244,11 +311,11 @@ function SinistrePage() {
                   </div>
                   <div className="flex items-start gap-2 text-sm">
                     <ShieldCheck className="mt-0.5 h-4 w-4 text-brand-orange" />
-                    <span>Diagnostic d'humidité avant toute repose</span>
+                    <span>Diagnostic d'humidité (hygromètre) avant toute repose</span>
                   </div>
                   <div className="flex items-start gap-2 text-sm">
                     <ShieldCheck className="mt-0.5 h-4 w-4 text-brand-orange" />
-                    <span>Compatibilité avec les barèmes d'expertise courants</span>
+                    <span>Compatibilité barèmes IRSI &amp; expertise courants</span>
                   </div>
                   <div className="flex items-start gap-2 text-sm">
                     <ShieldCheck className="mt-0.5 h-4 w-4 text-brand-orange" />
@@ -264,7 +331,12 @@ function SinistrePage() {
       {/* FAQ */}
       <section className="border-t border-border bg-secondary/30 py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <h2 className="font-display text-3xl sm:text-4xl">Questions fréquentes</h2>
+          <h2 className="font-display text-3xl sm:text-4xl">
+            Dégât des eaux parquet : vos questions
+          </h2>
+          <p className="mt-3 text-muted-foreground">
+            Les réponses concrètes que nos clients posent le plus souvent avant de lancer un devis sinistre.
+          </p>
           <div className="mt-8 divide-y divide-border rounded-2xl border border-border bg-card">
             {FAQ.map((f) => (
               <details key={f.q} className="group p-6">
@@ -276,18 +348,43 @@ function SinistrePage() {
             ))}
           </div>
 
-          {/* FAQ JSON-LD */}
+          {/* FAQ + Service JSON-LD */}
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
                 "@context": "https://schema.org",
-                "@type": "FAQPage",
-                mainEntity: FAQ.map((f) => ({
-                  "@type": "Question",
-                  name: f.q,
-                  acceptedAnswer: { "@type": "Answer", text: f.a },
-                })),
+                "@graph": [
+                  {
+                    "@type": "FAQPage",
+                    mainEntity: FAQ.map((f) => ({
+                      "@type": "Question",
+                      name: f.q,
+                      acceptedAnswer: { "@type": "Answer", text: f.a },
+                    })),
+                  },
+                  {
+                    "@type": "Service",
+                    serviceType: "Rénovation parquet après sinistre",
+                    name: "Devis parquet assurance — dégât des eaux, incendie",
+                    provider: {
+                      "@type": "Organization",
+                      name: "Parqueto",
+                      url: "https://parqueto.fr",
+                    },
+                    areaServed: [
+                      { "@type": "AdministrativeArea", name: "Île-de-France" },
+                      { "@type": "City", name: "Paris" },
+                    ],
+                    offers: {
+                      "@type": "Offer",
+                      price: "0",
+                      priceCurrency: "EUR",
+                      description:
+                        "Devis parquet compatible assurance, rapport photo daté, premier retour sous 24 h ouvrées.",
+                    },
+                  },
+                ],
               }),
             }}
           />
@@ -298,18 +395,19 @@ function SinistrePage() {
       <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-4xl px-6 text-center">
           <h2 className="font-display text-3xl text-balance sm:text-4xl">
-            Votre parquet a souffert ? <span className="italic text-brand-orange">On s'en occupe.</span>
+            Votre parquet a souffert ?{" "}
+            <span className="italic text-brand-orange">On s'en occupe.</span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-            Décrivez votre sinistre en 2 minutes, ajoutez vos photos. Un artisan partenaire
-            reprend contact sous 24 h.
+            Décrivez votre dégât des eaux ou sinistre en 2 minutes, ajoutez vos photos. Un artisan
+            partenaire reprend contact sous 24 h ouvrées avec un devis assurance.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               to="/estimation"
               className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
             >
-              Démarrer mon dossier
+              Lancer mon devis assurance
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link

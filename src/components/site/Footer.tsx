@@ -85,7 +85,10 @@ export function Footer() {
           <h4 className="font-display text-base">Pros & artisans</h4>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             <li><Link to="/estimation" className="hover:text-brand-orange">Estimer un projet</Link></li>
+            <li><Link to="/renovation-sinistre" className="hover:text-brand-orange">Dégât des eaux · devis assurance</Link></li>
             <li><Link to="/devenir-artisan" className="hover:text-brand-orange">Devenir artisan partenaire</Link></li>
+            <li><Link to="/artisan-verifie" className="hover:text-brand-orange">Badge Artisan Vérifié</Link></li>
+            <li><Link to="/confrerie-du-parquet" className="hover:text-brand-orange">La Confrérie du Parquet</Link></li>
             <li>
               <Link
                 to="/pro"
