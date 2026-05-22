@@ -46,6 +46,7 @@ import { Route as AdminNotificationsRouteImport } from './routes/admin.notificat
 import { Route as AdminMonetisationRouteImport } from './routes/admin.monetisation'
 import { Route as AdminModerationRouteImport } from './routes/admin.moderation'
 import { Route as AdminLogsRouteImport } from './routes/admin.logs'
+import { Route as AdminGuideRouteImport } from './routes/admin.guide'
 import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminArtisansRouteImport } from './routes/admin.artisans'
 import { Route as AuthenticatedProRouteImport } from './routes/_authenticated/pro'
@@ -245,6 +246,11 @@ const AdminLogsRoute = AdminLogsRouteImport.update({
   path: '/logs',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminGuideRoute = AdminGuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminClientsRoute = AdminClientsRouteImport.update({
   id: '/clients',
   path: '/clients',
@@ -344,6 +350,7 @@ export interface FileRoutesByFullPath {
   '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/moderation': typeof AdminModerationRoute
   '/admin/monetisation': typeof AdminMonetisationRoute
@@ -394,6 +401,7 @@ export interface FileRoutesByTo {
   '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/moderation': typeof AdminModerationRoute
   '/admin/monetisation': typeof AdminMonetisationRoute
@@ -447,6 +455,7 @@ export interface FileRoutesById {
   '/_authenticated/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/moderation': typeof AdminModerationRoute
   '/admin/monetisation': typeof AdminMonetisationRoute
@@ -500,6 +509,7 @@ export interface FileRouteTypes {
     | '/pro'
     | '/admin/artisans'
     | '/admin/clients'
+    | '/admin/guide'
     | '/admin/logs'
     | '/admin/moderation'
     | '/admin/monetisation'
@@ -550,6 +560,7 @@ export interface FileRouteTypes {
     | '/pro'
     | '/admin/artisans'
     | '/admin/clients'
+    | '/admin/guide'
     | '/admin/logs'
     | '/admin/moderation'
     | '/admin/monetisation'
@@ -602,6 +613,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pro'
     | '/admin/artisans'
     | '/admin/clients'
+    | '/admin/guide'
     | '/admin/logs'
     | '/admin/moderation'
     | '/admin/monetisation'
@@ -918,6 +930,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLogsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/guide': {
+      id: '/admin/guide'
+      path: '/guide'
+      fullPath: '/admin/guide'
+      preLoaderRoute: typeof AdminGuideRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/clients': {
       id: '/admin/clients'
       path: '/clients'
@@ -1050,6 +1069,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminArtisansRoute: typeof AdminArtisansRoute
   AdminClientsRoute: typeof AdminClientsRoute
+  AdminGuideRoute: typeof AdminGuideRoute
   AdminLogsRoute: typeof AdminLogsRoute
   AdminModerationRoute: typeof AdminModerationRoute
   AdminMonetisationRoute: typeof AdminMonetisationRoute
@@ -1062,6 +1082,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminArtisansRoute: AdminArtisansRoute,
   AdminClientsRoute: AdminClientsRoute,
+  AdminGuideRoute: AdminGuideRoute,
   AdminLogsRoute: AdminLogsRoute,
   AdminModerationRoute: AdminModerationRoute,
   AdminMonetisationRoute: AdminMonetisationRoute,
