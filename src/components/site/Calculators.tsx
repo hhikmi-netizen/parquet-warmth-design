@@ -642,7 +642,7 @@ function DiagnosticTool() {
 
 // --- Budget travaux -------------------------------------------------------
 // Fourchettes indicatives TTC (€/m²), pose + fournitures standard.
-// Sources : ordres de grandeur métier 2024-2025 marché parisien/IDF.
+// Sources : ordres de grandeur métier 2025-2026 marché parisien/IDF.
 type BudgetProjet = "neuf" | "renovation";
 type BudgetPose = "flottante" | "collee" | "massif";
 type BudgetSupport = "plat" | "moquette" | "ragreage";

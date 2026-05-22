@@ -26,7 +26,7 @@ export const GUIDE_FAQ: FaqItem[] = [
     a: "Aspirateur avec brosse douce chaque semaine, serpillère bien essorée + produit pH neutre. Jamais de vapeur, javel, vinaigre pur ni eau stagnante. Une fois par an, appliquer un produit d'entretien adapté à la finition.",
   },
   {
-    q: "Quel est le prix moyen d'un parquet posé en 2025 ?",
+    q: "Quel est le prix moyen d'un parquet posé en 2026 ?",
     a: "Comptez à partir de 60 €/m² pose comprise pour un contrecollé chêne entrée de gamme, et 90 €/m² minimum pour un parquet massif. Le coût total inclut le matériau, la préparation du support, la pose, les plinthes et la finition.",
   },
   {
