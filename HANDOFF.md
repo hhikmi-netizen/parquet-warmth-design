@@ -284,6 +284,7 @@ export const createLead = createServerFn({ method: "POST" })
 - [ ] Tests E2E des flows critiques : estimation, signup artisan, accept lead
 - [ ] Lighthouse mobile ≥ 90 sur `/` et `/estimation`
 - [ ] Tests RLS via `supabase--linter`
+- [ ] **Brancher l'Assistant Parqueto IA** (voir §13)
 
 ---
 
@@ -296,5 +297,99 @@ Avant de coder **quoi que ce soit** :
 4. Chercher si un composant Pq* existe déjà avant d'en créer un nouveau.
 5. Respecter la convention mobile-first du §6.
 6. Pour toute logique serveur : §7 (server functions, pas Edge Functions).
+
+---
+
+## 13. Assistant Parqueto IA — état & branchement
+
+**État actuel : UI complète, IA non branchée (mock visuel).**
+
+### Ce qui existe déjà
+- **Teaser homepage** : `src/components/site/AssistantTeaser.tsx`
+  - Affiche un résultat d'analyse **simulé** (chêne européen / vitrifiée mate / usure modérée — valeurs fixes).
+  - CTA vers `/assistant`.
+- **Page dédiée** : `src/routes/assistant.tsx` → `src/components/assistant/AssistantExperience.tsx` (538 lignes)
+  - Upload drag & drop + caméra mobile (preview via `URL.createObjectURL`, jamais envoyé).
+  - Animation de scan + barre de progression sur 5 étapes (3,8 s, factice via `setInterval`).
+  - Panneau résultats riche : essence probable, finition, pose, 4 signaux (rayures / humidité / tuilage / support), 3 recommandations, urgence estimée, ring de confiance (78%).
+  - **Toutes les valeurs sortent de la constante `MOCK_RESULT`** en haut du fichier (lignes ~30-80).
+  - Disclaimer en pied : *« lecture indicative, photo non conservée »* + CTA `/estimation`.
+
+### Décision produit (2026-05-22)
+On **garde** l'UI mockée telle quelle. Pas de fausse promesse côté texte : le disclaimer suffit. L'IA sera branchée plus tard via **Claude (Anthropic) ou OpenRouter**, choix utilisateur.
+
+### Comment brancher l'IA (TODO prochaine itération)
+
+**Option A — Lovable AI Gateway (zéro clé, recommandé pour MVP)**
+- Modèles vision : `google/gemini-2.5-flash` (gratuit jusqu'à fin oct. 2025), `google/gemini-2.5-pro`, `openai/gpt-5*`.
+- Aucun secret à demander à l'utilisateur.
+
+**Option B — Claude direct (Anthropic API)**
+- Modèle vision : `claude-sonnet-4` ou `claude-opus-4`.
+- Secret requis : `ANTHROPIC_API_KEY` (via `add_secret`).
+
+**Option C — OpenRouter (multi-modèles)**
+- Secret requis : `OPENROUTER_API_KEY`.
+- Switch facile entre Claude / GPT / Gemini sans changer le code.
+
+**Étapes communes :**
+
+1. Créer `src/lib/assistant.functions.ts` :
+   ```ts
+   export const analyzeParquetPhoto = createServerFn({ method: "POST" })
+     .inputValidator((d) => z.object({
+       imageBase64: z.string().min(100).max(15_000_000), // ~10 Mo b64
+       mimeType: z.enum(["image/jpeg", "image/png", "image/webp"]),
+     }).parse(d))
+     .handler(async ({ data }) => {
+       // appel API vision (Lovable / Claude / OpenRouter)
+       // prompt système : expert parqueteur, ton prudent,
+       //   sortie JSON structurée matchant MOCK_RESULT
+       // ⚠️ NE PAS STOCKER la photo (respect du disclaimer UI)
+       return parsedResult; // même shape que MOCK_RESULT
+     });
+   ```
+
+2. **Schéma de sortie JSON identique à `MOCK_RESULT`** (essence, finition, pose, signals[], recommendations[], urgency, confidence). Garder cette forme = zéro changement UI.
+
+3. Prompt système (à raffiner) :
+   > « Tu es un expert parqueteur français. À partir d'une photo, identifie l'essence probable, la finition, l'état d'usure. Reste prudent (`confidence` 0–100). Recommande des actions concrètes. Réponds UNIQUEMENT en JSON valide selon le schéma fourni. »
+
+4. Côté `AssistantExperience.tsx` :
+   - Remplacer le `setInterval` factice (`startAnalysis`) par :
+     ```ts
+     const result = await analyzeParquetPhoto({ data: { imageBase64, mimeType } });
+     setResult(result); // au lieu d'utiliser MOCK_RESULT
+     ```
+   - Convertir le `File` en base64 avant envoi (`FileReader.readAsDataURL`).
+   - Garder l'animation de scan pendant l'attente réelle.
+   - Gérer erreurs : timeout, image illisible, quota dépassé → toast + fallback gracieux.
+
+5. **Sécurité** :
+   - Aucune persistance image (pas de Storage, pas de log du base64).
+   - Rate-limit côté server fn (ex : 5 analyses / IP / heure).
+   - Log uniquement métadonnées : timestamp, taille, durée, modèle utilisé.
+
+### Fichiers concernés
+- `src/components/site/AssistantTeaser.tsx` — teaser homepage (mock)
+- `src/routes/assistant.tsx` — route `/assistant`
+- `src/components/assistant/AssistantExperience.tsx` — UI complète (mock)
+- *(à créer)* `src/lib/assistant.functions.ts` — server fn vision
+- *(à créer si B/C)* secret `ANTHROPIC_API_KEY` ou `OPENROUTER_API_KEY`
+
+---
+
+## 14. Journal — session 2026-05-22
+
+Travail effectué dans cette session (pour Codex / Claude qui reprend) :
+
+- **Hero homepage** : ajout d'un 4ᵉ slide "artisan" dans le carrousel.
+- **Photo artisan** : copiée vers `src/assets/hero-artisan-pose.jpg` (le fichier est en réalité un PNG renommé en `.jpg` — ça fonctionne, ne pas le ré-encoder). Dev server redémarré pour purger le bundle.
+- **Audit Assistant Parqueto IA** : confirmé que c'est un mock pur (aucun appel API, aucun upload réel). Décision : on garde l'UI, l'IA sera branchée plus tard (voir §13).
+- **HANDOFF.md** : ajout des §13 (assistant IA) et §14 (ce journal).
+
+**Reste à faire prioritaire :**
+1. Brancher l'IA vision sur l'Assistant (§13) — utilisateur choisira Claude direct vs OpenRouter.
+2. Tout ce qui est listé en §11.
 
 Bonne intégration. 🪵
