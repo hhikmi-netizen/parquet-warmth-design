@@ -14,9 +14,9 @@ import { buildJ2Email, buildJ7Email, type Segment } from "@/lib/guide-sequence.f
  * - Limite de 50 par exécution pour éviter les pics
  */
 
-const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
-const FROM = "Parqueto <guide@parqueto.fr>";
-const REPLY_TO = "contact@parqueto.fr";
+const SEQ_GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
+const SEQ_FROM = "Parqueto <guide@parqueto.fr>";
+const SEQ_REPLY_TO = "contact@parqueto.fr";
 
 type Lead = {
   id: string;
@@ -31,7 +31,7 @@ async function sendEmail(lead: Lead, payload: { subject: string; html: string })
   if (!LOVABLE_API_KEY || !RESEND_API_KEY) {
     return { ok: false, reason: "config" };
   }
-  const res = await fetch(`${GATEWAY_URL}/emails`, {
+  const res = await fetch(`${SEQ_GATEWAY_URL}/emails`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -39,9 +39,9 @@ async function sendEmail(lead: Lead, payload: { subject: string; html: string })
       "X-Connection-Api-Key": RESEND_API_KEY,
     },
     body: JSON.stringify({
-      from: FROM,
+      from: SEQ_FROM,
       to: [lead.email],
-      reply_to: REPLY_TO,
+      reply_to: SEQ_REPLY_TO,
       subject: payload.subject,
       html: payload.html,
     }),
