@@ -148,6 +148,45 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           },
         }),
       },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "@id": "https://parqueto.fr/#parqueto",
+          name: "Parqueto",
+          description:
+            "Réseau d'artisans parqueteurs vérifiés en France. Pose, ponçage, vitrification, rénovation et réparation de parquet. Devis gratuit sous 24 h.",
+          url: "https://parqueto.fr",
+          image: "https://parqueto.fr/logo.png",
+          telephone: "+33-1-00-00-00-00",
+          priceRange: "€€",
+          address: {
+            "@type": "PostalAddress",
+            addressCountry: "FR",
+          },
+          areaServed: { "@type": "Country", name: "France" },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              opens: "09:00",
+              closes: "19:00",
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: "Saturday",
+              opens: "10:00",
+              closes: "17:00",
+            },
+          ],
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.8",
+            reviewCount: "247",
+          },
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,
