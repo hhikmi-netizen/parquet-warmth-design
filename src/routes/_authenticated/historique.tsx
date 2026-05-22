@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, FileText, MessageSquare } from "lucide-react";
+import { LogOut, FileText, MessageSquare, FolderKanban } from "lucide-react";
 import logo from "@/assets/parqueto-logo.png";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -20,6 +20,12 @@ function HistoriquePage() {
             <img src={logo} alt="Parqueto" className="h-10 w-auto" />
           </Link>
           <div className="flex items-center gap-3 text-sm">
+            <Link
+              to="/mon-projet"
+              className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 font-semibold text-background transition hover:bg-foreground/90"
+            >
+              <FolderKanban className="h-4 w-4" /> Mon projet
+            </Link>
             <Link
               to="/messages"
               className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 font-medium transition hover:bg-accent"

@@ -1,5 +1,6 @@
 import { Eye, Lock, MessageCircle, Award } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { useAuth } from "@/hooks/use-auth";
 import clientImg from "@/assets/experience-client.png";
 
 const points = [
@@ -31,6 +32,7 @@ const points = [
  * reste pédagogique et factuel.
  */
 export function ClientExperience() {
+  const { user } = useAuth();
   return (
     <section className="relative bg-background py-24 sm:py-28">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-12 lg:items-center lg:gap-16">
@@ -59,13 +61,21 @@ export function ClientExperience() {
             ))}
           </ul>
 
-          <div className="mt-9">
+          <div className="mt-9 flex flex-wrap gap-3">
             <Link
               to="/estimation"
               className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition hover:-translate-y-0.5 hover:bg-foreground/90"
             >
               Estimer mon projet
             </Link>
+            {user && (
+              <Link
+                to="/mon-projet"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-accent"
+              >
+                Suivre mon projet
+              </Link>
+            )}
           </div>
         </div>
 
