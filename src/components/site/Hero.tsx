@@ -1,6 +1,6 @@
 import heroImg from "@/assets/hero-parquet.jpg";
 import detail from "@/assets/detail-wood.jpg";
-import beforeAfter from "@/assets/before-after.jpg";
+import artisanAction from "@/assets/artisan-action.jpg";
 import { ArrowRight } from "lucide-react";
 import { MicroReassurance } from "./MicroReassurance";
 
@@ -57,9 +57,9 @@ export function Hero() {
             <img src={detail} alt="Détail veinage chêne" className="aspect-square w-full object-cover" width={300} height={300} loading="lazy" />
           </div>
           <div className="absolute -right-4 top-10 hidden w-48 overflow-hidden rounded-xl border-4 border-background shadow-soft md:block">
-            <img src={beforeAfter} alt="Avant / après rénovation parquet" className="aspect-[4/3] w-full object-cover" width={400} height={300} loading="lazy" />
+            <img src={artisanAction} alt="Parqueteur partenaire en chantier, ponceuse en main" className="aspect-[4/3] w-full object-cover" width={400} height={300} loading="lazy" />
             <div className="absolute bottom-0 left-0 right-0 bg-foreground/85 px-2 py-1 text-center text-[10px] font-semibold uppercase tracking-wider text-background">
-              Avant · Après
+              Parqueteurs vérifiés
             </div>
           </div>
           <div className="absolute -right-2 -bottom-6 hidden rounded-xl bg-card px-5 py-4 shadow-warm lg:block">

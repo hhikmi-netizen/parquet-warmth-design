@@ -2,12 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import beforeAfter from "@/assets/before-after.jpg";
-import detail from "@/assets/detail-wood.jpg";
 import hero from "@/assets/hero-parquet.jpg";
-import a1 from "@/assets/artisan-1.jpg";
-import a2 from "@/assets/artisan-2.jpg";
-import a3 from "@/assets/artisan-3.jpg";
+import renoDamier from "@/assets/reno-damier.jpg";
+import renoHongrie from "@/assets/reno-hongrie.jpg";
+import renoMosaique from "@/assets/reno-mosaique.jpg";
+import renoDamierLight from "@/assets/reno-damier-light.jpg";
+import renoPoseChevron from "@/assets/reno-pose-chevron.jpg";
+import parquetAncien from "@/assets/parquet-ancien.jpg";
 
 export const Route = createFileRoute("/realisations")({
   component: RealisationsPage,
@@ -21,18 +22,19 @@ export const Route = createFileRoute("/realisations")({
       },
       { property: "og:title", content: "Réalisations parquet · Parqueto" },
       { property: "og:description", content: "Avant / après, des chantiers qui parlent d'eux-mêmes." },
-      { property: "og:image", content: beforeAfter },
+      { property: "og:image", content: hero },
     ],
   }),
 });
 
 const projects = [
-  { img: beforeAfter, title: "Rénovation chêne massif", city: "Paris 11ᵉ", tag: "Ponçage + vitrification" },
-  { img: detail, title: "Veinage révélé à l'huile dure", city: "Lyon 6ᵉ", tag: "Finition naturelle" },
-  { img: hero, title: "Pose chevron sur ancien", city: "Bordeaux", tag: "Dépose + pose collée" },
-  { img: a1, title: "Point de Hongrie haussmannien", city: "Paris 8ᵉ", tag: "Pose traditionnelle" },
-  { img: a2, title: "Contrecollé chêne brossé", city: "Lyon 2ᵉ", tag: "Pose flottante" },
-  { img: a3, title: "Restauration parquet ancien", city: "Bordeaux", tag: "Rénovation complète" },
+  { img: hero, title: "Chevron chêne en grand salon", city: "Île-de-France", tag: "Pose chevron · vitrification" },
+  { img: renoDamier, title: "Damier mosaïque haussmannien", city: "Paris", tag: "Rénovation + finition mate" },
+  { img: renoHongrie, title: "Point de Hongrie restauré", city: "Île-de-France", tag: "Ponçage + huile dure" },
+  { img: renoMosaique, title: "Mosaïque blanche lumineuse", city: "Île-de-France", tag: "Pose collée + vitrification" },
+  { img: renoDamierLight, title: "Damier chêne clair", city: "Île-de-France", tag: "Vitrification mate UV" },
+  { img: renoPoseChevron, title: "Chevron rénové sur ancien", city: "Île-de-France", tag: "Dépose + repose collée" },
+  { img: parquetAncien, title: "Parquet ancien revitalisé", city: "Île-de-France", tag: "Ponçage + finition naturelle" },
 ];
 
 function RealisationsPage() {
