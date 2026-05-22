@@ -15,6 +15,7 @@ const STATIC_ROUTES: { path: string; priority: number; changefreq: string }[] = 
   { path: "/confrerie-du-parquet", priority: 0.65, changefreq: "monthly" },
   { path: "/teintes", priority: 0.7, changefreq: "monthly" },
   { path: "/outils", priority: 0.6, changefreq: "monthly" },
+  { path: "/assistant", priority: 0.75, changefreq: "monthly" },
   { path: "/blog", priority: 0.7, changefreq: "weekly" },
   { path: "/devenir-artisan", priority: 0.6, changefreq: "monthly" },
   { path: "/partenaires", priority: 0.5, changefreq: "monthly" },

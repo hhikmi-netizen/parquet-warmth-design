@@ -114,6 +114,16 @@
     background-image: radial-gradient(oklch(0.6 0.06 50 / 0.05) 1px, transparent 1px);
     background-size: 3px 3px;
   }
+  .animate-scan {
+    animation: pq-scan 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes pq-scan {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
 }
 
 @media print {

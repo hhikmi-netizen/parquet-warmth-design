@@ -30,6 +30,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConfrerieDuParquetRouteImport } from './routes/confrerie-du-parquet'
 import { Route as CharteQualiteRouteImport } from './routes/charte-qualite'
 import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as ArtisansRouteImport } from './routes/artisans'
 import { Route as ArtisanVerifieRouteImport } from './routes/artisan-verifie'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -169,6 +170,11 @@ const CharteQualiteRoute = CharteQualiteRouteImport.update({
 const BlogRoute = BlogRouteImport.update({
   id: '/blog',
   path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArtisansRoute = ArtisansRouteImport.update({
@@ -358,6 +364,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/artisan-verifie': typeof ArtisanVerifieRoute
   '/artisans': typeof ArtisansRoute
+  '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/confrerie-du-parquet': typeof ConfrerieDuParquetRoute
@@ -414,6 +421,7 @@ export interface FileRoutesByTo {
   '/a-propos': typeof AProposRoute
   '/artisan-verifie': typeof ArtisanVerifieRoute
   '/artisans': typeof ArtisansRoute
+  '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/confrerie-du-parquet': typeof ConfrerieDuParquetRoute
@@ -473,6 +481,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/artisan-verifie': typeof ArtisanVerifieRoute
   '/artisans': typeof ArtisansRoute
+  '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/confrerie-du-parquet': typeof ConfrerieDuParquetRoute
@@ -532,6 +541,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/artisan-verifie'
     | '/artisans'
+    | '/assistant'
     | '/blog'
     | '/charte-qualite'
     | '/confrerie-du-parquet'
@@ -588,6 +598,7 @@ export interface FileRouteTypes {
     | '/a-propos'
     | '/artisan-verifie'
     | '/artisans'
+    | '/assistant'
     | '/blog'
     | '/charte-qualite'
     | '/confrerie-du-parquet'
@@ -646,6 +657,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/artisan-verifie'
     | '/artisans'
+    | '/assistant'
     | '/blog'
     | '/charte-qualite'
     | '/confrerie-du-parquet'
@@ -705,6 +717,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   ArtisanVerifieRoute: typeof ArtisanVerifieRoute
   ArtisansRoute: typeof ArtisansRoute
+  AssistantRoute: typeof AssistantRoute
   BlogRoute: typeof BlogRouteWithChildren
   CharteQualiteRoute: typeof CharteQualiteRoute
   ConfrerieDuParquetRoute: typeof ConfrerieDuParquetRoute
@@ -881,6 +894,13 @@ declare module '@tanstack/react-router' {
       path: '/blog'
       fullPath: '/blog'
       preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/artisans': {
@@ -1237,6 +1257,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   ArtisanVerifieRoute: ArtisanVerifieRoute,
   ArtisansRoute: ArtisansRoute,
+  AssistantRoute: AssistantRoute,
   BlogRoute: BlogRouteWithChildren,
   CharteQualiteRoute: CharteQualiteRoute,
   ConfrerieDuParquetRoute: ConfrerieDuParquetRoute,
