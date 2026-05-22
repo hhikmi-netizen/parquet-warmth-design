@@ -52,11 +52,11 @@ type ProfilKey = "particulier" | "pro";
 type CiviliteKey = "m" | "mme" | "autre";
 
 // Mapping projet → service de calcul (logique existante)
-const projetToService: Record<ProjetKey, "poncage" | "vitrification" | "pose" | "renovation"> = {
+const projetToService: Record<ProjetKey, "poncage" | "pose" | "renovation" | "reparation"> = {
   "pose-neuve": "pose",
   "renovation": "renovation",
   "poncage-vitrification": "poncage",
-  "reparation-degat-eaux": "renovation",
+  "reparation-degat-eaux": "reparation",
   "depose-remplacement": "pose",
 };
 
