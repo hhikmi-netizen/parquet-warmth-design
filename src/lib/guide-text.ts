@@ -88,9 +88,10 @@ function matchesCallout(line: string): string | null {
 const CHAPTER_RE = /^CHAPITRE\s+(\d+)\s*[:.\-]?\s*(.*)$/i;
 
 export function parseGuideText(raw: string): TextBlock[] {
-  if (!raw?.trim()) return [];
+  const cleaned = sanitizeGuideText(raw);
+  if (!cleaned?.trim()) return [];
 
-  const rawLines = raw
+  const rawLines = cleaned
     .split(/\r?\n/)
     .map((l) => l.trim())
     .filter((l) => l.length > 0 && !isNoise(l));
@@ -205,9 +206,25 @@ function mergeShortParas(blocks: TextBlock[]): TextBlock[] {
 }
 
 function toTitleCase(s: string): string {
-  // Keep acronyms (DTU, IA, PVC, LVT, HDF), lower others
+  // Lowercase everything, then capitalise the first letter of each whitespace-
+  // or hyphen-separated word. JS \b doesn't recognise accented characters
+  // as word chars, which previously produced bugs like "éTapes" or "ClÉS".
+  const ACRONYMS = new Set([
+    "DTU", "IA", "PVC", "LVT", "HDF", "MDF", "QR", "FAQ", "DPE", "PDF",
+  ]);
   return s
-    .toLowerCase()
-    .replace(/\b([a-zà-ÿ])/g, (m) => m.toUpperCase())
-    .replace(/\b(Dtu|Ia|Pvc|Lvt|Hdf|Mdf|Qr)\b/g, (m) => m.toUpperCase());
+    .toLocaleLowerCase("fr-FR")
+    .split(/(\s+|[-–—/])/)
+    .map((tok) => {
+      if (!tok || /^\s+$/.test(tok) || /^[-–—/]$/.test(tok)) return tok;
+      const upper = tok.toLocaleUpperCase("fr-FR");
+      if (ACRONYMS.has(upper)) return upper;
+      // Capitalise the FIRST character only, keep the rest lowercased.
+      // Array.from handles surrogate-safe iteration; works fine for accents.
+      const chars = Array.from(tok);
+      chars[0] = chars[0].toLocaleUpperCase("fr-FR");
+      return chars.join("");
+    })
+    .join("");
 }
+
