@@ -32,10 +32,10 @@ export type EstimationSubmissionResult = {
  * (cf. `artisans.specialites`).
  */
 const SERVICE_TO_SPECIALITES: Record<string, string[]> = {
-  poncage: ["Ponçage"],
-  vitrification: ["Vitrification"],
+  poncage: ["Ponçage & vitrification"],
   pose: ["Pose neuve"],
-  renovation: ["Rénovation", "Ponçage", "Vitrification"],
+  renovation: ["Rénovation", "Ponçage & vitrification"],
+  reparation: ["Réparation", "Rénovation"],
 };
 
 const TYPE_TO_BOIS: Record<string, string> = {
@@ -51,10 +51,10 @@ const ETAT_TO_LABEL: Record<string, string> = {
 };
 
 const SERVICE_TO_LABEL: Record<string, string> = {
-  poncage: "Ponçage",
-  vitrification: "Vitrification",
+  poncage: "Ponçage + vitrification",
   pose: "Pose neuve",
   renovation: "Rénovation complète",
+  reparation: "Réparation localisée",
 };
 
 export type EstimationInputs = {

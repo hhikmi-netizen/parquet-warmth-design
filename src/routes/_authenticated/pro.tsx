@@ -1118,7 +1118,7 @@ function ZoneTab() {
               Types de prestations
             </label>
             <div className="mt-2 flex flex-wrap gap-2">
-              {["Pose neuve", "Rénovation", "Ponçage", "Vitrification", "Pose chevron", "Conseil"].map(
+              {["Pose neuve", "Rénovation", "Ponçage + vitrification", "Réparation", "Pose chevron", "Conseil"].map(
                 (t) => (
                   <span
                     key={t}

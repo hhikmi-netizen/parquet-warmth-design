@@ -58,10 +58,10 @@ export const Route = createFileRoute("/contact")({
 });
 
 const PROJET_OPTIONS = [
-  "Ponçage",
-  "Vitrification",
+  "Ponçage + vitrification",
   "Pose parquet",
   "Rénovation",
+  "Réparation",
   "Escalier",
   "Autre",
 ] as const;

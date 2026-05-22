@@ -52,11 +52,11 @@ type ProfilKey = "particulier" | "pro";
 type CiviliteKey = "m" | "mme" | "autre";
 
 // Mapping projet → service de calcul (logique existante)
-const projetToService: Record<ProjetKey, "poncage" | "vitrification" | "pose" | "renovation"> = {
+const projetToService: Record<ProjetKey, "poncage" | "pose" | "renovation" | "reparation"> = {
   "pose-neuve": "pose",
   "renovation": "renovation",
   "poncage-vitrification": "poncage",
-  "reparation-degat-eaux": "renovation",
+  "reparation-degat-eaux": "reparation",
   "depose-remplacement": "pose",
 };
 
@@ -86,10 +86,10 @@ const compatibilite: Record<ProjetKey, MateriauKey[]> = {
 
 // Coefficients calc (alignés à Estimator.tsx)
 const SERVICE_PRICES = {
-  poncage: { min: 25, max: 40, label: "Ponçage" },
-  vitrification: { min: 15, max: 28, label: "Vitrification" },
+  poncage: { min: 40, max: 68, label: "Ponçage + vitrification" },
   pose: { min: 45, max: 90, label: "Pose" },
   renovation: { min: 60, max: 110, label: "Rénovation complète" },
+  reparation: { min: 35, max: 80, label: "Réparation localisée" },
 } as const;
 
 const MAT_FACTOR: Record<MateriauKey, number> = {

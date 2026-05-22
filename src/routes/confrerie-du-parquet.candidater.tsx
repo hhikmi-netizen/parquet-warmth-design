@@ -75,6 +75,7 @@ const SPECIALTIES = [
   "Versailles / Chantilly",
   "Mosaïque / Damier",
   "Ponçage & vitrification",
+  "Réparation",
   "Huile dure",
   "Restauration ancien",
   "Sinistre / dégât des eaux",
