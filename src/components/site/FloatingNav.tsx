@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowUp } from "lucide-react";
+import { ArrowLeft, ArrowUp, Home } from "lucide-react";
+import { Link, useRouterState } from "@tanstack/react-router";
 
 /**
  * Sections whose primary CTA must never be covered by the floating nav.
