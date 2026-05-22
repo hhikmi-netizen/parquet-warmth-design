@@ -1,8 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ChevronLeft, ChevronRight, List, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  List,
+  X,
+  ZoomIn,
+} from "lucide-react";
 import { CHAPTERS, getAllPages, type ChapterSlug } from "@/lib/guide-data";
+import { ZoomLightbox } from "@/components/guide/ZoomLightbox";
+import { DownloadGate } from "@/components/guide/DownloadGate";
 
 export const Route = createFileRoute("/guide/lecture")({
   component: GuideReader,
@@ -12,9 +22,8 @@ export const Route = createFileRoute("/guide/lecture")({
       {
         name: "description",
         content:
-          "Lisez les 79 pages du guide ultime du parquet en mode flipbook interactif. Navigation clavier, sommaire, plein écran.",
+          "Lisez le guide ultime du parquet en mode flipbook interactif. Zoom, sommaire, téléchargement PDF.",
       },
-      // Reader is interactive; the rendered chapter pages already carry SEO.
       { name: "robots", content: "noindex, follow" },
     ],
   }),
@@ -24,8 +33,9 @@ function GuideReader() {
   const pages = useMemo(() => getAllPages(), []);
   const [idx, setIdx] = useState(0);
   const [tocOpen, setTocOpen] = useState(false);
+  const [zoomOpen, setZoomOpen] = useState(false);
+  const [dlOpen, setDlOpen] = useState(false);
 
-  // Restore last page
   useEffect(() => {
     const saved = Number(localStorage.getItem("parqueto-guide-page") || 0);
     if (saved >= 0 && saved < pages.length) setIdx(saved);
@@ -40,18 +50,20 @@ function GuideReader() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (zoomOpen || dlOpen) return;
       if (e.key === "ArrowRight" || e.key === " ") next();
       else if (e.key === "ArrowLeft") prev();
       else if (e.key === "Escape") setTocOpen(false);
+      else if (e.key.toLowerCase() === "z") setZoomOpen(true);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [next, prev]);
+  }, [next, prev, zoomOpen, dlOpen]);
 
   const page = pages[idx];
   const chapter = CHAPTERS.find((c) => c.slug === page?.chapter);
+  const progress = ((idx + 1) / pages.length) * 100;
 
-  // Group for TOC
   const grouped = useMemo(() => {
     const groups: Record<string, { idx: number; page: typeof pages[0] }[]> = {};
     pages.forEach((p, i) => {
@@ -61,31 +73,58 @@ function GuideReader() {
   }, [pages]);
 
   return (
-    <main className="flex min-h-screen flex-col bg-[oklch(0.18_0.02_60)] text-white">
-      <header className="flex items-center justify-between border-b border-white/10 bg-black/30 px-4 py-3 backdrop-blur sm:px-6">
+    <main className="flex min-h-screen flex-col bg-[oklch(0.15_0.02_60)] text-white">
+      <header className="flex items-center justify-between gap-2 border-b border-white/10 bg-black/40 px-3 py-3 backdrop-blur sm:px-6">
         <Link
           to="/guide"
           className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/10"
         >
-          <ArrowLeft className="h-3.5 w-3.5" /> Sommaire
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Sommaire</span>
         </Link>
-        <div className="text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-orange">
+        <div className="min-w-0 flex-1 text-center">
+          <p className="truncate text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-orange">
             {chapter?.title}
           </p>
           <p className="text-xs text-white/70">
             Page {idx + 1} / {pages.length}
           </p>
         </div>
-        <button
-          onClick={() => setTocOpen(true)}
-          className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/10"
-        >
-          <List className="h-3.5 w-3.5" /> Chapitres
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setZoomOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/10"
+            aria-label="Zoom"
+            title="Zoom (Z)"
+          >
+            <ZoomIn className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={() => setDlOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">PDF</span>
+          </button>
+          <button
+            onClick={() => setTocOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/10"
+            aria-label="Chapitres"
+          >
+            <List className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </header>
 
-      <div className="relative flex flex-1 items-center justify-center overflow-hidden p-4 sm:p-8">
+      {/* Progress bar */}
+      <div className="h-0.5 bg-white/5">
+        <div
+          className="h-full bg-brand-orange transition-all duration-300"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      <div className="relative flex flex-1 items-center justify-center overflow-hidden p-3 sm:p-8">
         <button
           aria-label="Page précédente"
           onClick={prev}
@@ -95,17 +134,27 @@ function GuideReader() {
           <ChevronLeft className="h-5 w-5" />
         </button>
         <AnimatePresence mode="wait">
-          <motion.img
+          <motion.button
             key={idx}
-            src={page?.asset}
-            alt={page?.alt || page?.title || `Page ${idx + 1}`}
+            type="button"
+            onClick={() => setZoomOpen(true)}
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -30 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
-            className="max-h-full max-w-full rounded-xl object-contain shadow-2xl"
-            style={{ maxHeight: "calc(100vh - 180px)" }}
-          />
+            className="group relative max-h-full max-w-full cursor-zoom-in"
+            aria-label="Agrandir cette page"
+          >
+            <img
+              src={page?.asset}
+              alt={page?.alt || page?.title || `Page ${idx + 1}`}
+              className="max-h-full max-w-full rounded-xl object-contain shadow-2xl"
+              style={{ maxHeight: "calc(100vh - 200px)" }}
+            />
+            <span className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/65 px-3 py-1.5 text-[11px] font-medium text-white opacity-0 backdrop-blur transition group-hover:opacity-100">
+              <ZoomIn className="h-3.5 w-3.5" /> Cliquer pour zoomer
+            </span>
+          </motion.button>
         </AnimatePresence>
         <button
           aria-label="Page suivante"
@@ -117,10 +166,24 @@ function GuideReader() {
         </button>
       </div>
 
-      <div className="border-t border-white/10 bg-black/30 px-4 py-3 text-center text-xs text-white/60 backdrop-blur sm:px-6">
-        ← → pour naviguer · Espace = page suivante · Échap pour fermer le sommaire
+      <div className="border-t border-white/10 bg-black/40 px-4 py-2.5 text-center text-[11px] text-white/60 backdrop-blur sm:px-6">
+        ← → naviguer · Z = zoom · Échap = fermer
       </div>
 
+      {/* Zoom lightbox */}
+      {zoomOpen && page && (
+        <ZoomLightbox
+          src={page.asset}
+          alt={page.alt || page.title}
+          caption={`${chapter?.title} — ${page.title || `Page ${idx + 1}`}`}
+          onClose={() => setZoomOpen(false)}
+        />
+      )}
+
+      {/* Download gate */}
+      {dlOpen && <DownloadGate onClose={() => setDlOpen(false)} />}
+
+      {/* TOC */}
       <AnimatePresence>
         {tocOpen && (
           <motion.div
