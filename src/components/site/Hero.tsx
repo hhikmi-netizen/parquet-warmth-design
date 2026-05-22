@@ -1,5 +1,5 @@
 import heroSalon from "@/assets/hero-salon-parquet.jpg";
-import { ArrowRight, Calculator, ShieldCheck, MessageCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function Hero() {
   return (
