@@ -206,12 +206,6 @@ function GuideArticle() {
               href="tel:+33184606061"
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold transition hover:bg-accent"
             >
-              <Phone className="h-4 w-4" /> 01 84 60 60 61
-            </a>
-            <a
-              href="tel:+33184606061"
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold transition hover:bg-accent"
-            >
               <Phone className="h-4 w-4" /><span>01 84 60 60 61</span>
             </a>
             <a
