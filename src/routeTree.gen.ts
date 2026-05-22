@@ -37,6 +37,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ConfrerieDuParquetIndexRouteImport } from './routes/confrerie-du-parquet.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProOffresRouteImport } from './routes/pro.offres'
 import { Route as ProFacturationRouteImport } from './routes/pro.facturation'
@@ -207,6 +208,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ConfrerieDuParquetIndexRoute = ConfrerieDuParquetIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ConfrerieDuParquetRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
@@ -423,6 +429,7 @@ export interface FileRoutesByFullPath {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
+  '/confrerie-du-parquet/': typeof ConfrerieDuParquetIndexRoute
   '/pro/calendrier': typeof AuthenticatedProCalendrierRoute
   '/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/pro/messages': typeof AuthenticatedProMessagesRoute
@@ -440,7 +447,6 @@ export interface FileRoutesByTo {
   '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
-  '/confrerie-du-parquet': typeof ConfrerieDuParquetRouteWithChildren
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
@@ -482,6 +488,7 @@ export interface FileRoutesByTo {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
+  '/confrerie-du-parquet': typeof ConfrerieDuParquetIndexRoute
   '/pro/calendrier': typeof AuthenticatedProCalendrierRoute
   '/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/pro/messages': typeof AuthenticatedProMessagesRoute
@@ -544,6 +551,7 @@ export interface FileRoutesById {
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
+  '/confrerie-du-parquet/': typeof ConfrerieDuParquetIndexRoute
   '/_authenticated/pro/calendrier': typeof AuthenticatedProCalendrierRoute
   '/_authenticated/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/_authenticated/pro/messages': typeof AuthenticatedProMessagesRoute
@@ -606,6 +614,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
+    | '/confrerie-du-parquet/'
     | '/pro/calendrier'
     | '/pro/chantiers'
     | '/pro/messages'
@@ -623,7 +632,6 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/blog'
     | '/charte-qualite'
-    | '/confrerie-du-parquet'
     | '/contact'
     | '/design-system'
     | '/devenir-artisan'
@@ -665,6 +673,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin'
+    | '/confrerie-du-parquet'
     | '/pro/calendrier'
     | '/pro/chantiers'
     | '/pro/messages'
@@ -726,6 +735,7 @@ export interface FileRouteTypes {
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
+    | '/confrerie-du-parquet/'
     | '/_authenticated/pro/calendrier'
     | '/_authenticated/pro/chantiers'
     | '/_authenticated/pro/messages'
@@ -970,6 +980,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/confrerie-du-parquet/': {
+      id: '/confrerie-du-parquet/'
+      path: '/'
+      fullPath: '/confrerie-du-parquet/'
+      preLoaderRoute: typeof ConfrerieDuParquetIndexRouteImport
+      parentRoute: typeof ConfrerieDuParquetRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -1281,11 +1298,13 @@ const ConfrerieDuParquetCandidaterRouteWithChildren =
 
 interface ConfrerieDuParquetRouteChildren {
   ConfrerieDuParquetCandidaterRoute: typeof ConfrerieDuParquetCandidaterRouteWithChildren
+  ConfrerieDuParquetIndexRoute: typeof ConfrerieDuParquetIndexRoute
 }
 
 const ConfrerieDuParquetRouteChildren: ConfrerieDuParquetRouteChildren = {
   ConfrerieDuParquetCandidaterRoute:
     ConfrerieDuParquetCandidaterRouteWithChildren,
+  ConfrerieDuParquetIndexRoute: ConfrerieDuParquetIndexRoute,
 }
 
 const ConfrerieDuParquetRouteWithChildren =
