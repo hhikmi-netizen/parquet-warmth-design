@@ -190,6 +190,7 @@ function RootComponent() {
         <SkipToContent />
         <Outlet />
         <Toaster />
+        <CookieBanner />
       </AuthProvider>
     </QueryClientProvider>
   );
