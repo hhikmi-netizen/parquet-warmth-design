@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { Instagram, Linkedin, Facebook } from "lucide-react";
 import logo from "@/assets/parqueto-logo.png";
 
 export function Footer() {
