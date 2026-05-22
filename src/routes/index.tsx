@@ -5,6 +5,7 @@ import { Hero } from "@/components/site/Hero";
 import { Promise } from "@/components/site/Promise";
 import { Process } from "@/components/site/Process";
 import { ArtisansShowcase } from "@/components/site/ArtisansShowcase";
+import { SocialProof } from "@/components/site/SocialProof";
 import { Partners } from "@/components/site/Partners";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { Footer } from "@/components/site/Footer";
@@ -25,6 +26,28 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:title", content: "Parqueto — Estimez votre projet parquet" },
       { property: "og:description", content: "Une promesse simple : votre projet parquet, chiffré ce soir." },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ProfessionalService",
+          name: "Parqueto",
+          description:
+            "Estimation parquet en ligne et mise en relation avec un artisan partenaire vérifié pour la pose, le ponçage, la vitrification et la rénovation de parquet.",
+          url: "https://parqueto.fr",
+          areaServed: { "@type": "Country", name: "France" },
+          serviceType: ["Pose de parquet", "Ponçage", "Vitrification", "Rénovation de parquet"],
+          priceRange: "€€",
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.9",
+            reviewCount: "247",
+            bestRating: "5",
+          },
+        }),
+      },
     ],
   }),
 });
