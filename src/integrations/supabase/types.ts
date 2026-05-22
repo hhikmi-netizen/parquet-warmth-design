@@ -198,6 +198,33 @@ export type Database = {
           },
         ]
       }
+      guide_downloads: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          opt_in: boolean
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          opt_in?: boolean
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          opt_in?: boolean
+          source?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
