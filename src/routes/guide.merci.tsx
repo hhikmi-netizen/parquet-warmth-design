@@ -330,6 +330,7 @@ function ShareBtn({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => track("guide_share_click", { channel: label.toLowerCase() })}
       className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium transition hover:bg-accent"
     >
       {icon}
