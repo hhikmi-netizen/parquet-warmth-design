@@ -2,11 +2,15 @@
  * Contenu des emails J+2 (conseil complémentaire) et J+7 (CTA estimation).
  * Adapté au segment du lead (particulier / pro / artisan).
  */
+import { buildUnsubscribeUrl } from "@/lib/guide-unsubscribe";
+
 export type Segment = "particulier" | "pro" | "artisan";
 
 function esc(s: string) {
   return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 }
+
+
 
 function shell(title: string, kicker: string, bodyHtml: string, ctaHref: string, ctaLabel: string) {
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title></head>
