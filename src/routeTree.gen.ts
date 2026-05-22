@@ -17,6 +17,7 @@ import { Route as RealisationsRouteImport } from './routes/realisations'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
 import { Route as OutilsRouteImport } from './routes/outils'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as GuideParquetRouteImport } from './routes/guide-parquet'
 import { Route as GuideRouteImport } from './routes/guide'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as EstimationRouteImport } from './routes/estimation'
@@ -37,6 +38,7 @@ import { Route as GuideLectureRouteImport } from './routes/guide.lecture'
 import { Route as GuideSlugRouteImport } from './routes/guide.$slug'
 import { Route as DevenirArtisanInscriptionRouteImport } from './routes/devenir-artisan.inscription'
 import { Route as DemoMicroReassuranceRouteImport } from './routes/demo.micro-reassurance'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminSupportRouteImport } from './routes/admin.support'
 import { Route as AdminParametresRouteImport } from './routes/admin.parametres'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
@@ -93,6 +95,11 @@ const OutilsRoute = OutilsRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuideParquetRoute = GuideParquetRouteImport.update({
+  id: '/guide-parquet',
+  path: '/guide-parquet',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuideRoute = GuideRouteImport.update({
@@ -195,6 +202,11 @@ const DemoMicroReassuranceRoute = DemoMicroReassuranceRouteImport.update({
   path: '/demo/micro-reassurance',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 const AdminSupportRoute = AdminSupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -290,7 +302,7 @@ export interface FileRoutesByFullPath {
   '/a-propos': typeof AProposRoute
   '/admin': typeof AdminRouteWithChildren
   '/artisans': typeof ArtisansRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
@@ -298,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/guide': typeof GuideRouteWithChildren
+  '/guide-parquet': typeof GuideParquetRoute
   '/login': typeof LoginRoute
   '/outils': typeof OutilsRoute
   '/partenaires': typeof PartenairesRoute
@@ -318,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/parametres': typeof AdminParametresRoute
   '/admin/support': typeof AdminSupportRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/guide/$slug': typeof GuideSlugRoute
@@ -335,7 +349,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
   '/artisans': typeof ArtisansRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
@@ -343,6 +357,7 @@ export interface FileRoutesByTo {
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/guide': typeof GuideRouteWithChildren
+  '/guide-parquet': typeof GuideParquetRoute
   '/login': typeof LoginRoute
   '/outils': typeof OutilsRoute
   '/partenaires': typeof PartenairesRoute
@@ -363,6 +378,7 @@ export interface FileRoutesByTo {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/parametres': typeof AdminParametresRoute
   '/admin/support': typeof AdminSupportRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/guide/$slug': typeof GuideSlugRoute
@@ -383,7 +399,7 @@ export interface FileRoutesById {
   '/a-propos': typeof AProposRoute
   '/admin': typeof AdminRouteWithChildren
   '/artisans': typeof ArtisansRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
@@ -391,6 +407,7 @@ export interface FileRoutesById {
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/guide': typeof GuideRouteWithChildren
+  '/guide-parquet': typeof GuideParquetRoute
   '/login': typeof LoginRoute
   '/outils': typeof OutilsRoute
   '/partenaires': typeof PartenairesRoute
@@ -411,6 +428,7 @@ export interface FileRoutesById {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/parametres': typeof AdminParametresRoute
   '/admin/support': typeof AdminSupportRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/guide/$slug': typeof GuideSlugRoute
@@ -439,6 +457,7 @@ export interface FileRouteTypes {
     | '/estimation'
     | '/forgot-password'
     | '/guide'
+    | '/guide-parquet'
     | '/login'
     | '/outils'
     | '/partenaires'
@@ -459,6 +478,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/parametres'
     | '/admin/support'
+    | '/blog/$slug'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
     | '/guide/$slug'
@@ -484,6 +504,7 @@ export interface FileRouteTypes {
     | '/estimation'
     | '/forgot-password'
     | '/guide'
+    | '/guide-parquet'
     | '/login'
     | '/outils'
     | '/partenaires'
@@ -504,6 +525,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/parametres'
     | '/admin/support'
+    | '/blog/$slug'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
     | '/guide/$slug'
@@ -531,6 +553,7 @@ export interface FileRouteTypes {
     | '/estimation'
     | '/forgot-password'
     | '/guide'
+    | '/guide-parquet'
     | '/login'
     | '/outils'
     | '/partenaires'
@@ -551,6 +574,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/parametres'
     | '/admin/support'
+    | '/blog/$slug'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
     | '/guide/$slug'
@@ -571,7 +595,7 @@ export interface RootRouteChildren {
   AProposRoute: typeof AProposRoute
   AdminRoute: typeof AdminRouteWithChildren
   ArtisansRoute: typeof ArtisansRoute
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   CharteQualiteRoute: typeof CharteQualiteRoute
   ContactRoute: typeof ContactRoute
   DesignSystemRoute: typeof DesignSystemRoute
@@ -579,6 +603,7 @@ export interface RootRouteChildren {
   EstimationRoute: typeof EstimationRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   GuideRoute: typeof GuideRouteWithChildren
+  GuideParquetRoute: typeof GuideParquetRoute
   LoginRoute: typeof LoginRoute
   OutilsRoute: typeof OutilsRoute
   PartenairesRoute: typeof PartenairesRoute
@@ -649,6 +674,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guide-parquet': {
+      id: '/guide-parquet'
+      path: '/guide-parquet'
+      fullPath: '/guide-parquet'
+      preLoaderRoute: typeof GuideParquetRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guide': {
@@ -790,6 +822,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/demo/micro-reassurance'
       preLoaderRoute: typeof DemoMicroReassuranceRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/admin/support': {
       id: '/admin/support'
@@ -974,6 +1013,16 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 interface DevenirArtisanRouteChildren {
   DevenirArtisanInscriptionRoute: typeof DevenirArtisanInscriptionRoute
 }
@@ -1004,7 +1053,7 @@ const rootRouteChildren: RootRouteChildren = {
   AProposRoute: AProposRoute,
   AdminRoute: AdminRouteWithChildren,
   ArtisansRoute: ArtisansRoute,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   CharteQualiteRoute: CharteQualiteRoute,
   ContactRoute: ContactRoute,
   DesignSystemRoute: DesignSystemRoute,
@@ -1012,6 +1061,7 @@ const rootRouteChildren: RootRouteChildren = {
   EstimationRoute: EstimationRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   GuideRoute: GuideRouteWithChildren,
+  GuideParquetRoute: GuideParquetRoute,
   LoginRoute: LoginRoute,
   OutilsRoute: OutilsRoute,
   PartenairesRoute: PartenairesRoute,
