@@ -51,10 +51,10 @@ const ETAT_TO_LABEL: Record<string, string> = {
 };
 
 const SERVICE_TO_LABEL: Record<string, string> = {
-  poncage: "Ponçage",
-  vitrification: "Vitrification",
+  poncage: "Ponçage + vitrification",
   pose: "Pose neuve",
   renovation: "Rénovation complète",
+  reparation: "Réparation localisée",
 };
 
 export type EstimationInputs = {
