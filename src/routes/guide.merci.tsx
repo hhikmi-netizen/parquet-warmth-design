@@ -14,6 +14,7 @@ import {
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { GUIDE_COVER, GUIDE_META } from "@/lib/guide-content";
+import { track } from "@/lib/track";
 
 export const Route = createFileRoute("/guide/merci")({
   component: GuideThankYou,
