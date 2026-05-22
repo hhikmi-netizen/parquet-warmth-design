@@ -15,39 +15,78 @@ import { CookieBanner } from "@/components/site/CookieBanner";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-lg text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">Erreur 404</p>
-        <h1 className="mt-3 font-display text-6xl text-foreground sm:text-7xl">Page introuvable</h1>
-        <p className="mt-4 text-sm text-muted-foreground">
-          La page que vous cherchez n'existe pas, a été déplacée ou n'est plus disponible.
-          Continuez votre visite via les raccourcis ci-dessous.
+    <div className="relative min-h-screen overflow-hidden bg-background">
+      {/* Décor parquet subtil */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.08]"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(115deg, transparent 0 18px, hsl(var(--brand-orange) / 0.45) 18px 19px, transparent 19px 60px), repeating-linear-gradient(115deg, transparent 0 80px, hsl(var(--brand-orange) / 0.25) 80px 81px, transparent 81px 240px)",
+        }}
+      />
+
+      <div className="relative mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center px-6 py-20 text-center">
+        <p className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
+          <span className="h-1.5 w-1.5 rounded-full bg-brand-orange" />
+          Erreur 404
         </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
+
+        <h1 className="mt-6 font-display text-7xl leading-none tracking-tight text-foreground sm:text-8xl lg:text-[9rem]">
+          Lame{" "}
+          <span className="italic text-brand-orange">manquante.</span>
+        </h1>
+
+        <p className="mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
+          La page que vous cherchez n'est plus à sa place — peut-être déposée, déplacée
+          ou jamais posée. Pas de panique : on vous remet sur les bons rails.
+        </p>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-full bg-brand-orange px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-warm transition hover:-translate-y-0.5 hover:bg-brand-orange-deep"
+            className="inline-flex items-center justify-center rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground shadow-warm transition hover:-translate-y-0.5 hover:bg-brand-orange-deep"
           >
             Retour à l'accueil
           </Link>
           <Link
             to="/estimation"
-            className="inline-flex items-center justify-center rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-brand-orange/40 hover:text-brand-orange"
+            className="inline-flex items-center justify-center rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground transition hover:border-brand-orange/40 hover:text-brand-orange"
           >
             Estimer mon projet
           </Link>
           <Link
-            to="/guide"
-            className="inline-flex items-center justify-center rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-brand-orange/40 hover:text-brand-orange"
+            to="/assistant"
+            className="inline-flex items-center justify-center rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground transition hover:border-brand-orange/40 hover:text-brand-orange"
           >
-            Le guide du parquet
+            Assistant IA
           </Link>
         </div>
-        <div className="mt-8 grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:grid-cols-4">
-          <Link to="/realisations" className="hover:text-brand-orange">Réalisations</Link>
-          <Link to="/artisans" className="hover:text-brand-orange">Nos artisans</Link>
-          <Link to="/teintes" className="hover:text-brand-orange">Teintes</Link>
-          <Link to="/blog" className="hover:text-brand-orange">Blog</Link>
+
+        <div className="mt-14 w-full max-w-xl border-t border-border pt-8">
+          <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+            Continuer la visite
+          </p>
+          <div className="mt-4 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+            {[
+              { to: "/realisations" as const, label: "Réalisations" },
+              { to: "/artisans" as const, label: "Nos artisans" },
+              { to: "/teintes" as const, label: "Teintes" },
+              { to: "/blog" as const, label: "Blog" },
+              { to: "/guide" as const, label: "Le guide" },
+              { to: "/renovation-sinistre" as const, label: "Sinistre" },
+              { to: "/confrerie-du-parquet" as const, label: "La Confrérie" },
+              { to: "/contact" as const, label: "Contact" },
+            ].map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className="rounded-full border border-border bg-card px-3 py-2 text-foreground transition hover:border-brand-orange/40 hover:text-brand-orange"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </div>
