@@ -20,6 +20,8 @@ export function FloatingNav({ showBack = true }: { showBack?: boolean }) {
   const [progress, setProgress] = useState(0);
   const lastY = useRef(0);
   const [scrollDir, setScrollDir] = useState<"up" | "down">("up");
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isHome = pathname === "/";
 
   // Scroll-driven visibility, direction, and progress (single rAF loop).
   useEffect(() => {
