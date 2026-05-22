@@ -14,6 +14,7 @@ import {
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { GUIDE_COVER, GUIDE_META } from "@/lib/guide-content";
+import { track } from "@/lib/track";
 
 export const Route = createFileRoute("/guide/merci")({
   component: GuideThankYou,
@@ -50,12 +51,14 @@ function GuideThankYou() {
     } catch {
       /* ignore */
     }
+    track("guide_thankyou_view");
   }, []);
 
   async function copyLink() {
     try {
       await navigator.clipboard.writeText(SHARE_URL);
       setCopied(true);
+      track("guide_share_click", { channel: "copy" });
       setTimeout(() => setCopied(false), 2500);
     } catch {
       /* ignore */
@@ -270,11 +273,11 @@ function UpsellCard({
       <h3 className="mt-1 font-display text-xl text-brand-ink">{title}</h3>
       <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{text}</p>
       {to ? (
-        <Link to={to} className={ctaCls}>
+        <Link to={to} onClick={() => track("guide_upsell_click", { target: to, label: cta })} className={ctaCls}>
           {cta} <ArrowRight className="h-4 w-4" />
         </Link>
       ) : (
-        <a href={href} className={ctaCls}>
+        <a href={href} onClick={() => track("guide_upsell_click", { target: href, label: cta })} className={ctaCls}>
           {cta} <ArrowRight className="h-4 w-4" />
         </a>
       )}
@@ -327,6 +330,7 @@ function ShareBtn({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => track("guide_share_click", { channel: label.toLowerCase() })}
       className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium transition hover:bg-accent"
     >
       {icon}

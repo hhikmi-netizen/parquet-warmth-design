@@ -4,6 +4,13 @@ import { useServerFn } from "@tanstack/react-start";
 import { useNavigate } from "@tanstack/react-router";
 import { downloadGuidePdf } from "@/lib/guide-pdf.functions";
 import { sendGuideEmail } from "@/lib/guide-email.functions";
+import { setSegment, track, type Segment } from "@/lib/track";
+
+const SEGMENTS: { value: Segment; label: string; sub: string }[] = [
+  { value: "particulier", label: "Particulier", sub: "Pour mon logement" },
+  { value: "pro", label: "Pro / Prescripteur", sub: "Architecte, MOA…" },
+  { value: "artisan", label: "Artisan parquetier", sub: "Pour mon métier" },
+];
 
 /**
  * Email-gated download. Captures lead + generates PDF server-side, then
@@ -12,6 +19,7 @@ import { sendGuideEmail } from "@/lib/guide-email.functions";
 export function DownloadGate({ onClose }: { onClose: () => void }) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [segment, setSeg] = useState<Segment>("particulier");
   const [accepts, setAccepts] = useState(true);
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "err">("idle");
   const [err, setErr] = useState<string>("");
@@ -28,8 +36,11 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
       setStatus("err"); setErr("Adresse email invalide."); return;
     }
     setStatus("loading"); setErr("");
+    track("guide_download_submit", { segment }, { segment });
     try {
-      const res = await generate({ data: { email: email.trim(), name: name.trim() || null, optIn: accepts } });
+      const res = await generate({
+        data: { email: email.trim(), name: name.trim() || null, optIn: accepts, segment },
+      });
       // Decode base64 → Blob → download
       const bin = atob(res.base64);
       const bytes = new Uint8Array(bin.length);
@@ -43,18 +54,23 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 5000);
-      localStorage.setItem("parqueto-guide-lead", JSON.stringify({ email, name, at: Date.now() }));
+      localStorage.setItem(
+        "parqueto-guide-lead",
+        JSON.stringify({ email, name, segment, at: Date.now() })
+      );
+      setSegment(segment);
       // Fire-and-forget welcome email
       sendEmail({ data: { email: email.trim(), name: name.trim() || null } }).catch((err) =>
         console.error("welcome email failed", err)
       );
+      track("guide_download_success", { segment }, { segment });
       setStatus("ok");
-      // Redirige vers la page de remerciement avec upsell
       setTimeout(() => {
         navigate({ to: "/guide/merci" });
       }, 800);
     } catch (e: unknown) {
       console.error(e);
+      track("guide_download_error", { segment }, { segment });
       setStatus("err");
       setErr("Impossible de générer le PDF. Réessayez dans un instant.");
     }
@@ -91,6 +107,30 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
             </p>
 
             <div className="mt-5 space-y-3">
+              <div>
+                <span className="text-xs font-medium text-muted-foreground">Je suis…</span>
+                <div className="mt-1.5 grid grid-cols-3 gap-1.5">
+                  {SEGMENTS.map((s) => {
+                    const active = segment === s.value;
+                    return (
+                      <button
+                        type="button"
+                        key={s.value}
+                        onClick={() => setSeg(s.value)}
+                        className={`rounded-xl border px-2 py-2 text-left text-[11px] leading-tight transition ${
+                          active
+                            ? "border-brand-orange bg-brand-orange/10 text-brand-ink"
+                            : "border-border bg-background hover:border-brand-orange/40"
+                        }`}
+                      >
+                        <div className="font-semibold">{s.label}</div>
+                        <div className="text-[10px] text-muted-foreground">{s.sub}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               <label className="block">
                 <span className="text-xs font-medium text-muted-foreground">Prénom (optionnel)</span>
                 <input
@@ -157,15 +197,8 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
             </div>
             <h2 className="mt-4 font-display text-2xl">Merci {name || ""} !</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Le téléchargement a commencé. Si rien ne se passe, vérifiez vos téléchargements ou
-              réessayez.
+              Le téléchargement a commencé. Redirection vers votre espace…
             </p>
-            <button
-              onClick={onClose}
-              className="mt-5 inline-flex items-center justify-center rounded-full border border-border bg-background px-6 py-2.5 text-sm font-medium transition hover:bg-accent"
-            >
-              Continuer la lecture
-            </button>
           </div>
         )}
       </div>

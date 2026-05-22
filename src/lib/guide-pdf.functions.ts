@@ -474,6 +474,8 @@ const InputSchema = z.object({
   email: z.string().trim().email().max(255),
   name: z.string().trim().max(100).optional().nullable(),
   optIn: z.boolean().optional().default(true),
+  segment: z.enum(["particulier", "pro", "artisan"]).optional().nullable(),
+  source: z.string().trim().max(80).optional().nullable(),
 });
 
 export const downloadGuidePdf = createServerFn({ method: "POST" })
@@ -486,7 +488,8 @@ export const downloadGuidePdf = createServerFn({ method: "POST" })
         email: data.email,
         name: data.name ?? null,
         opt_in: data.optIn ?? true,
-        source: "guide_pdf_download",
+        segment: data.segment ?? null,
+        source: data.source ?? "guide_pdf_download",
       } as never);
     } catch (e) {
       console.error("guide_downloads insert failed", e);
