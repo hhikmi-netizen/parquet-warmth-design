@@ -66,6 +66,8 @@ function TeintesPage() {
           réelle, la lumière et la finition appliquée.
         </p>
       </section>
+      <Footer />
+      <FloatingNav />
     </main>
   );
 }
