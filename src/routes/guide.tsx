@@ -209,10 +209,16 @@ function GuideArticle() {
               <Phone className="h-4 w-4" /> 01 84 60 60 61
             </a>
             <a
+              href="tel:+33184606061"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold transition hover:bg-accent"
+            >
+              <Phone className="h-4 w-4" /><span>01 84 60 60 61</span>
+            </a>
+            <a
               href="mailto:contact@parqueto.fr"
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold transition hover:bg-accent"
             >
-              <Mail className="h-4 w-4" /> contact@parqueto.fr
+              <Mail className="h-4 w-4" /><span>contact@parqueto.fr</span>
             </a>
           </div>
         </div>
