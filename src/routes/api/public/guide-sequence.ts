@@ -96,7 +96,7 @@ async function handle(request: Request) {
     const leads = (data ?? []) as unknown as Lead[];
     results.j2.picked = leads.length;
     for (const lead of leads) {
-      const payload = buildJ2Email(lead.name, lead.segment);
+      const payload = buildJ2Email(lead.name, lead.segment, lead.email);
       const r = await sendEmail(lead, payload);
       if (r.ok) {
         results.j2.sent++;
@@ -125,7 +125,7 @@ async function handle(request: Request) {
     const leads = (data ?? []) as unknown as Lead[];
     results.j7.picked = leads.length;
     for (const lead of leads) {
-      const payload = buildJ7Email(lead.name, lead.segment);
+      const payload = buildJ7Email(lead.name, lead.segment, lead.email);
       const r = await sendEmail(lead, payload);
       if (r.ok) {
         results.j7.sent++;
