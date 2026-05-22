@@ -3,7 +3,7 @@ import { CheckCircle2, Mail, Users, ArrowRight } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 
-export const Route = createFileRoute("/confrerie-du-parquet/candidater/merci")({
+export const Route = createFileRoute("/confrerie-du-parquet_/candidater/merci")({
   component: MerciPage,
   head: () => ({
     meta: [
