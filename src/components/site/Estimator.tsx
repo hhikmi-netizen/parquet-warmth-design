@@ -23,15 +23,15 @@ import { buildEstimationPayload, submitEstimationStub } from "@/lib/estimation-t
 
 
 // ---------- Modèle de calcul ----------
-type ServiceKey = "poncage" | "vitrification" | "pose" | "renovation";
+type ServiceKey = "poncage" | "pose" | "renovation" | "reparation";
 type TypeKey = "contrecolle" | "massif" | "ancien";
 type EtatKey = "bon" | "moyen" | "abime";
 
 const services: Record<ServiceKey, { label: string; min: number; max: number }> = {
-  poncage: { label: "Ponçage", min: 25, max: 40 },
-  vitrification: { label: "Vitrification", min: 15, max: 28 },
-  pose: { label: "Pose", min: 45, max: 90 },
+  poncage: { label: "Ponçage + vitrification", min: 40, max: 68 },
+  pose: { label: "Pose neuve", min: 45, max: 90 },
   renovation: { label: "Rénovation complète", min: 60, max: 110 },
+  reparation: { label: "Réparation localisée", min: 35, max: 80 },
 };
 
 const types: Record<TypeKey, { label: string; factor: number }> = {
