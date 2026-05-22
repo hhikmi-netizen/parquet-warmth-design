@@ -53,6 +53,7 @@ import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
 import { Route as ProDevisNouveauRouteImport } from './routes/pro.devis.nouveau'
+import { Route as ApiPublicGuideSequenceRouteImport } from './routes/api/public/guide-sequence'
 import { Route as AuthenticatedProOnboardingRouteImport } from './routes/_authenticated/pro.onboarding'
 import { Route as AuthenticatedProMessagesRouteImport } from './routes/_authenticated/pro.messages'
 import { Route as AuthenticatedProChantiersRouteImport } from './routes/_authenticated/pro.chantiers'
@@ -278,6 +279,11 @@ const ProDevisNouveauRoute = ProDevisNouveauRouteImport.update({
   path: '/pro/devis/nouveau',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicGuideSequenceRoute = ApiPublicGuideSequenceRouteImport.update({
+  id: '/api/public/guide-sequence',
+  path: '/api/public/guide-sequence',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedProOnboardingRoute =
   AuthenticatedProOnboardingRouteImport.update({
     id: '/onboarding',
@@ -350,6 +356,7 @@ export interface FileRoutesByFullPath {
   '/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/pro/messages': typeof AuthenticatedProMessagesRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
+  '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesByTo {
@@ -398,6 +405,7 @@ export interface FileRoutesByTo {
   '/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/pro/messages': typeof AuthenticatedProMessagesRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
+  '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesById {
@@ -449,6 +457,7 @@ export interface FileRoutesById {
   '/_authenticated/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/_authenticated/pro/messages': typeof AuthenticatedProMessagesRoute
   '/_authenticated/pro/onboarding': typeof AuthenticatedProOnboardingRoute
+  '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRouteTypes {
@@ -500,6 +509,7 @@ export interface FileRouteTypes {
     | '/pro/chantiers'
     | '/pro/messages'
     | '/pro/onboarding'
+    | '/api/public/guide-sequence'
     | '/pro/devis/nouveau'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -548,6 +558,7 @@ export interface FileRouteTypes {
     | '/pro/chantiers'
     | '/pro/messages'
     | '/pro/onboarding'
+    | '/api/public/guide-sequence'
     | '/pro/devis/nouveau'
   id:
     | '__root__'
@@ -598,6 +609,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pro/chantiers'
     | '/_authenticated/pro/messages'
     | '/_authenticated/pro/onboarding'
+    | '/api/public/guide-sequence'
     | '/pro/devis/nouveau'
   fileRoutesById: FileRoutesById
 }
@@ -627,6 +639,7 @@ export interface RootRouteChildren {
   DemoMicroReassuranceRoute: typeof DemoMicroReassuranceRoute
   ProFacturationRoute: typeof ProFacturationRoute
   ProOffresRoute: typeof ProOffresRoute
+  ApiPublicGuideSequenceRoute: typeof ApiPublicGuideSequenceRoute
   ProDevisNouveauRoute: typeof ProDevisNouveauRoute
 }
 
@@ -940,6 +953,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProDevisNouveauRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/guide-sequence': {
+      id: '/api/public/guide-sequence'
+      path: '/api/public/guide-sequence'
+      fullPath: '/api/public/guide-sequence'
+      preLoaderRoute: typeof ApiPublicGuideSequenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/pro/onboarding': {
       id: '/_authenticated/pro/onboarding'
       path: '/onboarding'
@@ -1094,6 +1114,7 @@ const rootRouteChildren: RootRouteChildren = {
   DemoMicroReassuranceRoute: DemoMicroReassuranceRoute,
   ProFacturationRoute: ProFacturationRoute,
   ProOffresRoute: ProOffresRoute,
+  ApiPublicGuideSequenceRoute: ApiPublicGuideSequenceRoute,
   ProDevisNouveauRoute: ProDevisNouveauRoute,
 }
 export const routeTree = rootRouteImport
