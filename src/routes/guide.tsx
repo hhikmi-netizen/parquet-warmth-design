@@ -4,6 +4,7 @@ import { ArrowRight, BookOpen, ChevronDown, Download, List, Mail, Phone, X } fro
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { DownloadGate } from "@/components/guide/DownloadGate";
+import { FloatingGuideCta } from "@/components/guide/FloatingGuideCta";
 import { CHAPTERS, GUIDE_COVER, GUIDE_META, getReadingTime, type Block } from "@/lib/guide-content";
 import { GUIDE_FAQ } from "@/lib/guide-faq";
 
