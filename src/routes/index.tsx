@@ -10,6 +10,7 @@ import { Partners } from "@/components/site/Partners";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { Footer } from "@/components/site/Footer";
 import { MobileStickyCTA } from "@/components/site/MobileStickyCTA";
+import { AssistantTeaser } from "@/components/site/AssistantTeaser";
 import beforeAfter from "@/assets/before-after.jpg";
 import detail from "@/assets/detail-wood.jpg";
 import hero from "@/assets/hero-parquet.jpg";
@@ -22,10 +23,10 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Estimation parquet en ligne claire et immédiate : ponçage, vitrification, pose, rénovation. Un artisan partenaire vérifié pour cadrer votre projet, sans démarchage.",
+          "Estimation parquet en ligne et Assistant IA Parqueto — première intelligence artificielle française dédiée à l'analyse de parquet en photo. Ponçage, vitrification, pose, rénovation après dégât des eaux. Artisan partenaire vérifié, sans démarchage.",
       },
-      { property: "og:title", content: "Parqueto — Estimez votre projet parquet" },
-      { property: "og:description", content: "Une promesse simple : votre projet parquet, chiffré ce soir." },
+      { property: "og:title", content: "Parqueto — Estimation & Assistant IA parquet" },
+      { property: "og:description", content: "Une photo, une lecture IA : essence, usure, recommandation. Et un devis chiffré par un artisan vérifié." },
     ],
     scripts: [
       {
@@ -107,6 +108,7 @@ function Index() {
       <Header />
       <Hero />
       <Promise />
+      <AssistantTeaser />
       <Process />
       <ArtisansShowcase />
       <RealisationsTeaser />
