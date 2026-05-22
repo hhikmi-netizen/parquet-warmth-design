@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import logo from "@/assets/parqueto-logo.png";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 type NavItem = { label: string; to: string };
@@ -11,7 +11,6 @@ const nav: NavItem[] = [
   { label: "Réalisations", to: "/realisations" },
   { label: "Nos artisans", to: "/artisans" },
   { label: "Outils", to: "/outils" },
-  { label: "Assistant", to: "/assistant" },
   { label: "À propos", to: "/a-propos" },
   { label: "Contact", to: "/contact" },
 ];
