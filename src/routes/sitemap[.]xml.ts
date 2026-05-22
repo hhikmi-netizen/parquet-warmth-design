@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BLOG_POSTS } from "@/lib/blog-posts";
+import { CITIES } from "@/lib/cities";
 
 const BASE = "https://parqueto.fr";
 
