@@ -59,14 +59,15 @@ export function Header() {
           <Link
             to="/assistant"
             aria-label="Assistant Parqueto — IA d'analyse parquet"
-            className="ai-glow group inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand-orange to-brand-orange-deep px-4 py-2 text-sm font-semibold text-primary-foreground shadow-warm transition hover:-translate-y-0.5"
+            className="ai-glow group inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand-orange to-brand-orange-deep px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft transition hover:-translate-y-0.5"
           >
-            <Sparkles className="h-3.5 w-3.5" aria-hidden />
+            <Sparkles className="ai-twinkle h-3.5 w-3.5" aria-hidden />
             Assistant
             <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
               IA
             </span>
           </Link>
+
           {!loading && (
             <Link
               to={accountLink.to}
