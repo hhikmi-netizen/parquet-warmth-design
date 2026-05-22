@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { EstimateWizard } from "@/components/wizard/EstimateWizard";
+import { Footer } from "@/components/site/Footer";
+import { FloatingNav } from "@/components/site/FloatingNav";
 
 export const Route = createFileRoute("/estimation")({
   component: EstimationPage,
@@ -16,5 +18,11 @@ export const Route = createFileRoute("/estimation")({
 });
 
 function EstimationPage() {
-  return <EstimateWizard />;
+  return (
+    <>
+      <EstimateWizard />
+      <Footer />
+      <FloatingNav />
+    </>
+  );
 }
