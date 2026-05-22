@@ -14,6 +14,8 @@ import { AssistantTeaser } from "@/components/site/AssistantTeaser";
 import { AtelierVideo } from "@/components/site/AtelierVideo";
 import { MotionTechnique } from "@/components/site/MotionTechnique";
 import { BrandFilm } from "@/components/site/BrandFilm";
+import { ClientExperience } from "@/components/site/ClientExperience";
+import { ArtisanExperience } from "@/components/site/ArtisanExperience";
 import { videoObjectSchema } from "@/lib/video-schema";
 import beforeAfter from "@/assets/before-after.jpg";
 import detail from "@/assets/detail-wood.jpg";
@@ -124,8 +126,10 @@ function Index() {
       <AssistantTeaser />
       <AtelierVideo />
       <Process />
+      <ClientExperience />
       <MotionTechnique />
       <ArtisansShowcase />
+      <ArtisanExperience />
       <RealisationsTeaser />
       <BrandFilm />
       <SocialProof />
