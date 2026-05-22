@@ -242,8 +242,8 @@ function MonProjetPage() {
               <AddToCalendar
                 event={{
                   title: p.next_appointment.title,
-                  start: p.next_appointment.start,
-                  end: p.next_appointment.end,
+                  start: new Date(p.next_appointment.start),
+                  end: new Date(p.next_appointment.end),
                   location: p.next_appointment.location,
                   description: `Avec ${p.next_appointment.with}`,
                 }}
