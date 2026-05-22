@@ -1,70 +1,90 @@
-import heroImg from "@/assets/hero-parquet.jpg";
-import detail from "@/assets/detail-wood.jpg";
-import artisanAction from "@/assets/artisan-action.jpg";
-import { ArrowRight } from "lucide-react";
-import { MicroReassurance } from "./MicroReassurance";
+import heroSalon from "@/assets/hero-salon-parquet.jpg";
+import { ArrowRight, Calculator, ShieldCheck, MessageCircle } from "lucide-react";
 
 export function Hero() {
   return (
-    <section id="hero" className="relative overflow-hidden">
-      <div className="grain absolute inset-0 opacity-40" aria-hidden />
-      <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-12 lg:gap-10 lg:py-24">
-        <div className="lg:col-span-6 lg:pt-8">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-orange" />
-            Parqueto · Le parquet, sans détour
-          </span>
-          <h1 className="mt-6 font-display text-5xl leading-[1.05] text-balance text-foreground sm:text-6xl lg:text-7xl">
-            Estimez votre projet parquet
+    <section id="hero" className="relative isolate overflow-hidden bg-[#f6efe4]">
+      {/* Background image */}
+      <div className="absolute inset-0">
+        <img
+          src={heroSalon}
+          alt="Salon lumineux avec parquet chêne massif lames larges teinte miel, baie vitrée et canapé beige"
+          className="h-full w-full object-cover"
+          fetchPriority="high"
+        />
+        {/* Soft cream wash for legibility on the left */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-r from-[#f7efe2]/92 via-[#f7efe2]/55 to-transparent md:from-[#f7efe2]/88 md:via-[#f7efe2]/40"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7efe2]/70 to-transparent"
+        />
+      </div>
+
+      <div className="relative mx-auto grid min-h-[78vh] max-w-7xl grid-cols-1 items-center px-6 py-20 sm:py-24 md:min-h-[82vh] lg:grid-cols-12 lg:py-32">
+        {/* Text column */}
+        <div className="lg:col-span-7 xl:col-span-6">
+          <h1 className="font-display text-5xl leading-[1.05] text-balance text-foreground sm:text-6xl lg:text-7xl">
+            Votre projet parquet
             <span className="block italic text-brand-orange">en quelques minutes.</span>
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            Obtenez gratuitement une estimation claire selon votre surface, votre type de parquet
-            et votre projet de rénovation. Un artisan partenaire vérifié prend ensuite le relais — sans démarchage.
+
+          <div
+            aria-hidden
+            className="mt-6 h-[2px] w-24 rounded-full bg-brand-orange/70"
+          />
+
+          <p className="mt-7 max-w-xl text-base leading-relaxed text-foreground/75 sm:text-lg">
+            Obtenez gratuitement une estimation claire selon votre surface,
+            votre type de parquet et votre projet de rénovation.
+            Un artisan partenaire vérifié prend ensuite le relais — sans démarchage.
           </p>
 
-          <div className="mt-9 flex flex-col gap-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <a
-                href="#estimate"
-                className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-brand-orange px-7 py-4 text-[15px] font-semibold tracking-[-0.005em] text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition duration-300 hover:-translate-y-0.5 hover:bg-brand-orange-deep hover:shadow-[0_18px_40px_-12px_rgba(204,82,29,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full"
-                />
-                <span className="relative">Estimer mon projet gratuitement</span>
-                <ArrowRight className="relative h-4 w-4 transition group-hover:translate-x-0.5" />
-              </a>
-              <a
-                href="#realisations"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3.5 text-sm font-semibold text-foreground transition hover:border-brand-orange/40 hover:text-brand-orange"
-              >
-                Voir des réalisations
-              </a>
-            </div>
-
-            <MicroReassurance />
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <a
+              href="#estimate"
+              className="group inline-flex items-center gap-2.5 rounded-full bg-brand-orange px-7 py-4 text-[15px] font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep"
+            >
+              Estimer mon projet gratuitement
+              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+            </a>
+            <a
+              href="#realisations"
+              className="inline-flex items-center rounded-full border border-foreground/15 bg-background/70 px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-sm transition hover:border-brand-orange/40 hover:text-brand-orange"
+            >
+              Voir des réalisations
+            </a>
           </div>
+
+          <ul className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-foreground/75">
+            <li className="inline-flex items-center gap-2">
+              <Calculator className="h-4 w-4 text-brand-orange" aria-hidden />
+              Gratuit
+            </li>
+            <span aria-hidden className="h-1 w-1 rounded-full bg-brand-orange/60" />
+            <li className="inline-flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-brand-orange" aria-hidden />
+              Sans engagement
+            </li>
+            <span aria-hidden className="h-1 w-1 rounded-full bg-brand-orange/60" />
+            <li className="inline-flex items-center gap-2">
+              <MessageCircle className="h-4 w-4 text-brand-orange" aria-hidden />
+              Artisan partenaire ensuite
+            </li>
+          </ul>
         </div>
 
-
-        <div className="relative lg:col-span-6">
-          <div className="relative overflow-hidden rounded-2xl shadow-warm">
-            <img src={heroImg} alt="Parquet en chevron dans appartement parisien" className="aspect-[5/6] w-full object-cover" width={1200} height={1440} />
-          </div>
-          <div className="absolute -bottom-8 -left-8 hidden w-44 overflow-hidden rounded-xl border-4 border-background shadow-soft sm:block">
-            <img src={detail} alt="Détail veinage chêne" className="aspect-square w-full object-cover" width={300} height={300} loading="lazy" />
-          </div>
-          <div className="absolute -right-4 top-10 hidden w-48 overflow-hidden rounded-xl border-4 border-background shadow-soft md:block">
-            <img src={artisanAction} alt="Parqueteur partenaire en chantier, ponceuse en main" className="aspect-[4/3] w-full object-cover" width={400} height={300} loading="lazy" />
-            <div className="absolute bottom-0 left-0 right-0 bg-foreground/85 px-2 py-1 text-center text-[10px] font-semibold uppercase tracking-wider text-background">
-              Parqueteurs vérifiés
+        {/* Stats badge */}
+        <div className="mt-12 lg:col-span-5 lg:mt-0 lg:flex lg:justify-end xl:col-span-6">
+          <div className="inline-flex flex-col items-start rounded-2xl border border-border/60 bg-background/85 px-6 py-5 shadow-warm backdrop-blur-md sm:px-7 sm:py-6 lg:items-center lg:text-center">
+            <div className="font-display text-4xl font-semibold text-brand-orange sm:text-5xl">
+              +2 400
             </div>
-          </div>
-          <div className="absolute -right-2 -bottom-6 hidden rounded-xl bg-card px-5 py-4 shadow-warm lg:block">
-            <div className="text-3xl font-display font-semibold text-brand-orange">+2 400</div>
-            <div className="text-xs text-muted-foreground">projets estimés en France</div>
+            <div className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground sm:text-[13px]">
+              projets estimés en France
+            </div>
           </div>
         </div>
       </div>
