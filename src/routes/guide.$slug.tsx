@@ -52,7 +52,7 @@ export const Route = createFileRoute("/guide/$slug")({
 });
 
 function ChapterPage() {
-  const { chapter, pages } = Route.useLoaderData();
+  const { chapter, pages } = Route.useLoaderData() as { chapter: ReturnType<typeof getChapter> & {}; pages: GuidePage[] };
   const order = CHAPTERS.filter((c) => getPagesByChapter(c.slug).length > 0);
   const idx = order.findIndex((c) => c.slug === chapter.slug);
   const prev = idx > 0 ? order[idx - 1] : null;
