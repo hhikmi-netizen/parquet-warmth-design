@@ -146,21 +146,24 @@ function GuideThankYou() {
           </h2>
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             <ResourceLink
-              to="/blog/choisir-son-parquet"
+              to="/blog/$slug"
+              params={{ slug: "choisir-parquet-massif-contrecolle" }}
               kicker="Choix"
-              title="Comment choisir son parquet"
-              text="Massif, contrecollé, stratifié : la grille de décision."
+              title="Massif ou contrecollé&nbsp;?"
+              text="La grille de décision claire pour ne pas se tromper."
             />
             <ResourceLink
-              to="/blog/entretien-parquet"
+              to="/blog/$slug"
+              params={{ slug: "entretien-parquet-quotidien-erreurs" }}
               kicker="Entretien"
-              title="L'entretien qui fait durer 30 ans"
+              title="Les erreurs d'entretien à éviter"
               text="La routine simple validée par nos artisans."
             />
             <ResourceLink
-              to="/blog/renovation-parquet"
+              to="/blog/$slug"
+              params={{ slug: "renover-parquet-ancien-sans-le-denaturer" }}
               kicker="Rénovation"
-              title="Rénover plutôt que remplacer"
+              title="Rénover sans dénaturer"
               text="Quand le ponçage suffit, quand il faut tout refaire."
             />
           </div>
