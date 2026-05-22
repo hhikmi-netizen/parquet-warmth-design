@@ -38,6 +38,9 @@ export const Route = createFileRoute("/sitemap.xml")({
         for (const p of BLOG_POSTS) {
           urls.push(`<url><loc>${BASE}/blog/${p.slug}</loc><lastmod>${p.date.slice(0, 10)}</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>`);
         }
+        for (const c of CITIES) {
+          urls.push(`<url><loc>${BASE}/parqueteur/${c.slug}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>`);
+        }
         const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>`;
         return new Response(xml, {
           status: 200,
