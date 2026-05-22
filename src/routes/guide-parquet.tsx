@@ -189,6 +189,38 @@ function GuideLanding() {
         </div>
       </section>
 
+      {/* TEASERS — 3 conseils tirés du guide */}
+      <section className="border-b border-border py-16 sm:py-20">
+        <div className="mx-auto max-w-5xl px-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
+            Aperçu du contenu
+          </p>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl">
+            Trois conseils qui vous épargnent une erreur à 3&nbsp;000&nbsp;€
+          </h2>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            <TeaserTip
+              number="01"
+              title="Le test du verre d'eau"
+              text="Avant toute pose, laissez un verre d'eau renversé 24h sur la dalle. Si la marque mouillée persiste, l'humidité résiduelle est trop élevée — votre parquet va tuiler dans les 6 mois."
+            />
+            <TeaserTip
+              number="02"
+              title="Massif ≠ toujours mieux"
+              text="Sur un sol chauffant ou en immeuble (chape fine), un contrecollé 14 mm de qualité tient mieux dans la durée qu'un massif 22 mm. Le marketing dit l'inverse — les artisans, non."
+            />
+            <TeaserTip
+              number="03"
+              title="L'huile gagne sur la vitrification"
+              text="Une huile dure se rénove zone par zone, sans tout reponcer. Une vitrification se refait intégralement tous les 10-15 ans, à 35-50 €/m². Sur 30 ans, l'huile coûte moitié moins."
+            />
+          </div>
+          <p className="mt-8 text-center text-sm text-muted-foreground">
+            Le guide complet contient des dizaines d'autres conseils comme ceux-ci.
+          </p>
+        </div>
+      </section>
+
       {/* CTA FINAL */}
       <section className="border-b border-border py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-6 text-center">
