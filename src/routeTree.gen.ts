@@ -15,6 +15,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RenovationSinistreRouteImport } from './routes/renovation-sinistre'
 import { Route as RealisationsRouteImport } from './routes/realisations'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
 import { Route as OutilsRouteImport } from './routes/outils'
@@ -91,6 +92,11 @@ const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RenovationSinistreRoute = RenovationSinistreRouteImport.update({
+  id: '/renovation-sinistre',
+  path: '/renovation-sinistre',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RealisationsRoute = RealisationsRouteImport.update({
@@ -352,6 +358,7 @@ export interface FileRoutesByFullPath {
   '/outils': typeof OutilsRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
+  '/renovation-sinistre': typeof RenovationSinistreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
@@ -405,6 +412,7 @@ export interface FileRoutesByTo {
   '/outils': typeof OutilsRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
+  '/renovation-sinistre': typeof RenovationSinistreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
@@ -461,6 +469,7 @@ export interface FileRoutesById {
   '/outils': typeof OutilsRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
+  '/renovation-sinistre': typeof RenovationSinistreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
@@ -517,6 +526,7 @@ export interface FileRouteTypes {
     | '/outils'
     | '/partenaires'
     | '/realisations'
+    | '/renovation-sinistre'
     | '/reset-password'
     | '/robots.txt'
     | '/signup'
@@ -570,6 +580,7 @@ export interface FileRouteTypes {
     | '/outils'
     | '/partenaires'
     | '/realisations'
+    | '/renovation-sinistre'
     | '/reset-password'
     | '/robots.txt'
     | '/signup'
@@ -625,6 +636,7 @@ export interface FileRouteTypes {
     | '/outils'
     | '/partenaires'
     | '/realisations'
+    | '/renovation-sinistre'
     | '/reset-password'
     | '/robots.txt'
     | '/signup'
@@ -681,6 +693,7 @@ export interface RootRouteChildren {
   OutilsRoute: typeof OutilsRoute
   PartenairesRoute: typeof PartenairesRoute
   RealisationsRoute: typeof RealisationsRoute
+  RenovationSinistreRoute: typeof RenovationSinistreRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SignupRoute: typeof SignupRoute
@@ -737,6 +750,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/renovation-sinistre': {
+      id: '/renovation-sinistre'
+      path: '/renovation-sinistre'
+      fullPath: '/renovation-sinistre'
+      preLoaderRoute: typeof RenovationSinistreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/realisations': {
@@ -1189,6 +1209,7 @@ const rootRouteChildren: RootRouteChildren = {
   OutilsRoute: OutilsRoute,
   PartenairesRoute: PartenairesRoute,
   RealisationsRoute: RealisationsRoute,
+  RenovationSinistreRoute: RenovationSinistreRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SignupRoute: SignupRoute,
