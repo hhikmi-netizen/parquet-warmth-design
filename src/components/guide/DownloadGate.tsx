@@ -53,6 +53,7 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
       setTimeout(() => {
         navigate({ to: "/guide/merci" });
       }, 800);
+    } catch (e: unknown) {
       console.error(e);
       setStatus("err");
       setErr("Impossible de générer le PDF. Réessayez dans un instant.");
