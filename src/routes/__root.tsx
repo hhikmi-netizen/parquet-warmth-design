@@ -93,19 +93,59 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Parqueto — Estimation parquet en ligne & artisan partenaire" },
+      {
+        name: "description",
+        content:
+          "Estimez votre projet parquet (pose, ponçage, vitrification, rénovation) en quelques minutes, puis échangez avec un artisan partenaire vérifié. Sans démarchage.",
+      },
+      { name: "author", content: "Parqueto" },
+      { name: "theme-color", content: "#E25822" },
+      { property: "og:site_name", content: "Parqueto" },
+      { property: "og:title", content: "Parqueto — Le parquet, sans détour" },
+      { property: "og:description", content: "Estimation parquet en ligne et accompagnement par un artisan partenaire vérifié." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { property: "og:locale", content: "fr_FR" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@parqueto" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+    ],
+    scripts: [
       {
-        rel: "stylesheet",
-        href: appCss,
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Parqueto",
+          url: "https://parqueto.fr",
+          logo: "https://parqueto.fr/logo.png",
+          email: "contact@parqueto.fr",
+          areaServed: "FR",
+          sameAs: [
+            "https://instagram.com/parqueto",
+            "https://linkedin.com/company/parqueto",
+            "https://tiktok.com/@parqueto",
+            "https://x.com/parqueto",
+            "https://facebook.com/parqueto",
+          ],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Parqueto",
+          url: "https://parqueto.fr",
+          inLanguage: "fr-FR",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "https://parqueto.fr/blog?q={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        }),
       },
     ],
   }),
@@ -117,7 +157,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <HeadContent />
       </head>
