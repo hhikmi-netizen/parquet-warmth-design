@@ -45,7 +45,7 @@ export const GUIDE_META = {
   title: "Le Guide Ultime du Parquet",
   subtitle: "Choisir · Poser · Entretenir · Rénover",
   author: "Hicham Hikmi — Fondateur de Parqueto",
-  edition: "Édition 2025",
+  edition: "Édition 2026",
   signature: "Le parquet, sans détour.",
 };
 

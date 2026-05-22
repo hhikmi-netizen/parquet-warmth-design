@@ -13,18 +13,18 @@ export const Route = createFileRoute("/guide-parquet")({
     meta: [
       {
         title:
-          "Guide parquet 2025 (PDF gratuit) — Choisir, poser, entretenir · Parqueto",
+          "Guide parquet 2026 (PDF gratuit) — Choisir, poser, entretenir · Parqueto",
       },
       {
         name: "description",
         content:
-          "Téléchargez gratuitement Le Guide Ultime du Parquet : choisir l'essence, poser, entretenir, rénover. Conseils d'artisans, normes DTU, comparatifs. PDF 2025.",
+          "Téléchargez gratuitement Le Guide Ultime du Parquet : choisir l'essence, poser, entretenir, rénover. Conseils d'artisans, normes DTU, comparatifs. PDF 2026.",
       },
-      { property: "og:title", content: "Guide parquet 2025 — PDF gratuit · Parqueto" },
+      { property: "og:title", content: "Guide parquet 2026 — PDF gratuit · Parqueto" },
       {
         property: "og:description",
         content:
-          "Tout ce qu'un artisan met dix ans à apprendre, dans un guide PDF gratuit. Choisir, poser, entretenir, rénover votre parquet en 2025.",
+          "Tout ce qu'un artisan met dix ans à apprendre, dans un guide PDF gratuit. Choisir, poser, entretenir, rénover votre parquet en 2026.",
       },
       { property: "og:type", content: "website" },
       { property: "og:image", content: GUIDE_COVER },
@@ -97,7 +97,7 @@ function GuideLanding() {
         <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 sm:py-24 md:grid-cols-[1.1fr_0.9fr] md:items-center">
           <div>
             <p className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-card px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-orange">
-              <Sparkles className="h-3 w-3" /> PDF gratuit · Édition 2025
+              <Sparkles className="h-3 w-3" /> PDF gratuit · Édition 2026
             </p>
             <h1 className="mt-5 font-display text-5xl leading-[1.05] text-balance sm:text-6xl">
               Le Guide Ultime <span className="italic text-brand-orange">du Parquet</span>
@@ -137,7 +137,7 @@ function GuideLanding() {
             <div className="absolute -inset-6 -z-10 rounded-3xl bg-brand-orange/10 blur-3xl" />
             <img
               src={GUIDE_COVER}
-              alt="Couverture du Guide Ultime du Parquet édition 2025"
+              alt="Couverture du Guide Ultime du Parquet édition 2026"
               width={1024}
               height={1536}
               className="aspect-[2/3] w-full rounded-2xl object-cover shadow-warm ring-1 ring-black/5"
