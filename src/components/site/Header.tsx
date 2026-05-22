@@ -110,8 +110,16 @@ export function Header() {
               </Link>
             )}
             <Link
+              to="/assistant"
+              onClick={() => setOpen(false)}
+              className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand-orange to-brand-orange-deep px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm"
+            >
+              <Sparkles className="h-4 w-4" /> Assistant
+              <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">IA</span>
+            </Link>
+            <Link
               to="/estimation"
-              className="mt-2 rounded-full bg-brand-orange px-5 py-3 text-center text-sm font-semibold text-primary-foreground"
+              className="mt-2 rounded-full bg-foreground px-5 py-3 text-center text-sm font-semibold text-background"
               onClick={() => setOpen(false)}
             >
               Estimer gratuitement
