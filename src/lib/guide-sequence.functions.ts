@@ -12,7 +12,8 @@ function esc(s: string) {
 
 
 
-function shell(title: string, kicker: string, bodyHtml: string, ctaHref: string, ctaLabel: string) {
+function shell(title: string, kicker: string, bodyHtml: string, ctaHref: string, ctaLabel: string, email: string) {
+  const unsubUrl = buildUnsubscribeUrl(email);
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title></head>
 <body style="margin:0;padding:0;background:#f5f0e6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#2d2724;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e6;padding:32px 16px;"><tr><td align="center">
@@ -29,10 +30,12 @@ function shell(title: string, kicker: string, bodyHtml: string, ctaHref: string,
 <div style="color:#a89684;font-size:11px;margin-top:4px;font-style:italic;">Le parquet, sans détour.</div>
 </td></tr></table>
 <div style="max-width:560px;color:#a89684;font-size:11px;text-align:center;margin-top:18px;line-height:1.6;">
-Vous recevez cet email car vous avez téléchargé notre guide. Répondez "STOP" pour ne plus rien recevoir.
+Vous recevez cet email car vous avez téléchargé notre guide.<br>
+<a href="${unsubUrl}" style="color:#a89684;text-decoration:underline;">Me désinscrire en 1 clic</a> · ou répondez "STOP".
 </div>
 </td></tr></table></body></html>`;
 }
+
 
 export function buildJ2Email(name: string | null, segment: Segment | null) {
   const hello = name ? `Bonjour ${esc(name)},` : "Bonjour,";
