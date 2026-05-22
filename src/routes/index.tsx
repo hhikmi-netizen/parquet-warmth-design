@@ -53,6 +53,15 @@ export const Route = createFileRoute("/")({
           },
         }),
       },
+      videoObjectSchema({
+        name: "Parqueto — Le parquet, sans détour",
+        description:
+          "Film de marque Parqueto : estimation parquet en ligne, assistant IA, et réseau d'artisans parqueteurs vérifiés en France.",
+        thumbnailUrl: "https://parqueto.fr/og-image.jpg",
+        uploadDate: "2026-05-22",
+        contentUrl: "https://parqueto.fr/videos/parqueto-spot.mp4",
+        duration: "PT21S",
+      }),
     ],
   }),
 });
