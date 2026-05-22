@@ -8,6 +8,7 @@ import {
   getChapter,
   getPagesByChapter,
   type ChapterSlug,
+  type GuidePage,
 } from "@/lib/guide-data";
 
 export const Route = createFileRoute("/guide/$slug")({
