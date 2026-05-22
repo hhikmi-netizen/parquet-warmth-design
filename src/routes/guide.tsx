@@ -275,14 +275,8 @@ function GuideArticle() {
       </button>
       {tocOpen && <MobileToc activeId={activeId} onClose={() => setTocOpen(false)} />}
 
-      {/* Bouton flottant téléchargement */}
-      <button
-        onClick={() => setGateOpen(true)}
-        aria-label="Télécharger le guide en PDF"
-        className="fixed bottom-6 right-6 z-40 hidden items-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep print:hidden md:inline-flex"
-      >
-        <Download className="h-4 w-4" /> PDF
-      </button>
+      {/* Mini CTA flottant non-intrusif */}
+      <FloatingGuideCta onOpen={() => setGateOpen(true)} />
 
       {gateOpen && <DownloadGate onClose={() => setGateOpen(false)} />}
 
