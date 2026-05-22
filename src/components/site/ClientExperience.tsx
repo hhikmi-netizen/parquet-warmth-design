@@ -61,13 +61,21 @@ export function ClientExperience() {
             ))}
           </ul>
 
-          <div className="mt-9">
+          <div className="mt-9 flex flex-wrap gap-3">
             <Link
               to="/estimation"
               className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition hover:-translate-y-0.5 hover:bg-foreground/90"
             >
               Estimer mon projet
             </Link>
+            {user && (
+              <Link
+                to="/mon-projet"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-accent"
+              >
+                Suivre mon projet
+              </Link>
+            )}
           </div>
         </div>
 
