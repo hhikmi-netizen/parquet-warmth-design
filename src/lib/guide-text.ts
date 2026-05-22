@@ -3,6 +3,37 @@
  * Heuristics, not perfect — designed to handle the Parqueto guide style.
  */
 
+/**
+ * Replace fictitious / outdated coordinates that were printed on the original
+ * PDF sample pages (Casablanca address, +212 number, .ma domain, sample client
+ * details) with the real Parqueto FR coordinates.
+ */
+export function sanitizeGuideText(raw: string): string {
+  if (!raw) return raw;
+  return raw
+    // Address lines — strip entirely
+    .replace(/Route d'?El Jadida[^\n]*/gi, "")
+    .replace(/\d{2,5}[, ]+Rue des Orangers[^\n]*/gi, "")
+    .replace(/20\d{3}\s+Casablanca/gi, "75000 Paris")
+    // Phones
+    .replace(/0\s?5\s?22\s?45\s?67\s?89/g, "01 84 60 60 61")
+    .replace(/0\s?6\s?12\s?34\s?56\s?78/g, "01 84 60 60 61")
+    // Email & web
+    .replace(/contact@parqueto\.ma/gi, "contact@parqueto.fr")
+    .replace(/www\.parqueto\.ma/gi, "parqueto.fr")
+    .replace(/parqueto\.ma/gi, "parqueto.fr")
+    .replace(/y\.benali@email\.com/gi, "contact@parqueto.fr")
+    // Sample client name on the quote template
+    .replace(/M\.?\s*Youssef\s+Benali/gi, "M. / Mme Client")
+    // Sample quote reference dates
+    .replace(/DEV-2024-\d{4}/g, "DEV-AAAA-NNNN")
+    // Collapse leftover empty lines / double commas
+    .replace(/,\s*,/g, ",")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n");
+}
+
+
 export type TextBlock =
   | { kind: "heading"; level: 2 | 3; text: string }
   | { kind: "chapter"; number?: string; text: string }
@@ -57,9 +88,10 @@ function matchesCallout(line: string): string | null {
 const CHAPTER_RE = /^CHAPITRE\s+(\d+)\s*[:.\-]?\s*(.*)$/i;
 
 export function parseGuideText(raw: string): TextBlock[] {
-  if (!raw?.trim()) return [];
+  const cleaned = sanitizeGuideText(raw);
+  if (!cleaned?.trim()) return [];
 
-  const rawLines = raw
+  const rawLines = cleaned
     .split(/\r?\n/)
     .map((l) => l.trim())
     .filter((l) => l.length > 0 && !isNoise(l));
@@ -174,9 +206,25 @@ function mergeShortParas(blocks: TextBlock[]): TextBlock[] {
 }
 
 function toTitleCase(s: string): string {
-  // Keep acronyms (DTU, IA, PVC, LVT, HDF), lower others
+  // Lowercase everything, then capitalise the first letter of each whitespace-
+  // or hyphen-separated word. JS \b doesn't recognise accented characters
+  // as word chars, which previously produced bugs like "éTapes" or "ClÉS".
+  const ACRONYMS = new Set([
+    "DTU", "IA", "PVC", "LVT", "HDF", "MDF", "QR", "FAQ", "DPE", "PDF",
+  ]);
   return s
-    .toLowerCase()
-    .replace(/\b([a-zà-ÿ])/g, (m) => m.toUpperCase())
-    .replace(/\b(Dtu|Ia|Pvc|Lvt|Hdf|Mdf|Qr)\b/g, (m) => m.toUpperCase());
+    .toLocaleLowerCase("fr-FR")
+    .split(/(\s+|[-–—/])/)
+    .map((tok) => {
+      if (!tok || /^\s+$/.test(tok) || /^[-–—/]$/.test(tok)) return tok;
+      const upper = tok.toLocaleUpperCase("fr-FR");
+      if (ACRONYMS.has(upper)) return upper;
+      // Capitalise the FIRST character only, keep the rest lowercased.
+      // Array.from handles surrogate-safe iteration; works fine for accents.
+      const chars = Array.from(tok);
+      chars[0] = chars[0].toLocaleUpperCase("fr-FR");
+      return chars.join("");
+    })
+    .join("");
 }
+
