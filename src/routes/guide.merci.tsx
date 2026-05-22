@@ -51,12 +51,14 @@ function GuideThankYou() {
     } catch {
       /* ignore */
     }
+    track("guide_thankyou_view");
   }, []);
 
   async function copyLink() {
     try {
       await navigator.clipboard.writeText(SHARE_URL);
       setCopied(true);
+      track("guide_share_click", { channel: "copy" });
       setTimeout(() => setCopied(false), 2500);
     } catch {
       /* ignore */
