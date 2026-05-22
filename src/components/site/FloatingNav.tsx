@@ -124,6 +124,16 @@ export function FloatingNav({ showBack = true }: { showBack?: boolean }) {
           Retour
         </button>
       )}
+      {!isHome && (
+        <Link
+          to="/"
+          aria-label="Aller à l'accueil"
+          className="group inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-3.5 py-2 text-xs font-semibold text-foreground shadow-soft backdrop-blur transition hover:-translate-y-0.5 hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:hover:translate-y-0"
+        >
+          <Home className="h-3.5 w-3.5" />
+          Accueil
+        </Link>
+      )}
       <button
         type="button"
         onClick={scrollTop}
