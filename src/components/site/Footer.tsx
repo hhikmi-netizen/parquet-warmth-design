@@ -57,7 +57,18 @@ export function Footer() {
             <li><Link to="/artisans" className="hover:text-brand-orange">Nos artisans</Link></li>
             <li><Link to="/outils" className="hover:text-brand-orange">Outils</Link></li>
             <li><Link to="/teintes" className="hover:text-brand-orange">Simulateur de teintes</Link></li>
-            <li><Link to="/guide" className="hover:text-brand-orange">Le guide du parquet</Link></li>
+            <li>
+              <Link
+                to="/guide"
+                className="inline-flex items-center gap-1.5 font-semibold text-brand-orange hover:text-brand-orange-deep"
+              >
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-brand-orange" />
+                Le guide du parquet
+                <span className="ml-1 rounded-full bg-brand-orange/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand-orange">
+                  Gratuit
+                </span>
+              </Link>
+            </li>
             <li><Link to="/blog" className="hover:text-brand-orange">Blog</Link></li>
           </ul>
         </nav>
