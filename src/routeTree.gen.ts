@@ -34,6 +34,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProOffresRouteImport } from './routes/pro.offres'
 import { Route as ProFacturationRouteImport } from './routes/pro.facturation'
+import { Route as GuideMerciRouteImport } from './routes/guide.merci'
 import { Route as GuideLectureRouteImport } from './routes/guide.lecture'
 import { Route as GuideSlugRouteImport } from './routes/guide.$slug'
 import { Route as DevenirArtisanInscriptionRouteImport } from './routes/devenir-artisan.inscription'
@@ -180,6 +181,11 @@ const ProFacturationRoute = ProFacturationRouteImport.update({
   id: '/pro/facturation',
   path: '/pro/facturation',
   getParentRoute: () => rootRouteImport,
+} as any)
+const GuideMerciRoute = GuideMerciRouteImport.update({
+  id: '/merci',
+  path: '/merci',
+  getParentRoute: () => GuideRoute,
 } as any)
 const GuideLectureRoute = GuideLectureRouteImport.update({
   id: '/lecture',
@@ -336,6 +342,7 @@ export interface FileRoutesByFullPath {
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
+  '/guide/merci': typeof GuideMerciRoute
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
@@ -383,6 +390,7 @@ export interface FileRoutesByTo {
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
+  '/guide/merci': typeof GuideMerciRoute
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
@@ -433,6 +441,7 @@ export interface FileRoutesById {
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
+  '/guide/merci': typeof GuideMerciRoute
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
@@ -483,6 +492,7 @@ export interface FileRouteTypes {
     | '/devenir-artisan/inscription'
     | '/guide/$slug'
     | '/guide/lecture'
+    | '/guide/merci'
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
@@ -530,6 +540,7 @@ export interface FileRouteTypes {
     | '/devenir-artisan/inscription'
     | '/guide/$slug'
     | '/guide/lecture'
+    | '/guide/merci'
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin'
@@ -579,6 +590,7 @@ export interface FileRouteTypes {
     | '/devenir-artisan/inscription'
     | '/guide/$slug'
     | '/guide/lecture'
+    | '/guide/merci'
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
@@ -794,6 +806,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/pro/facturation'
       preLoaderRoute: typeof ProFacturationRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/guide/merci': {
+      id: '/guide/merci'
+      path: '/merci'
+      fullPath: '/guide/merci'
+      preLoaderRoute: typeof GuideMerciRouteImport
+      parentRoute: typeof GuideRoute
     }
     '/guide/lecture': {
       id: '/guide/lecture'
@@ -1038,11 +1057,13 @@ const DevenirArtisanRouteWithChildren = DevenirArtisanRoute._addFileChildren(
 interface GuideRouteChildren {
   GuideSlugRoute: typeof GuideSlugRoute
   GuideLectureRoute: typeof GuideLectureRoute
+  GuideMerciRoute: typeof GuideMerciRoute
 }
 
 const GuideRouteChildren: GuideRouteChildren = {
   GuideSlugRoute: GuideSlugRoute,
   GuideLectureRoute: GuideLectureRoute,
+  GuideMerciRoute: GuideMerciRoute,
 }
 
 const GuideRouteWithChildren = GuideRoute._addFileChildren(GuideRouteChildren)

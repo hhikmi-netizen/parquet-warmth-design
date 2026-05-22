@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CheckCircle2, Download, Loader2, Mail, X } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
+import { useNavigate } from "@tanstack/react-router";
 import { downloadGuidePdf } from "@/lib/guide-pdf.functions";
 import { sendGuideEmail } from "@/lib/guide-email.functions";
 
@@ -16,6 +17,7 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
   const [err, setErr] = useState<string>("");
   const generate = useServerFn(downloadGuidePdf);
   const sendEmail = useServerFn(sendGuideEmail);
+  const navigate = useNavigate();
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -47,6 +49,10 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
         console.error("welcome email failed", err)
       );
       setStatus("ok");
+      // Redirige vers la page de remerciement avec upsell
+      setTimeout(() => {
+        navigate({ to: "/guide/merci" });
+      }, 800);
     } catch (e: unknown) {
       console.error(e);
       setStatus("err");
