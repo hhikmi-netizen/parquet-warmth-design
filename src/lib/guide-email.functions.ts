@@ -105,7 +105,7 @@ export const sendGuideEmail = createServerFn({ method: "POST" })
           to: [data.email],
           reply_to: REPLY_TO,
           subject: "Votre Guide Ultime du Parquet est arrivé 🌿",
-          html: buildHtml(data.name ?? null),
+          html: buildHtml(data.name ?? null, data.email),
         }),
       });
       if (!res.ok) {
