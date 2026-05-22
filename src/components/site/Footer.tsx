@@ -20,6 +20,7 @@ export function Footer() {
             <li><Link to="/artisans" className="hover:text-brand-orange">Nos artisans</Link></li>
             <li><Link to="/outils" className="hover:text-brand-orange">Outils</Link></li>
             <li><Link to="/teintes" className="hover:text-brand-orange">Simulateur de teintes</Link></li>
+            <li><Link to="/guide" className="hover:text-brand-orange">Le guide du parquet</Link></li>
             <li><Link to="/blog" className="hover:text-brand-orange">Blog</Link></li>
           </ul>
         </nav>

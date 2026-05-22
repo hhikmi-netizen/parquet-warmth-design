@@ -17,6 +17,7 @@ import { Route as RealisationsRouteImport } from './routes/realisations'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
 import { Route as OutilsRouteImport } from './routes/outils'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as GuideRouteImport } from './routes/guide'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as EstimationRouteImport } from './routes/estimation'
 import { Route as DevenirArtisanRouteImport } from './routes/devenir-artisan'
@@ -32,6 +33,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProOffresRouteImport } from './routes/pro.offres'
 import { Route as ProFacturationRouteImport } from './routes/pro.facturation'
+import { Route as GuideLectureRouteImport } from './routes/guide.lecture'
+import { Route as GuideSlugRouteImport } from './routes/guide.$slug'
 import { Route as DevenirArtisanInscriptionRouteImport } from './routes/devenir-artisan.inscription'
 import { Route as DemoMicroReassuranceRouteImport } from './routes/demo.micro-reassurance'
 import { Route as AdminSupportRouteImport } from './routes/admin.support'
@@ -90,6 +93,11 @@ const OutilsRoute = OutilsRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuideRoute = GuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -165,6 +173,16 @@ const ProFacturationRoute = ProFacturationRouteImport.update({
   id: '/pro/facturation',
   path: '/pro/facturation',
   getParentRoute: () => rootRouteImport,
+} as any)
+const GuideLectureRoute = GuideLectureRouteImport.update({
+  id: '/lecture',
+  path: '/lecture',
+  getParentRoute: () => GuideRoute,
+} as any)
+const GuideSlugRoute = GuideSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => GuideRoute,
 } as any)
 const DevenirArtisanInscriptionRoute =
   DevenirArtisanInscriptionRouteImport.update({
@@ -279,6 +297,7 @@ export interface FileRoutesByFullPath {
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/guide': typeof GuideRouteWithChildren
   '/login': typeof LoginRoute
   '/outils': typeof OutilsRoute
   '/partenaires': typeof PartenairesRoute
@@ -301,6 +320,8 @@ export interface FileRoutesByFullPath {
   '/admin/support': typeof AdminSupportRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
+  '/guide/$slug': typeof GuideSlugRoute
+  '/guide/lecture': typeof GuideLectureRoute
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
@@ -321,6 +342,7 @@ export interface FileRoutesByTo {
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/guide': typeof GuideRouteWithChildren
   '/login': typeof LoginRoute
   '/outils': typeof OutilsRoute
   '/partenaires': typeof PartenairesRoute
@@ -343,6 +365,8 @@ export interface FileRoutesByTo {
   '/admin/support': typeof AdminSupportRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
+  '/guide/$slug': typeof GuideSlugRoute
+  '/guide/lecture': typeof GuideLectureRoute
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
@@ -366,6 +390,7 @@ export interface FileRoutesById {
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/guide': typeof GuideRouteWithChildren
   '/login': typeof LoginRoute
   '/outils': typeof OutilsRoute
   '/partenaires': typeof PartenairesRoute
@@ -388,6 +413,8 @@ export interface FileRoutesById {
   '/admin/support': typeof AdminSupportRoute
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
+  '/guide/$slug': typeof GuideSlugRoute
+  '/guide/lecture': typeof GuideLectureRoute
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
@@ -411,6 +438,7 @@ export interface FileRouteTypes {
     | '/devenir-artisan'
     | '/estimation'
     | '/forgot-password'
+    | '/guide'
     | '/login'
     | '/outils'
     | '/partenaires'
@@ -433,6 +461,8 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
+    | '/guide/$slug'
+    | '/guide/lecture'
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
@@ -453,6 +483,7 @@ export interface FileRouteTypes {
     | '/devenir-artisan'
     | '/estimation'
     | '/forgot-password'
+    | '/guide'
     | '/login'
     | '/outils'
     | '/partenaires'
@@ -475,6 +506,8 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
+    | '/guide/$slug'
+    | '/guide/lecture'
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin'
@@ -497,6 +530,7 @@ export interface FileRouteTypes {
     | '/devenir-artisan'
     | '/estimation'
     | '/forgot-password'
+    | '/guide'
     | '/login'
     | '/outils'
     | '/partenaires'
@@ -519,6 +553,8 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
+    | '/guide/$slug'
+    | '/guide/lecture'
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
@@ -542,6 +578,7 @@ export interface RootRouteChildren {
   DevenirArtisanRoute: typeof DevenirArtisanRouteWithChildren
   EstimationRoute: typeof EstimationRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  GuideRoute: typeof GuideRouteWithChildren
   LoginRoute: typeof LoginRoute
   OutilsRoute: typeof OutilsRoute
   PartenairesRoute: typeof PartenairesRoute
@@ -612,6 +649,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guide': {
+      id: '/guide'
+      path: '/guide'
+      fullPath: '/guide'
+      preLoaderRoute: typeof GuideRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -718,6 +762,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/pro/facturation'
       preLoaderRoute: typeof ProFacturationRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/guide/lecture': {
+      id: '/guide/lecture'
+      path: '/lecture'
+      fullPath: '/guide/lecture'
+      preLoaderRoute: typeof GuideLectureRouteImport
+      parentRoute: typeof GuideRoute
+    }
+    '/guide/$slug': {
+      id: '/guide/$slug'
+      path: '/$slug'
+      fullPath: '/guide/$slug'
+      preLoaderRoute: typeof GuideSlugRouteImport
+      parentRoute: typeof GuideRoute
     }
     '/devenir-artisan/inscription': {
       id: '/devenir-artisan/inscription'
@@ -928,6 +986,18 @@ const DevenirArtisanRouteWithChildren = DevenirArtisanRoute._addFileChildren(
   DevenirArtisanRouteChildren,
 )
 
+interface GuideRouteChildren {
+  GuideSlugRoute: typeof GuideSlugRoute
+  GuideLectureRoute: typeof GuideLectureRoute
+}
+
+const GuideRouteChildren: GuideRouteChildren = {
+  GuideSlugRoute: GuideSlugRoute,
+  GuideLectureRoute: GuideLectureRoute,
+}
+
+const GuideRouteWithChildren = GuideRoute._addFileChildren(GuideRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
@@ -941,6 +1011,7 @@ const rootRouteChildren: RootRouteChildren = {
   DevenirArtisanRoute: DevenirArtisanRouteWithChildren,
   EstimationRoute: EstimationRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  GuideRoute: GuideRouteWithChildren,
   LoginRoute: LoginRoute,
   OutilsRoute: OutilsRoute,
   PartenairesRoute: PartenairesRoute,
@@ -957,13 +1028,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
