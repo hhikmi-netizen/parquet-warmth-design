@@ -240,11 +240,14 @@ function MonProjetPage() {
                 </div>
               </div>
               <AddToCalendar
-                title={p.next_appointment.title}
-                start={p.next_appointment.start}
-                end={p.next_appointment.end}
-                location={p.next_appointment.location}
-                description={`Avec ${p.next_appointment.with}`}
+                event={{
+                  title: p.next_appointment.title,
+                  start: p.next_appointment.start,
+                  end: p.next_appointment.end,
+                  location: p.next_appointment.location,
+                  description: `Avec ${p.next_appointment.with}`,
+                }}
+                variant="primary"
               />
             </div>
           </div>
