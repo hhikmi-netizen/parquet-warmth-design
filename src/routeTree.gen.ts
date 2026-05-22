@@ -41,6 +41,7 @@ import { Route as ConfrerieDuParquetIndexRouteImport } from './routes/confrerie-
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProOffresRouteImport } from './routes/pro.offres'
 import { Route as ProFacturationRouteImport } from './routes/pro.facturation'
+import { Route as ParqueteurVilleRouteImport } from './routes/parqueteur.$ville'
 import { Route as GuideMerciRouteImport } from './routes/guide.merci'
 import { Route as GuideLectureRouteImport } from './routes/guide.lecture'
 import { Route as GuideSlugRouteImport } from './routes/guide.$slug'
@@ -227,6 +228,11 @@ const ProOffresRoute = ProOffresRouteImport.update({
 const ProFacturationRoute = ProFacturationRouteImport.update({
   id: '/pro/facturation',
   path: '/pro/facturation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParqueteurVilleRoute = ParqueteurVilleRouteImport.update({
+  id: '/parqueteur/$ville',
+  path: '/parqueteur/$ville',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuideMerciRoute = GuideMerciRouteImport.update({
@@ -426,6 +432,7 @@ export interface FileRoutesByFullPath {
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
   '/guide/merci': typeof GuideMerciRoute
+  '/parqueteur/$ville': typeof ParqueteurVilleRoute
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
@@ -485,6 +492,7 @@ export interface FileRoutesByTo {
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
   '/guide/merci': typeof GuideMerciRoute
+  '/parqueteur/$ville': typeof ParqueteurVilleRoute
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
@@ -548,6 +556,7 @@ export interface FileRoutesById {
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
   '/guide/merci': typeof GuideMerciRoute
+  '/parqueteur/$ville': typeof ParqueteurVilleRoute
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
@@ -611,6 +620,7 @@ export interface FileRouteTypes {
     | '/guide/$slug'
     | '/guide/lecture'
     | '/guide/merci'
+    | '/parqueteur/$ville'
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
@@ -670,6 +680,7 @@ export interface FileRouteTypes {
     | '/guide/$slug'
     | '/guide/lecture'
     | '/guide/merci'
+    | '/parqueteur/$ville'
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin'
@@ -732,6 +743,7 @@ export interface FileRouteTypes {
     | '/guide/$slug'
     | '/guide/lecture'
     | '/guide/merci'
+    | '/parqueteur/$ville'
     | '/pro/facturation'
     | '/pro/offres'
     | '/admin/'
@@ -776,6 +788,7 @@ export interface RootRouteChildren {
   TeintesRoute: typeof TeintesRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   DemoMicroReassuranceRoute: typeof DemoMicroReassuranceRoute
+  ParqueteurVilleRoute: typeof ParqueteurVilleRoute
   ProFacturationRoute: typeof ProFacturationRoute
   ProOffresRoute: typeof ProOffresRoute
   ApiPublicGuideSequenceRoute: typeof ApiPublicGuideSequenceRoute
@@ -1007,6 +1020,13 @@ declare module '@tanstack/react-router' {
       path: '/pro/facturation'
       fullPath: '/pro/facturation'
       preLoaderRoute: typeof ProFacturationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parqueteur/$ville': {
+      id: '/parqueteur/$ville'
+      path: '/parqueteur/$ville'
+      fullPath: '/parqueteur/$ville'
+      preLoaderRoute: typeof ParqueteurVilleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guide/merci': {
@@ -1366,6 +1386,7 @@ const rootRouteChildren: RootRouteChildren = {
   TeintesRoute: TeintesRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   DemoMicroReassuranceRoute: DemoMicroReassuranceRoute,
+  ParqueteurVilleRoute: ParqueteurVilleRoute,
   ProFacturationRoute: ProFacturationRoute,
   ProOffresRoute: ProOffresRoute,
   ApiPublicGuideSequenceRoute: ApiPublicGuideSequenceRoute,

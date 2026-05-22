@@ -183,7 +183,7 @@ function CityPage() {
                 <h3 className="font-display text-xl">Quartiers couverts</h3>
                 <p className="mt-1 text-sm text-muted-foreground">Nos parqueteurs partenaires interviennent dans tout {city.name} et ses environs immédiats.</p>
                 <ul className="mt-4 flex flex-wrap gap-2">
-                  {city.quartiers.map((q) => (
+                  {city.quartiers.map((q: string) => (
                     <li key={q} className="rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground">
                       {q}
                     </li>
