@@ -273,11 +273,11 @@ function UpsellCard({
       <h3 className="mt-1 font-display text-xl text-brand-ink">{title}</h3>
       <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{text}</p>
       {to ? (
-        <Link to={to} className={ctaCls}>
+        <Link to={to} onClick={() => track("guide_upsell_click", { target: to, label: cta })} className={ctaCls}>
           {cta} <ArrowRight className="h-4 w-4" />
         </Link>
       ) : (
-        <a href={href} className={ctaCls}>
+        <a href={href} onClick={() => track("guide_upsell_click", { target: href, label: cta })} className={ctaCls}>
           {cta} <ArrowRight className="h-4 w-4" />
         </a>
       )}
