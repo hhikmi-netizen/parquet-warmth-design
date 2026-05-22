@@ -18,7 +18,7 @@ export function GuideBanner({
   anchor,
   ctaLabel = "Lire le chapitre correspondant",
 }: Props) {
-  const guideTarget = anchor ? `/guide#${anchor}` : "/guide";
+
 
   if (variant === "wide") {
     return (
