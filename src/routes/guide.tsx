@@ -41,6 +41,7 @@ function GuideArticle() {
   const [gateOpen, setGateOpen] = useState(false);
   const [tocOpen, setTocOpen] = useState(false);
   const [activeId, setActiveId] = useState<string>(CHAPTERS[0]?.id ?? "");
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -54,7 +55,18 @@ function GuideArticle() {
       const el = document.getElementById(`chapitre-${c.id}`);
       if (el) obs.observe(el);
     });
-    return () => obs.disconnect();
+
+    const onScroll = () => {
+      const h = document.documentElement;
+      const total = h.scrollHeight - h.clientHeight;
+      setProgress(total > 0 ? Math.min(100, Math.max(0, (h.scrollTop / total) * 100)) : 0);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      obs.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   const bookJsonLd = {
