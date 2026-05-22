@@ -82,6 +82,16 @@ function PostPage() {
     })),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: "https://parqueto.fr/" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://parqueto.fr/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://parqueto.fr/blog/${post.slug}` },
+    ],
+  };
+
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
       <Header />
