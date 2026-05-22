@@ -147,11 +147,11 @@ function AssistantPage() {
             {FAQ.map((f) => (
               <details key={f.q} className="group p-6 [&_summary::-webkit-details-marker]:hidden">
                 <summary className="flex cursor-pointer items-start justify-between gap-4 list-none">
-                  <span className="font-display text-base text-foreground transition group-open:text-foreground sm:text-lg">
+                  <span className="font-display text-base text-foreground sm:text-lg">
                     {f.q}
                   </span>
-                  <span className="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border text-foreground/60 transition group-open:rotate-45 group-open:border-foreground/40">
-                    <span className="block h-px w-2.5 bg-current" />
+                  <span className="relative mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border text-foreground/60 transition group-open:rotate-45 group-open:border-foreground/40">
+                    <span className="absolute block h-px w-2.5 bg-current" />
                     <span className="absolute block h-2.5 w-px bg-current transition group-open:opacity-0" />
                   </span>
                 </summary>
