@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowUp } from "lucide-react";
+import { ArrowLeft, ArrowUp, Home } from "lucide-react";
+import { Link, useRouterState } from "@tanstack/react-router";
 
 /**
  * Sections whose primary CTA must never be covered by the floating nav.
@@ -19,6 +20,8 @@ export function FloatingNav({ showBack = true }: { showBack?: boolean }) {
   const [progress, setProgress] = useState(0);
   const lastY = useRef(0);
   const [scrollDir, setScrollDir] = useState<"up" | "down">("up");
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isHome = pathname === "/";
 
   // Scroll-driven visibility, direction, and progress (single rAF loop).
   useEffect(() => {
@@ -122,6 +125,16 @@ export function FloatingNav({ showBack = true }: { showBack?: boolean }) {
           <ArrowLeft className="h-3.5 w-3.5 transition group-hover:-translate-x-0.5 motion-reduce:group-hover:translate-x-0" />
           Retour
         </button>
+      )}
+      {!isHome && (
+        <Link
+          to="/"
+          aria-label="Aller à l'accueil"
+          className="group inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-3.5 py-2 text-xs font-semibold text-foreground shadow-soft backdrop-blur transition hover:-translate-y-0.5 hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:hover:translate-y-0"
+        >
+          <Home className="h-3.5 w-3.5" />
+          Accueil
+        </Link>
       )}
       <button
         type="button"

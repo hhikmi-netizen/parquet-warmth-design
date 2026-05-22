@@ -3,6 +3,8 @@ import { ArrowLeft, ArrowRight, Hammer, Compass, HandshakeIcon, ShieldCheck } fr
 import logo from "@/assets/parqueto-logo.png";
 import artisanImg from "@/assets/about-artisan.jpg";
 import detailImg from "@/assets/about-detail.jpg";
+import { Footer } from "@/components/site/Footer";
+import { FloatingNav } from "@/components/site/FloatingNav";
 
 export const Route = createFileRoute("/a-propos")({
   component: AboutPage,
@@ -251,6 +253,8 @@ function AboutPage() {
           </div>
         </div>
       </section>
+      <Footer />
+      <FloatingNav />
     </main>
   );
 }
