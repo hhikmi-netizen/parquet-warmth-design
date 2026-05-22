@@ -5,7 +5,6 @@ import { buildUnsubscribeUrl } from "@/lib/guide-unsubscribe";
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
 const FROM = "Parqueto <guide@parqueto.fr>";
 const REPLY_TO = "contact@parqueto.fr";
-const REPLY_TO = "contact@parqueto.fr";
 
 const Input = z.object({
   email: z.string().trim().email().max(255),
