@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as TeintesRouteImport } from './routes/teintes'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RealisationsRouteImport } from './routes/realisations'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
@@ -71,9 +73,19 @@ const TeintesRoute = TeintesRouteImport.update({
   path: '/teintes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -341,7 +353,9 @@ export interface FileRoutesByFullPath {
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teintes': typeof TeintesRoute
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
@@ -392,7 +406,9 @@ export interface FileRoutesByTo {
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teintes': typeof TeintesRoute
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
@@ -446,7 +462,9 @@ export interface FileRoutesById {
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teintes': typeof TeintesRoute
   '/verify-email': typeof VerifyEmailRoute
   '/_authenticated/devis': typeof AuthenticatedDevisRoute
@@ -500,7 +518,9 @@ export interface FileRouteTypes {
     | '/partenaires'
     | '/realisations'
     | '/reset-password'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/teintes'
     | '/verify-email'
     | '/devis'
@@ -551,7 +571,9 @@ export interface FileRouteTypes {
     | '/partenaires'
     | '/realisations'
     | '/reset-password'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/teintes'
     | '/verify-email'
     | '/devis'
@@ -604,7 +626,9 @@ export interface FileRouteTypes {
     | '/partenaires'
     | '/realisations'
     | '/reset-password'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/teintes'
     | '/verify-email'
     | '/_authenticated/devis'
@@ -658,7 +682,9 @@ export interface RootRouteChildren {
   PartenairesRoute: typeof PartenairesRoute
   RealisationsRoute: typeof RealisationsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SignupRoute: typeof SignupRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeintesRoute: typeof TeintesRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   DemoMicroReassuranceRoute: typeof DemoMicroReassuranceRoute
@@ -685,11 +711,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeintesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -1150,7 +1190,9 @@ const rootRouteChildren: RootRouteChildren = {
   PartenairesRoute: PartenairesRoute,
   RealisationsRoute: RealisationsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SignupRoute: SignupRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeintesRoute: TeintesRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   DemoMicroReassuranceRoute: DemoMicroReassuranceRoute,
@@ -1163,3 +1205,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
