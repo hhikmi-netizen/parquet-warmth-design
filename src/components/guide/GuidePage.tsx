@@ -10,6 +10,9 @@ import { ZoomLightbox } from "@/components/guide/ZoomLightbox";
  */
 export function GuidePageBlock({ page, index }: { page: GuidePage; index: number }) {
   const blocks = parseGuideText(page.text);
+  const cleanTitle = sanitizeGuideText(page.title || "");
+  const cleanSummary = sanitizeGuideText(page.summary || "");
+  const cleanAlt = sanitizeGuideText(page.alt || "");
   const [zoomOpen, setZoomOpen] = useState(false);
 
   return (
@@ -22,11 +25,11 @@ export function GuidePageBlock({ page, index }: { page: GuidePage; index: number
           type="button"
           onClick={() => setZoomOpen(true)}
           className="group relative block w-full overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition hover:shadow-warm"
-          aria-label={`Agrandir : ${page.title || `Page ${page.order}`}`}
+          aria-label={`Agrandir : ${cleanTitle || `Page ${page.order}`}`}
         >
           <img
             src={page.asset}
-            alt={page.alt || page.title}
+            alt={cleanAlt || cleanTitle}
             loading={index < 2 ? "eager" : "lazy"}
             className="w-full object-contain"
             width={1600}
@@ -37,16 +40,16 @@ export function GuidePageBlock({ page, index }: { page: GuidePage; index: number
           </span>
         </button>
         <figcaption className="mt-3 text-xs text-muted-foreground">
-          Page {page.order} · {page.summary}
+          Page {page.order} · {cleanSummary}
         </figcaption>
       </figure>
 
       <div className="max-w-none">
         <h2 className="font-display text-2xl text-foreground sm:text-3xl">
-          {page.title || `Page ${page.order}`}
+          {cleanTitle || `Page ${page.order}`}
         </h2>
-        {page.summary && (
-          <p className="mt-2 text-sm italic text-muted-foreground">{page.summary}</p>
+        {cleanSummary && (
+          <p className="mt-2 text-sm italic text-muted-foreground">{cleanSummary}</p>
         )}
 
         <div className="mt-6 space-y-4">
