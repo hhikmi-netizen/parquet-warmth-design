@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as TeintesRouteImport } from './routes/teintes'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RealisationsRouteImport } from './routes/realisations'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
@@ -46,6 +48,7 @@ import { Route as AdminNotificationsRouteImport } from './routes/admin.notificat
 import { Route as AdminMonetisationRouteImport } from './routes/admin.monetisation'
 import { Route as AdminModerationRouteImport } from './routes/admin.moderation'
 import { Route as AdminLogsRouteImport } from './routes/admin.logs'
+import { Route as AdminGuideRouteImport } from './routes/admin.guide'
 import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminArtisansRouteImport } from './routes/admin.artisans'
 import { Route as AuthenticatedProRouteImport } from './routes/_authenticated/pro'
@@ -53,6 +56,7 @@ import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
 import { Route as ProDevisNouveauRouteImport } from './routes/pro.devis.nouveau'
+import { Route as ApiPublicGuideUnsubscribeRouteImport } from './routes/api/public/guide-unsubscribe'
 import { Route as ApiPublicGuideSequenceRouteImport } from './routes/api/public/guide-sequence'
 import { Route as AuthenticatedProOnboardingRouteImport } from './routes/_authenticated/pro.onboarding'
 import { Route as AuthenticatedProMessagesRouteImport } from './routes/_authenticated/pro.messages'
@@ -69,9 +73,19 @@ const TeintesRoute = TeintesRouteImport.update({
   path: '/teintes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -244,6 +258,11 @@ const AdminLogsRoute = AdminLogsRouteImport.update({
   path: '/logs',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminGuideRoute = AdminGuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminClientsRoute = AdminClientsRouteImport.update({
   id: '/clients',
   path: '/clients',
@@ -279,6 +298,12 @@ const ProDevisNouveauRoute = ProDevisNouveauRouteImport.update({
   path: '/pro/devis/nouveau',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicGuideUnsubscribeRoute =
+  ApiPublicGuideUnsubscribeRouteImport.update({
+    id: '/api/public/guide-unsubscribe',
+    path: '/api/public/guide-unsubscribe',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicGuideSequenceRoute = ApiPublicGuideSequenceRouteImport.update({
   id: '/api/public/guide-sequence',
   path: '/api/public/guide-sequence',
@@ -328,7 +353,9 @@ export interface FileRoutesByFullPath {
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teintes': typeof TeintesRoute
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
@@ -337,6 +364,7 @@ export interface FileRoutesByFullPath {
   '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/moderation': typeof AdminModerationRoute
   '/admin/monetisation': typeof AdminMonetisationRoute
@@ -357,6 +385,7 @@ export interface FileRoutesByFullPath {
   '/pro/messages': typeof AuthenticatedProMessagesRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
+  '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesByTo {
@@ -377,7 +406,9 @@ export interface FileRoutesByTo {
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teintes': typeof TeintesRoute
   '/verify-email': typeof VerifyEmailRoute
   '/devis': typeof AuthenticatedDevisRoute
@@ -386,6 +417,7 @@ export interface FileRoutesByTo {
   '/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/moderation': typeof AdminModerationRoute
   '/admin/monetisation': typeof AdminMonetisationRoute
@@ -406,6 +438,7 @@ export interface FileRoutesByTo {
   '/pro/messages': typeof AuthenticatedProMessagesRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
+  '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesById {
@@ -429,7 +462,9 @@ export interface FileRoutesById {
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teintes': typeof TeintesRoute
   '/verify-email': typeof VerifyEmailRoute
   '/_authenticated/devis': typeof AuthenticatedDevisRoute
@@ -438,6 +473,7 @@ export interface FileRoutesById {
   '/_authenticated/pro': typeof AuthenticatedProRouteWithChildren
   '/admin/artisans': typeof AdminArtisansRoute
   '/admin/clients': typeof AdminClientsRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/moderation': typeof AdminModerationRoute
   '/admin/monetisation': typeof AdminMonetisationRoute
@@ -458,6 +494,7 @@ export interface FileRoutesById {
   '/_authenticated/pro/messages': typeof AuthenticatedProMessagesRoute
   '/_authenticated/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
+  '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRouteTypes {
@@ -481,7 +518,9 @@ export interface FileRouteTypes {
     | '/partenaires'
     | '/realisations'
     | '/reset-password'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/teintes'
     | '/verify-email'
     | '/devis'
@@ -490,6 +529,7 @@ export interface FileRouteTypes {
     | '/pro'
     | '/admin/artisans'
     | '/admin/clients'
+    | '/admin/guide'
     | '/admin/logs'
     | '/admin/moderation'
     | '/admin/monetisation'
@@ -510,6 +550,7 @@ export interface FileRouteTypes {
     | '/pro/messages'
     | '/pro/onboarding'
     | '/api/public/guide-sequence'
+    | '/api/public/guide-unsubscribe'
     | '/pro/devis/nouveau'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -530,7 +571,9 @@ export interface FileRouteTypes {
     | '/partenaires'
     | '/realisations'
     | '/reset-password'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/teintes'
     | '/verify-email'
     | '/devis'
@@ -539,6 +582,7 @@ export interface FileRouteTypes {
     | '/pro'
     | '/admin/artisans'
     | '/admin/clients'
+    | '/admin/guide'
     | '/admin/logs'
     | '/admin/moderation'
     | '/admin/monetisation'
@@ -559,6 +603,7 @@ export interface FileRouteTypes {
     | '/pro/messages'
     | '/pro/onboarding'
     | '/api/public/guide-sequence'
+    | '/api/public/guide-unsubscribe'
     | '/pro/devis/nouveau'
   id:
     | '__root__'
@@ -581,7 +626,9 @@ export interface FileRouteTypes {
     | '/partenaires'
     | '/realisations'
     | '/reset-password'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/teintes'
     | '/verify-email'
     | '/_authenticated/devis'
@@ -590,6 +637,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pro'
     | '/admin/artisans'
     | '/admin/clients'
+    | '/admin/guide'
     | '/admin/logs'
     | '/admin/moderation'
     | '/admin/monetisation'
@@ -610,6 +658,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pro/messages'
     | '/_authenticated/pro/onboarding'
     | '/api/public/guide-sequence'
+    | '/api/public/guide-unsubscribe'
     | '/pro/devis/nouveau'
   fileRoutesById: FileRoutesById
 }
@@ -633,13 +682,16 @@ export interface RootRouteChildren {
   PartenairesRoute: typeof PartenairesRoute
   RealisationsRoute: typeof RealisationsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SignupRoute: typeof SignupRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeintesRoute: typeof TeintesRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   DemoMicroReassuranceRoute: typeof DemoMicroReassuranceRoute
   ProFacturationRoute: typeof ProFacturationRoute
   ProOffresRoute: typeof ProOffresRoute
   ApiPublicGuideSequenceRoute: typeof ApiPublicGuideSequenceRoute
+  ApiPublicGuideUnsubscribeRoute: typeof ApiPublicGuideUnsubscribeRoute
   ProDevisNouveauRoute: typeof ProDevisNouveauRoute
 }
 
@@ -659,11 +711,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeintesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -904,6 +970,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLogsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/guide': {
+      id: '/admin/guide'
+      path: '/guide'
+      fullPath: '/admin/guide'
+      preLoaderRoute: typeof AdminGuideRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/clients': {
       id: '/admin/clients'
       path: '/clients'
@@ -951,6 +1024,13 @@ declare module '@tanstack/react-router' {
       path: '/pro/devis/nouveau'
       fullPath: '/pro/devis/nouveau'
       preLoaderRoute: typeof ProDevisNouveauRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/guide-unsubscribe': {
+      id: '/api/public/guide-unsubscribe'
+      path: '/api/public/guide-unsubscribe'
+      fullPath: '/api/public/guide-unsubscribe'
+      preLoaderRoute: typeof ApiPublicGuideUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/guide-sequence': {
@@ -1029,6 +1109,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminArtisansRoute: typeof AdminArtisansRoute
   AdminClientsRoute: typeof AdminClientsRoute
+  AdminGuideRoute: typeof AdminGuideRoute
   AdminLogsRoute: typeof AdminLogsRoute
   AdminModerationRoute: typeof AdminModerationRoute
   AdminMonetisationRoute: typeof AdminMonetisationRoute
@@ -1041,6 +1122,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminArtisansRoute: AdminArtisansRoute,
   AdminClientsRoute: AdminClientsRoute,
+  AdminGuideRoute: AdminGuideRoute,
   AdminLogsRoute: AdminLogsRoute,
   AdminModerationRoute: AdminModerationRoute,
   AdminMonetisationRoute: AdminMonetisationRoute,
@@ -1108,13 +1190,16 @@ const rootRouteChildren: RootRouteChildren = {
   PartenairesRoute: PartenairesRoute,
   RealisationsRoute: RealisationsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SignupRoute: SignupRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeintesRoute: TeintesRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   DemoMicroReassuranceRoute: DemoMicroReassuranceRoute,
   ProFacturationRoute: ProFacturationRoute,
   ProOffresRoute: ProOffresRoute,
   ApiPublicGuideSequenceRoute: ApiPublicGuideSequenceRoute,
+  ApiPublicGuideUnsubscribeRoute: ApiPublicGuideUnsubscribeRoute,
   ProDevisNouveauRoute: ProDevisNouveauRoute,
 }
 export const routeTree = rootRouteImport

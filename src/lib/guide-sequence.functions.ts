@@ -2,13 +2,18 @@
  * Contenu des emails J+2 (conseil complémentaire) et J+7 (CTA estimation).
  * Adapté au segment du lead (particulier / pro / artisan).
  */
+import { buildUnsubscribeUrl } from "@/lib/guide-unsubscribe";
+
 export type Segment = "particulier" | "pro" | "artisan";
 
 function esc(s: string) {
   return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 }
 
-function shell(title: string, kicker: string, bodyHtml: string, ctaHref: string, ctaLabel: string) {
+
+
+function shell(title: string, kicker: string, bodyHtml: string, ctaHref: string, ctaLabel: string, email: string) {
+  const unsubUrl = buildUnsubscribeUrl(email);
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title></head>
 <body style="margin:0;padding:0;background:#f5f0e6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#2d2724;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e6;padding:32px 16px;"><tr><td align="center">
@@ -25,12 +30,14 @@ function shell(title: string, kicker: string, bodyHtml: string, ctaHref: string,
 <div style="color:#a89684;font-size:11px;margin-top:4px;font-style:italic;">Le parquet, sans détour.</div>
 </td></tr></table>
 <div style="max-width:560px;color:#a89684;font-size:11px;text-align:center;margin-top:18px;line-height:1.6;">
-Vous recevez cet email car vous avez téléchargé notre guide. Répondez "STOP" pour ne plus rien recevoir.
+Vous recevez cet email car vous avez téléchargé notre guide.<br>
+<a href="${unsubUrl}" style="color:#a89684;text-decoration:underline;">Me désinscrire en 1 clic</a> · ou répondez "STOP".
 </div>
 </td></tr></table></body></html>`;
 }
 
-export function buildJ2Email(name: string | null, segment: Segment | null) {
+
+export function buildJ2Email(name: string | null, segment: Segment | null, email: string) {
   const hello = name ? `Bonjour ${esc(name)},` : "Bonjour,";
   let tip = "";
   if (segment === "pro") {
@@ -49,11 +56,11 @@ ${tip}
 <p style="margin:0;font-size:15px;line-height:1.65;color:#3d3531;">Bonne lecture, et à très vite.</p>`;
   return {
     subject: "Une astuce parquet que peu de gens connaissent",
-    html: shell("Une astuce qu'on ne met jamais par écrit", "Jour +2 · Conseil offert", html, "https://parqueto.fr/guide", "Relire le guide"),
+    html: shell("Une astuce qu'on ne met jamais par écrit", "Jour +2 · Conseil offert", html, "https://parqueto.fr/guide", "Relire le guide", email),
   };
 }
 
-export function buildJ7Email(name: string | null, segment: Segment | null) {
+export function buildJ7Email(name: string | null, segment: Segment | null, email: string) {
   const hello = name ? `Bonjour ${esc(name)},` : "Bonjour,";
   let pitch = "";
   let cta = "Estimer mon projet";
@@ -76,6 +83,6 @@ ${pitch}
 <p style="margin:0;font-size:14px;line-height:1.65;color:#7a6a5c;">Une question ? Répondez simplement à cet email — un humain vous lira.</p>`;
   return {
     subject: "Et si on chiffrait votre projet parquet ?",
-    html: shell("Passons du papier au projet", "Jour +7 · Estimation", html, href, cta),
+    html: shell("Passons du papier au projet", "Jour +7 · Estimation", html, href, cta, email),
   };
 }
