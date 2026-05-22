@@ -1,26 +1,25 @@
 import { createFileRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
-import { useState } from "react";
-import { ArrowRight, BookOpen, Download, Layers } from "lucide-react";
+import { ArrowRight, BookOpen, Download, Mail, Phone } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { DownloadGate } from "@/components/guide/DownloadGate";
-import { getChapterStats } from "@/lib/guide-data";
+import { CHAPTERS, GUIDE_COVER, GUIDE_META, getReadingTime, type Block } from "@/lib/guide-content";
 
 export const Route = createFileRoute("/guide")({
   component: GuideLayout,
   head: () => ({
     meta: [
-      { title: "Le guide ultime du parquet — Conseils d'artisans · Parqueto" },
+      { title: "Le Guide Ultime du Parquet — Choisir, poser, entretenir · Parqueto" },
       {
         name: "description",
         content:
-          "Le guide complet du parquet par les artisans Parqueto : choisir, poser, entretenir, rénover. 79 pages d'expertise illustrée, en libre accès.",
+          "Le guide complet du parquet par Parqueto : choisir, poser, entretenir, rénover. Lexique, normes DTU, comparatifs et solutions concrètes. Libre accès, téléchargeable en PDF.",
       },
-      { property: "og:title", content: "Le guide ultime du parquet · Parqueto" },
+      { property: "og:title", content: "Le Guide Ultime du Parquet · Parqueto" },
       {
         property: "og:description",
-        content: "79 pages d'expertise artisanale en libre accès : choisir, poser, entretenir, rénover.",
+        content: "Choisir, poser, entretenir, rénover : tout le savoir-faire des artisans du parquet, condensé dans un guide en libre accès.",
       },
+      { property: "og:image", content: GUIDE_COVER },
       { name: "robots", content: "index, follow, max-image-preview:large" },
     ],
   }),
@@ -30,121 +29,297 @@ function GuideLayout() {
   const matches = useMatches();
   const isChild = matches.some((m) => m.routeId !== "/guide" && m.routeId.startsWith("/guide"));
   if (isChild) return <Outlet />;
-  return <GuideHub />;
+  return <GuideArticle />;
 }
 
-function GuideHub() {
-  const chapters = getChapterStats();
-  const [dlOpen, setDlOpen] = useState(false);
-  const total = chapters.reduce((s, c) => s + c.count, 0);
+function handleDownload() {
+  // Impression navigateur → "Enregistrer en PDF" : aucun service externe, fidélité totale.
+  window.print();
+}
 
+function GuideArticle() {
+  const minutes = getReadingTime();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Book",
-    name: "Le guide ultime du parquet",
-    author: { "@type": "Organization", name: "Parqueto" },
-    publisher: { "@type": "Organization", name: "Parqueto" },
+    name: GUIDE_META.title,
+    author: { "@type": "Person", name: "Hicham Hikmi" },
+    publisher: { "@type": "Organization", name: "Parqueto", url: "https://parqueto.fr" },
     inLanguage: "fr-FR",
-    numberOfPages: total,
+    image: GUIDE_COVER,
+    numberOfPages: CHAPTERS.length,
     description:
-      "Guide professionnel pour choisir, poser, entretenir et rénover le parquet. Conseils d'artisans, normes DTU, techniques de pose et solutions aux problèmes.",
-    hasPart: chapters.map((c) => ({
-      "@type": "Chapter",
-      name: c.title,
-      url: `https://parqueto.fr/guide/${c.slug}`,
-    })),
+      "Guide professionnel pour choisir, poser, entretenir et rénover le parquet. Conseils d'artisans, normes DTU, comparatifs et diagnostics.",
+    hasPart: CHAPTERS.map((c) => ({ "@type": "Chapter", name: c.title })),
   };
 
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
-      <Header />
+      <div className="print:hidden">
+        <Header />
+      </div>
 
-      <section className="border-b border-border bg-secondary/30 py-16 sm:py-24">
-        <div className="mx-auto max-w-5xl px-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
-            Le guide ultime
+      {/* HERO */}
+      <section className="border-b border-border bg-gradient-warm print:hidden">
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 sm:py-24 md:grid-cols-[1.1fr_0.9fr] md:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-orange">
+              {GUIDE_META.edition} · {minutes} min de lecture
+            </p>
+            <h1 className="mt-5 font-display text-5xl leading-[1.05] text-balance sm:text-6xl">
+              Le Guide Ultime <span className="italic text-brand-orange">du Parquet</span>
+            </h1>
+            <p className="mt-5 font-display text-xl text-muted-foreground">
+              {GUIDE_META.subtitle}
+            </p>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
+              Tout ce qu'un artisan expérimenté met dix ans à apprendre, condensé dans un seul guide.
+              Rédigé par {GUIDE_META.author}.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#chapitre-introduction"
+                className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-brand-orange-deep"
+              >
+                <BookOpen className="h-4 w-4" /> Commencer la lecture
+              </a>
+              <button
+                onClick={handleDownload}
+                className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-card px-6 py-3 text-sm font-semibold text-brand-orange-deep transition hover:bg-brand-orange/10"
+              >
+                <Download className="h-4 w-4" /> Télécharger le guide (PDF)
+              </button>
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Astuce : dans la fenêtre d'impression, choisissez « Enregistrer au format PDF ».
+            </p>
+          </div>
+
+          <figure className="relative mx-auto w-full max-w-sm">
+            <div className="absolute -inset-6 -z-10 rounded-3xl bg-brand-orange/10 blur-3xl" />
+            <img
+              src={GUIDE_COVER}
+              alt="Couverture du Guide Ultime du Parquet — édition Parqueto"
+              width={1024}
+              height={1536}
+              className="aspect-[2/3] w-full rounded-2xl object-cover shadow-warm ring-1 ring-black/5"
+            />
+            <figcaption className="mt-3 text-center text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              {GUIDE_META.signature}
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      {/* SOMMAIRE */}
+      <section className="border-b border-border print:hidden">
+        <div className="mx-auto max-w-6xl px-6 py-14">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">Sommaire</p>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl">{CHAPTERS.length} chapitres</h2>
+          <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {CHAPTERS.map((c) => (
+              <li key={c.id}>
+                <a
+                  href={`#chapitre-${c.id}`}
+                  className="group flex items-start gap-4 rounded-xl border border-border bg-card p-4 transition hover:border-brand-orange/40 hover:bg-brand-orange/5"
+                >
+                  <span className="font-display text-2xl text-brand-orange">{c.number}</span>
+                  <span>
+                    <span className="block font-display text-lg leading-tight">{c.title}</span>
+                    <span className="text-xs text-muted-foreground">{c.kicker}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* PAGE DE GARDE IMPRIMÉE */}
+      <section className="hidden print:flex print:min-h-screen print:flex-col print:items-center print:justify-center print:gap-6 print:p-12">
+        <img src={GUIDE_COVER} alt="" className="max-h-[70vh] w-auto" />
+        <p className="font-display text-2xl">{GUIDE_META.title}</p>
+        <p className="text-sm text-muted-foreground">{GUIDE_META.subtitle}</p>
+        <p className="text-xs text-muted-foreground">{GUIDE_META.author} — {GUIDE_META.edition}</p>
+      </section>
+
+      {/* CHAPITRES */}
+      <article className="mx-auto max-w-3xl px-6 py-16 print:max-w-none print:px-0 print:py-0">
+        {CHAPTERS.map((c, idx) => (
+          <section
+            key={c.id}
+            id={`chapitre-${c.id}`}
+            className="scroll-mt-24 border-b border-border pb-20 pt-20 first:pt-0 last:border-b-0 print:break-before-page print:pt-12"
+          >
+            <header className="mb-10 flex items-baseline gap-4 border-l-4 border-brand-orange pl-5">
+              <span className="font-display text-5xl text-brand-orange/40">{c.number}</span>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
+                  {c.kicker}
+                </p>
+                <h2 className="mt-1 font-display text-3xl sm:text-4xl">{c.title}</h2>
+              </div>
+            </header>
+
+            <figure className="mb-10 overflow-hidden rounded-2xl border border-border bg-muted">
+              <img
+                src={c.cover}
+                alt={`Illustration du chapitre ${c.title}`}
+                loading={idx === 0 ? "eager" : "lazy"}
+                className="aspect-[16/10] w-full object-cover"
+              />
+            </figure>
+
+            <p className="mb-12 font-display text-xl leading-relaxed text-brand-ink/85 sm:text-2xl">
+              {c.intro}
+            </p>
+
+            {c.sections.map((s) => (
+              <section key={s.id} className="mb-12 scroll-mt-24" id={`${c.id}-${s.id}`}>
+                <h3 className="mb-5 font-display text-2xl text-brand-ink">{s.title}</h3>
+                <div className="space-y-5">
+                  {s.blocks.map((b, i) => (
+                    <RenderBlock key={i} block={b} />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </section>
+        ))}
+      </article>
+
+      {/* CTA FINAL */}
+      <section className="border-t border-border bg-secondary/40 py-16 print:hidden">
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <h2 className="font-display text-3xl sm:text-4xl">Un projet de parquet ?</h2>
+          <p className="mt-4 text-muted-foreground">
+            Estimez votre projet en 2 minutes ou contactez nos artisans pour un conseil gratuit.
           </p>
-          <h1 className="mt-4 font-display text-4xl text-balance sm:text-6xl">
-            Le parquet, <span className="italic text-brand-orange">expliqué de A à Z.</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
-            {total} pages d'expertise artisanale en libre accès. Choisir, poser, finir, entretenir,
-            rénover : tout ce que les meilleurs poseurs de parquet partagent rarement, condensé dans
-            un seul guide.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              to="/guide/lecture"
-              className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
-            >
-              <BookOpen className="h-4 w-4" /> Lire le guide
-            </Link>
-            <button
-              onClick={() => setDlOpen(true)}
-              className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-card px-6 py-3 text-sm font-semibold text-brand-orange-deep transition hover:bg-brand-orange/10"
-            >
-              <Download className="h-4 w-4" /> Télécharger le PDF
-            </button>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               to="/estimation"
+              className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
+            >
+              Estimer mon projet <ArrowRight className="h-4 w-4" />
+            </Link>
+            <a
+              href="tel:+33184606061"
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold transition hover:bg-accent"
             >
-              Estimer mon projet
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+              <Phone className="h-4 w-4" /> 01 84 60 60 61
+            </a>
+            <a
+              href="mailto:contact@parqueto.fr"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold transition hover:bg-accent"
+            >
+              <Mail className="h-4 w-4" /> contact@parqueto.fr
+            </a>
           </div>
         </div>
       </section>
 
-      {dlOpen && <DownloadGate onClose={() => setDlOpen(false)} />}
+      <div className="print:hidden">
+        <Footer />
+      </div>
 
-      <section className="py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-10 flex items-end justify-between gap-6">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
-                Sommaire
-              </p>
-              <h2 className="mt-3 font-display text-3xl sm:text-4xl">
-                {chapters.length} chapitres, {total} pages
-              </h2>
-            </div>
-            <Layers className="hidden h-10 w-10 text-brand-orange/60 sm:block" />
-          </div>
+      {/* Bouton flottant impression / téléchargement */}
+      <button
+        onClick={handleDownload}
+        aria-label="Télécharger le guide en PDF"
+        className="fixed bottom-6 right-6 z-40 hidden items-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep print:hidden md:inline-flex"
+      >
+        <Download className="h-4 w-4" /> PDF
+      </button>
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {chapters.map((c, i) => (
-              <Link
-                key={c.slug}
-                to="/guide/$slug"
-                params={{ slug: c.slug }}
-                className="group overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition hover:-translate-y-1 hover:shadow-warm"
-              >
-                <div className="aspect-[4/3] overflow-hidden bg-muted">
-                  {c.cover && (
-                    <img
-                      src={c.cover}
-                      alt={c.title}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                    />
-                  )}
-                </div>
-                <div className="p-6">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-orange">
-                    Chapitre {i + 1} · {c.count} pages
-                  </p>
-                  <h3 className="mt-2 font-display text-2xl">{c.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{c.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <Footer />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     </main>
   );
+}
+
+function RenderBlock({ block }: { block: Block }) {
+  switch (block.type) {
+    case "p":
+      return <p className="text-base leading-[1.75] text-brand-ink/85">{block.text}</p>;
+    case "lead":
+      return (
+        <p className="border-l-2 border-brand-orange pl-4 font-display text-xl italic text-brand-ink">
+          {block.text}
+        </p>
+      );
+    case "h3":
+      return <h4 className="mt-6 font-display text-xl text-brand-ink">{block.text}</h4>;
+    case "list":
+      return (
+        <ul className="space-y-2.5">
+          {block.items.map((item, i) => (
+            <li key={i} className="flex gap-3 text-base leading-relaxed text-brand-ink/85">
+              <span aria-hidden className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-brand-orange" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      );
+    case "callout":
+      return (
+        <aside className="rounded-2xl border border-brand-orange/25 bg-brand-orange/[0.06] p-6 print:break-inside-avoid">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-orange">
+            {block.title}
+          </p>
+          <p className="mt-2 font-display text-lg leading-snug text-brand-ink">{block.text}</p>
+        </aside>
+      );
+    case "tip":
+      return (
+        <p className="rounded-xl border-l-4 border-brand-orange bg-secondary/50 px-4 py-3 text-sm leading-relaxed text-brand-ink/80">
+          <span className="font-semibold text-brand-orange-deep">Astuce — </span>
+          {block.text}
+        </p>
+      );
+    case "table":
+      return (
+        <div className="overflow-x-auto rounded-xl border border-border print:overflow-visible">
+          <table className="w-full border-collapse text-sm">
+            <thead className="bg-secondary/60">
+              <tr>
+                {block.head.map((h, i) => (
+                  <th
+                    key={i}
+                    className="border-b border-border px-4 py-3 text-left font-display text-base text-brand-ink"
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((row, ri) => (
+                <tr key={ri} className="even:bg-secondary/20">
+                  {row.map((cell, ci) => (
+                    <td
+                      key={ci}
+                      className="border-b border-border/60 px-4 py-3 align-top text-brand-ink/80"
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    case "image":
+      return (
+        <figure className="overflow-hidden rounded-xl border border-border bg-muted">
+          <img src={block.src} alt={block.caption || ""} loading="lazy" className="w-full" />
+          {block.caption && (
+            <figcaption className="border-t border-border bg-card px-4 py-2 text-xs italic text-muted-foreground">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+    default:
+      return null;
+  }
 }
