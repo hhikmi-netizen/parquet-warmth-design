@@ -278,7 +278,7 @@ function ConfreriePage() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              to="/devenir-artisan"
+              to="/confrerie-du-parquet/candidater"
               className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
             >
               Candidater
