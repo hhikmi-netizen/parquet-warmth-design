@@ -42,6 +42,10 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 5000);
       localStorage.setItem("parqueto-guide-lead", JSON.stringify({ email, name, at: Date.now() }));
+      // Fire-and-forget welcome email
+      sendEmail({ data: { email: email.trim(), name: name.trim() || null } }).catch((err) =>
+        console.error("welcome email failed", err)
+      );
       setStatus("ok");
     } catch (e: unknown) {
       console.error(e);
