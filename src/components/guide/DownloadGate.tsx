@@ -17,6 +17,7 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
   const [err, setErr] = useState<string>("");
   const generate = useServerFn(downloadGuidePdf);
   const sendEmail = useServerFn(sendGuideEmail);
+  const navigate = useNavigate();
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -48,7 +49,10 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
         console.error("welcome email failed", err)
       );
       setStatus("ok");
-    } catch (e: unknown) {
+      // Redirige vers la page de remerciement avec upsell
+      setTimeout(() => {
+        navigate({ to: "/guide/merci" });
+      }, 800);
       console.error(e);
       setStatus("err");
       setErr("Impossible de générer le PDF. Réessayez dans un instant.");
