@@ -117,6 +117,38 @@
   .animate-scan {
     animation: pq-scan 1.8s ease-in-out infinite;
   }
+  .animate-marquee {
+    animation: pq-marquee 38s linear infinite;
+  }
+  .pause-on-hover:hover {
+    animation-play-state: paused;
+  }
+  .ai-glow {
+    position: relative;
+    isolation: isolate;
+  }
+  .ai-glow::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 9999px;
+    background: conic-gradient(from 0deg, oklch(0.78 0.18 55), oklch(0.72 0.18 35), oklch(0.85 0.14 75), oklch(0.78 0.18 55));
+    filter: blur(8px);
+    opacity: 0.5;
+    z-index: -1;
+    animation: pq-ai-rotate 6s linear infinite;
+  }
+  .ai-glow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: linear-gradient(120deg, transparent 30%, oklch(1 0 0 / 0.35) 50%, transparent 70%);
+    background-size: 220% 100%;
+    animation: pq-ai-shimmer 3.2s ease-in-out infinite;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
 }
 
 @keyframes pq-scan {
@@ -124,6 +156,20 @@
   10% { opacity: 1; }
   90% { opacity: 1; }
   100% { top: 100%; opacity: 0; }
+}
+
+@keyframes pq-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes pq-ai-rotate {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pq-ai-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -100% 0; }
 }
 
 @media print {
