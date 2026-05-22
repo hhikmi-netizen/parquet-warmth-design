@@ -1,7 +1,9 @@
 import { createFileRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, Layers } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, BookOpen, Download, Layers } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { DownloadGate } from "@/components/guide/DownloadGate";
 import { getChapterStats } from "@/lib/guide-data";
 
 export const Route = createFileRoute("/guide")({
@@ -33,6 +35,7 @@ function GuideLayout() {
 
 function GuideHub() {
   const chapters = getChapterStats();
+  const [dlOpen, setDlOpen] = useState(false);
   const total = chapters.reduce((s, c) => s + c.count, 0);
 
   const jsonLd = {
@@ -76,6 +79,12 @@ function GuideHub() {
             >
               <BookOpen className="h-4 w-4" /> Lire le guide
             </Link>
+            <button
+              onClick={() => setDlOpen(true)}
+              className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-card px-6 py-3 text-sm font-semibold text-brand-orange-deep transition hover:bg-brand-orange/10"
+            >
+              <Download className="h-4 w-4" /> Télécharger le PDF
+            </button>
             <Link
               to="/estimation"
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold transition hover:bg-accent"
@@ -86,6 +95,8 @@ function GuideHub() {
           </div>
         </div>
       </section>
+
+      {dlOpen && <DownloadGate onClose={() => setDlOpen(false)} />}
 
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-6">
