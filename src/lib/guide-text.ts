@@ -3,6 +3,37 @@
  * Heuristics, not perfect — designed to handle the Parqueto guide style.
  */
 
+/**
+ * Replace fictitious / outdated coordinates that were printed on the original
+ * PDF sample pages (Casablanca address, +212 number, .ma domain, sample client
+ * details) with the real Parqueto FR coordinates.
+ */
+export function sanitizeGuideText(raw: string): string {
+  if (!raw) return raw;
+  return raw
+    // Address lines — strip entirely
+    .replace(/Route d'?El Jadida[^\n]*/gi, "")
+    .replace(/\d{2,5}[, ]+Rue des Orangers[^\n]*/gi, "")
+    .replace(/20\d{3}\s+Casablanca/gi, "75000 Paris")
+    // Phones
+    .replace(/0\s?5\s?22\s?45\s?67\s?89/g, "01 84 60 60 61")
+    .replace(/0\s?6\s?12\s?34\s?56\s?78/g, "01 84 60 60 61")
+    // Email & web
+    .replace(/contact@parqueto\.ma/gi, "contact@parqueto.fr")
+    .replace(/www\.parqueto\.ma/gi, "parqueto.fr")
+    .replace(/parqueto\.ma/gi, "parqueto.fr")
+    .replace(/y\.benali@email\.com/gi, "contact@parqueto.fr")
+    // Sample client name on the quote template
+    .replace(/M\.?\s*Youssef\s+Benali/gi, "M. / Mme Client")
+    // Sample quote reference dates
+    .replace(/DEV-2024-\d{4}/g, "DEV-AAAA-NNNN")
+    // Collapse leftover empty lines / double commas
+    .replace(/,\s*,/g, ",")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n");
+}
+
+
 export type TextBlock =
   | { kind: "heading"; level: 2 | 3; text: string }
   | { kind: "chapter"; number?: string; text: string }
