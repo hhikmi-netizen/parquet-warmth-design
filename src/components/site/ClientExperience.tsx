@@ -1,5 +1,6 @@
 import { Eye, Lock, MessageCircle, Award } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { useAuth } from "@/hooks/use-auth";
 import clientImg from "@/assets/experience-client.png";
 
 const points = [
