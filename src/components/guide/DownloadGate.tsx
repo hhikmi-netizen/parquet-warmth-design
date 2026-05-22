@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CheckCircle2, Download, Loader2, Mail, X } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { downloadGuidePdf } from "@/lib/guide-pdf.functions";
+import { sendGuideEmail } from "@/lib/guide-email.functions";
 
 /**
  * Email-gated download. Captures lead + generates PDF server-side, then
@@ -14,6 +15,7 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "err">("idle");
   const [err, setErr] = useState<string>("");
   const generate = useServerFn(downloadGuidePdf);
+  const sendEmail = useServerFn(sendGuideEmail);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,6 +42,10 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 5000);
       localStorage.setItem("parqueto-guide-lead", JSON.stringify({ email, name, at: Date.now() }));
+      // Fire-and-forget welcome email
+      sendEmail({ data: { email: email.trim(), name: name.trim() || null } }).catch((err) =>
+        console.error("welcome email failed", err)
+      );
       setStatus("ok");
     } catch (e: unknown) {
       console.error(e);
