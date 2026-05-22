@@ -1,37 +1,16 @@
+import { Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import poncage from "@/assets/artisan.jpg";
-import vitrif from "@/assets/vitrification.jpg";
-import ancien from "@/assets/parquet-ancien.jpg";
+import { BLOG_POSTS } from "@/lib/blog-posts";
 
-const articles = [
-  {
-    img: poncage,
-    category: "Ponçage",
-    date: "Mai 2026",
-    readTime: "6 min",
-    title: "Poncer son parquet : la méthode des pros, étape par étape",
-    excerpt:
-      "Grain, machine, sens du fil, dépoussiérage. Tout ce qu'un artisan vérifie avant de lancer le ponçage — et ce que vous devriez exiger d'un devis sérieux.",
-  },
-  {
-    img: vitrif,
-    category: "Finitions",
-    date: "Avr. 2026",
-    readTime: "4 min",
-    title: "Vitrification, huile ou cire : quelle finition pour votre parquet ?",
-    excerpt:
-      "Mate, satinée, brillante, naturelle. On compare tenue dans le temps, entretien, rendu visuel et coût au m² pour vous aider à trancher sans regret.",
-  },
-  {
-    img: ancien,
-    category: "Patrimoine",
-    date: "Mars 2026",
-    readTime: "8 min",
-    title: "Rénover un parquet ancien sans le dénaturer",
-    excerpt:
-      "Point de Hongrie, Versailles, lames anciennes. Les bons réflexes pour restaurer un parquet d'époque tout en respectant son âme et ses assemblages.",
-  },
-];
+const articles = BLOG_POSTS.slice(0, 3).map((p) => ({
+  slug: p.slug,
+  img: p.cover,
+  category: p.category,
+  date: p.dateLabel,
+  readTime: p.readTime,
+  title: p.title,
+  excerpt: p.excerpt,
+}));
 
 export function Blog() {
   return (
@@ -46,13 +25,13 @@ export function Blog() {
               Le parquet, expliqué <span className="italic text-brand-orange">sans détour.</span>
             </h2>
           </div>
-          <a
-            href="#blog"
+          <Link
+            to="/blog"
             className="group hidden items-center gap-2 text-sm font-semibold text-foreground transition hover:text-brand-orange sm:inline-flex"
           >
             Voir tous les articles
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-          </a>
+          </Link>
         </div>
 
         {/* Mobile: snap carousel · Desktop: grid */}
@@ -63,10 +42,14 @@ export function Blog() {
           >
             {articles.map((a, i) => (
               <article
-                key={a.title}
+                key={a.slug}
                 className="group flex w-[85%] flex-shrink-0 snap-center flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition active:scale-[0.985] active:shadow-warm"
               >
-                <a href="#blog" className="relative block overflow-hidden">
+                <Link
+                  to="/blog/$slug"
+                  params={{ slug: a.slug }}
+                  className="relative block overflow-hidden"
+                >
                   <img
                     src={a.img}
                     alt={a.title}
@@ -79,7 +62,7 @@ export function Blog() {
                   <span className="absolute right-3 top-3 inline-flex items-center rounded-full bg-foreground/85 px-2.5 py-1 text-[10px] font-semibold text-background backdrop-blur">
                     {i + 1}/{articles.length}
                   </span>
-                </a>
+                </Link>
                 <div className="flex flex-1 flex-col p-5">
                   <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
                     <span>{a.date}</span>
@@ -87,20 +70,25 @@ export function Blog() {
                     <span>{a.readTime}</span>
                   </div>
                   <h3 className="mt-2 font-display text-[22px] leading-tight text-balance">
-                    <a href="#blog" className="transition active:text-brand-orange">
+                    <Link
+                      to="/blog/$slug"
+                      params={{ slug: a.slug }}
+                      className="transition active:text-brand-orange"
+                    >
                       {a.title}
-                    </a>
+                    </Link>
                   </h3>
                   <p className="mt-2 flex-1 text-[14px] leading-relaxed text-muted-foreground line-clamp-3">
                     {a.excerpt}
                   </p>
-                  <a
-                    href="#blog"
+                  <Link
+                    to="/blog/$slug"
+                    params={{ slug: a.slug }}
                     className="mt-5 inline-flex w-fit items-center gap-1.5 rounded-full bg-brand-orange/10 px-4 py-2 text-sm font-semibold text-brand-orange transition active:bg-brand-orange active:text-primary-foreground"
                   >
                     Lire l'article
                     <ArrowUpRight className="h-4 w-4" />
-                  </a>
+                  </Link>
                 </div>
               </article>
             ))}
@@ -119,10 +107,14 @@ export function Blog() {
         <div className="mt-14 hidden gap-6 md:grid md:grid-cols-3">
           {articles.map((a) => (
             <article
-              key={a.title}
+              key={a.slug}
               className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition hover:-translate-y-1 hover:shadow-warm"
             >
-              <a href="#blog" className="relative block overflow-hidden">
+              <Link
+                to="/blog/$slug"
+                params={{ slug: a.slug }}
+                className="relative block overflow-hidden"
+              >
                 <img
                   src={a.img}
                   alt={a.title}
@@ -132,7 +124,7 @@ export function Blog() {
                 <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-background/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-orange backdrop-blur">
                   {a.category}
                 </span>
-              </a>
+              </Link>
               <div className="flex flex-1 flex-col p-6">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span>{a.date}</span>
@@ -140,34 +132,38 @@ export function Blog() {
                   <span>{a.readTime} de lecture</span>
                 </div>
                 <h3 className="mt-3 font-display text-2xl leading-snug text-balance">
-                  <a href="#blog" className="transition hover:text-brand-orange">
+                  <Link
+                    to="/blog/$slug"
+                    params={{ slug: a.slug }}
+                    className="transition hover:text-brand-orange"
+                  >
                     {a.title}
-                  </a>
+                  </Link>
                 </h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
                   {a.excerpt}
                 </p>
-                <a
-                  href="#blog"
+                <Link
+                  to="/blog/$slug"
+                  params={{ slug: a.slug }}
                   className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-orange"
                 >
                   Lire l'article
                   <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </a>
+                </Link>
               </div>
             </article>
           ))}
         </div>
 
-
         <div className="mt-10 flex justify-center sm:hidden">
-          <a
-            href="#blog"
+          <Link
+            to="/blog"
             className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-3 text-sm font-semibold text-foreground"
           >
             Voir tous les articles
             <ArrowRight className="h-4 w-4" />
-          </a>
+          </Link>
         </div>
       </div>
     </section>
