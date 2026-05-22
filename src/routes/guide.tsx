@@ -1,8 +1,11 @@
 import { createFileRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, Download, Mail, Phone } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, BookOpen, ChevronDown, Download, List, Mail, Phone, X } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { DownloadGate } from "@/components/guide/DownloadGate";
 import { CHAPTERS, GUIDE_COVER, GUIDE_META, getReadingTime, type Block } from "@/lib/guide-content";
+import { GUIDE_FAQ } from "@/lib/guide-faq";
 
 export const Route = createFileRoute("/guide")({
   component: GuideLayout,
@@ -32,14 +35,28 @@ function GuideLayout() {
   return <GuideArticle />;
 }
 
-function handleDownload() {
-  // Impression navigateur → "Enregistrer en PDF" : aucun service externe, fidélité totale.
-  window.print();
-}
-
 function GuideArticle() {
   const minutes = getReadingTime();
-  const jsonLd = {
+  const [gateOpen, setGateOpen] = useState(false);
+  const [tocOpen, setTocOpen] = useState(false);
+  const [activeId, setActiveId] = useState<string>(CHAPTERS[0]?.id ?? "");
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const vis = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (vis[0]) setActiveId(vis[0].target.id.replace("chapitre-", ""));
+      },
+      { rootMargin: "-30% 0px -60% 0px", threshold: 0 }
+    );
+    CHAPTERS.forEach((c) => {
+      const el = document.getElementById(`chapitre-${c.id}`);
+      if (el) obs.observe(el);
+    });
+    return () => obs.disconnect();
+  }, []);
+
+  const bookJsonLd = {
     "@context": "https://schema.org",
     "@type": "Book",
     name: GUIDE_META.title,
@@ -48,6 +65,7 @@ function GuideArticle() {
     inLanguage: "fr-FR",
     image: GUIDE_COVER,
     numberOfPages: CHAPTERS.length,
+
     description:
       "Guide professionnel pour choisir, poser, entretenir et rénover le parquet. Conseils d'artisans, normes DTU, comparatifs et diagnostics.",
     hasPart: CHAPTERS.map((c) => ({ "@type": "Chapter", name: c.title })),
