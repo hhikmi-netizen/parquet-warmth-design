@@ -137,20 +137,63 @@ const MANIFEST: GuidePage[] = (rawManifest as GuidePage[]).map((p) => ({
   asset: resolveAsset(p.asset),
 }));
 
+// Curated reading order overrides for chapters where the OCR'd page order
+// doesn't match the editorial sequence. Cover first, then sommaire, vision,
+// then content pages. Pages not listed here keep their natural order
+// at the end of the chapter.
+const CHAPTER_ORDER_OVERRIDES: Partial<Record<ChapterSlug, number[]>> = {
+  introduction: [
+    11, // COUVERTURE : « Le Guide Ultime du Parquet »
+    8, //  Couverture alternative (sommaire visuel)
+    10, // Sommaire du guide
+    5, //  Sommaire détaillé
+    6, //  Notre vision, votre confort
+    7, //  Notre mission : vous guider
+    2, //  Vision et engagements Parqueto
+    9, //  L'histoire du parquet
+    4, //  10 choses sur le parquet
+    3, //  Lexique parquet
+    14, // La composition du parquet
+    15, // Les essences de bois
+    16, // Bois & écologie
+    17, // Outils du parqueteur
+    18, // Comprendre son devis
+    1, //  Inspiration des ambiances
+    12, // Échantillons stratifié
+    19, // Résumé / 4e de couverture
+    13, // Q décoratif
+  ],
+};
+
+function sortChapter(slug: ChapterSlug, pages: GuidePage[]): GuidePage[] {
+  const override = CHAPTER_ORDER_OVERRIDES[slug];
+  if (!override) return [...pages].sort((a, b) => a.order - b.order);
+  const rank = new Map<number, number>();
+  override.forEach((ord, i) => rank.set(ord, i));
+  return [...pages].sort((a, b) => {
+    const ra = rank.has(a.order) ? rank.get(a.order)! : 1000 + a.order;
+    const rb = rank.has(b.order) ? rank.get(b.order)! : 1000 + b.order;
+    return ra - rb;
+  });
+}
+
 export function getChapter(slug: ChapterSlug): ChapterMeta | undefined {
   return CHAPTERS.find((c) => c.slug === slug);
 }
 
 export function getPagesByChapter(slug: ChapterSlug): GuidePage[] {
-  return MANIFEST.filter((p) => p.chapter === slug).sort((a, b) => a.order - b.order);
+  return sortChapter(slug, MANIFEST.filter((p) => p.chapter === slug));
 }
 
 export function getAllPages(): GuidePage[] {
   const order = CHAPTERS.map((c) => c.slug);
-  return [...MANIFEST].sort((a, b) => {
+  return CHAPTERS.flatMap((c) =>
+    sortChapter(c.slug, MANIFEST.filter((p) => p.chapter === c.slug))
+  ).sort((a, b) => {
     const ca = order.indexOf(a.chapter);
     const cb = order.indexOf(b.chapter);
-    return ca !== cb ? ca - cb : a.order - b.order;
+    if (ca !== cb) return ca - cb;
+    return 0; // preserve sortChapter order within a chapter
   });
 }
 
