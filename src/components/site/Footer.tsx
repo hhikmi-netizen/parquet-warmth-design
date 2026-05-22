@@ -86,7 +86,15 @@ export function Footer() {
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             <li><Link to="/estimation" className="hover:text-brand-orange">Estimer un projet</Link></li>
             <li><Link to="/devenir-artisan" className="hover:text-brand-orange">Devenir artisan partenaire</Link></li>
-            <li><Link to="/pro" className="hover:text-brand-orange">Espace Pro</Link></li>
+            <li>
+              <Link
+                to="/pro"
+                className="inline-flex items-center gap-1.5 font-semibold text-brand-orange hover:text-brand-orange-deep"
+              >
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-brand-orange" />
+                Espace Pro
+              </Link>
+            </li>
             <li><Link to="/login" className="hover:text-brand-orange">Connexion</Link></li>
             <li><Link to="/signup" className="hover:text-brand-orange">Créer un compte</Link></li>
           </ul>
