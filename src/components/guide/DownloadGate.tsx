@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CheckCircle2, Download, Loader2, Mail, X } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { downloadGuidePdf } from "@/lib/guide-pdf.functions";
+import { sendGuideEmail } from "@/lib/guide-email.functions";
 
 /**
  * Email-gated download. Captures lead + generates PDF server-side, then
