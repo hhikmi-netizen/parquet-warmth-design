@@ -45,6 +45,7 @@ import { Route as GuideLectureRouteImport } from './routes/guide.lecture'
 import { Route as GuideSlugRouteImport } from './routes/guide.$slug'
 import { Route as DevenirArtisanInscriptionRouteImport } from './routes/devenir-artisan.inscription'
 import { Route as DemoMicroReassuranceRouteImport } from './routes/demo.micro-reassurance'
+import { Route as ConfrerieDuParquetCandidaterRouteImport } from './routes/confrerie-du-parquet.candidater'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminSupportRouteImport } from './routes/admin.support'
 import { Route as AdminParametresRouteImport } from './routes/admin.parametres'
@@ -60,6 +61,7 @@ import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
 import { Route as ProDevisNouveauRouteImport } from './routes/pro.devis.nouveau'
+import { Route as ConfrerieDuParquetCandidaterMerciRouteImport } from './routes/confrerie-du-parquet.candidater.merci'
 import { Route as ApiPublicGuideUnsubscribeRouteImport } from './routes/api/public/guide-unsubscribe'
 import { Route as ApiPublicGuideSequenceRouteImport } from './routes/api/public/guide-sequence'
 import { Route as AuthenticatedProOnboardingRouteImport } from './routes/_authenticated/pro.onboarding'
@@ -247,6 +249,12 @@ const DemoMicroReassuranceRoute = DemoMicroReassuranceRouteImport.update({
   path: '/demo/micro-reassurance',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfrerieDuParquetCandidaterRoute =
+  ConfrerieDuParquetCandidaterRouteImport.update({
+    id: '/candidater',
+    path: '/candidater',
+    getParentRoute: () => ConfrerieDuParquetRoute,
+  } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -322,6 +330,12 @@ const ProDevisNouveauRoute = ProDevisNouveauRouteImport.update({
   path: '/pro/devis/nouveau',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfrerieDuParquetCandidaterMerciRoute =
+  ConfrerieDuParquetCandidaterMerciRouteImport.update({
+    id: '/merci',
+    path: '/merci',
+    getParentRoute: () => ConfrerieDuParquetCandidaterRoute,
+  } as any)
 const ApiPublicGuideUnsubscribeRoute =
   ApiPublicGuideUnsubscribeRouteImport.update({
     id: '/api/public/guide-unsubscribe',
@@ -367,7 +381,7 @@ export interface FileRoutesByFullPath {
   '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
-  '/confrerie-du-parquet': typeof ConfrerieDuParquetRoute
+  '/confrerie-du-parquet': typeof ConfrerieDuParquetRouteWithChildren
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
@@ -400,6 +414,7 @@ export interface FileRoutesByFullPath {
   '/admin/parametres': typeof AdminParametresRoute
   '/admin/support': typeof AdminSupportRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/confrerie-du-parquet/candidater': typeof ConfrerieDuParquetCandidaterRouteWithChildren
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/guide/$slug': typeof GuideSlugRoute
@@ -414,6 +429,7 @@ export interface FileRoutesByFullPath {
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
+  '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesByTo {
@@ -424,7 +440,7 @@ export interface FileRoutesByTo {
   '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
-  '/confrerie-du-parquet': typeof ConfrerieDuParquetRoute
+  '/confrerie-du-parquet': typeof ConfrerieDuParquetRouteWithChildren
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
@@ -457,6 +473,7 @@ export interface FileRoutesByTo {
   '/admin/parametres': typeof AdminParametresRoute
   '/admin/support': typeof AdminSupportRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/confrerie-du-parquet/candidater': typeof ConfrerieDuParquetCandidaterRouteWithChildren
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/guide/$slug': typeof GuideSlugRoute
@@ -471,6 +488,7 @@ export interface FileRoutesByTo {
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
+  '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesById {
@@ -484,7 +502,7 @@ export interface FileRoutesById {
   '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
-  '/confrerie-du-parquet': typeof ConfrerieDuParquetRoute
+  '/confrerie-du-parquet': typeof ConfrerieDuParquetRouteWithChildren
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
@@ -517,6 +535,7 @@ export interface FileRoutesById {
   '/admin/parametres': typeof AdminParametresRoute
   '/admin/support': typeof AdminSupportRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/confrerie-du-parquet/candidater': typeof ConfrerieDuParquetCandidaterRouteWithChildren
   '/demo/micro-reassurance': typeof DemoMicroReassuranceRoute
   '/devenir-artisan/inscription': typeof DevenirArtisanInscriptionRoute
   '/guide/$slug': typeof GuideSlugRoute
@@ -531,6 +550,7 @@ export interface FileRoutesById {
   '/_authenticated/pro/onboarding': typeof AuthenticatedProOnboardingRoute
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
+  '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRouteTypes {
@@ -577,6 +597,7 @@ export interface FileRouteTypes {
     | '/admin/parametres'
     | '/admin/support'
     | '/blog/$slug'
+    | '/confrerie-du-parquet/candidater'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
     | '/guide/$slug'
@@ -591,6 +612,7 @@ export interface FileRouteTypes {
     | '/pro/onboarding'
     | '/api/public/guide-sequence'
     | '/api/public/guide-unsubscribe'
+    | '/confrerie-du-parquet/candidater/merci'
     | '/pro/devis/nouveau'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -634,6 +656,7 @@ export interface FileRouteTypes {
     | '/admin/parametres'
     | '/admin/support'
     | '/blog/$slug'
+    | '/confrerie-du-parquet/candidater'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
     | '/guide/$slug'
@@ -648,6 +671,7 @@ export interface FileRouteTypes {
     | '/pro/onboarding'
     | '/api/public/guide-sequence'
     | '/api/public/guide-unsubscribe'
+    | '/confrerie-du-parquet/candidater/merci'
     | '/pro/devis/nouveau'
   id:
     | '__root__'
@@ -693,6 +717,7 @@ export interface FileRouteTypes {
     | '/admin/parametres'
     | '/admin/support'
     | '/blog/$slug'
+    | '/confrerie-du-parquet/candidater'
     | '/demo/micro-reassurance'
     | '/devenir-artisan/inscription'
     | '/guide/$slug'
@@ -707,6 +732,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pro/onboarding'
     | '/api/public/guide-sequence'
     | '/api/public/guide-unsubscribe'
+    | '/confrerie-du-parquet/candidater/merci'
     | '/pro/devis/nouveau'
   fileRoutesById: FileRoutesById
 }
@@ -720,7 +746,7 @@ export interface RootRouteChildren {
   AssistantRoute: typeof AssistantRoute
   BlogRoute: typeof BlogRouteWithChildren
   CharteQualiteRoute: typeof CharteQualiteRoute
-  ConfrerieDuParquetRoute: typeof ConfrerieDuParquetRoute
+  ConfrerieDuParquetRoute: typeof ConfrerieDuParquetRouteWithChildren
   ContactRoute: typeof ContactRoute
   DesignSystemRoute: typeof DesignSystemRoute
   DevenirArtisanRoute: typeof DevenirArtisanRouteWithChildren
@@ -1001,6 +1027,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoMicroReassuranceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/confrerie-du-parquet/candidater': {
+      id: '/confrerie-du-parquet/candidater'
+      path: '/candidater'
+      fullPath: '/confrerie-du-parquet/candidater'
+      preLoaderRoute: typeof ConfrerieDuParquetCandidaterRouteImport
+      parentRoute: typeof ConfrerieDuParquetRoute
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/$slug'
@@ -1105,6 +1138,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/pro/devis/nouveau'
       preLoaderRoute: typeof ProDevisNouveauRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/confrerie-du-parquet/candidater/merci': {
+      id: '/confrerie-du-parquet/candidater/merci'
+      path: '/merci'
+      fullPath: '/confrerie-du-parquet/candidater/merci'
+      preLoaderRoute: typeof ConfrerieDuParquetCandidaterMerciRouteImport
+      parentRoute: typeof ConfrerieDuParquetCandidaterRoute
     }
     '/api/public/guide-unsubscribe': {
       id: '/api/public/guide-unsubscribe'
@@ -1224,6 +1264,33 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
+interface ConfrerieDuParquetCandidaterRouteChildren {
+  ConfrerieDuParquetCandidaterMerciRoute: typeof ConfrerieDuParquetCandidaterMerciRoute
+}
+
+const ConfrerieDuParquetCandidaterRouteChildren: ConfrerieDuParquetCandidaterRouteChildren =
+  {
+    ConfrerieDuParquetCandidaterMerciRoute:
+      ConfrerieDuParquetCandidaterMerciRoute,
+  }
+
+const ConfrerieDuParquetCandidaterRouteWithChildren =
+  ConfrerieDuParquetCandidaterRoute._addFileChildren(
+    ConfrerieDuParquetCandidaterRouteChildren,
+  )
+
+interface ConfrerieDuParquetRouteChildren {
+  ConfrerieDuParquetCandidaterRoute: typeof ConfrerieDuParquetCandidaterRouteWithChildren
+}
+
+const ConfrerieDuParquetRouteChildren: ConfrerieDuParquetRouteChildren = {
+  ConfrerieDuParquetCandidaterRoute:
+    ConfrerieDuParquetCandidaterRouteWithChildren,
+}
+
+const ConfrerieDuParquetRouteWithChildren =
+  ConfrerieDuParquetRoute._addFileChildren(ConfrerieDuParquetRouteChildren)
+
 interface DevenirArtisanRouteChildren {
   DevenirArtisanInscriptionRoute: typeof DevenirArtisanInscriptionRoute
 }
@@ -1260,7 +1327,7 @@ const rootRouteChildren: RootRouteChildren = {
   AssistantRoute: AssistantRoute,
   BlogRoute: BlogRouteWithChildren,
   CharteQualiteRoute: CharteQualiteRoute,
-  ConfrerieDuParquetRoute: ConfrerieDuParquetRoute,
+  ConfrerieDuParquetRoute: ConfrerieDuParquetRouteWithChildren,
   ContactRoute: ContactRoute,
   DesignSystemRoute: DesignSystemRoute,
   DevenirArtisanRoute: DevenirArtisanRouteWithChildren,
@@ -1289,3 +1356,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
