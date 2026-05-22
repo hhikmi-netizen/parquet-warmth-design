@@ -1,5 +1,5 @@
 import heroSalon from "@/assets/hero-salon-parquet.jpg";
-import { ArrowRight, Calculator, ShieldCheck, MessageCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function Hero() {
   return (
@@ -57,23 +57,6 @@ export function Hero() {
               Voir des réalisations
             </a>
           </div>
-
-          <ul className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-foreground/75">
-            <li className="inline-flex items-center gap-2">
-              <Calculator className="h-4 w-4 text-brand-orange" aria-hidden />
-              Gratuit
-            </li>
-            <span aria-hidden className="h-1 w-1 rounded-full bg-brand-orange/60" />
-            <li className="inline-flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-brand-orange" aria-hidden />
-              Sans engagement
-            </li>
-            <span aria-hidden className="h-1 w-1 rounded-full bg-brand-orange/60" />
-            <li className="inline-flex items-center gap-2">
-              <MessageCircle className="h-4 w-4 text-brand-orange" aria-hidden />
-              Artisan partenaire ensuite
-            </li>
-          </ul>
         </div>
 
         {/* Stats badge */}
