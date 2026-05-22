@@ -34,6 +34,7 @@ const NAV: NavItem[] = [
   { to: "/admin", label: "Vue 360°", icon: LayoutDashboard, exact: true },
   { to: "/admin/clients", label: "Demandes clients", icon: Inbox, badge: "3" },
   { to: "/admin/artisans", label: "Artisans", icon: Hammer },
+  { to: "/admin/guide", label: "Guide & leads", icon: ScrollText },
   { to: "/admin/moderation", label: "Modération & qualité", icon: ShieldAlert, badge: "4" },
   { to: "/admin/monetisation", label: "Monétisation", icon: Wallet },
   { to: "/admin/support", label: "Support", icon: LifeBuoy, badge: "2" },
