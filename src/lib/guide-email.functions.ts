@@ -11,8 +11,9 @@ const Input = z.object({
   name: z.string().trim().max(100).optional().nullable(),
 });
 
-function buildHtml(name: string | null) {
+function buildHtml(name: string | null, email: string) {
   const hello = name ? `Bonjour ${escapeHtml(name)},` : "Bonjour,";
+  const unsubUrl = buildUnsubscribeUrl(email);
   return `<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Votre Guide Ultime du Parquet</title></head>
 <body style="margin:0;padding:0;background:#f5f0e6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#2d2724;">
@@ -71,7 +72,7 @@ function buildHtml(name: string | null) {
       </table>
       <div style="max-width:560px;color:#a89684;font-size:11px;text-align:center;margin-top:18px;line-height:1.6;">
         Vous recevez cet email car vous avez téléchargé notre guide.<br>
-        Pour ne plus recevoir nos conseils, répondez "STOP" à cet email.
+        <a href="${unsubUrl}" style="color:#a89684;text-decoration:underline;">Me désinscrire en 1 clic</a> · ou répondez "STOP".
       </div>
     </td></tr>
   </table>
