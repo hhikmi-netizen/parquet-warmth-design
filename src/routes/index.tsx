@@ -16,6 +16,7 @@ import { MotionTechnique } from "@/components/site/MotionTechnique";
 import { BrandFilm } from "@/components/site/BrandFilm";
 import { ClientExperience } from "@/components/site/ClientExperience";
 import { ArtisanExperience } from "@/components/site/ArtisanExperience";
+import { TrustStrip } from "@/components/site/TrustStrip";
 import { videoObjectSchema } from "@/lib/video-schema";
 import beforeAfter from "@/assets/before-after.jpg";
 import detail from "@/assets/detail-wood.jpg";
@@ -122,6 +123,7 @@ function Index() {
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
       <Header />
       <Hero />
+      <TrustStrip />
       <Promise />
       <AssistantTeaser />
       <AtelierVideo />
