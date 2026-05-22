@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Palette } from "lucide-react";
 import { TeinteSelector } from "@/components/teintes/TeinteSelector";
 import logo from "@/assets/parqueto-logo.png";
+import { Footer } from "@/components/site/Footer";
+import { FloatingNav } from "@/components/site/FloatingNav";
 
 export const Route = createFileRoute("/teintes")({
   component: TeintesPage,
