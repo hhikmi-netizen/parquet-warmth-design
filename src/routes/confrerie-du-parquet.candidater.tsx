@@ -14,7 +14,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/confrerie-du-parquet_/candidater")({
+export const Route = createFileRoute("/confrerie-du-parquet/candidater")({
   component: CandidaterPage,
   head: () => ({
     meta: [
