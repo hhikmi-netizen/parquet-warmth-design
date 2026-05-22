@@ -1,7 +1,9 @@
 import { createFileRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, Layers } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, BookOpen, Download, Layers } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { DownloadGate } from "@/components/guide/DownloadGate";
 import { getChapterStats } from "@/lib/guide-data";
 
 export const Route = createFileRoute("/guide")({
@@ -33,6 +35,7 @@ function GuideLayout() {
 
 function GuideHub() {
   const chapters = getChapterStats();
+  const [dlOpen, setDlOpen] = useState(false);
   const total = chapters.reduce((s, c) => s + c.count, 0);
 
   const jsonLd = {
