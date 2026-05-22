@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { CheckCircle2, Download, Loader2, Mail, X } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { downloadGuidePdf } from "@/lib/guide-pdf.functions";
 
 /**
- * Email-gated download. Captures lead (best-effort via Supabase), then
- * confirms. The PDF itself is generated/sent later — for now we surface a
- * success state. Email is also kept in localStorage so we don't re-ask.
+ * Email-gated download. Captures lead + generates PDF server-side, then
+ * triggers a browser download. Keeps email in localStorage so we don't re-ask.
  */
 export function DownloadGate({ onClose }: { onClose: () => void }) {
   const [email, setEmail] = useState("");
@@ -13,30 +13,39 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
   const [accepts, setAccepts] = useState(true);
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "err">("idle");
   const [err, setErr] = useState<string>("");
+  const generate = useServerFn(downloadGuidePdf);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (name.length > 100) {
+      setStatus("err"); setErr("Prénom trop long."); return;
+    }
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setStatus("err");
-      setErr("Adresse email invalide.");
-      return;
+      setStatus("err"); setErr("Adresse email invalide."); return;
     }
-    setStatus("loading");
-    setErr("");
-
+    setStatus("loading"); setErr("");
     try {
-      // Best-effort lead capture. Table may not exist yet — fail soft.
-      await supabase
-        .from("guide_downloads" as never)
-        .insert({ email, name: name || null, opt_in: accepts } as never);
-    } catch {
-      /* ignore — we still grant access */
+      const res = await generate({ data: { email: email.trim(), name: name.trim() || null, optIn: accepts } });
+      // Decode base64 → Blob → download
+      const bin = atob(res.base64);
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const blob = new Blob([bytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = res.filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      localStorage.setItem("parqueto-guide-lead", JSON.stringify({ email, name, at: Date.now() }));
+      setStatus("ok");
+    } catch (e: unknown) {
+      console.error(e);
+      setStatus("err");
+      setErr("Impossible de générer le PDF. Réessayez dans un instant.");
     }
-    localStorage.setItem(
-      "parqueto-guide-lead",
-      JSON.stringify({ email, name, at: Date.now() })
-    );
-    setStatus("ok");
   }
 
   return (
@@ -59,24 +68,23 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
         {status !== "ok" ? (
           <form onSubmit={submit} className="p-7">
             <div className="inline-flex items-center gap-2 rounded-full bg-brand-orange/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-orange-deep">
-              <Download className="h-3.5 w-3.5" /> PDF gratuit · 79 pages
+              <Download className="h-3.5 w-3.5" /> PDF gratuit · A4
             </div>
             <h2 className="mt-4 font-display text-2xl text-balance">
-              Recevez le guide ultime du parquet
+              Recevez le Guide Ultime du Parquet
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Le guide complet par les artisans Parqueto, en PDF haute qualité,
-              envoyé directement par email.
+              Le guide complet rédigé par Parqueto, généré en PDF haute qualité,
+              téléchargé immédiatement.
             </p>
 
             <div className="mt-5 space-y-3">
               <label className="block">
-                <span className="text-xs font-medium text-muted-foreground">
-                  Prénom (optionnel)
-                </span>
+                <span className="text-xs font-medium text-muted-foreground">Prénom (optionnel)</span>
                 <input
                   type="text"
                   value={name}
+                  maxLength={100}
                   onChange={(e) => setName(e.target.value)}
                   className="mt-1 w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20"
                   placeholder="Hicham"
@@ -91,6 +99,7 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
                   <input
                     type="email"
                     required
+                    maxLength={255}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full rounded-xl border border-border bg-background py-2.5 pl-10 pr-4 text-sm outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20"
@@ -106,15 +115,13 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
                   className="mt-0.5 h-3.5 w-3.5 accent-[oklch(0.66_0.17_47)]"
                 />
                 <span>
-                  J'accepte de recevoir le guide et occasionnellement des conseils
-                  parquet de la part de Parqueto. Désinscription en 1 clic.
+                  J'accepte de recevoir occasionnellement des conseils parquet de la part de
+                  Parqueto. Désinscription en 1 clic.
                 </span>
               </label>
             </div>
 
-            {status === "err" && (
-              <p className="mt-3 text-xs text-destructive">{err}</p>
-            )}
+            {status === "err" && <p className="mt-3 text-xs text-destructive">{err}</p>}
 
             <button
               type="submit"
@@ -122,11 +129,10 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
               className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep disabled:opacity-60"
             >
               {status === "loading" ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <><Loader2 className="h-4 w-4 animate-spin" /> Génération du PDF…</>
               ) : (
-                <Download className="h-4 w-4" />
+                <><Download className="h-4 w-4" /> Télécharger le PDF</>
               )}
-              Recevoir le PDF
             </button>
             <p className="mt-3 text-center text-[11px] text-muted-foreground">
               Aucun spam, jamais. Vos données restent chez Parqueto.
@@ -139,9 +145,8 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
             </div>
             <h2 className="mt-4 font-display text-2xl">Merci {name || ""} !</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Votre lien de téléchargement va arriver à <strong>{email}</strong>{" "}
-              d'ici quelques minutes. En attendant, le guide reste accessible en
-              lecture libre.
+              Le téléchargement a commencé. Si rien ne se passe, vérifiez vos téléchargements ou
+              réessayez.
             </p>
             <button
               onClick={onClose}
