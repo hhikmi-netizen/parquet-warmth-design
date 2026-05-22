@@ -273,3 +273,26 @@ function GuideLanding() {
     </main>
   );
 }
+
+function TeaserTip({
+  number,
+  title,
+  text,
+}: {
+  number: string;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="relative flex flex-col rounded-2xl border border-border bg-card p-6 shadow-soft">
+      <span
+        aria-hidden
+        className="absolute -top-3 left-5 rounded-full bg-brand-orange px-3 py-0.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-foreground"
+      >
+        Conseil {number}
+      </span>
+      <h3 className="mt-3 font-display text-xl text-brand-ink">{title}</h3>
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{text}</p>
+    </div>
+  );
+}
