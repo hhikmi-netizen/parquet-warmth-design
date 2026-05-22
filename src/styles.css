@@ -115,3 +115,16 @@
     background-size: 3px 3px;
   }
 }
+
+@media print {
+  @page { size: A4; margin: 18mm 16mm; }
+  html, body { background: white !important; color: black !important; }
+  a { color: inherit !important; text-decoration: none !important; }
+  img { max-width: 100% !important; height: auto !important; break-inside: avoid; }
+  h1, h2, h3, h4 { break-after: avoid; }
+  p, li { orphans: 3; widows: 3; }
+  table { break-inside: avoid; }
+  .print\:hidden { display: none !important; }
+  .print\:break-before-page { break-before: page; }
+  .print\:break-inside-avoid { break-inside: avoid; }
+}
