@@ -236,21 +236,140 @@ function GuideArticle() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section className="border-t border-border bg-background py-20 print:hidden">
+        <div className="mx-auto max-w-3xl px-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
+            Questions fréquentes
+          </p>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl">Tout ce qu'on nous demande</h2>
+          <div className="mt-10 divide-y divide-border rounded-2xl border border-border bg-card">
+            {GUIDE_FAQ.map((f, i) => (
+              <details key={i} className="group p-5 open:bg-secondary/30">
+                <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
+                  <span className="font-display text-lg text-brand-ink">{f.q}</span>
+                  <ChevronDown className="h-5 w-5 shrink-0 text-brand-orange transition group-open:rotate-180" />
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-brand-ink/80">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <div className="print:hidden">
         <Footer />
       </div>
 
-      {/* Bouton flottant impression / téléchargement */}
+      {/* TOC flottante desktop */}
+      <FloatingToc activeId={activeId} />
+
+      {/* TOC mobile */}
       <button
-        onClick={handleDownload}
+        onClick={() => setTocOpen(true)}
+        aria-label="Ouvrir le sommaire"
+        className="fixed bottom-6 left-6 z-40 inline-flex items-center gap-2 rounded-full bg-card px-4 py-3 text-xs font-semibold text-brand-ink shadow-warm ring-1 ring-border transition hover:bg-accent lg:hidden print:hidden"
+      >
+        <List className="h-4 w-4" /> Sommaire
+      </button>
+      {tocOpen && <MobileToc activeId={activeId} onClose={() => setTocOpen(false)} />}
+
+      {/* Bouton flottant téléchargement */}
+      <button
+        onClick={() => setGateOpen(true)}
         aria-label="Télécharger le guide en PDF"
         className="fixed bottom-6 right-6 z-40 hidden items-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep print:hidden md:inline-flex"
       >
         <Download className="h-4 w-4" /> PDF
       </button>
 
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {gateOpen && <DownloadGate onClose={() => setGateOpen(false)} />}
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bookJsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: GUIDE_FAQ.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          }),
+        }}
+      />
     </main>
+  );
+}
+
+function FloatingToc({ activeId }: { activeId: string }) {
+  return (
+    <nav
+      aria-label="Sommaire du guide"
+      className="pointer-events-none fixed left-6 top-1/2 z-30 hidden -translate-y-1/2 lg:block print:hidden"
+    >
+      <ol className="pointer-events-auto max-h-[70vh] space-y-1 overflow-auto rounded-2xl border border-border bg-card/90 p-3 text-xs shadow-soft backdrop-blur">
+        {CHAPTERS.map((c) => {
+          const active = c.id === activeId;
+          return (
+            <li key={c.id}>
+              <a
+                href={`#chapitre-${c.id}`}
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 transition ${
+                  active
+                    ? "bg-brand-orange/10 text-brand-orange-deep"
+                    : "text-muted-foreground hover:bg-accent hover:text-brand-ink"
+                }`}
+              >
+                <span className="font-display text-sm">{c.number}</span>
+                <span className="max-w-[160px] truncate">{c.title}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}
+
+function MobileToc({ activeId, onClose }: { activeId: string; onClose: () => void }) {
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-end bg-black/60 lg:hidden"
+      onClick={onClose}
+    >
+      <div
+        className="w-full rounded-t-3xl bg-card p-5 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between">
+          <h3 className="font-display text-lg">Sommaire</h3>
+          <button onClick={onClose} className="rounded-full bg-secondary p-2" aria-label="Fermer">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <ol className="mt-3 space-y-1">
+          {CHAPTERS.map((c) => (
+            <li key={c.id}>
+              <a
+                href={`#chapitre-${c.id}`}
+                onClick={onClose}
+                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm ${
+                  c.id === activeId
+                    ? "bg-brand-orange/10 text-brand-orange-deep"
+                    : "text-brand-ink hover:bg-accent"
+                }`}
+              >
+                <span className="font-display text-base text-brand-orange">{c.number}</span>
+                <span>{c.title}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
   );
 }
 
