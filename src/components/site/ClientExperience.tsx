@@ -32,6 +32,7 @@ const points = [
  * reste pédagogique et factuel.
  */
 export function ClientExperience() {
+  const { user } = useAuth();
   return (
     <section className="relative bg-background py-24 sm:py-28">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-12 lg:items-center lg:gap-16">
