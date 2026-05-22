@@ -12,6 +12,7 @@ import appCss from "../styles.css?url";
 import { AuthProvider } from "@/hooks/use-auth";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieBanner } from "@/components/site/CookieBanner";
+import { Analytics } from "@/components/site/Analytics";
 
 function NotFoundComponent() {
   return (
@@ -269,6 +270,7 @@ function RootComponent() {
         <Outlet />
         <Toaster />
         <CookieBanner />
+        <Analytics />
       </AuthProvider>
     </QueryClientProvider>
   );

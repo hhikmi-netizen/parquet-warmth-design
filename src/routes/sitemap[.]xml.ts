@@ -24,6 +24,8 @@ const STATIC_ROUTES: { path: string; priority: number; changefreq: string }[] = 
   { path: "/a-propos", priority: 0.5, changefreq: "yearly" },
   { path: "/charte-qualite", priority: 0.4, changefreq: "yearly" },
   { path: "/contact", priority: 0.5, changefreq: "yearly" },
+  { path: "/parrainage", priority: 0.6, changefreq: "monthly" },
+  { path: "/newsletter", priority: 0.6, changefreq: "monthly" },
 ];
 
 export const Route = createFileRoute("/sitemap.xml")({

@@ -18,7 +18,9 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RenovationSinistreRouteImport } from './routes/renovation-sinistre'
 import { Route as RealisationsRouteImport } from './routes/realisations'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
+import { Route as ParrainageRouteImport } from './routes/parrainage'
 import { Route as OutilsRouteImport } from './routes/outils'
+import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GuideParquetRouteImport } from './routes/guide-parquet'
 import { Route as GuideRouteImport } from './routes/guide'
@@ -66,6 +68,7 @@ import { Route as ProDevisNouveauRouteImport } from './routes/pro.devis.nouveau'
 import { Route as ConfrerieDuParquetCandidaterMerciRouteImport } from './routes/confrerie-du-parquet.candidater.merci'
 import { Route as ApiPublicGuideUnsubscribeRouteImport } from './routes/api/public/guide-unsubscribe'
 import { Route as ApiPublicGuideSequenceRouteImport } from './routes/api/public/guide-sequence'
+import { Route as AuthenticatedProStatistiquesRouteImport } from './routes/_authenticated/pro.statistiques'
 import { Route as AuthenticatedProOnboardingRouteImport } from './routes/_authenticated/pro.onboarding'
 import { Route as AuthenticatedProMessagesRouteImport } from './routes/_authenticated/pro.messages'
 import { Route as AuthenticatedProChantiersRouteImport } from './routes/_authenticated/pro.chantiers'
@@ -116,9 +119,19 @@ const PartenairesRoute = PartenairesRouteImport.update({
   path: '/partenaires',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ParrainageRoute = ParrainageRouteImport.update({
+  id: '/parrainage',
+  path: '/parrainage',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OutilsRoute = OutilsRouteImport.update({
   id: '/outils',
   path: '/outils',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsletterRoute = NewsletterRouteImport.update({
+  id: '/newsletter',
+  path: '/newsletter',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -359,6 +372,12 @@ const ApiPublicGuideSequenceRoute = ApiPublicGuideSequenceRouteImport.update({
   path: '/api/public/guide-sequence',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedProStatistiquesRoute =
+  AuthenticatedProStatistiquesRouteImport.update({
+    id: '/statistiques',
+    path: '/statistiques',
+    getParentRoute: () => AuthenticatedProRoute,
+  } as any)
 const AuthenticatedProOnboardingRoute =
   AuthenticatedProOnboardingRouteImport.update({
     id: '/onboarding',
@@ -402,7 +421,9 @@ export interface FileRoutesByFullPath {
   '/guide': typeof GuideRouteWithChildren
   '/guide-parquet': typeof GuideParquetRoute
   '/login': typeof LoginRoute
+  '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
+  '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
   '/renovation-sinistre': typeof RenovationSinistreRoute
@@ -441,6 +462,7 @@ export interface FileRoutesByFullPath {
   '/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/pro/messages': typeof AuthenticatedProMessagesRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
+  '/pro/statistiques': typeof AuthenticatedProStatistiquesRoute
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
   '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
@@ -462,7 +484,9 @@ export interface FileRoutesByTo {
   '/guide': typeof GuideRouteWithChildren
   '/guide-parquet': typeof GuideParquetRoute
   '/login': typeof LoginRoute
+  '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
+  '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
   '/renovation-sinistre': typeof RenovationSinistreRoute
@@ -501,6 +525,7 @@ export interface FileRoutesByTo {
   '/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/pro/messages': typeof AuthenticatedProMessagesRoute
   '/pro/onboarding': typeof AuthenticatedProOnboardingRoute
+  '/pro/statistiques': typeof AuthenticatedProStatistiquesRoute
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
   '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
@@ -526,7 +551,9 @@ export interface FileRoutesById {
   '/guide': typeof GuideRouteWithChildren
   '/guide-parquet': typeof GuideParquetRoute
   '/login': typeof LoginRoute
+  '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
+  '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
   '/renovation-sinistre': typeof RenovationSinistreRoute
@@ -565,6 +592,7 @@ export interface FileRoutesById {
   '/_authenticated/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/_authenticated/pro/messages': typeof AuthenticatedProMessagesRoute
   '/_authenticated/pro/onboarding': typeof AuthenticatedProOnboardingRoute
+  '/_authenticated/pro/statistiques': typeof AuthenticatedProStatistiquesRoute
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
   '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
@@ -590,7 +618,9 @@ export interface FileRouteTypes {
     | '/guide'
     | '/guide-parquet'
     | '/login'
+    | '/newsletter'
     | '/outils'
+    | '/parrainage'
     | '/partenaires'
     | '/realisations'
     | '/renovation-sinistre'
@@ -629,6 +659,7 @@ export interface FileRouteTypes {
     | '/pro/chantiers'
     | '/pro/messages'
     | '/pro/onboarding'
+    | '/pro/statistiques'
     | '/api/public/guide-sequence'
     | '/api/public/guide-unsubscribe'
     | '/confrerie-du-parquet/candidater/merci'
@@ -650,7 +681,9 @@ export interface FileRouteTypes {
     | '/guide'
     | '/guide-parquet'
     | '/login'
+    | '/newsletter'
     | '/outils'
+    | '/parrainage'
     | '/partenaires'
     | '/realisations'
     | '/renovation-sinistre'
@@ -689,6 +722,7 @@ export interface FileRouteTypes {
     | '/pro/chantiers'
     | '/pro/messages'
     | '/pro/onboarding'
+    | '/pro/statistiques'
     | '/api/public/guide-sequence'
     | '/api/public/guide-unsubscribe'
     | '/confrerie-du-parquet/candidater/merci'
@@ -713,7 +747,9 @@ export interface FileRouteTypes {
     | '/guide'
     | '/guide-parquet'
     | '/login'
+    | '/newsletter'
     | '/outils'
+    | '/parrainage'
     | '/partenaires'
     | '/realisations'
     | '/renovation-sinistre'
@@ -752,6 +788,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pro/chantiers'
     | '/_authenticated/pro/messages'
     | '/_authenticated/pro/onboarding'
+    | '/_authenticated/pro/statistiques'
     | '/api/public/guide-sequence'
     | '/api/public/guide-unsubscribe'
     | '/confrerie-du-parquet/candidater/merci'
@@ -777,7 +814,9 @@ export interface RootRouteChildren {
   GuideRoute: typeof GuideRouteWithChildren
   GuideParquetRoute: typeof GuideParquetRoute
   LoginRoute: typeof LoginRoute
+  NewsletterRoute: typeof NewsletterRoute
   OutilsRoute: typeof OutilsRoute
+  ParrainageRoute: typeof ParrainageRoute
   PartenairesRoute: typeof PartenairesRoute
   RealisationsRoute: typeof RealisationsRoute
   RenovationSinistreRoute: typeof RenovationSinistreRoute
@@ -861,11 +900,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartenairesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/parrainage': {
+      id: '/parrainage'
+      path: '/parrainage'
+      fullPath: '/parrainage'
+      preLoaderRoute: typeof ParrainageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/outils': {
       id: '/outils'
       path: '/outils'
       fullPath: '/outils'
       preLoaderRoute: typeof OutilsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/newsletter': {
+      id: '/newsletter'
+      path: '/newsletter'
+      fullPath: '/newsletter'
+      preLoaderRoute: typeof NewsletterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -1197,6 +1250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicGuideSequenceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/pro/statistiques': {
+      id: '/_authenticated/pro/statistiques'
+      path: '/statistiques'
+      fullPath: '/pro/statistiques'
+      preLoaderRoute: typeof AuthenticatedProStatistiquesRouteImport
+      parentRoute: typeof AuthenticatedProRoute
+    }
     '/_authenticated/pro/onboarding': {
       id: '/_authenticated/pro/onboarding'
       path: '/onboarding'
@@ -1233,6 +1293,7 @@ interface AuthenticatedProRouteChildren {
   AuthenticatedProChantiersRoute: typeof AuthenticatedProChantiersRoute
   AuthenticatedProMessagesRoute: typeof AuthenticatedProMessagesRoute
   AuthenticatedProOnboardingRoute: typeof AuthenticatedProOnboardingRoute
+  AuthenticatedProStatistiquesRoute: typeof AuthenticatedProStatistiquesRoute
 }
 
 const AuthenticatedProRouteChildren: AuthenticatedProRouteChildren = {
@@ -1240,6 +1301,7 @@ const AuthenticatedProRouteChildren: AuthenticatedProRouteChildren = {
   AuthenticatedProChantiersRoute: AuthenticatedProChantiersRoute,
   AuthenticatedProMessagesRoute: AuthenticatedProMessagesRoute,
   AuthenticatedProOnboardingRoute: AuthenticatedProOnboardingRoute,
+  AuthenticatedProStatistiquesRoute: AuthenticatedProStatistiquesRoute,
 }
 
 const AuthenticatedProRouteWithChildren =
@@ -1375,7 +1437,9 @@ const rootRouteChildren: RootRouteChildren = {
   GuideRoute: GuideRouteWithChildren,
   GuideParquetRoute: GuideParquetRoute,
   LoginRoute: LoginRoute,
+  NewsletterRoute: NewsletterRoute,
   OutilsRoute: OutilsRoute,
+  ParrainageRoute: ParrainageRoute,
   PartenairesRoute: PartenairesRoute,
   RealisationsRoute: RealisationsRoute,
   RenovationSinistreRoute: RenovationSinistreRoute,
