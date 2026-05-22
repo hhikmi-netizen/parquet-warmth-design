@@ -14,9 +14,9 @@ import { buildJ2Email, buildJ7Email, type Segment } from "@/lib/guide-sequence.f
  * - Limite de 50 par exécution pour éviter les pics
  */
 
-const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
-const FROM = "Parqueto <guide@parqueto.fr>";
-const REPLY_TO = "contact@parqueto.fr";
+const SEQ_GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
+const SEQ_FROM = "Parqueto <guide@parqueto.fr>";
+const SEQ_REPLY_TO = "contact@parqueto.fr";
 
 type Lead = {
   id: string;
