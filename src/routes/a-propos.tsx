@@ -253,6 +253,8 @@ function AboutPage() {
           </div>
         </div>
       </section>
+      <Footer />
+      <FloatingNav />
     </main>
   );
 }
