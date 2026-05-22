@@ -267,6 +267,78 @@ export const CITIES: ParquetoCity[] = [
     codePostalPrincipal: "94160",
     geo: { lat: 48.8413, lng: 2.4192 },
   },
+  {
+    slug: "bourg-la-reine",
+    name: "Bourg-la-Reine",
+    region: "Île-de-France (Hauts-de-Seine)",
+    population: "20 500 habitants",
+    quartiers: ["Centre", "Pavillons", "Cité-Jardin", "Marie", "Croix-de-Berny"],
+    contexte:
+      "Bourg-la-Reine, cité-jardin historique, mêle maisons des années 30, pavillons bourgeois et résidences récentes. Les parquets d'origine en chêne massif y sont nombreux et les propriétaires investissent dans leur rénovation complète : ponçage, vitrification et réparation de lames.",
+    tarifIndicatif: "55 à 95 €/m²",
+    codePostalPrincipal: "92340",
+    geo: { lat: 48.7791, lng: 2.1897 },
+  },
+  {
+    slug: "le-plessis-robinson",
+    name: "Le Plessis-Robinson",
+    region: "Île-de-France (Hauts-de-Seine)",
+    population: "24 000 habitants",
+    quartiers: ["Centre", "Hôtel de Ville", "Briand", "Boulainvilliers", "Vallée", "Méridia"],
+    contexte:
+      "Le Plessis-Robinson conjugue patrimoine ancien et urbanisme contemporain. Les quartiers pavillonnaires des années 60-70 abritent de nombreux parquets chêne à rénover, tandis que les nouveaux éco-quartiers demandent des poses neuves haut de gamme en contrecollé large.",
+    tarifIndicatif: "55 à 95 €/m²",
+    codePostalPrincipal: "92350",
+    geo: { lat: 48.7815, lng: 2.2634 },
+  },
+  {
+    slug: "sceaux",
+    name: "Sceaux",
+    region: "Île-de-France (Hauts-de-Seine)",
+    population: "20 000 habitants",
+    quartiers: ["Centre", "Parc", "Blagis", "Guichard", "Hôtel de Ville", "Cité-Jardin"],
+    contexte:
+      "Sceaux, ville royale au célèbre château et au parc classé, compte parmi les communes les plus recherchées de la banlieue sud. Hôtels particuliers, demeures bourgeoises et belles résidences Art déco abritent des parquets d'origine que les propriétaires restaurent avec soin.",
+    tarifIndicatif: "60 à 100 €/m²",
+    codePostalPrincipal: "92330",
+    geo: { lat: 48.6459, lng: 2.2914 },
+  },
+  {
+    slug: "chatenay-malabry",
+    name: "Châtenay-Malabry",
+    region: "Île-de-France (Hauts-de-Seine)",
+    population: "34 000 habitants",
+    quartiers: ["Centre", "Vallée-aux-Loups", "La Pépinière", "Châteaubriand", "Bourg", "Cœur de Ville"],
+    contexte:
+      "Châtenay-Malabry abrite le domaine de la Vallée-aux-Loups et un patrimoine architectural varié : maisons de maître, pavillons des années 50 et résidences récentes. La rénovation de parquet y concerne autant le massif ancien que le contrecollé contemporain en pose collée.",
+    tarifIndicatif: "52 à 90 €/m²",
+    codePostalPrincipal: "92290",
+    geo: { lat: 48.7702, lng: 2.2734 },
+  },
+  {
+    slug: "fontenay-aux-roses",
+    name: "Fontenay-aux-Roses",
+    region: "Île-de-France (Hauts-de-Seine)",
+    population: "25 000 habitants",
+    quartiers: ["Centre", "Noyer-Renard", "Parc", "Parchamps", "Petit-Fort", "Les Trianons"],
+    contexte:
+      "Fontenay-aux-Roses, commune essentiellement pavillonnaire, compte de nombreuses maisons des années 30 à 50 avec parquet chêne d'origine. Les propriétaires y privilégient la rénovation complète : ponçage doux, réparation des lames et vitrification mate ou huilée.",
+    tarifIndicatif: "55 à 95 €/m²",
+    codePostalPrincipal: "92260",
+    geo: { lat: 48.7935, lng: 2.2889 },
+  },
+  {
+    slug: "montrouge",
+    name: "Montrouge",
+    region: "Île-de-France (Hauts-de-Seine)",
+    population: "48 000 habitants",
+    quartiers: ["Centre", "Échangeur", "Verdun", "Bas-Montrouge", "Cimetière Parisien", "Aristide-Briand"],
+    contexte:
+      "Montrouge, porte sud de Paris, mêle immeubles haussmanniens, bâti Art déco et constructions neuves. Le parquet ancien y est très présent : point de Hongrie, chevrons et mosaïques dans les appartements typiques, avec une forte demande de restauration par des artisans qualifiés.",
+    tarifIndicatif: "55 à 95 €/m²",
+    codePostalPrincipal: "92120",
+    geo: { lat: 48.8164, lng: 2.3174 },
+  },
 ];
 
 export function getCityBySlug(slug: string): ParquetoCity | undefined {
