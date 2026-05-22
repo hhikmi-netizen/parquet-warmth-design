@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Linkedin, Facebook } from "lucide-react";
 import logo from "@/assets/parqueto-logo.png";
+import { CITIES } from "@/lib/cities";
+import { NewsletterSignup } from "@/components/site/NewsletterSignup";
 
 function TikTokIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -101,8 +103,52 @@ export function Footer() {
             </li>
             <li><Link to="/login" className="hover:text-brand-orange">Connexion</Link></li>
             <li><Link to="/signup" className="hover:text-brand-orange">Créer un compte</Link></li>
+            <li><Link to="/parrainage" className="hover:text-brand-orange">Programme de parrainage</Link></li>
+            <li><Link to="/newsletter" className="hover:text-brand-orange">Newsletter</Link></li>
           </ul>
         </nav>
+      </div>
+
+      {/* Nos villes — local SEO */}
+      <div className="border-t border-border">
+        <div className="mx-auto max-w-7xl px-6 py-10">
+          <div className="grid gap-8 md:grid-cols-3">
+            <div>
+              <h4 className="font-display text-base text-foreground">Nos artisans près de chez vous</h4>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Parqueto couvre les principales métropoles françaises et les communes premium d'Île-de-France.
+              </p>
+            </div>
+            <div className="md:col-span-2">
+              <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                {CITIES.map((c) => (
+                  <li key={c.slug}>
+                    <Link
+                      to="/parqueteur/$ville"
+                      params={{ ville: c.slug }}
+                      className="hover:text-brand-orange"
+                    >
+                      Parqueteur {c.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Newsletter */}
+          <div className="mt-10 rounded-2xl border border-border bg-card p-6">
+            <div className="grid gap-6 md:grid-cols-[1.2fr_1fr] md:items-center">
+              <div>
+                <h4 className="font-display text-lg text-foreground">L'éclat du parquet</h4>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  La newsletter mensuelle Parqueto — conseils, tendances et offres artisans. Pas de spam.
+                </p>
+              </div>
+              <NewsletterSignup variant="footer" source="footer" />
+            </div>
+          </div>
+        </div>
       </div>
       <div className="border-t border-border">
         <div className="mx-auto max-w-7xl px-6 py-5">
