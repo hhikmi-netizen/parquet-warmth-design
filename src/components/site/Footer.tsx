@@ -12,6 +12,26 @@ export function Footer() {
             Parqueto, l'estimation parquet en ligne et l'accompagnement par un artisan partenaire vérifié. Le parquet, sans détour ni démarchage.
           </p>
           <p className="mt-4 text-sm text-muted-foreground">contact@parqueto.fr · Paris, France</p>
+          <div className="mt-5 flex items-center gap-2">
+            {[
+              { href: "https://instagram.com/parqueto", label: "Instagram", Icon: Instagram },
+              { href: "https://linkedin.com/company/parqueto", label: "LinkedIn", Icon: Linkedin },
+              { href: "https://tiktok.com/@parqueto", label: "TikTok", Icon: TikTokIcon },
+              { href: "https://x.com/parqueto", label: "X", Icon: XIcon },
+              { href: "https://facebook.com/parqueto", label: "Facebook", Icon: Facebook },
+            ].map(({ href, label, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition hover:-translate-y-0.5 hover:border-brand-orange/50 hover:text-brand-orange"
+              >
+                <Icon className="h-4 w-4" />
+              </a>
+            ))}
+          </div>
         </div>
         <nav aria-label="Plan du site — Découvrir">
           <h4 className="font-display text-base">Découvrir</h4>
