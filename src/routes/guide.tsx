@@ -102,14 +102,14 @@ function GuideArticle() {
                 <BookOpen className="h-4 w-4" /> Commencer la lecture
               </a>
               <button
-                onClick={handleDownload}
+                onClick={() => setGateOpen(true)}
                 className="inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-card px-6 py-3 text-sm font-semibold text-brand-orange-deep transition hover:bg-brand-orange/10"
               >
-                <Download className="h-4 w-4" /> Télécharger le guide (PDF)
+                <Download className="h-4 w-4" /> Télécharger le PDF
               </button>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">
-              Astuce : dans la fenêtre d'impression, choisissez « Enregistrer au format PDF ».
+              {CHAPTERS.length} chapitres · libre accès · PDF généré à la demande.
             </p>
           </div>
 
