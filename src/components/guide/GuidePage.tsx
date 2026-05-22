@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ZoomIn } from "lucide-react";
 import type { GuidePage } from "@/lib/guide-data";
-import { parseGuideText, type TextBlock } from "@/lib/guide-text";
+import { parseGuideText, sanitizeGuideText, type TextBlock } from "@/lib/guide-text";
 import { ZoomLightbox } from "@/components/guide/ZoomLightbox";
 
 /**
