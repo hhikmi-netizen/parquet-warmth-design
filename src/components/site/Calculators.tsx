@@ -521,7 +521,7 @@ function DiagnosticTool() {
     const params = new URLSearchParams({
       projet:
         verdict === "poncage"
-          ? "Ponçage / vitrification"
+          ? "Ponçage + vitrification"
           : verdict === "remplacement"
           ? "Rénovation parquet"
           : "Diagnostic parquet",
