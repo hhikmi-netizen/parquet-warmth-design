@@ -135,7 +135,7 @@ function GuideReader() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25 }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
               className="ml-auto h-full w-full max-w-md overflow-y-auto bg-[oklch(0.22_0.02_60)] p-6 shadow-2xl"
             >
               <div className="flex items-center justify-between">
