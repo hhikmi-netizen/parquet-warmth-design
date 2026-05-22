@@ -86,6 +86,17 @@ function GuideArticle() {
 
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
+      {/* Reading progress bar */}
+      <div
+        aria-hidden
+        className="fixed inset-x-0 top-0 z-[60] h-0.5 bg-brand-orange/15 print:hidden"
+      >
+        <div
+          className="h-full bg-brand-orange transition-[width] duration-150"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
       <div className="print:hidden">
         <Header />
       </div>
