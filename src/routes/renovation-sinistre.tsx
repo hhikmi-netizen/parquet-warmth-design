@@ -252,6 +252,30 @@ function SinistrePage() {
         </div>
       </section>
 
+      {/* Assistant IA inline CTA — discrete */}
+      <section className="border-b border-border bg-background py-10">
+        <div className="mx-auto flex max-w-5xl flex-col items-start gap-5 px-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-4">
+            <span className="ai-glow inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-brand-orange to-brand-orange-deep text-primary-foreground">
+              <svg className="ai-twinkle h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M12 2l2.39 5.96L20 9.27l-4.5 3.9L17 20l-5-3-5 3 1.5-6.83L4 9.27l5.61-1.31L12 2z"/></svg>
+            </span>
+            <div>
+              <p className="font-display text-lg">Pas sûr de l'ampleur des dégâts ?</p>
+              <p className="text-sm text-muted-foreground">
+                L'Assistant IA Parqueto analyse votre photo et donne un premier signal en quelques secondes. Photo non conservée.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/assistant"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full border border-brand-orange/40 bg-brand-orange/5 px-5 py-2.5 text-sm font-semibold text-brand-orange-deep transition hover:bg-brand-orange/10"
+          >
+            Analyser ma photo
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* Steps */}
       <section className="border-y border-border bg-secondary/40 py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-6">
