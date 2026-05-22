@@ -37,7 +37,7 @@ Vous recevez cet email car vous avez téléchargé notre guide.<br>
 }
 
 
-export function buildJ2Email(name: string | null, segment: Segment | null) {
+export function buildJ2Email(name: string | null, segment: Segment | null, email: string) {
   const hello = name ? `Bonjour ${esc(name)},` : "Bonjour,";
   let tip = "";
   if (segment === "pro") {
@@ -56,11 +56,11 @@ ${tip}
 <p style="margin:0;font-size:15px;line-height:1.65;color:#3d3531;">Bonne lecture, et à très vite.</p>`;
   return {
     subject: "Une astuce parquet que peu de gens connaissent",
-    html: shell("Une astuce qu'on ne met jamais par écrit", "Jour +2 · Conseil offert", html, "https://parqueto.fr/guide", "Relire le guide"),
+    html: shell("Une astuce qu'on ne met jamais par écrit", "Jour +2 · Conseil offert", html, "https://parqueto.fr/guide", "Relire le guide", email),
   };
 }
 
-export function buildJ7Email(name: string | null, segment: Segment | null) {
+export function buildJ7Email(name: string | null, segment: Segment | null, email: string) {
   const hello = name ? `Bonjour ${esc(name)},` : "Bonjour,";
   let pitch = "";
   let cta = "Estimer mon projet";
@@ -83,6 +83,6 @@ ${pitch}
 <p style="margin:0;font-size:14px;line-height:1.65;color:#7a6a5c;">Une question ? Répondez simplement à cet email — un humain vous lira.</p>`;
   return {
     subject: "Et si on chiffrait votre projet parquet ?",
-    html: shell("Passons du papier au projet", "Jour +7 · Estimation", html, href, cta),
+    html: shell("Passons du papier au projet", "Jour +7 · Estimation", html, href, cta, email),
   };
 }
