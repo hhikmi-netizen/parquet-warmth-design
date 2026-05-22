@@ -15,6 +15,7 @@ export function DownloadGate({ onClose }: { onClose: () => void }) {
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "err">("idle");
   const [err, setErr] = useState<string>("");
   const generate = useServerFn(downloadGuidePdf);
+  const sendEmail = useServerFn(sendGuideEmail);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
