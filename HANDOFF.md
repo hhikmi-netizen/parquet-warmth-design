@@ -379,17 +379,164 @@ On **garde** l'UI mockée telle quelle. Pas de fausse promesse côté texte : le
 
 ---
 
-## 14. Journal — session 2026-05-22
+## 14. Journal complet — session du vendredi 22 mai 2026 (06h → 14h30)
 
-Travail effectué dans cette session (pour Codex / Claude qui reprend) :
+Rapport détaillé de tout ce qui a été produit aujourd'hui, destiné à Claude / Codex qui reprend.
 
-- **Hero homepage** : ajout d'un 4ᵉ slide "artisan" dans le carrousel.
-- **Photo artisan** : copiée vers `src/assets/hero-artisan-pose.jpg` (le fichier est en réalité un PNG renommé en `.jpg` — ça fonctionne, ne pas le ré-encoder). Dev server redémarré pour purger le bundle.
-- **Audit Assistant Parqueto IA** : confirmé que c'est un mock pur (aucun appel API, aucun upload réel). Décision : on garde l'UI, l'IA sera branchée plus tard (voir §13).
-- **HANDOFF.md** : ajout des §13 (assistant IA) et §14 (ce journal).
+### 14.1 Système vidéo premium (10h30 → 10h45)
 
-**Reste à faire prioritaire :**
-1. Brancher l'IA vision sur l'Assistant (§13) — utilisateur choisira Claude direct vs OpenRouter.
-2. Tout ce qui est listé en §11.
+Brief : créer une expérience vidéo sobre, métier, type Apple / magazine d'architecture, sans look "startup IA".
 
-Bonne intégration. 🪵
+**Composants créés** :
+- `src/components/site/video/VideoPlayer.tsx` — lecteur lazy universel (MP4 / WebM / YouTube / Vimeo), mode `ambient` (muet, loop, sans contrôles) pour fond hero, IntersectionObserver pour ne charger qu'à proximité du viewport.
+- `src/components/site/HeroVideo.tsx` — variante de hero avec vidéo en fond (non utilisée actuellement, le `Hero.tsx` actif est la version cinématique 3 slides, voir §14.5).
+- `src/components/site/AtelierVideo.tsx` — section "Atelier numérique" : mockups UI animés (scan IA, barre d'estimation, bulles chat) en CSS / Framer Motion.
+- `src/components/site/MotionTechnique.tsx` — animations pédagogiques SVG : couches parquet, humidité 8-12%, joints de dilatation, résistance plancher chauffant R≤0,15 m²·K/W.
+- `src/components/site/BrandFilm.tsx` — bloc éditorial qui embarque le spot 21 s de marque.
+- `src/lib/video-schema.ts` — helper JSON-LD `VideoObject` (SEO).
+
+**Asset** : `public/videos/parqueto-spot.mp4` (21 s, 1920×1080, généré via Remotion, avec vrai logo Parqueto, tagline « Le parquet, sans détour. », CTA `www.parqueto.fr`). **Pas de "depuis 1987"** — claim retiré sur demande utilisateur.
+
+**Intégration home** (`src/routes/index.tsx`) : ajout des sections + injection du JSON-LD `VideoObject` dans le `head()`.
+
+### 14.2 Expériences client & artisan (10h45 → 11h00)
+
+Brief : "le client doit suivre son projet en sérénité", "l'artisan gagne du temps et en rentabilité".
+
+- `src/components/site/ClientExperience.tsx` — éditorial 5/7, 4 bénéfices client. Image `@/assets/experience-client.png`. CTA conditionnel : `/mon-projet` si connecté, sinon `/estimation`.
+- `src/components/site/ArtisanExperience.tsx` — éditorial miroir 7/5, 4 bénéfices artisan. Image `@/assets/experience-artisan.png`. Double CTA.
+
+### 14.3 Espace client "Mon projet" (10h55 → 11h00)
+
+Construction d'un vrai dashboard client (avant ça, la promesse "suivi projet" était purement visuelle).
+
+- `src/routes/_authenticated/mon-projet.tsx` — page protégée `/mon-projet` :
+  - Header projet (réf, artisan + badge vérifié, barre d'avancement %)
+  - **Timeline 7 étapes** : Devis → Acceptation → Visite → Préparation → Pose → Finitions → Réception
+  - Carte **Prochain RDV** avec `AddToCalendar`
+  - **Galerie photos** (Avant / Pendant / Après)
+  - **Documents** (devis, fiches techniques, garanties — PDF mock)
+  - Bloc "Vos garanties Parqueto"
+- `src/lib/client-project-mock.ts` — types **shape Supabase-ready** : `ClientProject`, `Milestone`, `TimelinePhoto`, `ProjectDocument`, `ProjectEvent`. Branchement futur = remplacer imports mock par `useQuery` sur server fn.
+- Raccourci ajouté dans `src/routes/_authenticated/historique.tsx`.
+
+### 14.4 SEO local — pages ville affinées (11h00 → 11h10)
+
+`src/routes/parqueteur.$ville.tsx` — refonte complète du template (les 19+ villes en héritent automatiquement) :
+
+- **JSON-LD** : `LocalBusiness` enrichi (AggregateRating 4.8 / 247 avis, geo, priceRange), `FAQPage` (6 Q/R → rich snippets), `BreadcrumbList`.
+- **Contenus long-tail** : tableau tarifs (6 prestations), témoignages par quartier, FAQ accordéon `<details>`, process 4 étapes.
+- **UX** : hero éditorial, badges confiance, KPI aside, ancres deep-link (`#tarifs`, `#avis`, `#faq`…), footer "villes couvertes" pour maillage interne.
+- Villes ajoutées : Antony, Neuilly, Levallois, Boulogne, Bourg-la-Reine, Plessis-Robinson, Sceaux, Châtenay-Malabry, Fontenay-aux-Roses, Montrouge.
+
+### 14.5 Hero homepage — 3 itérations (12h10 → 13h05)
+
+1. **12h10 — Hero V1** : full-bleed image salon chêne miel (`hero-salon-parquet.jpg`), titre serif + 2ᵉ ligne orange italique, badge "+2 400 projets", liste réassurance.
+2. **12h25 — TrustStrip ajoutée** sous le hero : 4 promesses honnêtes (Estimation claire / Artisans vérifiés / Gratuit / Aucun démarchage). **Aucun chiffre inventé**, pas de presse fictive.
+3. **12h28 — Doublons supprimés** : les 3 items réassurance du Hero retirés (vivent uniquement dans TrustStrip).
+4. **12h45 — Hero V2 cinématique** : 3 slides crossfade (1,8 s fade, 9 s/slide, Ken Burns 1.06→1.0), texte & CTA strictement statiques, `useReducedMotion`, dots minimalistes.
+   - Slides : `hero-salon-parquet.jpg` → `hero-haussmann-chevron.jpg` → `hero-artisan-pose.jpg`
+5. **13h05 — Slide artisan remplacé** par nouvelle photo (chevron + lumière naturelle latérale). `src/assets/hero-artisan-pose.jpg` est un **PNG renommé `.jpg`** — fonctionne, **ne PAS le ré-encoder**.
+
+Composants : `src/components/site/Hero.tsx`, `src/components/site/TrustStrip.tsx`.
+
+### 14.6 Assistant Parqueto IA — audit & doc (13h15 → 13h25)
+
+- Audit : `AssistantTeaser` (home) + `AssistantExperience` (`/assistant`, 538 lignes) sont des **mocks purs**. Toutes les valeurs viennent de `MOCK_RESULT`. Aucun appel API, aucun upload, animation `setInterval` factice.
+- Décision : on **garde l'UI**, l'IA sera branchée plus tard via **Claude direct ou OpenRouter** (au choix).
+- Doc complète en **§13** : 3 options (Lovable AI Gateway / Anthropic / OpenRouter), pattern `analyzeParquetPhoto` `createServerFn`, prompt système, schéma JSON identique à `MOCK_RESULT`, contraintes sécurité.
+
+### 14.7 HANDOFF.md
+
+- §13 (assistant IA — état & branchement).
+- §14 (ce journal complet).
+- §15 + §16 (checklist Claude + snapshot ci-dessous).
+
+---
+
+## 15. Checklist Claude / Codex — par priorité
+
+### 🔴 Backend critique (avant lancement)
+
+- [ ] **Auth Google** : `supabase--configure_social_auth providers: ["google"]` + bouton dans `src/components/auth/AuthShell.tsx`.
+- [ ] **Migrations Supabase** pour remplacer les mocks :
+  - `leads` (depuis `src/lib/mock-leads.ts` + wizard `/estimation`)
+  - `candidatures_confrerie` (`/confrerie-du-parquet/candidater`)
+  - `inscriptions_artisans` (`/devenir-artisan/inscription`)
+  - `projects`, `project_milestones`, `project_photos`, `project_documents`, `project_events` (depuis `src/lib/client-project-mock.ts`)
+  - `admin_*` (depuis `src/lib/admin-mock.ts`)
+  - `inbox_messages`, `messaging_*` (depuis `src/lib/inbox-mock.ts`, `src/lib/messaging-mock.ts`)
+- [ ] **RLS** sur toutes les tables : `user_roles` + `has_role()` SECURITY DEFINER (cf §8). **Jamais** de colonne `role` sur `profiles`.
+- [ ] **Server functions** dans `src/lib/*.functions.ts` :
+  - `createLead`, `getLeadsForArtisan`, `acceptLead`
+  - `getMyProject`, `getProjectMilestones`, `addProjectPhoto`
+  - `submitCandidatureConfrerie`, `submitArtisanInscription`
+  - `getAdminKpi`, `getAdminClients`, `getAdminArtisans`…
+- [ ] **Storage** bucket `chantier-photos` (RLS par `project_id` / `user_id`).
+- [ ] **Email transactionnel** (Resend ou natif Supabase) : confirmation lead, notification artisan, RDV chantier.
+
+### 🟠 Assistant Parqueto IA (cf §13)
+
+- [ ] Choisir provider : Lovable AI (gratuit fin oct. 2025, `gemini-2.5-flash` vision) **OU** Claude direct **OU** OpenRouter.
+- [ ] Si Claude/OpenRouter : `secrets--add_secret ANTHROPIC_API_KEY` ou `OPENROUTER_API_KEY`.
+- [ ] Créer `src/lib/assistant.functions.ts` avec `analyzeParquetPhoto` (sortie = shape `MOCK_RESULT`, zéro changement UI).
+- [ ] Remplacer le `setInterval` factice dans `AssistantExperience.tsx`.
+- [ ] Rate-limit IP (5 analyses/h), zéro persistance image.
+
+### 🟡 Paiement & monétisation
+
+- [ ] **Stripe** crédits artisans pour `/pro/offres` (`payments--enable_stripe_payments`). Webhook `/api/public/stripe-webhook` avec vérif HMAC.
+- [ ] Table `artisan_credits` + ledger consommation.
+
+### 🟢 Polish & contenu
+
+- [ ] Tests E2E : estimation 10 étapes / signup artisan / accept lead / "Mon projet".
+- [ ] Lighthouse mobile ≥ 90 sur `/` et `/estimation`.
+- [ ] Vérifier hero cinématique sur Safari iOS (Ken Burns + crossfade Framer Motion).
+- [ ] Google Rich Results Test sur pages ville + assistant.
+- [ ] `og:image` par ville (actuellement hérité du root).
+- [ ] Remplacer témoignages mock des pages ville par de vrais avis.
+- [ ] Sitemap dynamique (19+ villes + articles blog).
+
+### 🔵 Qualité code
+
+- [ ] `supabase--linter` après chaque migration.
+- [ ] Vérifier `attachSupabaseAuth` toujours présent dans `src/start.ts → functionMiddleware` (OK aujourd'hui).
+- [ ] `src/integrations/supabase/types.ts` régénéré après chaque migration (auto).
+
+---
+
+## 16. Snapshot fin de session (22 mai 2026, 14h30)
+
+**Homepage flow actuel** (`src/routes/index.tsx`) :
+
+```
+Hero (cinématique 3 slides)
+  → TrustStrip (4 promesses)
+  → Promise
+  → AssistantTeaser (mock)
+  → AtelierVideo
+  → Process
+  → ClientExperience
+  → MotionTechnique
+  → ArtisansShowcase
+  → ArtisanExperience
+  → RealisationsTeaser
+  → BrandFilm
+  → SocialProof
+  → Partners
+  → FinalCTA
+```
+
+**Routes ajoutées aujourd'hui** : `/mon-projet` (auth required).
+
+**Assets ajoutés** :
+- `src/assets/hero-salon-parquet.jpg`
+- `src/assets/hero-haussmann-chevron.jpg`
+- `src/assets/hero-artisan-pose.jpg` (PNG renommé — ne pas ré-encoder)
+- `src/assets/experience-client.png`
+- `src/assets/experience-artisan.png`
+- `public/videos/parqueto-spot.mp4`
+
+Bonne reprise. 🪵
+
