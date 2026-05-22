@@ -22,7 +22,7 @@ function NotFoundComponent() {
         className="pointer-events-none absolute inset-0 opacity-[0.08]"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(115deg, transparent 0 18px, hsl(var(--brand-orange) / 0.45) 18px 19px, transparent 19px 60px), repeating-linear-gradient(115deg, transparent 0 80px, hsl(var(--brand-orange) / 0.25) 80px 81px, transparent 81px 240px)",
+            "repeating-linear-gradient(115deg, transparent 0 18px, var(--brand-orange) 18px 19px, transparent 19px 60px), repeating-linear-gradient(115deg, transparent 0 80px, var(--brand-orange) 80px 81px, transparent 81px 240px)",
         }}
       />
 
