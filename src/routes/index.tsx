@@ -110,6 +110,7 @@ function Index() {
       <Process />
       <ArtisansShowcase />
       <RealisationsTeaser />
+      <SocialProof />
       <Partners />
       <FinalCTA />
       <Footer />
