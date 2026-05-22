@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CheckCircle2, Download, Loader2, Mail, X } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
+import { useNavigate } from "@tanstack/react-router";
 import { downloadGuidePdf } from "@/lib/guide-pdf.functions";
 import { sendGuideEmail } from "@/lib/guide-email.functions";
 
