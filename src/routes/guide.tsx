@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowRight, BookOpen, ChevronDown, Download, List, Mail, Phone, X } from "lucide-react";
+import { ArrowRight, BookOpen, ChevronDown, Download, List, Mail, Phone, X, Droplets, Thermometer, Layers } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { DownloadGate } from "@/components/guide/DownloadGate";
