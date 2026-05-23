@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Droplets, AlertTriangle, Sparkles, CheckCircle2 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { Promise } from "@/components/site/Promise";
@@ -21,6 +21,7 @@ import { videoObjectSchema } from "@/lib/video-schema";
 import beforeAfter from "@/assets/before-after.jpg";
 import detail from "@/assets/detail-wood.jpg";
 import hero from "@/assets/hero-parquet.jpg";
+import { GONDOLAGE_CASES } from "@/lib/gondolage-cases";
 
 export const Route = createFileRoute("/")({
   component: Index,
