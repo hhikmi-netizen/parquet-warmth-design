@@ -13,6 +13,7 @@ import { Footer } from "@/components/site/Footer";
 import {
   getGondolageCase,
   GONDOLAGE_CASES,
+  type GondolageCase,
 } from "@/lib/gondolage-cases";
 
 export const Route = createFileRoute("/parquet-qui-gondole/$cas")({
@@ -77,8 +78,8 @@ export const Route = createFileRoute("/parquet-qui-gondole/$cas")({
 });
 
 function CasPage() {
-  const { cas } = Route.useLoaderData() as { cas: ReturnType<typeof getGondolageCase> & object };
-  if (!cas) return null;
+  const data = Route.useLoaderData() as { cas: GondolageCase };
+  const cas = data.cas;
   const others = GONDOLAGE_CASES.filter((c) => c.slug !== cas.slug).slice(0, 3);
 
   return (
