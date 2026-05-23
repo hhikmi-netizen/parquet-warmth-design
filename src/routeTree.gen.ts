@@ -45,6 +45,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProOffresRouteImport } from './routes/pro.offres'
 import { Route as ProFacturationRouteImport } from './routes/pro.facturation'
 import { Route as ParqueteurVilleRouteImport } from './routes/parqueteur.$ville'
+import { Route as ParquetQuiGondoleCasRouteImport } from './routes/parquet-qui-gondole.$cas'
 import { Route as GuideMerciRouteImport } from './routes/guide.merci'
 import { Route as GuideLectureRouteImport } from './routes/guide.lecture'
 import { Route as GuideSlugRouteImport } from './routes/guide.$slug'
@@ -256,6 +257,11 @@ const ParqueteurVilleRoute = ParqueteurVilleRouteImport.update({
   path: '/parqueteur/$ville',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ParquetQuiGondoleCasRoute = ParquetQuiGondoleCasRouteImport.update({
+  id: '/$cas',
+  path: '/$cas',
+  getParentRoute: () => ParquetQuiGondoleRoute,
+} as any)
 const GuideMerciRoute = GuideMerciRouteImport.update({
   id: '/merci',
   path: '/merci',
@@ -442,7 +448,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
-  '/parquet-qui-gondole': typeof ParquetQuiGondoleRoute
+  '/parquet-qui-gondole': typeof ParquetQuiGondoleRouteWithChildren
   '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
@@ -474,6 +480,7 @@ export interface FileRoutesByFullPath {
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
   '/guide/merci': typeof GuideMerciRoute
+  '/parquet-qui-gondole/$cas': typeof ParquetQuiGondoleCasRoute
   '/parqueteur/$ville': typeof ParqueteurVilleRouteWithChildren
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
@@ -508,7 +515,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
-  '/parquet-qui-gondole': typeof ParquetQuiGondoleRoute
+  '/parquet-qui-gondole': typeof ParquetQuiGondoleRouteWithChildren
   '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
@@ -540,6 +547,7 @@ export interface FileRoutesByTo {
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
   '/guide/merci': typeof GuideMerciRoute
+  '/parquet-qui-gondole/$cas': typeof ParquetQuiGondoleCasRoute
   '/parqueteur/$ville': typeof ParqueteurVilleRouteWithChildren
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
@@ -578,7 +586,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
-  '/parquet-qui-gondole': typeof ParquetQuiGondoleRoute
+  '/parquet-qui-gondole': typeof ParquetQuiGondoleRouteWithChildren
   '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
@@ -610,6 +618,7 @@ export interface FileRoutesById {
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
   '/guide/merci': typeof GuideMerciRoute
+  '/parquet-qui-gondole/$cas': typeof ParquetQuiGondoleCasRoute
   '/parqueteur/$ville': typeof ParqueteurVilleRouteWithChildren
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
@@ -680,6 +689,7 @@ export interface FileRouteTypes {
     | '/guide/$slug'
     | '/guide/lecture'
     | '/guide/merci'
+    | '/parquet-qui-gondole/$cas'
     | '/parqueteur/$ville'
     | '/pro/facturation'
     | '/pro/offres'
@@ -746,6 +756,7 @@ export interface FileRouteTypes {
     | '/guide/$slug'
     | '/guide/lecture'
     | '/guide/merci'
+    | '/parquet-qui-gondole/$cas'
     | '/parqueteur/$ville'
     | '/pro/facturation'
     | '/pro/offres'
@@ -815,6 +826,7 @@ export interface FileRouteTypes {
     | '/guide/$slug'
     | '/guide/lecture'
     | '/guide/merci'
+    | '/parquet-qui-gondole/$cas'
     | '/parqueteur/$ville'
     | '/pro/facturation'
     | '/pro/offres'
@@ -853,7 +865,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   NewsletterRoute: typeof NewsletterRoute
   OutilsRoute: typeof OutilsRoute
-  ParquetQuiGondoleRoute: typeof ParquetQuiGondoleRoute
+  ParquetQuiGondoleRoute: typeof ParquetQuiGondoleRouteWithChildren
   ParrainageRoute: typeof ParrainageRoute
   PartenairesRoute: typeof PartenairesRoute
   RealisationsRoute: typeof RealisationsRoute
@@ -1126,6 +1138,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/parqueteur/$ville'
       preLoaderRoute: typeof ParqueteurVilleRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/parquet-qui-gondole/$cas': {
+      id: '/parquet-qui-gondole/$cas'
+      path: '/$cas'
+      fullPath: '/parquet-qui-gondole/$cas'
+      preLoaderRoute: typeof ParquetQuiGondoleCasRouteImport
+      parentRoute: typeof ParquetQuiGondoleRoute
     }
     '/guide/merci': {
       id: '/guide/merci'
@@ -1479,6 +1498,17 @@ const GuideRouteChildren: GuideRouteChildren = {
 
 const GuideRouteWithChildren = GuideRoute._addFileChildren(GuideRouteChildren)
 
+interface ParquetQuiGondoleRouteChildren {
+  ParquetQuiGondoleCasRoute: typeof ParquetQuiGondoleCasRoute
+}
+
+const ParquetQuiGondoleRouteChildren: ParquetQuiGondoleRouteChildren = {
+  ParquetQuiGondoleCasRoute: ParquetQuiGondoleCasRoute,
+}
+
+const ParquetQuiGondoleRouteWithChildren =
+  ParquetQuiGondoleRoute._addFileChildren(ParquetQuiGondoleRouteChildren)
+
 interface ParqueteurVilleRouteChildren {
   ParqueteurVillePrestationRoute: typeof ParqueteurVillePrestationRoute
 }
@@ -1512,7 +1542,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   NewsletterRoute: NewsletterRoute,
   OutilsRoute: OutilsRoute,
-  ParquetQuiGondoleRoute: ParquetQuiGondoleRoute,
+  ParquetQuiGondoleRoute: ParquetQuiGondoleRouteWithChildren,
   ParrainageRoute: ParrainageRoute,
   PartenairesRoute: PartenairesRoute,
   RealisationsRoute: RealisationsRoute,
