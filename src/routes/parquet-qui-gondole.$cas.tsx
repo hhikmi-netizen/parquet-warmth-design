@@ -77,7 +77,8 @@ export const Route = createFileRoute("/parquet-qui-gondole/$cas")({
 });
 
 function CasPage() {
-  const { cas } = Route.useLoaderData();
+  const { cas } = Route.useLoaderData() as { cas: ReturnType<typeof getGondolageCase> & object };
+  if (!cas) return null;
   const others = GONDOLAGE_CASES.filter((c) => c.slug !== cas.slug).slice(0, 3);
 
   return (
