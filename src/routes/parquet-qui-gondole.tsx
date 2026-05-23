@@ -775,6 +775,51 @@ function FaqSection() {
 // Maillage interne
 // ---------------------------------------------------------------------------
 
+function SatelliteCases() {
+  return (
+    <section className="bg-muted/30 px-6 py-20">
+      <div className="mx-auto max-w-5xl">
+        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-brand-orange">
+          <Sparkles className="h-3.5 w-3.5" />
+          Cas pratiques
+        </div>
+        <h2 className="mt-3 font-display text-3xl text-foreground sm:text-4xl">
+          Diagnostic détaillé selon votre situation
+        </h2>
+        <p className="mt-3 max-w-2xl text-muted-foreground">
+          Chaque cas de gondolage a ses propres causes, son protocole et son
+          budget. Ouvrez la page qui correspond exactement à votre parquet.
+        </p>
+
+        <div className="mt-10 grid gap-4 md:grid-cols-2">
+          {GONDOLAGE_CASES.map((c) => (
+            <Link
+              key={c.slug}
+              to="/parquet-qui-gondole/$cas"
+              params={{ cas: c.slug }}
+              className="group flex flex-col rounded-2xl border border-border bg-background p-6 transition hover:border-brand-orange/60 hover:shadow-warm"
+            >
+              <div className="font-display text-lg text-foreground group-hover:text-brand-orange">
+                {c.h1}
+              </div>
+              <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
+                {c.intro}
+              </p>
+              <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-orange">
+                Lire le cas
+                <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+
+
 function InternalMesh() {
   return (
     <section className="px-6 py-20">
