@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -16,10 +17,13 @@ import {
   Thermometer,
   Ruler,
   Wrench,
+  Loader2,
+  Brain,
 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { GONDOLAGE_CASES } from "@/lib/gondolage-cases";
+import { diagnosticGondolage, type DiagnosticResult } from "@/lib/gondolage-diagnostic.functions";
 
 
 const PAGE_URL = "/parquet-qui-gondole";
