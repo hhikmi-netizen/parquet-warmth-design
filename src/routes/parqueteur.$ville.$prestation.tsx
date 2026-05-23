@@ -149,6 +149,8 @@ export const Route = createFileRoute("/parqueteur/$ville/$prestation")({
 
 function PrestationVillePage() {
   const { city, prestation } = Route.useLoaderData();
+  const faq = buildPrestationFaq(city, prestation);
+
 
   // Autres prestations pour le maillage interne
   const otherPrestations = PRESTATIONS.filter((p) => p.slug !== prestation.slug).slice(0, 4);
