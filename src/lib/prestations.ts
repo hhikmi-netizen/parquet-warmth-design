@@ -284,6 +284,178 @@ export const PRESTATIONS: Prestation[] = [
       "parquet français traditionnel",
     ],
   },
+  {
+    slug: "pose-parquet-flottant",
+    name: "Pose parquet flottant",
+    longName: "Pose de parquet flottant (contrecollé clipsable)",
+    verb: "poser",
+    short:
+      "Pose rapide et propre sur sous-couche acoustique — idéal en rénovation sans dépose du sol existant.",
+    tarif: "25 – 55 €/m²",
+    duree: "1 à 3 jours pour 30 m²",
+    description:
+      "La pose flottante d'un parquet contrecollé clipsable est la solution la plus rapide et la moins invasive. Les lames s'emboîtent grâce à un système clic, posées sur une sous-couche acoustique sans collage ni clouage. Parfait pour rénover un sol existant (carrelage, ancien parquet plan) sans gros œuvre, avec un chantier propre en 1 à 3 jours pour 30 m².",
+    etapes: [
+      {
+        title: "Vérification du support",
+        text: "Contrôle de la planéité (≤ 3 mm sous règle de 2 m), mesure d'humidité, dépoussiérage complet.",
+      },
+      {
+        title: "Sous-couche acoustique",
+        text: "Pose d'une sous-couche en mousse, liège ou fibre selon les exigences phoniques de la copropriété.",
+      },
+      {
+        title: "Pose clipsée",
+        text: "Calepinage en quinconce, joints de dilatation périphériques de 8 à 10 mm, coupes précises aux extrémités.",
+      },
+      {
+        title: "Finitions",
+        text: "Pose des plinthes, profils de seuil aux jonctions, contrôle final du verrouillage des clips.",
+      },
+    ],
+    benefits: [
+      "Chantier rapide (1 à 3 jours)",
+      "Pas de colle, pas de clouage",
+      "Pose sur sol existant possible",
+      "Démontable et réutilisable",
+    ],
+    keywords: [
+      "pose parquet flottant",
+      "parquet clipsable",
+      "parquet contrecollé flottant",
+      "pose flottante rénovation",
+      "pose parquet sur carrelage",
+    ],
+  },
+  {
+    slug: "pose-stratifie",
+    name: "Pose de stratifié",
+    longName: "Pose de sol stratifié",
+    verb: "poser",
+    short:
+      "Sol décor bois ultra-résistant, pose rapide clipsable, excellent rapport qualité/prix.",
+    tarif: "18 – 40 €/m²",
+    duree: "1 à 2 jours pour 30 m²",
+    description:
+      "Le stratifié reproduit fidèlement l'aspect d'un parquet bois grâce à une couche décor sous résine mélamine ultra-résistante (classes AC4 / AC5). Pose clipsée flottante, prix attractif, résistance forte aux rayures et au passage : c'est la solution idéale pour les chambres, bureaux et locations. Nos artisans posent dans les règles avec sous-couche, joints de dilatation et finitions propres.",
+    etapes: [
+      {
+        title: "Préparation du sol",
+        text: "Contrôle de planéité, dépoussiérage, pose d'un film pare-vapeur si dalle béton.",
+      },
+      {
+        title: "Sous-couche technique",
+        text: "Sous-couche acoustique adaptée au stratifié (mousse 2-3 mm ou liège selon usage).",
+      },
+      {
+        title: "Pose clipsée en quinconce",
+        text: "Calepinage en quinconce ⅓ ou ½, joints de dilatation 8 mm en périphérie, coupes propres autour des huisseries.",
+      },
+      {
+        title: "Plinthes & seuils",
+        text: "Pose des plinthes assorties, barres de seuil aux changements de revêtement, nettoyage final.",
+      },
+    ],
+    benefits: [
+      "Excellent rapport qualité/prix",
+      "Très résistant aux rayures",
+      "Pose rapide (1 à 2 jours)",
+      "Large choix de décors",
+    ],
+    keywords: [
+      "pose stratifié",
+      "sol stratifié",
+      "stratifié AC4 AC5",
+      "pose stratifié clipsable",
+      "poseur stratifié",
+    ],
+  },
+  {
+    slug: "parquet-salle-de-bain",
+    name: "Parquet salle de bain",
+    longName: "Pose de parquet en salle de bain (pièce humide)",
+    verb: "poser",
+    short:
+      "Essences exotiques imputrescibles (teck, ipé, wengé) et finition huile marine pour pièce humide.",
+    tarif: "95 – 180 €/m²",
+    duree: "3 à 5 jours pour 8 m²",
+    description:
+      "Poser un parquet en salle de bain est techniquement possible et magnifique, à condition de respecter trois règles : essence imputrescible (teck, ipé, wengé, iroko), pose collée pleine surface avec colle polyuréthane SMP étanche, et finition huile marine ou vitrification spécifique pièce humide. Nos artisans réalisent ces chantiers techniques avec garantie sur l'étanchéité périphérique.",
+    etapes: [
+      {
+        title: "Choix de l'essence",
+        text: "Teck, ipé, iroko ou wengé — bois denses naturellement imputrescibles, sélection des lames sans nœud traversant.",
+      },
+      {
+        title: "Étanchéité du support",
+        text: "SPEC (Système de Protection à l'Eau sous Carrelage) sur le support, joints siliconés aux périphéries.",
+      },
+      {
+        title: "Pose collée étanche",
+        text: "Collage pleine surface à la colle SMP polyuréthane, lames jointives et pontées si pose à la française.",
+      },
+      {
+        title: "Finition huile marine",
+        text: "2 à 3 couches d'huile marine ou de vitrification pièce humide, joints siliconés couleur bois en périphérie.",
+      },
+    ],
+    benefits: [
+      "Essences imputrescibles certifiées",
+      "Pose collée DTU 51.2",
+      "Garantie étanchéité périphérique",
+      "Aspect chaleureux unique",
+    ],
+    keywords: [
+      "parquet salle de bain",
+      "parquet teck salle de bain",
+      "parquet pièce humide",
+      "parquet ipé salle de bain",
+      "bois imputrescible parquet",
+    ],
+  },
+  {
+    slug: "parquet-chauffage-au-sol",
+    name: "Parquet sur chauffage au sol",
+    longName: "Pose de parquet sur chauffage au sol",
+    verb: "poser",
+    short:
+      "Contrecollé adapté basse température, pose collée pleine surface, mise en chauffe progressive.",
+    tarif: "65 – 130 €/m²",
+    duree: "3 à 6 jours pour 30 m²",
+    description:
+      "Poser un parquet sur un plancher chauffant (eau basse température ou électrique rayonnant) demande un parquet certifié compatible (généralement contrecollé), une pose collée pleine surface à la colle SMP élastique, et un protocole strict de mise en chauffe. La résistance thermique totale (parquet + sous-couche) doit rester < 0,15 m².K/W pour préserver le rendement.",
+    etapes: [
+      {
+        title: "Vérification du plancher chauffant",
+        text: "Test d'étanchéité, mesure de la température maximale (≤ 28 °C en surface), arrêt 48 h avant pose.",
+      },
+      {
+        title: "Choix du parquet",
+        text: "Contrecollé certifié chauffage au sol, essences stables (chêne, noyer), épaisseur ≤ 14 mm de préférence.",
+      },
+      {
+        title: "Pose collée pleine surface",
+        text: "Collage à la colle SMP élastique conductrice, lames jointives, contrôle de l'hygrométrie ambiante.",
+      },
+      {
+        title: "Mise en chauffe progressive",
+        text: "Remise en chauffe par paliers de +5 °C / jour après 7 jours, jusqu'à la température nominale.",
+      },
+    ],
+    benefits: [
+      "Compatible eau & électrique",
+      "Pose collée DTU 51.2 conforme",
+      "Protocole de mise en chauffe fourni",
+      "Garantie décennale incluse",
+    ],
+    keywords: [
+      "parquet chauffage au sol",
+      "parquet plancher chauffant",
+      "parquet compatible chauffage",
+      "pose parquet PCBT",
+      "contrecollé chauffage au sol",
+    ],
+  },
 ];
 
 export function getPrestationBySlug(slug: string): Prestation | undefined {
