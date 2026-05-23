@@ -230,6 +230,53 @@ function GuideArticle() {
         ))}
       </article>
 
+      {/* GUIDES CONNEXES / PROBLÉMATIQUES */}
+      <section className="border-t border-border bg-muted/20 py-16 print:hidden">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">Problématiques courantes</p>
+              <h2 className="mt-3 font-display text-3xl sm:text-4xl">Parquet qui gondole</h2>
+              <p className="mt-2 max-w-xl text-muted-foreground">
+                Le problème le plus fréquent du parquet : diagnostic, causes, simulateur de gravité et devis sous 24 h.
+              </p>
+            </div>
+            <Link
+              to="/parquet-qui-gondole"
+              className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
+            >
+              Voir le guide complet
+              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+            </Link>
+          </div>
+
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
+            {[
+              { slug: "degat-des-eaux", title: "Parquet gondolé après dégât des eaux", kicker: "Sinistre & assurance", icon: Droplets },
+              { slug: "chauffage-au-sol", title: "Parquet gondolé sur chauffage au sol", kicker: "Installation & compatibilité", icon: Thermometer },
+              { slug: "humidite", title: "Parquet gondolé à cause de l'humidité", kicker: "Diagnostic hygrométrie", icon: Droplets },
+              { slug: "flottant", title: "Parquet flottant qui gondole", kicker: "Réparation & remplacement", icon: Layers },
+            ].map((c) => (
+              <Link
+                key={c.slug}
+                to="/parquet-qui-gondole/$cas"
+                params={{ cas: c.slug }}
+                className="group flex items-start gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-brand-orange/50 hover:bg-brand-orange/[0.03]"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange">
+                  <c.icon className="h-4 w-4" />
+                </div>
+                <div className="flex-1">
+                  <span className="block text-xs font-medium uppercase tracking-wider text-brand-orange">{c.kicker}</span>
+                  <span className="mt-1 block font-display text-base text-foreground group-hover:text-brand-orange">{c.title}</span>
+                </div>
+                <ArrowRight className="mt-2 h-4 w-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-brand-orange" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA FINAL */}
       <section className="border-t border-border bg-secondary/40 py-16 print:hidden">
         <div className="mx-auto max-w-3xl px-6 text-center">
