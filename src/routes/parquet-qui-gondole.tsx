@@ -141,6 +141,14 @@ const FAQS = [
     q: "Parquet sur chauffage au sol qui gondole : que faire ?",
     a: "Coupez immédiatement le chauffage. Mesurez l'humidité du support — si > 3 %, le problème vient de là. Sinon, le parquet n'était probablement pas certifié PCBT (compatible plancher chauffant). Remise en chauffe lente (+5 °C/jour), et si le gondolage persiste, dépose et repose en contrecollé certifié.",
   },
+  {
+    q: "Puis-je réparer moi-même un parquet gondolé ?",
+    a: "Sur un parquet massif avec une bosse légère (< 5 mm) et une zone < 1 m², oui : séchage, ponçage fin, mastic bois, vitrification de raccord. Au-delà, ou sur du flottant clipsable, le DIY aggrave souvent les choses (joints cassés, ponçage qui traverse la couche d'usure). Faites au minimum diagnostiquer par un artisan — la visite est gratuite chez Parqueto.",
+  },
+  {
+    q: "Comment fonctionne le diagnostic IA Parqueto pour un parquet gondolé ?",
+    a: "Vous répondez à 5 questions (type de parquet, cause, surface, ancienneté, chauffage au sol). Notre IA croise ces données avec les normes DTU 51.2 / 51.11 et l'historique de nos chantiers, puis génère un rapport : niveau d'urgence, causes probables, étapes à suivre, fourchette de prix et couverture assurance. C'est gratuit, instantané, sans engagement.",
+  },
 ];
 
 const PILIER_LINKS = [
@@ -259,10 +267,12 @@ function ParquetQuiGondolePage() {
         <CausesSection />
         <GravitySimulator />
         <ScenariosTable />
+        <PriceCalculator />
         <AssuranceSection />
         <PreventionSection />
         <FaqSection />
         <SatelliteCases />
+        <GeoBlock />
         <InternalMesh />
         <FinalCta />
 
@@ -1087,6 +1097,203 @@ function FinalCta() {
             <CheckCircle2 className="h-3.5 w-3.5 text-brand-orange" />
             Sans engagement · réponse sous 24 h ouvrées
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Mini-calculateur de prix (100% client, pas d'IA)
+// ---------------------------------------------------------------------------
+
+function PriceCalculator() {
+  const [type, setType] = useState<"massif" | "flottant" | "stratifie">("massif");
+  const [gravite, setGravite] = useState<"legere" | "moyenne" | "importante">("moyenne");
+  const [surface, setSurface] = useState<number>(5);
+  const [ville, setVille] = useState<"paris" | "lyon" | "marseille" | "autre">("paris");
+
+  const { min, max, libelle } = useMemo(() => {
+    // Tarifs de base €/m²
+    const base: Record<string, [number, number]> = {
+      massif: [55, 95],
+      flottant: [45, 75],
+      stratifie: [35, 60],
+    };
+    const gravMult: Record<string, number> = {
+      legere: 0.6,
+      moyenne: 1,
+      importante: 1.6,
+    };
+    const villeMult: Record<string, number> = {
+      paris: 1.15,
+      lyon: 1.05,
+      marseille: 1,
+      autre: 1,
+    };
+    const [bMin, bMax] = base[type];
+    const g = gravMult[gravite];
+    const v = villeMult[ville];
+    const s = Math.max(1, Math.min(100, surface));
+    const minTotal = Math.round(bMin * g * v * s);
+    const maxTotal = Math.round(bMax * g * v * s);
+    const lib =
+      gravite === "legere"
+        ? "Réparation locale + ponçage de raccord"
+        : gravite === "moyenne"
+        ? "Dépose partielle + ponçage / vitrification de la zone"
+        : "Dépose complète + nouvelle pose et finition";
+    return { min: minTotal, max: maxTotal, libelle: lib };
+  }, [type, gravite, surface, ville]);
+
+  return (
+    <section id="calculateur" className="bg-secondary/30 px-6 py-20">
+      <div className="mx-auto max-w-5xl">
+        <div className="flex items-center gap-2 text-brand-orange">
+          <Ruler className="h-5 w-5" />
+          <span className="text-xs font-semibold uppercase tracking-[0.18em]">
+            Estimation prix
+          </span>
+        </div>
+        <h2 className="mt-3 font-display text-3xl text-foreground sm:text-4xl">
+          Estimer le prix de réparation de votre parquet gondolé
+        </h2>
+        <p className="mt-3 max-w-2xl text-muted-foreground">
+          Fourchette indicative basée sur nos chantiers 2026. Devis ferme sous
+          24 h après visite d'un artisan vérifié.
+        </p>
+
+        <div className="mt-10 grid gap-8 rounded-3xl border border-border bg-background p-6 lg:grid-cols-[1fr_320px] lg:p-10">
+          <div>
+            <SimQuestion
+              label="Type de parquet"
+              value={type}
+              onChange={(v) => setType(v as typeof type)}
+              options={[
+                { v: "massif", l: "Massif" },
+                { v: "flottant", l: "Flottant / contrecollé" },
+                { v: "stratifie", l: "Stratifié" },
+              ]}
+            />
+            <SimQuestion
+              label="Gravité du gondolage"
+              value={gravite}
+              onChange={(v) => setGravite(v as typeof gravite)}
+              options={[
+                { v: "legere", l: "Légère (1 lame, bosse < 5 mm)" },
+                { v: "moyenne", l: "Moyenne (zone localisée)" },
+                { v: "importante", l: "Importante (pièce entière)" },
+              ]}
+            />
+            <SimQuestion
+              label="Ville"
+              value={ville}
+              onChange={(v) => setVille(v as typeof ville)}
+              options={[
+                { v: "paris", l: "Paris" },
+                { v: "lyon", l: "Lyon" },
+                { v: "marseille", l: "Marseille" },
+                { v: "autre", l: "Autre" },
+              ]}
+            />
+            <div className="mb-2 text-sm font-semibold text-foreground">
+              Surface concernée : <span className="text-brand-orange">{surface} m²</span>
+            </div>
+            <input
+              type="range"
+              min={1}
+              max={50}
+              step={1}
+              value={surface}
+              onChange={(e) => setSurface(Number(e.target.value))}
+              className="w-full accent-[var(--brand-orange)]"
+              aria-label="Surface en mètres carrés"
+            />
+            <div className="mt-1 flex justify-between text-[10px] uppercase tracking-wider text-muted-foreground">
+              <span>1 m²</span>
+              <span>50 m²</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between gap-4 rounded-2xl bg-foreground p-6 text-background">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-brand-orange">
+                Estimation globale
+              </p>
+              <p className="mt-2 font-display text-3xl text-background">
+                {min.toLocaleString("fr-FR")} – {max.toLocaleString("fr-FR")} €
+              </p>
+              <p className="mt-1 text-xs text-background/60">
+                soit ≈ {Math.round(min / surface)} – {Math.round(max / surface)} €/m²
+              </p>
+              <p className="mt-4 text-xs text-background/80">{libelle}</p>
+            </div>
+            <Link
+              to="/estimation"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
+            >
+              Recevoir un devis ferme
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <p className="text-[10px] text-background/50">
+              Indicatif, hors prise en charge MRH. TVA 10 % rénovation incluse.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Bloc GEO — pages locales
+// ---------------------------------------------------------------------------
+
+const GEO_VILLES: { slug: string; label: string; angle: string }[] = [
+  { slug: "paris", label: "Paris", angle: "Haussmannien, point de Hongrie, intervention urgente 75" },
+  { slug: "lyon", label: "Lyon", angle: "Croix-Rousse, Presqu'île, parquets anciens 69" },
+  { slug: "marseille", label: "Marseille", angle: "Vieux centre, humidité littorale, 13" },
+  { slug: "bordeaux", label: "Bordeaux", angle: "Échoppes, immeubles pierre, 33" },
+  { slug: "toulouse", label: "Toulouse", angle: "Carmes, Saint-Étienne, parquets ancien 31" },
+  { slug: "nantes", label: "Nantes", angle: "Centre Haussmannien, humidité Loire 44" },
+  { slug: "nice", label: "Nice", angle: "Carré d'or, immeubles Belle Époque 06" },
+  { slug: "strasbourg", label: "Strasbourg", angle: "Krutenau, Neustadt, parquets germaniques 67" },
+];
+
+function GeoBlock() {
+  return (
+    <section className="px-6 py-20">
+      <div className="mx-auto max-w-5xl">
+        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-brand-orange">
+          <Sparkles className="h-3.5 w-3.5" />
+          Artisan local
+        </div>
+        <h2 className="mt-3 font-display text-3xl text-foreground sm:text-4xl">
+          Parquet qui gondole près de chez vous
+        </h2>
+        <p className="mt-3 max-w-2xl text-muted-foreground">
+          Un artisan parqueteur Parqueto vérifié intervient sous 24 h dans
+          votre ville. Diagnostic gratuit, devis conforme assurance habitation.
+        </p>
+
+        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {GEO_VILLES.map((v) => (
+            <Link
+              key={v.slug}
+              to="/parqueteur/$ville"
+              params={{ ville: v.slug }}
+              className="group flex flex-col rounded-2xl border border-border bg-background p-5 transition hover:border-brand-orange/60 hover:shadow-warm"
+            >
+              <div className="font-display text-lg text-foreground group-hover:text-brand-orange">
+                Parquet qui gondole {v.label}
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">{v.angle}</p>
+              <div className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand-orange">
+                Voir les artisans
+                <ArrowRight className="h-3 w-3 transition group-hover:translate-x-0.5" />
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </section>
