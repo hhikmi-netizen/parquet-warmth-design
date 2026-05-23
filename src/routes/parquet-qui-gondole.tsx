@@ -258,8 +258,10 @@ function ParquetQuiGondolePage() {
         <AssuranceSection />
         <PreventionSection />
         <FaqSection />
+        <SatelliteCases />
         <InternalMesh />
         <FinalCta />
+
       </main>
       <Footer />
     </>
