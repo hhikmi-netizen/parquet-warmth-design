@@ -16,7 +16,10 @@ export const Route = createFileRoute("/outils")({
       },
       { property: "og:title", content: "Outils parquet · Parqueto" },
       { property: "og:description", content: "L'atelier d'outils Parqueto, gratuit et sans inscription." },
+      { property: "og:url", content: "/outils" },
     ],
+
+    links: [{ rel: "canonical", href: "/outils" }],
   }),
 });
 

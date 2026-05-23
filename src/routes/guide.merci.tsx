@@ -29,7 +29,10 @@ export const Route = createFileRoute("/guide/merci")({
       { name: "robots", content: "noindex, follow" },
       { property: "og:title", content: "Merci ! Votre guide parquet est prêt · Parqueto" },
       { property: "og:image", content: GUIDE_COVER },
+      { property: "og:url", content: "/guide/merci" },
     ],
+
+    links: [{ rel: "canonical", href: "/guide/merci" }],
   }),
 });
 

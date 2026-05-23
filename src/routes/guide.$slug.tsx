@@ -19,15 +19,18 @@ export const Route = createFileRoute("/guide/$slug")({
     const pages = getPagesByChapter(params.slug as ChapterSlug);
     return { chapter, pages };
   },
-  head: ({ loaderData }) => {
+  head: ({ params, loaderData }) => {
     if (!loaderData) return {};
     const { chapter, pages } = loaderData;
+    const url = `/guide/${params.slug}`;
     return {
       meta: [
         { title: chapter.seoTitle },
         { name: "description", content: chapter.seoDescription },
         { property: "og:title", content: chapter.seoTitle },
         { property: "og:description", content: chapter.seoDescription },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "article" },
         ...(pages[0]?.asset
           ? [
               { property: "og:image", content: pages[0].asset },
@@ -36,6 +39,7 @@ export const Route = createFileRoute("/guide/$slug")({
           : []),
         { name: "robots", content: "index, follow, max-image-preview:large" },
       ],
+      links: [{ rel: "canonical", href: url }],
     };
   },
   notFoundComponent: () => (

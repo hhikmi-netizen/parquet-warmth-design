@@ -25,7 +25,10 @@ export const Route = createFileRoute("/guide")({
       },
       { property: "og:image", content: GUIDE_COVER },
       { name: "robots", content: "index, follow, max-image-preview:large" },
+      { property: "og:url", content: "/guide" },
     ],
+
+    links: [{ rel: "canonical", href: "/guide" }],
   }),
 });
 

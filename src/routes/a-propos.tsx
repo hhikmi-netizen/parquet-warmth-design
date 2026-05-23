@@ -23,7 +23,10 @@ export const Route = createFileRoute("/a-propos")({
           "Pensé par un artisan parqueteur, fondateur d'Antony Parquet. 19 ans de chantiers, de devis et de bois travaillé à la main.",
       },
       { property: "og:image", content: artisanImg },
+      { property: "og:url", content: "/a-propos" },
     ],
+
+    links: [{ rel: "canonical", href: "/a-propos" }],
   }),
 });
 

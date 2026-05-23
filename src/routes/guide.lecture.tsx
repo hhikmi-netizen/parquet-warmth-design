@@ -25,7 +25,10 @@ export const Route = createFileRoute("/guide/lecture")({
           "Lisez le guide ultime du parquet en mode flipbook interactif. Zoom, sommaire, téléchargement PDF.",
       },
       { name: "robots", content: "noindex, follow" },
+      { property: "og:url", content: "/guide/lecture" },
     ],
+
+    links: [{ rel: "canonical", href: "/guide/lecture" }],
   }),
 });
 

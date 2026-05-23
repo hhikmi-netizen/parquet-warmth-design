@@ -31,11 +31,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Estimation parquet en ligne et Assistant IA Parqueto — première intelligence artificielle française dédiée à l'analyse de parquet en photo. Ponçage, vitrification, pose, rénovation après dégât des eaux. Artisan partenaire vérifié, sans démarchage.",
+          "Estimation parquet en ligne et Assistant IA Parqueto : pose, ponçage, vitrification, rénovation. Devis d'un artisan vérifié sous 24 h, sans démarchage.",
       },
       { property: "og:title", content: "Parqueto — Estimation & Assistant IA parquet" },
       { property: "og:description", content: "Une photo, une lecture IA : essence, usure, recommandation. Et un devis chiffré par un artisan vérifié." },
+      { property: "og:url", content: "/" },
     ],
+    links: [{ rel: "canonical", href: "/" }],
     scripts: [
       {
         type: "application/ld+json",

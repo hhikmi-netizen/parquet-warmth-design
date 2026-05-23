@@ -26,7 +26,10 @@ export const Route = createFileRoute("/charte-qualite")({
           "Les 10 engagements du réseau Parqueto envers les clients et les artisans : transparence des devis, projets exclusifs, garantie de remboursement, respect de la parole donnée.",
       },
       { property: "og:title", content: "Charte qualité Parqueto" },
+      { property: "og:url", content: "/charte-qualite" },
     ],
+
+    links: [{ rel: "canonical", href: "/charte-qualite" }],
   }),
 });
 

@@ -16,7 +16,10 @@ export const Route = createFileRoute("/blog")({
       },
       { property: "og:title", content: "Blog Parqueto" },
       { property: "og:description", content: "Le parquet expliqué simplement, sans jargon." },
+      { property: "og:url", content: "/blog" },
     ],
+
+    links: [{ rel: "canonical", href: "/blog" }],
   }),
 });
 
