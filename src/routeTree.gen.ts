@@ -15,11 +15,15 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RenoverParquetAncienRouteImport } from './routes/renover-parquet-ancien'
 import { Route as RenovationSinistreRouteImport } from './routes/renovation-sinistre'
 import { Route as RealisationsRouteImport } from './routes/realisations'
+import { Route as PrixPoncageParquetRouteImport } from './routes/prix-poncage-parquet'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
 import { Route as ParrainageRouteImport } from './routes/parrainage'
+import { Route as ParquetSurCarrelageRouteImport } from './routes/parquet-sur-carrelage'
 import { Route as ParquetQuiGondoleRouteImport } from './routes/parquet-qui-gondole'
+import { Route as ParquetFlottantOuMassifRouteImport } from './routes/parquet-flottant-ou-massif'
 import { Route as OutilsRouteImport } from './routes/outils'
 import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as LoginRouteImport } from './routes/login'
@@ -108,6 +112,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RenoverParquetAncienRoute = RenoverParquetAncienRouteImport.update({
+  id: '/renover-parquet-ancien',
+  path: '/renover-parquet-ancien',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RenovationSinistreRoute = RenovationSinistreRouteImport.update({
   id: '/renovation-sinistre',
   path: '/renovation-sinistre',
@@ -116,6 +125,11 @@ const RenovationSinistreRoute = RenovationSinistreRouteImport.update({
 const RealisationsRoute = RealisationsRouteImport.update({
   id: '/realisations',
   path: '/realisations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrixPoncageParquetRoute = PrixPoncageParquetRouteImport.update({
+  id: '/prix-poncage-parquet',
+  path: '/prix-poncage-parquet',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartenairesRoute = PartenairesRouteImport.update({
@@ -128,9 +142,19 @@ const ParrainageRoute = ParrainageRouteImport.update({
   path: '/parrainage',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ParquetSurCarrelageRoute = ParquetSurCarrelageRouteImport.update({
+  id: '/parquet-sur-carrelage',
+  path: '/parquet-sur-carrelage',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ParquetQuiGondoleRoute = ParquetQuiGondoleRouteImport.update({
   id: '/parquet-qui-gondole',
   path: '/parquet-qui-gondole',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParquetFlottantOuMassifRoute = ParquetFlottantOuMassifRouteImport.update({
+  id: '/parquet-flottant-ou-massif',
+  path: '/parquet-flottant-ou-massif',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OutilsRoute = OutilsRouteImport.update({
@@ -448,11 +472,15 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
+  '/parquet-flottant-ou-massif': typeof ParquetFlottantOuMassifRoute
   '/parquet-qui-gondole': typeof ParquetQuiGondoleRouteWithChildren
+  '/parquet-sur-carrelage': typeof ParquetSurCarrelageRoute
   '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
+  '/prix-poncage-parquet': typeof PrixPoncageParquetRoute
   '/realisations': typeof RealisationsRoute
   '/renovation-sinistre': typeof RenovationSinistreRoute
+  '/renover-parquet-ancien': typeof RenoverParquetAncienRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
@@ -515,11 +543,15 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
+  '/parquet-flottant-ou-massif': typeof ParquetFlottantOuMassifRoute
   '/parquet-qui-gondole': typeof ParquetQuiGondoleRouteWithChildren
+  '/parquet-sur-carrelage': typeof ParquetSurCarrelageRoute
   '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
+  '/prix-poncage-parquet': typeof PrixPoncageParquetRoute
   '/realisations': typeof RealisationsRoute
   '/renovation-sinistre': typeof RenovationSinistreRoute
+  '/renover-parquet-ancien': typeof RenoverParquetAncienRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
@@ -586,11 +618,15 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
+  '/parquet-flottant-ou-massif': typeof ParquetFlottantOuMassifRoute
   '/parquet-qui-gondole': typeof ParquetQuiGondoleRouteWithChildren
+  '/parquet-sur-carrelage': typeof ParquetSurCarrelageRoute
   '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
+  '/prix-poncage-parquet': typeof PrixPoncageParquetRoute
   '/realisations': typeof RealisationsRoute
   '/renovation-sinistre': typeof RenovationSinistreRoute
+  '/renover-parquet-ancien': typeof RenoverParquetAncienRoute
   '/reset-password': typeof ResetPasswordRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
@@ -657,11 +693,15 @@ export interface FileRouteTypes {
     | '/login'
     | '/newsletter'
     | '/outils'
+    | '/parquet-flottant-ou-massif'
     | '/parquet-qui-gondole'
+    | '/parquet-sur-carrelage'
     | '/parrainage'
     | '/partenaires'
+    | '/prix-poncage-parquet'
     | '/realisations'
     | '/renovation-sinistre'
+    | '/renover-parquet-ancien'
     | '/reset-password'
     | '/robots.txt'
     | '/signup'
@@ -724,11 +764,15 @@ export interface FileRouteTypes {
     | '/login'
     | '/newsletter'
     | '/outils'
+    | '/parquet-flottant-ou-massif'
     | '/parquet-qui-gondole'
+    | '/parquet-sur-carrelage'
     | '/parrainage'
     | '/partenaires'
+    | '/prix-poncage-parquet'
     | '/realisations'
     | '/renovation-sinistre'
+    | '/renover-parquet-ancien'
     | '/reset-password'
     | '/robots.txt'
     | '/signup'
@@ -794,11 +838,15 @@ export interface FileRouteTypes {
     | '/login'
     | '/newsletter'
     | '/outils'
+    | '/parquet-flottant-ou-massif'
     | '/parquet-qui-gondole'
+    | '/parquet-sur-carrelage'
     | '/parrainage'
     | '/partenaires'
+    | '/prix-poncage-parquet'
     | '/realisations'
     | '/renovation-sinistre'
+    | '/renover-parquet-ancien'
     | '/reset-password'
     | '/robots.txt'
     | '/signup'
@@ -865,11 +913,15 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   NewsletterRoute: typeof NewsletterRoute
   OutilsRoute: typeof OutilsRoute
+  ParquetFlottantOuMassifRoute: typeof ParquetFlottantOuMassifRoute
   ParquetQuiGondoleRoute: typeof ParquetQuiGondoleRouteWithChildren
+  ParquetSurCarrelageRoute: typeof ParquetSurCarrelageRoute
   ParrainageRoute: typeof ParrainageRoute
   PartenairesRoute: typeof PartenairesRoute
+  PrixPoncageParquetRoute: typeof PrixPoncageParquetRoute
   RealisationsRoute: typeof RealisationsRoute
   RenovationSinistreRoute: typeof RenovationSinistreRoute
+  RenoverParquetAncienRoute: typeof RenoverParquetAncienRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SignupRoute: typeof SignupRoute
@@ -929,6 +981,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/renover-parquet-ancien': {
+      id: '/renover-parquet-ancien'
+      path: '/renover-parquet-ancien'
+      fullPath: '/renover-parquet-ancien'
+      preLoaderRoute: typeof RenoverParquetAncienRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/renovation-sinistre': {
       id: '/renovation-sinistre'
       path: '/renovation-sinistre'
@@ -941,6 +1000,13 @@ declare module '@tanstack/react-router' {
       path: '/realisations'
       fullPath: '/realisations'
       preLoaderRoute: typeof RealisationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prix-poncage-parquet': {
+      id: '/prix-poncage-parquet'
+      path: '/prix-poncage-parquet'
+      fullPath: '/prix-poncage-parquet'
+      preLoaderRoute: typeof PrixPoncageParquetRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partenaires': {
@@ -957,11 +1023,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ParrainageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/parquet-sur-carrelage': {
+      id: '/parquet-sur-carrelage'
+      path: '/parquet-sur-carrelage'
+      fullPath: '/parquet-sur-carrelage'
+      preLoaderRoute: typeof ParquetSurCarrelageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/parquet-qui-gondole': {
       id: '/parquet-qui-gondole'
       path: '/parquet-qui-gondole'
       fullPath: '/parquet-qui-gondole'
       preLoaderRoute: typeof ParquetQuiGondoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parquet-flottant-ou-massif': {
+      id: '/parquet-flottant-ou-massif'
+      path: '/parquet-flottant-ou-massif'
+      fullPath: '/parquet-flottant-ou-massif'
+      preLoaderRoute: typeof ParquetFlottantOuMassifRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/outils': {
@@ -1542,11 +1622,15 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   NewsletterRoute: NewsletterRoute,
   OutilsRoute: OutilsRoute,
+  ParquetFlottantOuMassifRoute: ParquetFlottantOuMassifRoute,
   ParquetQuiGondoleRoute: ParquetQuiGondoleRouteWithChildren,
+  ParquetSurCarrelageRoute: ParquetSurCarrelageRoute,
   ParrainageRoute: ParrainageRoute,
   PartenairesRoute: PartenairesRoute,
+  PrixPoncageParquetRoute: PrixPoncageParquetRoute,
   RealisationsRoute: RealisationsRoute,
   RenovationSinistreRoute: RenovationSinistreRoute,
+  RenoverParquetAncienRoute: RenoverParquetAncienRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SignupRoute: SignupRoute,
