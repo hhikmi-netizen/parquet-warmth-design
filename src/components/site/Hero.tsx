@@ -91,9 +91,12 @@ export function Hero() {
       <div className="relative mx-auto grid min-h-[78vh] max-w-7xl grid-cols-1 items-center px-6 py-20 sm:py-24 md:min-h-[82vh] lg:grid-cols-12 lg:py-32">
         <div className="lg:col-span-7 xl:col-span-6">
           <h1 className="font-display text-5xl leading-[1.05] text-balance text-foreground sm:text-6xl lg:text-7xl">
-            Votre projet parquet
+            Estimation parquet
             <span className="block italic text-brand-orange">en quelques minutes.</span>
           </h1>
+          <p className="sr-only">
+            Pose, ponçage, vitrification et rénovation de parquet — devis d'un artisan parqueteur vérifié sous 24 h, partout en France.
+          </p>
 
           <div
             aria-hidden

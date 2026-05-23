@@ -27,17 +27,24 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Parqueto — Estimez votre projet parquet en quelques minutes" },
+      { title: "Estimation parquet en ligne & artisan parqueteur vérifié — Parqueto" },
       {
         name: "description",
         content:
-          "Estimation parquet en ligne et Assistant IA Parqueto : pose, ponçage, vitrification, rénovation. Devis d'un artisan vérifié sous 24 h, sans démarchage.",
+          "Estimation parquet en ligne gratuite : pose, ponçage, vitrification, rénovation, parquet qui gondole. Devis d'un artisan parqueteur vérifié sous 24 h, sans démarchage.",
       },
-      { property: "og:title", content: "Parqueto — Estimation & Assistant IA parquet" },
-      { property: "og:description", content: "Une photo, une lecture IA : essence, usure, recommandation. Et un devis chiffré par un artisan vérifié." },
-      { property: "og:url", content: "/" },
+      { property: "og:title", content: "Estimation parquet & artisan vérifié — Parqueto" },
+      { property: "og:description", content: "Pose, ponçage, vitrification, rénovation, parquet qui gondole : estimation en ligne et devis chiffré par un artisan parqueteur vérifié sous 24 h." },
+      { property: "og:url", content: "https://parqueto.fr/" },
+      { property: "og:image", content: "https://parqueto.fr/og-image.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Parqueto — estimation parquet et artisan parqueteur vérifié" },
+      { name: "twitter:image", content: "https://parqueto.fr/og-image.jpg" },
+      { name: "twitter:title", content: "Estimation parquet & artisan vérifié — Parqueto" },
+      { name: "twitter:description", content: "Estimation parquet en ligne et devis d'un artisan parqueteur vérifié sous 24 h." },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: "https://parqueto.fr/" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -46,17 +53,40 @@ export const Route = createFileRoute("/")({
           "@type": "ProfessionalService",
           name: "Parqueto",
           description:
-            "Estimation parquet en ligne et mise en relation avec un artisan partenaire vérifié pour la pose, le ponçage, la vitrification et la rénovation de parquet.",
+            "Estimation parquet en ligne et mise en relation avec un artisan parqueteur vérifié pour la pose, le ponçage, la vitrification et la rénovation de parquet.",
           url: "https://parqueto.fr",
           areaServed: { "@type": "Country", name: "France" },
-          serviceType: ["Pose de parquet", "Ponçage", "Vitrification", "Rénovation de parquet"],
+          serviceType: ["Pose de parquet", "Ponçage parquet", "Vitrification parquet", "Rénovation de parquet", "Réparation parquet qui gondole"],
           priceRange: "€€",
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: "4.9",
-            reviewCount: "247",
-            bestRating: "5",
-          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "Combien coûte une estimation parquet chez Parqueto ?",
+              acceptedAnswer: { "@type": "Answer", text: "L'estimation en ligne est 100 % gratuite. Vous obtenez une fourchette de prix selon la surface, le type de parquet et la prestation (pose, ponçage, vitrification, rénovation), puis un devis chiffré par un artisan vérifié sous 24 h." },
+            },
+            {
+              "@type": "Question",
+              name: "Que faire si mon parquet gondole ?",
+              acceptedAnswer: { "@type": "Answer", text: "Coupez la source d'humidité, ventilez, puis utilisez notre simulateur de gravité (5 questions) pour savoir si un ponçage suffit ou si une dépose partielle est nécessaire. Un artisan vous rappelle sous 24 h avec un devis conforme à votre assurance MRH." },
+            },
+            {
+              "@type": "Question",
+              name: "Quel prix au m² pour poncer et vitrifier un parquet ?",
+              acceptedAnswer: { "@type": "Answer", text: "Comptez 35 à 60 €/m² TTC pour un ponçage + vitrification standard, et 50 à 90 €/m² pour une rénovation complète (réparation des lames + teinte + finition). Lancez l'estimation pour un chiffrage personnalisé." },
+            },
+            {
+              "@type": "Question",
+              name: "Les artisans Parqueto sont-ils vraiment vérifiés ?",
+              acceptedAnswer: { "@type": "Answer", text: "Oui : Kbis à jour, assurance décennale en cours de validité, avis clients contrôlés et chartre qualité signée. Aucun démarchage, vous restez maître du contact." },
+            },
+          ],
         }),
       },
       videoObjectSchema({
