@@ -141,6 +141,14 @@ const FAQS = [
     q: "Parquet sur chauffage au sol qui gondole : que faire ?",
     a: "Coupez immédiatement le chauffage. Mesurez l'humidité du support — si > 3 %, le problème vient de là. Sinon, le parquet n'était probablement pas certifié PCBT (compatible plancher chauffant). Remise en chauffe lente (+5 °C/jour), et si le gondolage persiste, dépose et repose en contrecollé certifié.",
   },
+  {
+    q: "Puis-je réparer moi-même un parquet gondolé ?",
+    a: "Sur un parquet massif avec une bosse légère (< 5 mm) et une zone < 1 m², oui : séchage, ponçage fin, mastic bois, vitrification de raccord. Au-delà, ou sur du flottant clipsable, le DIY aggrave souvent les choses (joints cassés, ponçage qui traverse la couche d'usure). Faites au minimum diagnostiquer par un artisan — la visite est gratuite chez Parqueto.",
+  },
+  {
+    q: "Comment fonctionne le diagnostic IA Parqueto pour un parquet gondolé ?",
+    a: "Vous répondez à 5 questions (type de parquet, cause, surface, ancienneté, chauffage au sol). Notre IA croise ces données avec les normes DTU 51.2 / 51.11 et l'historique de nos chantiers, puis génère un rapport : niveau d'urgence, causes probables, étapes à suivre, fourchette de prix et couverture assurance. C'est gratuit, instantané, sans engagement.",
+  },
 ];
 
 const PILIER_LINKS = [
