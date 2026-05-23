@@ -394,7 +394,7 @@ function PrestationVillePage() {
           <h2 className="mt-3 font-display text-3xl sm:text-4xl">
             {prestation.name} à {city.name} : ce qu'on nous demande
           </h2>
-          <dl className="mt-10 space-y-3">
+          <div className="mt-10 space-y-3">
             {faq.map((item) => (
               <details
                 key={item.question}
@@ -409,12 +409,12 @@ function PrestationVillePage() {
                     +
                   </span>
                 </summary>
-                <dd className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                   {item.answer}
-                </dd>
+                </p>
               </details>
             ))}
-          </dl>
+          </div>
         </div>
       </section>
 
