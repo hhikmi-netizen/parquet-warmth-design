@@ -10,7 +10,7 @@ export interface FaqItem {
  * Génère 6 Q/R contextualisées ville × prestation pour AEO + Schema.org FAQPage.
  * Réponses concises (40-90 mots) avec données concrètes (prix, délai, garantie).
  */
-export function buildPrestationFaq(city: City, prestation: Prestation): FaqItem[] {
+export function buildPrestationFaq(city: ParquetoCity, prestation: Prestation): FaqItem[] {
   const presta = prestation.name.toLowerCase();
   return [
     {
