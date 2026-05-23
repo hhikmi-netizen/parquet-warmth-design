@@ -1,4 +1,5 @@
-import { MessagesSquare, Sparkles, HandHeart } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { MessagesSquare, Sparkles, HandHeart, ArrowRight } from "lucide-react";
 
 const steps = [
   {
