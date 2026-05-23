@@ -16,7 +16,10 @@ export const Route = createFileRoute("/partenaires")({
       },
       { property: "og:title", content: "Partenaires · Parqueto" },
       { property: "og:description", content: "L'écosystème Parqueto : marques, fournisseurs, partenaires métier." },
+      { property: "og:url", content: "/partenaires" },
     ],
+
+    links: [{ rel: "canonical", href: "/partenaires" }],
   }),
 });
 

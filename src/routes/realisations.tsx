@@ -28,7 +28,10 @@ export const Route = createFileRoute("/realisations")({
       { property: "og:title", content: "Réalisations parquet · Parqueto" },
       { property: "og:description", content: "Avant / après, des chantiers qui parlent d'eux-mêmes." },
       { property: "og:image", content: hero },
+      { property: "og:url", content: "/realisations" },
     ],
+
+    links: [{ rel: "canonical", href: "/realisations" }],
   }),
 });
 

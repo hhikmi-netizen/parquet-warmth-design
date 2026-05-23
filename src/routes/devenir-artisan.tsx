@@ -31,7 +31,10 @@ export const Route = createFileRoute("/devenir-artisan")({
         content:
           "Des projets parquet déjà cadrés, des clients déjà informés. Pas d'enchères, pas de revente de leads.",
       },
+      { property: "og:url", content: "/devenir-artisan" },
     ],
+
+    links: [{ rel: "canonical", href: "/devenir-artisan" }],
   }),
 });
 

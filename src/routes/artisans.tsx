@@ -17,7 +17,10 @@ export const Route = createFileRoute("/artisans")({
       },
       { property: "og:title", content: "Nos artisans · Parqueto" },
       { property: "og:description", content: "Des visages, des mains, un savoir-faire." },
+      { property: "og:url", content: "/artisans" },
     ],
+
+    links: [{ rel: "canonical", href: "/artisans" }],
   }),
 });
 

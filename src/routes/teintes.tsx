@@ -20,7 +20,10 @@ export const Route = createFileRoute("/teintes")({
         property: "og:description",
         content: "8 teintes de parquet en haute définition, comparables côte à côte.",
       },
+      { property: "og:url", content: "/teintes" },
     ],
+
+    links: [{ rel: "canonical", href: "/teintes" }],
   }),
 });
 

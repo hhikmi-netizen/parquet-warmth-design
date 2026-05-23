@@ -52,7 +52,10 @@ export const Route = createFileRoute("/contact")({
         property: "og:description",
         content: "Parlons de votre projet parquet. Réponse humaine, sans démarchage.",
       },
+      { property: "og:url", content: "/contact" },
     ],
+
+    links: [{ rel: "canonical", href: "/contact" }],
   }),
   component: ContactPage,
 });

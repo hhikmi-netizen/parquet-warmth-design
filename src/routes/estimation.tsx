@@ -13,7 +13,10 @@ export const Route = createFileRoute("/estimation")({
         content:
           "Décrivez votre projet parquet en 4 étapes guidées : projet, logement, localisation, coordonnées. Estimation indicative sous 24 h, sans engagement.",
       },
+      { property: "og:url", content: "/estimation" },
     ],
+
+    links: [{ rel: "canonical", href: "/estimation" }],
   }),
 });
 
