@@ -13,6 +13,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { getCityBySlug, CITIES } from "@/lib/cities";
 import { getPrestationBySlug, PRESTATIONS } from "@/lib/prestations";
+import { buildPrestationFaq } from "@/lib/prestation-faq";
 
 export const Route = createFileRoute("/parqueteur/$ville/$prestation")({
   loader: ({ params }) => {
