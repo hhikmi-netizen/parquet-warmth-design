@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import heroSalon from "@/assets/hero-salon-parquet.jpg";
 import heroHaussmann from "@/assets/hero-haussmann-chevron.jpg";
 import heroArtisan from "@/assets/hero-artisan-pose.jpg";
