@@ -1,4 +1,5 @@
-import { MessagesSquare, Sparkles, HandHeart } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { MessagesSquare, Sparkles, HandHeart, ArrowRight } from "lucide-react";
 
 const steps = [
   {
@@ -64,6 +65,15 @@ export function Process() {
           Une estimation en quelques minutes. Un interlocuteur de confiance.
           <span className="text-foreground"> Et votre tranquillité, surtout.</span>
         </p>
+        <div className="mt-6 flex justify-center">
+          <Link
+            to="/estimation"
+            className="group inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-brand-orange/5 px-6 py-3 text-sm font-semibold text-brand-orange transition hover:bg-brand-orange hover:text-primary-foreground"
+          >
+            Voir les tarifs détaillés
+            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+          </Link>
+        </div>
       </div>
     </section>
   );

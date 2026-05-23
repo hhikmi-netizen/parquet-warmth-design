@@ -139,6 +139,10 @@ function GondolagePillar() {
               Inondation, humidité, chauffage au sol mal réglé ou pose non conforme :
               le gondolage est la panne n°1 du parquet. Découvrez les causes,
               évaluez la gravité avec notre simulateur et obtenez un devis sous 24 h.
+              Besoin de conseils ? Consultez aussi nos{" "}
+              <Link to="/guide" className="font-medium text-brand-orange underline underline-offset-4 hover:text-brand-orange-deep">
+                guides parquet
+              </Link>.
             </p>
           </div>
           <Link

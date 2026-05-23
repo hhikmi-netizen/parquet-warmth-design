@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import heroSalon from "@/assets/hero-salon-parquet.jpg";
 import heroHaussmann from "@/assets/hero-haussmann-chevron.jpg";
 import heroArtisan from "@/assets/hero-artisan-pose.jpg";
@@ -106,19 +107,19 @@ export function Hero() {
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
-            <a
-              href="#estimate"
+            <Link
+              to="/estimation"
               className="group inline-flex items-center gap-2.5 rounded-full bg-brand-orange px-7 py-4 text-[15px] font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep"
             >
               Estimer mon projet gratuitement
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-            </a>
-            <a
-              href="#realisations"
+            </Link>
+            <Link
+              to="/guide"
               className="inline-flex items-center rounded-full border border-foreground/15 bg-background/70 px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-sm transition hover:border-brand-orange/40 hover:text-brand-orange"
             >
-              Voir des réalisations
-            </a>
+              Guides et conseils parquet
+            </Link>
           </div>
         </div>
 
