@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { GONDOLAGE_CASES } from "@/lib/gondolage-cases";
+
 
 const PAGE_URL = "/parquet-qui-gondole";
 const PAGE_TITLE = "Parquet qui gondole : causes, solutions et devis en ligne";
