@@ -1,4 +1,4 @@
-import type { City } from "@/lib/cities";
+import type { ParquetoCity } from "@/lib/cities";
 import type { Prestation } from "@/lib/prestations";
 
 export interface FaqItem {
