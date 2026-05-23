@@ -299,7 +299,7 @@ function PrestationVillePage() {
             Ce que vous obtenez à {city.name}
           </h2>
           <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-            {prestation.benefits.map((b) => (
+            {prestation.benefits.map((b: string) => (
               <li
                 key={b}
                 className="flex items-start gap-3 rounded-xl border border-border bg-card p-4"
