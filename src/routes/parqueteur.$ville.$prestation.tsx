@@ -385,6 +385,39 @@ function PrestationVillePage() {
         </section>
       )}
 
+      {/* FAQ — AEO + Schema.org FAQPage */}
+      <section className="border-t border-border bg-secondary/30 py-16 sm:py-20">
+        <div className="mx-auto max-w-3xl px-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
+            Questions fréquentes
+          </p>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl">
+            {prestation.name} à {city.name} : ce qu'on nous demande
+          </h2>
+          <dl className="mt-10 space-y-3">
+            {faq.map((item) => (
+              <details
+                key={item.question}
+                className="group rounded-2xl border border-border bg-card p-5 transition open:shadow-soft"
+              >
+                <summary className="flex cursor-pointer list-none items-start justify-between gap-4 font-display text-base text-foreground">
+                  <span>{item.question}</span>
+                  <span
+                    aria-hidden
+                    className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border text-brand-orange transition group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <dd className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  {item.answer}
+                </dd>
+              </details>
+            ))}
+          </dl>
+        </div>
+      </section>
+
       {/* CTA final */}
       <section className="border-t border-border bg-foreground py-16 text-background sm:py-20">
         <div className="mx-auto max-w-4xl px-6 text-center">
