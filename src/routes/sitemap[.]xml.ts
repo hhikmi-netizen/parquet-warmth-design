@@ -13,6 +13,7 @@ const STATIC_ROUTES: { path: string; priority: number; changefreq: string }[] = 
   { path: "/artisans", priority: 0.8, changefreq: "weekly" },
   { path: "/realisations", priority: 0.7, changefreq: "monthly" },
   { path: "/renovation-sinistre", priority: 0.9, changefreq: "monthly" },
+  { path: "/parquet-qui-gondole", priority: 0.95, changefreq: "monthly" },
   { path: "/artisan-verifie", priority: 0.7, changefreq: "monthly" },
   { path: "/confrerie-du-parquet", priority: 0.65, changefreq: "monthly" },
   { path: "/confrerie-du-parquet/candidater", priority: 0.55, changefreq: "monthly" },
