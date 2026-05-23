@@ -410,7 +410,40 @@ const initialSim: SimState = { type: "", cause: "", surface: "", duree: "", chau
 
 function GravitySimulator() {
   const [sim, setSim] = useState<SimState>(initialSim);
+  const [contexte, setContexte] = useState("");
+  const [ville, setVille] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiResult, setAiResult] = useState<DiagnosticResult | null>(null);
+  const runDiagnostic = useServerFn(diagnosticGondolage);
   const complete = Object.values(sim).every((v) => v !== "");
+
+  const askAi = async () => {
+    if (!complete) return;
+    setAiLoading(true);
+    setAiError(null);
+    setAiResult(null);
+    try {
+      const res = await runDiagnostic({
+        data: {
+          typeParquet: sim.type as "massif" | "flottant" | "stratifie",
+          cause: sim.cause as "inondation" | "humidite" | "chauffage" | "pose",
+          surface: sim.surface as "petite" | "moyenne" | "grande",
+          duree: sim.duree as "moins24" | "moins72" | "plus72",
+          chauffageSol: sim.chauffage === "oui",
+          contexte: contexte.trim() || undefined,
+          ville: ville.trim() || undefined,
+        },
+      });
+      if (res.error) setAiError(res.error);
+      else setAiResult(res.result);
+    } catch (e) {
+      setAiError("Le diagnostic IA est temporairement indisponible.");
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
 
   const result = useMemo(() => {
     if (!complete) return null;
