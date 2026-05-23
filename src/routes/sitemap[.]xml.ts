@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 import { CITIES } from "@/lib/cities";
 import { PRESTATIONS } from "@/lib/prestations";
+import { GONDOLAGE_CASES } from "@/lib/gondolage-cases";
 
 const BASE = "https://parqueto.fr";
 
