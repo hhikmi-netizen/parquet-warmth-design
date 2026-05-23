@@ -19,6 +19,7 @@ import { Route as RenovationSinistreRouteImport } from './routes/renovation-sini
 import { Route as RealisationsRouteImport } from './routes/realisations'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
 import { Route as ParrainageRouteImport } from './routes/parrainage'
+import { Route as ParquetQuiGondoleRouteImport } from './routes/parquet-qui-gondole'
 import { Route as OutilsRouteImport } from './routes/outils'
 import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as LoginRouteImport } from './routes/login'
@@ -124,6 +125,11 @@ const PartenairesRoute = PartenairesRouteImport.update({
 const ParrainageRoute = ParrainageRouteImport.update({
   id: '/parrainage',
   path: '/parrainage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParquetQuiGondoleRoute = ParquetQuiGondoleRouteImport.update({
+  id: '/parquet-qui-gondole',
+  path: '/parquet-qui-gondole',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OutilsRoute = OutilsRouteImport.update({
@@ -436,6 +442,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
+  '/parquet-qui-gondole': typeof ParquetQuiGondoleRoute
   '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
@@ -501,6 +508,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
+  '/parquet-qui-gondole': typeof ParquetQuiGondoleRoute
   '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
@@ -570,6 +578,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
+  '/parquet-qui-gondole': typeof ParquetQuiGondoleRoute
   '/parrainage': typeof ParrainageRoute
   '/partenaires': typeof PartenairesRoute
   '/realisations': typeof RealisationsRoute
@@ -639,6 +648,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/newsletter'
     | '/outils'
+    | '/parquet-qui-gondole'
     | '/parrainage'
     | '/partenaires'
     | '/realisations'
@@ -704,6 +714,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/newsletter'
     | '/outils'
+    | '/parquet-qui-gondole'
     | '/parrainage'
     | '/partenaires'
     | '/realisations'
@@ -772,6 +783,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/newsletter'
     | '/outils'
+    | '/parquet-qui-gondole'
     | '/parrainage'
     | '/partenaires'
     | '/realisations'
@@ -841,6 +853,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   NewsletterRoute: typeof NewsletterRoute
   OutilsRoute: typeof OutilsRoute
+  ParquetQuiGondoleRoute: typeof ParquetQuiGondoleRoute
   ParrainageRoute: typeof ParrainageRoute
   PartenairesRoute: typeof PartenairesRoute
   RealisationsRoute: typeof RealisationsRoute
@@ -930,6 +943,13 @@ declare module '@tanstack/react-router' {
       path: '/parrainage'
       fullPath: '/parrainage'
       preLoaderRoute: typeof ParrainageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parquet-qui-gondole': {
+      id: '/parquet-qui-gondole'
+      path: '/parquet-qui-gondole'
+      fullPath: '/parquet-qui-gondole'
+      preLoaderRoute: typeof ParquetQuiGondoleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/outils': {
@@ -1492,6 +1512,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   NewsletterRoute: NewsletterRoute,
   OutilsRoute: OutilsRoute,
+  ParquetQuiGondoleRoute: ParquetQuiGondoleRoute,
   ParrainageRoute: ParrainageRoute,
   PartenairesRoute: PartenairesRoute,
   RealisationsRoute: RealisationsRoute,
