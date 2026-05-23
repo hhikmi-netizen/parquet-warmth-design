@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -16,10 +17,13 @@ import {
   Thermometer,
   Ruler,
   Wrench,
+  Loader2,
+  Brain,
 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { GONDOLAGE_CASES } from "@/lib/gondolage-cases";
+import { diagnosticGondolage, type DiagnosticResult } from "@/lib/gondolage-diagnostic.functions";
 
 
 const PAGE_URL = "/parquet-qui-gondole";
@@ -406,7 +410,40 @@ const initialSim: SimState = { type: "", cause: "", surface: "", duree: "", chau
 
 function GravitySimulator() {
   const [sim, setSim] = useState<SimState>(initialSim);
+  const [contexte, setContexte] = useState("");
+  const [ville, setVille] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiResult, setAiResult] = useState<DiagnosticResult | null>(null);
+  const runDiagnostic = useServerFn(diagnosticGondolage);
   const complete = Object.values(sim).every((v) => v !== "");
+
+  const askAi = async () => {
+    if (!complete) return;
+    setAiLoading(true);
+    setAiError(null);
+    setAiResult(null);
+    try {
+      const res = await runDiagnostic({
+        data: {
+          typeParquet: sim.type as "massif" | "flottant" | "stratifie",
+          cause: sim.cause as "inondation" | "humidite" | "chauffage" | "pose",
+          surface: sim.surface as "petite" | "moyenne" | "grande",
+          duree: sim.duree as "moins24" | "moins72" | "plus72",
+          chauffageSol: sim.chauffage === "oui",
+          contexte: contexte.trim() || undefined,
+          ville: ville.trim() || undefined,
+        },
+      });
+      if (res.error) setAiError(res.error);
+      else setAiResult(res.result);
+    } catch (e) {
+      setAiError("Le diagnostic IA est temporairement indisponible.");
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
 
   const result = useMemo(() => {
     if (!complete) return null;
@@ -553,6 +590,156 @@ function GravitySimulator() {
             <p className="mt-5 text-xs text-muted-foreground">
               Répondez aux 5 questions pour afficher votre niveau de gravité.
             </p>
+          )}
+
+          {complete && (
+            <div className="mt-8 rounded-2xl border border-dashed border-foreground/15 bg-background p-6">
+              <div className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-brand-orange" />
+                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-orange">
+                  Diagnostic IA personnalisé · gratuit
+                </span>
+              </div>
+              <h3 className="mt-2 font-display text-xl text-foreground">
+                Allez plus loin : décrivez votre situation en quelques mots
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Notre IA croise vos 5 réponses avec votre contexte pour produire un diagnostic
+                concret : causes probables, étapes à suivre, fourchette de prix, couverture
+                assurance.
+              </p>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <input
+                  type="text"
+                  value={ville}
+                  onChange={(e) => setVille(e.target.value)}
+                  placeholder="Ville (optionnel)"
+                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-brand-orange focus:outline-none"
+                  maxLength={80}
+                />
+                <textarea
+                  value={contexte}
+                  onChange={(e) => setContexte(e.target.value)}
+                  placeholder="Ex : Cuisine, fuite lave-vaisselle découverte ce matin, parquet chêne posé en 2019, plinthes décollées sur 2 mètres…"
+                  className="min-h-[80px] rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-brand-orange focus:outline-none sm:col-span-2"
+                  maxLength={800}
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={askAi}
+                disabled={aiLoading}
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background transition hover:bg-foreground/85 disabled:opacity-60"
+              >
+                {aiLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" /> Analyse en cours…
+                  </>
+                ) : (
+                  <>
+                    <Brain className="h-4 w-4" /> Lancer le diagnostic IA
+                  </>
+                )}
+              </button>
+
+              {aiError && (
+                <p className="mt-3 text-sm text-destructive">{aiError}</p>
+              )}
+
+              {aiResult && (
+                <div className="mt-6 space-y-5 rounded-2xl border border-brand-orange/30 bg-brand-orange/5 p-6">
+                  <div className="flex items-start gap-3">
+                    <span
+                      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
+                        aiResult.urgence === "critique"
+                          ? "bg-destructive text-destructive-foreground"
+                          : aiResult.urgence === "haute"
+                          ? "bg-brand-orange text-primary-foreground"
+                          : aiResult.urgence === "moyenne"
+                          ? "bg-amber-500 text-white"
+                          : "bg-emerald-600 text-white"
+                      }`}
+                    >
+                      Urgence {aiResult.urgence}
+                    </span>
+                    <p className="text-sm text-foreground">{aiResult.diagnostic}</p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      Causes probables
+                    </h4>
+                    <ul className="mt-2 space-y-1.5">
+                      {aiResult.causes_probables.map((c, i) => (
+                        <li key={i} className="flex gap-2 text-sm text-foreground">
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange" />
+                          {c}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      Étapes recommandées
+                    </h4>
+                    <ol className="mt-2 space-y-3">
+                      {aiResult.etapes.map((e, i) => (
+                        <li key={i} className="flex gap-3 text-sm">
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-orange text-xs font-bold text-primary-foreground">
+                            {i + 1}
+                          </span>
+                          <div>
+                            <p className="font-semibold text-foreground">{e.titre}</p>
+                            <p className="text-muted-foreground">{e.detail}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-xl border border-border bg-background p-4">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        Fourchette de prix
+                      </p>
+                      <p className="mt-1 font-display text-lg text-foreground">
+                        {aiResult.prix_estimatif}
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-border bg-background p-4">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        Assurance
+                      </p>
+                      <p className="mt-1 text-sm text-foreground">
+                        {aiResult.couverture_assurance}
+                      </p>
+                    </div>
+                  </div>
+
+                  <Link
+                    to="/estimation"
+                    className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-brand-orange-deep"
+                  >
+                    {aiResult.cta_recommande === "urgence_sinistre"
+                      ? "Lancer le dossier sinistre"
+                      : aiResult.cta_recommande === "devis"
+                      ? "Recevoir un devis sous 24 h"
+                      : aiResult.cta_recommande === "observation"
+                      ? "Demander un diagnostic préventif"
+                      : "Demander un diagnostic gratuit"}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+
+                  <p className="text-[11px] text-muted-foreground">
+                    Diagnostic généré par IA à titre indicatif. Un artisan vérifié confirme sur
+                    place avant tout devis.
+                  </p>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
