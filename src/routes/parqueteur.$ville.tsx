@@ -18,6 +18,7 @@ import {
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { CITIES, getCityBySlug } from "@/lib/cities";
+import { PRESTATIONS as LOCAL_PRESTATIONS, type Prestation } from "@/lib/prestations";
 
 export const Route = createFileRoute("/parqueteur/$ville")({
   loader: ({ params }) => {
