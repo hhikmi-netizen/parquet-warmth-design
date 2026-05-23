@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 import { CITIES } from "@/lib/cities";
+import { PRESTATIONS } from "@/lib/prestations";
 
 const BASE = "https://parqueto.fr";
 
@@ -42,6 +43,9 @@ export const Route = createFileRoute("/sitemap.xml")({
         }
         for (const c of CITIES) {
           urls.push(`<url><loc>${BASE}/parqueteur/${c.slug}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>`);
+          for (const p of PRESTATIONS) {
+            urls.push(`<url><loc>${BASE}/parqueteur/${c.slug}/${p.slug}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.78</priority></url>`);
+          }
         }
         const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>`;
         return new Response(xml, {

@@ -66,6 +66,7 @@ import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedDevisRouteImport } from './routes/_authenticated/devis'
 import { Route as ProDevisNouveauRouteImport } from './routes/pro.devis.nouveau'
+import { Route as ParqueteurVillePrestationRouteImport } from './routes/parqueteur.$ville.$prestation'
 import { Route as ConfrerieDuParquetCandidaterMerciRouteImport } from './routes/confrerie-du-parquet.candidater.merci'
 import { Route as ApiPublicGuideUnsubscribeRouteImport } from './routes/api/public/guide-unsubscribe'
 import { Route as ApiPublicGuideSequenceRouteImport } from './routes/api/public/guide-sequence'
@@ -361,6 +362,12 @@ const ProDevisNouveauRoute = ProDevisNouveauRouteImport.update({
   path: '/pro/devis/nouveau',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ParqueteurVillePrestationRoute =
+  ParqueteurVillePrestationRouteImport.update({
+    id: '/$prestation',
+    path: '/$prestation',
+    getParentRoute: () => ParqueteurVilleRoute,
+  } as any)
 const ConfrerieDuParquetCandidaterMerciRoute =
   ConfrerieDuParquetCandidaterMerciRouteImport.update({
     id: '/merci',
@@ -460,7 +467,7 @@ export interface FileRoutesByFullPath {
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
   '/guide/merci': typeof GuideMerciRoute
-  '/parqueteur/$ville': typeof ParqueteurVilleRoute
+  '/parqueteur/$ville': typeof ParqueteurVilleRouteWithChildren
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
@@ -473,6 +480,7 @@ export interface FileRoutesByFullPath {
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
   '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
+  '/parqueteur/$ville/$prestation': typeof ParqueteurVillePrestationRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesByTo {
@@ -524,7 +532,7 @@ export interface FileRoutesByTo {
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
   '/guide/merci': typeof GuideMerciRoute
-  '/parqueteur/$ville': typeof ParqueteurVilleRoute
+  '/parqueteur/$ville': typeof ParqueteurVilleRouteWithChildren
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
@@ -537,6 +545,7 @@ export interface FileRoutesByTo {
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
   '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
+  '/parqueteur/$ville/$prestation': typeof ParqueteurVillePrestationRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRoutesById {
@@ -592,7 +601,7 @@ export interface FileRoutesById {
   '/guide/$slug': typeof GuideSlugRoute
   '/guide/lecture': typeof GuideLectureRoute
   '/guide/merci': typeof GuideMerciRoute
-  '/parqueteur/$ville': typeof ParqueteurVilleRoute
+  '/parqueteur/$ville': typeof ParqueteurVilleRouteWithChildren
   '/pro/facturation': typeof ProFacturationRoute
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
@@ -605,6 +614,7 @@ export interface FileRoutesById {
   '/api/public/guide-sequence': typeof ApiPublicGuideSequenceRoute
   '/api/public/guide-unsubscribe': typeof ApiPublicGuideUnsubscribeRoute
   '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
+  '/parqueteur/$ville/$prestation': typeof ParqueteurVillePrestationRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
 }
 export interface FileRouteTypes {
@@ -673,6 +683,7 @@ export interface FileRouteTypes {
     | '/api/public/guide-sequence'
     | '/api/public/guide-unsubscribe'
     | '/confrerie-du-parquet/candidater/merci'
+    | '/parqueteur/$ville/$prestation'
     | '/pro/devis/nouveau'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -737,6 +748,7 @@ export interface FileRouteTypes {
     | '/api/public/guide-sequence'
     | '/api/public/guide-unsubscribe'
     | '/confrerie-du-parquet/candidater/merci'
+    | '/parqueteur/$ville/$prestation'
     | '/pro/devis/nouveau'
   id:
     | '__root__'
@@ -804,6 +816,7 @@ export interface FileRouteTypes {
     | '/api/public/guide-sequence'
     | '/api/public/guide-unsubscribe'
     | '/confrerie-du-parquet/candidater/merci'
+    | '/parqueteur/$ville/$prestation'
     | '/pro/devis/nouveau'
   fileRoutesById: FileRoutesById
 }
@@ -839,7 +852,7 @@ export interface RootRouteChildren {
   TeintesRoute: typeof TeintesRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   DemoMicroReassuranceRoute: typeof DemoMicroReassuranceRoute
-  ParqueteurVilleRoute: typeof ParqueteurVilleRoute
+  ParqueteurVilleRoute: typeof ParqueteurVilleRouteWithChildren
   ProFacturationRoute: typeof ProFacturationRoute
   ProOffresRoute: typeof ProOffresRoute
   ApiPublicGuideSequenceRoute: typeof ApiPublicGuideSequenceRoute
@@ -1248,6 +1261,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProDevisNouveauRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/parqueteur/$ville/$prestation': {
+      id: '/parqueteur/$ville/$prestation'
+      path: '/$prestation'
+      fullPath: '/parqueteur/$ville/$prestation'
+      preLoaderRoute: typeof ParqueteurVillePrestationRouteImport
+      parentRoute: typeof ParqueteurVilleRoute
+    }
     '/confrerie-du-parquet/candidater/merci': {
       id: '/confrerie-du-parquet/candidater/merci'
       path: '/merci'
@@ -1439,6 +1459,18 @@ const GuideRouteChildren: GuideRouteChildren = {
 
 const GuideRouteWithChildren = GuideRoute._addFileChildren(GuideRouteChildren)
 
+interface ParqueteurVilleRouteChildren {
+  ParqueteurVillePrestationRoute: typeof ParqueteurVillePrestationRoute
+}
+
+const ParqueteurVilleRouteChildren: ParqueteurVilleRouteChildren = {
+  ParqueteurVillePrestationRoute: ParqueteurVillePrestationRoute,
+}
+
+const ParqueteurVilleRouteWithChildren = ParqueteurVilleRoute._addFileChildren(
+  ParqueteurVilleRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
@@ -1471,7 +1503,7 @@ const rootRouteChildren: RootRouteChildren = {
   TeintesRoute: TeintesRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   DemoMicroReassuranceRoute: DemoMicroReassuranceRoute,
-  ParqueteurVilleRoute: ParqueteurVilleRoute,
+  ParqueteurVilleRoute: ParqueteurVilleRouteWithChildren,
   ProFacturationRoute: ProFacturationRoute,
   ProOffresRoute: ProOffresRoute,
   ApiPublicGuideSequenceRoute: ApiPublicGuideSequenceRoute,
@@ -1481,13 +1513,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

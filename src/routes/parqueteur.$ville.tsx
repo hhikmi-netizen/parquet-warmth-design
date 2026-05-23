@@ -18,6 +18,7 @@ import {
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { CITIES, getCityBySlug } from "@/lib/cities";
+import { PRESTATIONS as LOCAL_PRESTATIONS, type Prestation } from "@/lib/prestations";
 
 export const Route = createFileRoute("/parqueteur/$ville")({
   loader: ({ params }) => {
@@ -418,6 +419,44 @@ function CityPage() {
           </div>
         </div>
       </section>
+
+      {/* Liens prestations dédiées — SEO local longue traîne */}
+      <section className="py-14 sm:py-16">
+        <div className="mx-auto max-w-6xl px-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
+            Pages dédiées
+          </p>
+          <h2 className="mt-3 font-display text-2xl sm:text-3xl">
+            Tous nos services parquet à {city.name}
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+            Une page détaillée par prestation, avec la méthode, les tarifs et les spécificités
+            locales à {city.name}.
+          </p>
+          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {LOCAL_PRESTATIONS.map((p: Prestation) => (
+              <li key={p.slug}>
+                <Link
+                  to="/parqueteur/$ville/$prestation"
+                  params={{ ville: city.slug, prestation: p.slug }}
+                  className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 transition hover:-translate-y-0.5 hover:border-brand-orange/40 hover:shadow-soft"
+                >
+                  <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange">
+                    <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-display text-base text-foreground">
+                      {p.name} à {city.name}
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">{p.tarif}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
 
       {/* Tarifs */}
       <section id="tarifs" className="py-16 sm:py-20">
