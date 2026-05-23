@@ -267,10 +267,12 @@ function ParquetQuiGondolePage() {
         <CausesSection />
         <GravitySimulator />
         <ScenariosTable />
+        <PriceCalculator />
         <AssuranceSection />
         <PreventionSection />
         <FaqSection />
         <SatelliteCases />
+        <GeoBlock />
         <InternalMesh />
         <FinalCta />
 
