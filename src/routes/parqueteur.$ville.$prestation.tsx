@@ -273,7 +273,7 @@ function PrestationVillePage() {
             Les étapes — {prestation.name.toLowerCase()}
           </h2>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {prestation.etapes.map((e, i) => (
+            {prestation.etapes.map((e: { title: string; text: string }, i: number) => (
               <div
                 key={e.title}
                 className="rounded-2xl border border-border bg-card p-6 transition hover:border-brand-orange/40 hover:shadow-soft"
