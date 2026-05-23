@@ -1,0 +1,42 @@
+# Parqueto
+
+> Plateforme française qui met en relation les particuliers avec des artisans parqueteurs vérifiés. Estimation en ligne, assistant IA d'analyse de parquet en photo, accompagnement complet de la pose à la rénovation après dégât des eaux.
+
+Parqueto opère partout en France. Spécialités : pose (massif, contrecollé, stratifié, point de Hongrie), ponçage, vitrification, huilage, rénovation de parquet ancien, expertise sinistre (dégât des eaux, gondolage), parquet sur chauffage au sol, parquet en pièce humide. Tous les artisans du réseau sont vérifiés (SIRET, décennale, références).
+
+## Pages
+
+- [Accueil](/): Estimation parquet en ligne et présentation du réseau d'artisans vérifiés.
+- [Estimation](/estimation): Estimateur de prix parquet en quelques minutes (pose, ponçage, rénovation).
+- [Assistant IA](/assistant): Analyse de parquet en photo — essence, usure, recommandation.
+- [Le Guide](/guide): Guide complet du parquet en libre accès (choisir, poser, entretenir, rénover).
+- [Guide Parquet (PDF)](/guide-parquet): Téléchargement du guide en PDF.
+- [Nos artisans](/artisans): Présentation du réseau d'artisans parqueteurs vérifiés.
+- [Artisan vérifié](/artisan-verifie): Critères de vérification (SIRET, décennale, références).
+- [Réalisations](/realisations): Galerie de chantiers (rénovation, pose chevron, point de Hongrie).
+- [Teintes](/teintes): Nuancier interactif des teintes de finition.
+- [Outils](/outils): Calculateurs (surface, consommation vernis, durée de chantier).
+
+## Piliers SEO
+
+- [Parquet qui gondole](/parquet-qui-gondole): Causes, simulateur de gravité IA, prix de réparation.
+- [Rénovation après sinistre](/renovation-sinistre): Dégât des eaux, dossier MRH, indemnisation.
+- [Prix ponçage parquet](/prix-poncage-parquet): Fourchettes de prix au m², facteurs de variation.
+- [Parquet flottant ou massif](/parquet-flottant-ou-massif): Comparatif technique et financier.
+- [Rénover parquet ancien](/renover-parquet-ancien): Versailles, point de Hongrie, mosaïque.
+- [Parquet sur carrelage](/parquet-sur-carrelage): Pose flottante ou collée sur sol existant.
+
+## Contenu
+
+- [Blog](/blog): Articles techniques et conseils d'artisans.
+- [À propos](/a-propos): L'histoire et la mission de Parqueto.
+- [Charte qualité](/charte-qualite): Engagements du réseau.
+- [La Confrérie du Parquet](/confrerie-du-parquet): Communauté professionnelle des artisans Parqueto.
+
+## Espaces dédiés
+
+- [Devenir artisan partenaire](/devenir-artisan): Rejoindre le réseau Parqueto.
+- [Partenaires](/partenaires): Fournisseurs et institutionnels.
+- [Newsletter](/newsletter): Inscription aux actualités.
+- [Parrainage](/parrainage): Programme de recommandation.
+- [Contact](/contact): Formulaire de contact.

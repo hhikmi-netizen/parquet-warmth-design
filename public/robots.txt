@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Pages privées / techniques — ne pas indexer
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /design-system
+Disallow: /devis
+Disallow: /messages
+Disallow: /mon-projet
+Disallow: /historique
+Disallow: /pro
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://parqueto.fr/sitemap.xml
