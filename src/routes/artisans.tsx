@@ -94,8 +94,38 @@ function ArtisansPage() {
         </div>
       </section>
       <ArtisansShowcase />
+
+      {/* Parcours artisan — explication pédagogique sous forme de carrousel */}
+      <section className="border-y border-border bg-secondary/30 py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
+              Comment ça marche pour vous
+            </p>
+            <h2 className="mt-4 font-display text-3xl text-balance sm:text-4xl">
+              Rejoindre Parqueto, <span className="italic text-brand-orange">en 4 étapes.</span>
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Pas de paperasse interminable, pas de leads génériques. Un parcours pensé pour les artisans qui veulent
+              se concentrer sur leur métier.
+            </p>
+          </div>
+          <JourneyStepper steps={artisanJourney} accent="ink" />
+          <div className="mt-10 flex justify-center">
+            <Link
+              to="/comment-ca-marche"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-orange hover:underline"
+            >
+              Voir aussi le parcours côté client
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <Artisan />
       <Footer />
+
     </main>
   );
 }
