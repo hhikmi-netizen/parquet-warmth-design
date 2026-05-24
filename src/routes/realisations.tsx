@@ -19,15 +19,17 @@ export const Route = createFileRoute("/realisations")({
   component: RealisationsPage,
   head: () => ({
     meta: [
-      { title: "Réalisations parquet — Avant / Après · Parqueto" },
+      { title: "Rénovation parquet & parquet qui gondole — Avant / Après · Parqueto" },
       {
         name: "description",
         content:
-          "Découvrez des chantiers parquet réalisés par nos artisans partenaires : rénovation, pose chevron, vitrification, point de Hongrie.",
+          "Photos de rénovation parquet : ponçage, vitrification, pose. Solutions parquet qui gondole, rénovation parquet ancien et chantiers avant / après par des artisans parqueteurs vérifiés.",
       },
-      { property: "og:title", content: "Réalisations parquet · Parqueto" },
-      { property: "og:description", content: "Avant / après, des chantiers qui parlent d'eux-mêmes." },
+      { property: "og:title", content: "Rénovation parquet & parquet qui gondole — Avant / Après · Parqueto" },
+      { property: "og:description", content: "Photos de rénovation parquet et solutions parquet qui gondole. Avant / après par des artisans vérifiés." },
       { property: "og:image", content: hero },
+      { property: "og:image:alt", content: "Rénovation parquet et parquet qui gondole — Avant / Après" },
+      { property: "og:type", content: "website" },
       { property: "og:url", content: "/realisations" },
     ],
 
