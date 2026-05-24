@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 type NavItem = { label: string; to: string };
 
 const nav: NavItem[] = [
-  { label: "Comment ça marche", to: "/process" },
+  { label: "Comment ça marche", to: "/comment-ca-marche" },
   { label: "Réalisations", to: "/realisations" },
   { label: "Nos artisans", to: "/artisans" },
   { label: "Outils", to: "/outils" },
@@ -15,9 +15,9 @@ const nav: NavItem[] = [
   { label: "Contact", to: "/contact" },
 ];
 
-// "/process" is rendered as a hash link to the homepage Process section.
-const isHashItem = (to: string) => to === "/process";
-const hashHref = (to: string) => (to === "/process" ? "/#process" : to);
+// No hash items currently in the nav — kept for future flexibility.
+const isHashItem = (_to: string) => false;
+const hashHref = (to: string) => to;
 
 export function Header() {
   const [open, setOpen] = useState(false);

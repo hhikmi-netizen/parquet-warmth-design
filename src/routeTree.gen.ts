@@ -35,6 +35,7 @@ import { Route as DevenirArtisanRouteImport } from './routes/devenir-artisan'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConfrerieDuParquetRouteImport } from './routes/confrerie-du-parquet'
+import { Route as CommentCaMarcheRouteImport } from './routes/comment-ca-marche'
 import { Route as CharteQualiteRouteImport } from './routes/charte-qualite'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AssistantRouteImport } from './routes/assistant'
@@ -210,6 +211,11 @@ const ContactRoute = ContactRouteImport.update({
 const ConfrerieDuParquetRoute = ConfrerieDuParquetRouteImport.update({
   id: '/confrerie-du-parquet',
   path: '/confrerie-du-parquet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommentCaMarcheRoute = CommentCaMarcheRouteImport.update({
+  id: '/comment-ca-marche',
+  path: '/comment-ca-marche',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CharteQualiteRoute = CharteQualiteRouteImport.update({
@@ -461,6 +467,7 @@ export interface FileRoutesByFullPath {
   '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
+  '/comment-ca-marche': typeof CommentCaMarcheRoute
   '/confrerie-du-parquet': typeof ConfrerieDuParquetRouteWithChildren
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
@@ -533,6 +540,7 @@ export interface FileRoutesByTo {
   '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
+  '/comment-ca-marche': typeof CommentCaMarcheRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
@@ -607,6 +615,7 @@ export interface FileRoutesById {
   '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
   '/charte-qualite': typeof CharteQualiteRoute
+  '/comment-ca-marche': typeof CommentCaMarcheRoute
   '/confrerie-du-parquet': typeof ConfrerieDuParquetRouteWithChildren
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
@@ -682,6 +691,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/blog'
     | '/charte-qualite'
+    | '/comment-ca-marche'
     | '/confrerie-du-parquet'
     | '/contact'
     | '/design-system'
@@ -754,6 +764,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/blog'
     | '/charte-qualite'
+    | '/comment-ca-marche'
     | '/contact'
     | '/design-system'
     | '/devenir-artisan'
@@ -827,6 +838,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/blog'
     | '/charte-qualite'
+    | '/comment-ca-marche'
     | '/confrerie-du-parquet'
     | '/contact'
     | '/design-system'
@@ -902,6 +914,7 @@ export interface RootRouteChildren {
   AssistantRoute: typeof AssistantRoute
   BlogRoute: typeof BlogRouteWithChildren
   CharteQualiteRoute: typeof CharteQualiteRoute
+  CommentCaMarcheRoute: typeof CommentCaMarcheRoute
   ConfrerieDuParquetRoute: typeof ConfrerieDuParquetRouteWithChildren
   ContactRoute: typeof ContactRoute
   DesignSystemRoute: typeof DesignSystemRoute
@@ -1119,6 +1132,13 @@ declare module '@tanstack/react-router' {
       path: '/confrerie-du-parquet'
       fullPath: '/confrerie-du-parquet'
       preLoaderRoute: typeof ConfrerieDuParquetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comment-ca-marche': {
+      id: '/comment-ca-marche'
+      path: '/comment-ca-marche'
+      fullPath: '/comment-ca-marche'
+      preLoaderRoute: typeof CommentCaMarcheRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/charte-qualite': {
@@ -1611,6 +1631,7 @@ const rootRouteChildren: RootRouteChildren = {
   AssistantRoute: AssistantRoute,
   BlogRoute: BlogRouteWithChildren,
   CharteQualiteRoute: CharteQualiteRoute,
+  CommentCaMarcheRoute: CommentCaMarcheRoute,
   ConfrerieDuParquetRoute: ConfrerieDuParquetRouteWithChildren,
   ContactRoute: ContactRoute,
   DesignSystemRoute: DesignSystemRoute,
@@ -1648,13 +1669,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
