@@ -9,14 +9,19 @@ export const Route = createFileRoute("/artisans")({
   component: ArtisansPage,
   head: () => ({
     meta: [
-      { title: "Nos artisans parqueteurs — sélectionnés et vérifiés · Parqueto" },
+      { title: "Artisan parqueteur vérifié près de chez vous — Devis sous 24 h · Parqueto" },
       {
         name: "description",
         content:
-          "Découvrez les artisans parqueteurs partenaires de Parqueto : sélectionnés sur dossier, vérifiés, notés par les particuliers.",
+          "Artisans parqueteurs vérifiés (décennale, identité, avis clients) : pose, ponçage, vitrification, rénovation. Devis gratuit d'un artisan parqueteur vérifié sous 24 h, sans engagement.",
       },
-      { property: "og:title", content: "Nos artisans · Parqueto" },
-      { property: "og:description", content: "Des visages, des mains, un savoir-faire." },
+      { property: "og:title", content: "Artisan parqueteur vérifié — Devis sous 24 h · Parqueto" },
+      {
+        property: "og:description",
+        content:
+          "Découvrez les artisans parqueteurs vérifiés Parqueto : pose, ponçage, vitrification, rénovation. Devis gratuit sous 24 h.",
+      },
+      { property: "og:type", content: "website" },
       { property: "og:url", content: "/artisans" },
     ],
 
