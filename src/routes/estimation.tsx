@@ -7,13 +7,37 @@ export const Route = createFileRoute("/estimation")({
   component: EstimationPage,
   head: () => ({
     meta: [
-      { title: "Estimation détaillée — Parqueto" },
+      {
+        title:
+          "Estimation parquet en ligne gratuite — Pose, ponçage, vitrification, rénovation | Parqueto",
+      },
       {
         name: "description",
         content:
-          "Décrivez votre projet parquet en 4 étapes guidées : projet, logement, localisation, coordonnées. Estimation indicative sous 24 h, sans engagement.",
+          "Estimation parquet en ligne gratuite en 4 étapes : pose, ponçage, vitrification, rénovation. Devis d'un artisan parqueteur vérifié sous 24 h, sans engagement.",
+      },
+      {
+        property: "og:title",
+        content:
+          "Estimation parquet en ligne gratuite — Pose, ponçage, vitrification, rénovation | Parqueto",
+      },
+      {
+        property: "og:description",
+        content:
+          "Estimation parquet en ligne gratuite en 4 étapes : pose, ponçage, vitrification, rénovation. Devis d'un artisan parqueteur vérifié sous 24 h.",
       },
       { property: "og:url", content: "/estimation" },
+      { property: "og:type", content: "website" },
+      {
+        property: "twitter:title",
+        content:
+          "Estimation parquet en ligne gratuite — Pose, ponçage, vitrification, rénovation | Parqueto",
+      },
+      {
+        property: "twitter:description",
+        content:
+          "Estimation parquet en ligne gratuite en 4 étapes : pose, ponçage, vitrification, rénovation. Devis d'un artisan parqueteur vérifié sous 24 h.",
+      },
     ],
 
     links: [{ rel: "canonical", href: "/estimation" }],
