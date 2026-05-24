@@ -78,7 +78,7 @@ function RealisationsPage() {
                 <div className="overflow-hidden">
                   <img
                     src={p.img}
-                    alt={p.title}
+                    alt={`${p.title} — ${p.tag} · ${p.city}`}
                     className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-105"
                     loading="lazy"
                   />
