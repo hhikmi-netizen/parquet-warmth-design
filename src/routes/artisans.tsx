@@ -1,9 +1,42 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, UserPlus, Target, MessagesSquare, CheckCircle2 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ArtisansShowcase } from "@/components/site/ArtisansShowcase";
 import { Artisan } from "@/components/site/Artisan";
+import { JourneyStepper, type JourneyStep } from "@/components/site/JourneyStepper";
+
+const artisanJourney: JourneyStep[] = [
+  {
+    n: "01",
+    icon: UserPlus,
+    title: "Créez votre compte artisan",
+    body: "Spécialités, zone d'intervention, disponibilités et justificatifs (KBIS, RC Pro, décennale). Tout est vérifié manuellement avant validation.",
+    highlight: "Essai 14 jours",
+  },
+  {
+    n: "02",
+    icon: Target,
+    title: "Recevez des missions ciblées",
+    body: "Notre algorithme ne vous envoie que les projets qui correspondent à votre métier, votre zone et votre niveau de qualification. Aucun lead générique.",
+    highlight: "Leads qualifiés",
+  },
+  {
+    n: "03",
+    icon: MessagesSquare,
+    title: "Échangez avec le client",
+    body: "Contact direct, questions techniques, visite si besoin, devis depuis l'application. Pas d'intermédiaire qui filtre vos messages.",
+    highlight: "Direct & sans filtre",
+  },
+  {
+    n: "04",
+    icon: CheckCircle2,
+    title: "Chantier validé, signature",
+    body: "Le client signe votre devis. Vous gérez le planning, les photos chantier et la facturation depuis votre espace pro.",
+    highlight: "Chantier livré",
+  },
+];
+
 
 export const Route = createFileRoute("/artisans")({
   component: ArtisansPage,
@@ -61,8 +94,38 @@ function ArtisansPage() {
         </div>
       </section>
       <ArtisansShowcase />
+
+      {/* Parcours artisan — explication pédagogique sous forme de carrousel */}
+      <section className="border-y border-border bg-secondary/30 py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
+              Comment ça marche pour vous
+            </p>
+            <h2 className="mt-4 font-display text-3xl text-balance sm:text-4xl">
+              Rejoindre Parqueto, <span className="italic text-brand-orange">en 4 étapes.</span>
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Pas de paperasse interminable, pas de leads génériques. Un parcours pensé pour les artisans qui veulent
+              se concentrer sur leur métier.
+            </p>
+          </div>
+          <JourneyStepper steps={artisanJourney} accent="ink" />
+          <div className="mt-10 flex justify-center">
+            <Link
+              to="/comment-ca-marche"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-orange hover:underline"
+            >
+              Voir aussi le parcours côté client
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <Artisan />
       <Footer />
+
     </main>
   );
 }
