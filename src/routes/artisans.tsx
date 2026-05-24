@@ -1,9 +1,42 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, UserPlus, Target, MessagesSquare, CheckCircle2 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ArtisansShowcase } from "@/components/site/ArtisansShowcase";
 import { Artisan } from "@/components/site/Artisan";
+import { JourneyStepper, type JourneyStep } from "@/components/site/JourneyStepper";
+
+const artisanJourney: JourneyStep[] = [
+  {
+    n: "01",
+    icon: UserPlus,
+    title: "Créez votre compte artisan",
+    body: "Spécialités, zone d'intervention, disponibilités et justificatifs (KBIS, RC Pro, décennale). Tout est vérifié manuellement avant validation.",
+    highlight: "Essai 14 jours",
+  },
+  {
+    n: "02",
+    icon: Target,
+    title: "Recevez des missions ciblées",
+    body: "Notre algorithme ne vous envoie que les projets qui correspondent à votre métier, votre zone et votre niveau de qualification. Aucun lead générique.",
+    highlight: "Leads qualifiés",
+  },
+  {
+    n: "03",
+    icon: MessagesSquare,
+    title: "Échangez avec le client",
+    body: "Contact direct, questions techniques, visite si besoin, devis depuis l'application. Pas d'intermédiaire qui filtre vos messages.",
+    highlight: "Direct & sans filtre",
+  },
+  {
+    n: "04",
+    icon: CheckCircle2,
+    title: "Chantier validé, signature",
+    body: "Le client signe votre devis. Vous gérez le planning, les photos chantier et la facturation depuis votre espace pro.",
+    highlight: "Chantier livré",
+  },
+];
+
 
 export const Route = createFileRoute("/artisans")({
   component: ArtisansPage,
