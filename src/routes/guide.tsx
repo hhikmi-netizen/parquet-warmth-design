@@ -12,20 +12,33 @@ export const Route = createFileRoute("/guide")({
   component: GuideLayout,
   head: () => ({
     meta: [
-      { title: "Le Guide Ultime du Parquet — Choisir, poser, entretenir · Parqueto" },
+      { title: "Guide parquet complet — Conseils pose, ponçage, vitrification, rénovation · Parqueto" },
       {
         name: "description",
         content:
-          "Le guide complet du parquet par Parqueto : choisir, poser, entretenir, rénover. Lexique, normes DTU, comparatifs et solutions concrètes. Libre accès, téléchargeable en PDF.",
+          "Guide parquet gratuit : conseils pose, ponçage, vitrification, rénovation et entretien. Lexique, normes DTU, comparatifs et solutions concrètes. Téléchargeable en PDF.",
       },
-      { property: "og:title", content: "Le Guide Ultime du Parquet · Parqueto" },
+      {
+        property: "og:title",
+        content: "Guide parquet complet — Conseils pose, ponçage, vitrification, rénovation · Parqueto",
+      },
       {
         property: "og:description",
-        content: "Choisir, poser, entretenir, rénover : tout le savoir-faire des artisans du parquet, condensé dans un guide en libre accès.",
+        content: "Conseils parquet gratuits : pose, ponçage, vitrification, rénovation et entretien. Tout le savoir-faire des artisans, condensé dans un guide en libre accès.",
       },
       { property: "og:image", content: GUIDE_COVER },
-      { name: "robots", content: "index, follow, max-image-preview:large" },
       { property: "og:url", content: "/guide" },
+      { property: "og:type", content: "website" },
+      {
+        property: "twitter:title",
+        content: "Guide parquet complet — Conseils pose, ponçage, vitrification, rénovation · Parqueto",
+      },
+      {
+        property: "twitter:description",
+        content: "Conseils parquet gratuits : pose, ponçage, vitrification, rénovation et entretien. Tout le savoir-faire des artisans, condensé dans un guide en libre accès.",
+      },
+      { property: "twitter:image", content: GUIDE_COVER },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
     ],
 
     links: [{ rel: "canonical", href: "/guide" }],
