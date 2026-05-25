@@ -258,7 +258,7 @@ function DevenirArtisan() {
             Ce que Parqueto n'est pas
           </p>
           <h2 className="mt-3 font-serif text-3xl tracking-tight sm:text-4xl">
-            Pas une marketplace agressive. Pas un casino à crédits.
+            Pas une marketplace agressive. Pas une foire aux leads.
           </h2>
           <div className="mt-10 grid gap-6 sm:grid-cols-2">
             {[
