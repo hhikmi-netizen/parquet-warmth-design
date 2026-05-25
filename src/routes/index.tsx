@@ -300,6 +300,7 @@ function Index() {
       <ArtisanExperience />
       <RealisationsTeaser />
       <BrandFilm />
+      <CharteTeaser />
       <SocialProof />
       <Partners />
       <FinalCTA />
