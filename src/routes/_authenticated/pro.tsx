@@ -581,14 +581,12 @@ function MatchCard({
 
 function ProjectDrawer({
   match,
-  balance,
   onClose,
   onAccept,
   onDecline,
   onRefund,
 }: {
   match: InboxMatch;
-  balance: number;
   onClose: () => void;
   onAccept: (m: InboxMatch) => void;
   onDecline: (m: InboxMatch) => void;
