@@ -224,12 +224,12 @@ function DevenirArtisan() {
                 },
                 {
                   t: "Client injoignable = remboursé",
-                  d: "Si vous ne parvenez pas à joindre le client sous 5 jours ouvrés, le crédit est restitué.",
+                  d: "Si vous ne parvenez pas à joindre le client sous 5 jours ouvrés, le lead est remboursé.",
                   i: ShieldCheck,
                 },
                 {
                   t: "Hors zone = remboursé",
-                  d: "Si le projet est finalement hors de votre rayon d'intervention, crédit restitué.",
+                  d: "Si le projet est finalement hors de votre rayon d'intervention, le lead est remboursé.",
                   i: MapPin,
                 },
                 {
