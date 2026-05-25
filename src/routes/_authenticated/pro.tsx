@@ -568,8 +568,7 @@ function MatchCard({
           {p.budget_min.toLocaleString("fr-FR")} – {p.budget_max.toLocaleString("fr-FR")} €
         </p>
         <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-brand-orange/10 px-2 py-0.5 text-[10px] font-semibold text-brand-orange-deep">
-          <Coins className="h-3 w-3" /> {p.credits_cost} crédit
-          {p.credits_cost > 1 ? "s" : ""}
+          <CreditCard className="h-3 w-3" /> {getLeadPrice(p.budget_max).price}€
         </p>
       </div>
     </button>
