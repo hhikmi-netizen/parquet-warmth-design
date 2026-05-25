@@ -111,8 +111,8 @@ function DevenirArtisan() {
               </ul>
               <div className="mt-6 flex items-center justify-between rounded-2xl bg-muted/60 p-4">
                 <div className="text-xs text-muted-foreground">
-                  <p className="font-semibold text-foreground">1 crédit projet</p>
-                  <p>Coordonnées débloquées à l'acceptation</p>
+                  <p className="font-semibold text-foreground">Lead Standard · 49 € TTC</p>
+                  <p>Coordonnées débloquées après achat</p>
                 </div>
                 <button className="rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background">
                   Voir le projet
@@ -124,7 +124,7 @@ function DevenirArtisan() {
                 <ShieldCheck className="h-5 w-5 text-emerald-600" />
                 <div>
                   <p className="text-xs font-semibold">Client injoignable ?</p>
-                  <p className="text-xs text-muted-foreground">Crédit remboursé automatiquement.</p>
+                  <p className="text-xs text-muted-foreground">Lead remboursé automatiquement.</p>
                 </div>
               </div>
             </div>
