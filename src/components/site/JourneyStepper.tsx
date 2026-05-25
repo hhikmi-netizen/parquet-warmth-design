@@ -332,13 +332,18 @@ export function JourneyStepper({
       onKeyDown={onCarouselKeyDown}
     >
       <div className="lg:col-span-6">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-cream/60 via-background to-secondary/40 p-4 shadow-soft sm:p-6">
-          <div className="grain absolute inset-0 opacity-20" aria-hidden />
+        <div className={cn(
+          "relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-cream/60 via-background to-secondary/40 shadow-soft",
+          step.image
+            ? "aspect-[16/10] p-0 sm:aspect-[4/3] sm:p-6"
+            : "aspect-[4/3] p-4 sm:p-6",
+        )}>
+          <div className="grain absolute inset-0 opacity-20 pointer-events-none" aria-hidden />
           {step.image ? (
             <img
               src={step.image}
               alt={imageAlt}
-              className="relative h-full w-full rounded-[1.25rem] object-cover shadow-soft"
+              className="relative h-full w-full object-cover sm:rounded-[1.25rem] sm:shadow-soft"
               loading="lazy"
             />
           ) : (
