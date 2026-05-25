@@ -65,7 +65,7 @@ export function JourneyStepper({
   const resolvedMode = useResolvedMode(mode, autoBreakpoint);
 
   const [i, setI] = useState(0);
-  const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const [openIdx, setOpenIdx] = useState<number | null>(defaultOpenIndex ?? 0);
   const baseId = useId();
 
   const step = steps[i];
