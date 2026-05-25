@@ -251,6 +251,101 @@ function AbonnementPage() {
           </div>
         </PqSurface>
 
+        {/* ===== Grille Mensuel / Annuel — changer de formule ===== */}
+        <section className="mt-10">
+          <div className="mb-4 flex items-end justify-between gap-3">
+            <div>
+              <h2 className="font-serif text-xl text-brand-ink">Changer de formule</h2>
+              <p className="text-sm text-muted-foreground">
+                Passez à l'annuel pour économiser <strong className="text-foreground">120€ (-17%)</strong>, ou revenez au mensuel à tout moment.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {([
+              {
+                id: "monthly" as const,
+                title: "Mensuel",
+                price: 59,
+                unit: "/ mois TTC",
+                total: "708€ / an",
+                perks: ["Sans engagement", "Résiliable en 1 clic", "Facturation chaque mois"],
+              },
+              {
+                id: "yearly" as const,
+                title: "Annuel",
+                price: 49,
+                unit: "/ mois TTC",
+                total: "588€ facturés en une fois",
+                perks: ["2 mois offerts (-17%)", "1 seule facture par an", "Idem mensuel, moins cher"],
+                save: "-17%",
+              },
+            ]).map((plan) => {
+              const isCurrent = plan.id === sub.billing;
+              const isSelected = plan.id === selectedBilling;
+              return (
+                <button
+                  key={plan.id}
+                  type="button"
+                  onClick={() => setSelectedBilling(plan.id)}
+                  className={`relative rounded-3xl border-2 p-6 text-left transition ${
+                    isSelected
+                      ? "border-brand-orange bg-background shadow-warm"
+                      : "border-border bg-background hover:border-brand-orange/40"
+                  }`}
+                >
+                  {plan.save && (
+                    <div className="absolute -top-3 right-4">
+                      <PqPill tone="orange">
+                        <Sparkles className="h-3 w-3" /> {plan.save}
+                      </PqPill>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <span className="font-serif text-2xl text-brand-ink">{plan.title}</span>
+                    {isCurrent && (
+                      <PqPill tone="success">
+                        <Check className="h-3 w-3" /> Formule actuelle
+                      </PqPill>
+                    )}
+                  </div>
+                  <div className="mt-3 flex items-baseline gap-2">
+                    <span className="font-serif text-4xl text-brand-ink">{plan.price}€</span>
+                    <span className="text-sm text-muted-foreground">{plan.unit}</span>
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground">{plan.total}</div>
+                  <ul className="mt-4 space-y-2 text-sm text-foreground">
+                    {plan.perks.map((p) => (
+                      <li key={p} className="flex items-start gap-2">
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-background p-4">
+            <div className="text-sm text-muted-foreground">
+              {selectedBilling === sub.billing ? (
+                <>Vous êtes déjà en formule <strong className="text-foreground">{selectedBilling === "yearly" ? "annuelle" : "mensuelle"}</strong>.</>
+              ) : (
+                <>Basculer en <strong className="text-foreground">{selectedBilling === "yearly" ? "annuel" : "mensuel"}</strong> prendra effet à la fin de la période en cours.</>
+              )}
+            </div>
+            <PqButton
+              onClick={handleSwitchPlan}
+              disabled={selectedBilling === sub.billing || switchLoading}
+            >
+              <ArrowRight className="h-4 w-4" />
+              {switchLoading ? "Redirection…" : "Confirmer la bascule"}
+            </PqButton>
+          </div>
+        </section>
+
         {/* Leads pricing reminder */}
         <section className="mt-10">
           <div className="mb-4">
