@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShieldCheck, Clock3, BadgeEuro } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import heroSalon from "@/assets/hero-salon-parquet.jpg";
 import heroHaussmann from "@/assets/hero-haussmann-chevron.jpg";
@@ -90,8 +90,12 @@ export function Hero() {
       {/* Contenu statique */}
       <div className="relative mx-auto grid min-h-[78vh] max-w-7xl grid-cols-1 items-center px-6 py-20 sm:py-24 md:min-h-[82vh] lg:grid-cols-12 lg:py-32">
         <div className="lg:col-span-7 xl:col-span-6">
-          <h1 className="font-display text-5xl leading-[1.05] text-balance text-foreground sm:text-6xl lg:text-7xl">
-            Estimation parquet
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-orange/30 bg-background/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-orange backdrop-blur-sm">
+            <Sparkles className="h-3 w-3" aria-hidden />
+            Estimation IA gratuite
+          </span>
+          <h1 className="mt-4 font-display text-[2.6rem] leading-[1.05] text-balance text-foreground sm:text-6xl lg:text-7xl">
+            Estimez votre projet parquet
             <span className="block italic text-brand-orange">en quelques minutes.</span>
           </h1>
           <p className="sr-only">
@@ -100,26 +104,41 @@ export function Hero() {
 
           <div
             aria-hidden
-            className="mt-6 h-[2px] w-24 rounded-full bg-brand-orange/70"
+            className="mt-5 h-[2px] w-20 rounded-full bg-brand-orange/70"
           />
 
-          <p className="mt-7 max-w-xl text-base leading-relaxed text-foreground/75 sm:text-lg">
-            Obtenez gratuitement une estimation claire selon votre surface,
-            votre type de parquet et votre projet de rénovation.
-            Un artisan partenaire vérifié prend ensuite le relais — sans démarchage.
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-foreground/75 sm:text-lg">
+            Surface, type de parquet, état des lieux : recevez une fourchette de prix claire,
+            puis un artisan partenaire vérifié vous recontacte — sans démarchage.
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
+          {/* Preuves courtes */}
+          <ul className="mt-6 flex flex-wrap gap-2 text-xs font-medium text-foreground/80 sm:text-sm">
+            <li className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 backdrop-blur-sm">
+              <BadgeEuro className="h-3.5 w-3.5 text-brand-orange" aria-hidden />
+              100 % gratuit
+            </li>
+            <li className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 backdrop-blur-sm">
+              <Clock3 className="h-3.5 w-3.5 text-brand-orange" aria-hidden />
+              Réponse sous 24 h
+            </li>
+            <li className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 backdrop-blur-sm">
+              <ShieldCheck className="h-3.5 w-3.5 text-brand-orange" aria-hidden />
+              Artisans vérifiés
+            </li>
+          </ul>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link
               to="/estimation"
-              className="group inline-flex items-center gap-2.5 rounded-full bg-brand-orange px-7 py-4 text-[15px] font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep"
+              className="group inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-brand-orange px-7 py-4 text-base font-semibold text-primary-foreground shadow-warm ring-1 ring-brand-orange-deep/20 transition hover:-translate-y-0.5 hover:bg-brand-orange-deep sm:w-auto sm:text-[15px]"
             >
               Estimer mon projet gratuitement
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
             </Link>
             <Link
               to="/guide"
-              className="inline-flex items-center rounded-full border border-foreground/15 bg-background/70 px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-sm transition hover:border-brand-orange/40 hover:text-brand-orange"
+              className="inline-flex w-full items-center justify-center rounded-full border border-foreground/15 bg-background/80 px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-sm transition hover:border-brand-orange/40 hover:text-brand-orange sm:w-auto"
             >
               Guides et conseils parquet
             </Link>
@@ -127,7 +146,7 @@ export function Hero() {
         </div>
 
         {/* Badge stats */}
-        <div className="mt-12 lg:col-span-5 lg:mt-0 lg:flex lg:justify-end xl:col-span-6">
+        <div className="mt-10 lg:col-span-5 lg:mt-0 lg:flex lg:justify-end xl:col-span-6">
           <div className="inline-flex flex-col items-start rounded-2xl border border-border/60 bg-background/85 px-6 py-5 shadow-warm backdrop-blur-md sm:px-7 sm:py-6 lg:items-center lg:text-center">
             <div className="font-display text-4xl font-semibold text-brand-orange sm:text-5xl">
               +2 400

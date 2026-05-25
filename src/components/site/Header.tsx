@@ -10,7 +10,6 @@ const nav: NavItem[] = [
   { label: "Comment ça marche", to: "/comment-ca-marche" },
   { label: "Réalisations", to: "/realisations" },
   { label: "Nos artisans", to: "/artisans" },
-  { label: "Outils", to: "/outils" },
   { label: "À propos", to: "/a-propos" },
   { label: "Contact", to: "/contact" },
 ];
