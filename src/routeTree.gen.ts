@@ -30,6 +30,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as GuideParquetRouteImport } from './routes/guide-parquet'
 import { Route as GuideRouteImport } from './routes/guide'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EstimationRouteImport } from './routes/estimation'
 import { Route as DevenirArtisanRouteImport } from './routes/devenir-artisan'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
@@ -188,6 +189,11 @@ const GuideRoute = GuideRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EstimationRoute = EstimationRouteImport.update({
@@ -487,6 +493,7 @@ export interface FileRoutesByFullPath {
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
+  '/faq': typeof FaqRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/guide': typeof GuideRouteWithChildren
   '/guide-parquet': typeof GuideParquetRoute
@@ -561,6 +568,7 @@ export interface FileRoutesByTo {
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
+  '/faq': typeof FaqRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/guide': typeof GuideRouteWithChildren
   '/guide-parquet': typeof GuideParquetRoute
@@ -639,6 +647,7 @@ export interface FileRoutesById {
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
   '/estimation': typeof EstimationRoute
+  '/faq': typeof FaqRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/guide': typeof GuideRouteWithChildren
   '/guide-parquet': typeof GuideParquetRoute
@@ -717,6 +726,7 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/devenir-artisan'
     | '/estimation'
+    | '/faq'
     | '/forgot-password'
     | '/guide'
     | '/guide-parquet'
@@ -791,6 +801,7 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/devenir-artisan'
     | '/estimation'
+    | '/faq'
     | '/forgot-password'
     | '/guide'
     | '/guide-parquet'
@@ -868,6 +879,7 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/devenir-artisan'
     | '/estimation'
+    | '/faq'
     | '/forgot-password'
     | '/guide'
     | '/guide-parquet'
@@ -946,6 +958,7 @@ export interface RootRouteChildren {
   DesignSystemRoute: typeof DesignSystemRoute
   DevenirArtisanRoute: typeof DevenirArtisanRouteWithChildren
   EstimationRoute: typeof EstimationRoute
+  FaqRoute: typeof FaqRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   GuideRoute: typeof GuideRouteWithChildren
   GuideParquetRoute: typeof GuideParquetRoute
@@ -1123,6 +1136,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/estimation': {
@@ -1681,6 +1701,7 @@ const rootRouteChildren: RootRouteChildren = {
   DesignSystemRoute: DesignSystemRoute,
   DevenirArtisanRoute: DevenirArtisanRouteWithChildren,
   EstimationRoute: EstimationRoute,
+  FaqRoute: FaqRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   GuideRoute: GuideRouteWithChildren,
   GuideParquetRoute: GuideParquetRoute,
