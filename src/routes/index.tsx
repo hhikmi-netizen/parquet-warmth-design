@@ -4,6 +4,7 @@ import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { Promise } from "@/components/site/Promise";
 import { Process } from "@/components/site/Process";
+import { HomeFAQ } from "@/components/site/HomeFAQ";
 import { ArtisansShowcase } from "@/components/site/ArtisansShowcase";
 import { SocialProof } from "@/components/site/SocialProof";
 import { Partners } from "@/components/site/Partners";
