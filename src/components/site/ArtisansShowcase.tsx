@@ -10,8 +10,6 @@ const artisans = [
     name: "Jean-Marc L.",
     city: "Paris 11ᵉ",
     years: 22,
-    rating: 4.9,
-    reviews: 86,
     specialties: ["Parquet ancien", "Point de Hongrie", "Vitrification"],
     quote: "Un parquet bien posé, c'est un sol qu'on entend chanter sous les pas.",
   },
@@ -20,8 +18,6 @@ const artisans = [
     name: "Camille D.",
     city: "Lyon 6ᵉ",
     years: 14,
-    rating: 4.8,
-    reviews: 54,
     specialties: ["Pose chevron", "Huile naturelle", "Massif chêne"],
     quote: "Chaque pièce a son grain, sa lumière. Le bois fait le reste.",
   },
@@ -30,8 +26,6 @@ const artisans = [
     name: "Thomas R.",
     city: "Bordeaux",
     years: 9,
-    rating: 4.9,
-    reviews: 41,
     specialties: ["Rénovation", "Ponçage", "Contrecollé"],
     quote: "On ne rattrape pas un bâclage. Le travail propre, c'est la base.",
   },
@@ -82,7 +76,7 @@ export function ArtisansShowcase() {
                     <h3 className="font-display text-2xl">{a.name}</h3>
                     <span className="inline-flex items-center gap-1 rounded-full bg-background/15 px-2 py-0.5 text-xs font-semibold backdrop-blur">
                       <Star className="h-3 w-3 fill-brand-orange text-brand-orange" />
-                      {a.rating}
+                      Artisan vérifié
                     </span>
                   </div>
                   <div className="mt-1 flex items-center gap-2 text-xs text-background/80">
@@ -108,7 +102,7 @@ export function ArtisansShowcase() {
                   ))}
                 </div>
                 <div className="mt-5 flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground">
-                  <span>{a.reviews} avis vérifiés</span>
+                  <span>Profil type</span>
                   <Link to="/estimation" className="font-semibold text-brand-orange">
                     Estimer mon projet →
                   </Link>

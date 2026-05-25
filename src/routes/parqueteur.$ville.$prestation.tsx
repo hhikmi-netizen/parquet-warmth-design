@@ -4,7 +4,6 @@ import {
   CheckCircle2,
   ArrowRight,
   Phone,
-  Star,
   ShieldCheck,
   Clock,
   Euro,
@@ -230,14 +229,13 @@ function PrestationVillePage() {
 
               <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
                 <span className="inline-flex items-center gap-1.5">
-                  <Star className="h-3.5 w-3.5 fill-brand-orange text-brand-orange" />
-                  <strong className="font-semibold text-foreground">4,8 / 5</strong> · 247 avis
-                </span>
-                <span className="inline-flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Décennale vérifiée
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <Clock className="h-3.5 w-3.5 text-brand-orange" /> Devis sous 24 h
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-brand-orange" /> Artisan sélectionné
                 </span>
               </div>
             </div>

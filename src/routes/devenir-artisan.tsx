@@ -8,9 +8,7 @@ import {
   MapPin,
   Clock,
   CheckCircle2,
-  Quote,
   ArrowRight,
-  Users,
   Lock,
   Heart,
 } from "lucide-react";
@@ -277,18 +275,28 @@ function DevenirArtisan() {
         </div>
       </section>
 
-      {/* Témoignage */}
+      {/* Preuve méthode */}
       <section className="border-b border-border/60 py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <Quote className="h-10 w-10 text-brand-orange" />
-          <p className="mt-4 font-serif text-2xl leading-relaxed sm:text-3xl">
-            « Avant Parqueto, je passais mes soirées à rappeler des clients déjà engagés ailleurs.
-            Aujourd'hui, je reçois trois projets par mois, tous sérieux, tous dans ma zone.
-            C'est exactement ce que je cherchais. »
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
+            Ce que nos artisans disent
           </p>
-          <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
-            <Users className="h-4 w-4" /> Julien M., artisan parqueteur depuis 14 ans · Lyon
-          </div>
+          <h2 className="mt-3 font-display text-3xl text-balance sm:text-4xl">
+            Moins de temps perdu, <span className="italic text-brand-orange">plus de chantiers sérieux.</span>
+          </h2>
+          <ul className="mt-8 space-y-4">
+            {[
+              "Projets pré-qualifiés avec budget et délai clairs avant le premier contact",
+              "Un seul interlocuteur par projet — pas de concurrence à 10 sur le même devis",
+              "Paiement sécurisé et médiation Parqueto en cas de différend",
+              "Pas de jargon SaaS ni de dark patterns",
+            ].map((x) => (
+              <li key={x} className="flex items-start gap-3 text-sm text-foreground/85">
+                <span className="mt-0.5 text-brand-orange">✓</span>
+                {x}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

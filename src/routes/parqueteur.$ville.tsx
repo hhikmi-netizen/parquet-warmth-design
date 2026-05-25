@@ -9,11 +9,9 @@ import {
   Droplets,
   Phone,
   Building2,
-  Star,
   ShieldCheck,
   Clock,
   Euro,
-  Quote,
 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -80,12 +78,6 @@ export const Route = createFileRoute("/parqueteur/$ville")({
               "@type": "GeoCoordinates",
               latitude: city.geo.lat,
               longitude: city.geo.lng,
-            },
-            aggregateRating: {
-              "@type": "AggregateRating",
-              ratingValue: "4.8",
-              reviewCount: "247",
-              bestRating: "5",
             },
             image: "https://parqueto.fr/logo.png",
           }),
@@ -212,27 +204,6 @@ function buildFaqs(city: string, tarif: string) {
   ];
 }
 
-const TESTIMONIALS = [
-  {
-    name: "Camille R.",
-    quartier: "Marais",
-    note: 5,
-    text: "Ponçage et huilage d'un point de Hongrie de 1890. Travail méticuleux, artisan ponctuel, finition irréprochable. Je recommande Parqueto.",
-  },
-  {
-    name: "Famille Dupont",
-    quartier: "Batignolles",
-    note: 5,
-    text: "Devis clair, planning tenu, communication parfaite via l'espace client. Le parquet de notre salon a retrouvé une seconde vie.",
-  },
-  {
-    name: "Léa T.",
-    quartier: "Saint-Germain",
-    note: 5,
-    text: "Vitrification de 60 m² en 3 jours, chantier propre, prix conforme au devis. Vraiment au-delà de mes attentes.",
-  },
-];
-
 const PROCESS_STEPS = [
   {
     n: "01",
@@ -326,14 +297,13 @@ function CityPage() {
               {/* Signaux de confiance */}
               <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
                 <span className="inline-flex items-center gap-1.5">
-                  <Star className="h-3.5 w-3.5 fill-brand-orange text-brand-orange" />
-                  <strong className="font-semibold text-foreground">4,8 / 5</strong> · 247 avis
-                </span>
-                <span className="inline-flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Décennale vérifiée
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <Clock className="h-3.5 w-3.5 text-brand-orange" /> Devis sous 24 h
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-brand-orange" /> Artisan sélectionné
                 </span>
               </div>
             </div>
@@ -344,7 +314,7 @@ function CityPage() {
                 <Stat label="Tarif moyen" value={city.tarifIndicatif} />
                 <Stat label="Délai devis" value="24 h" />
                 <Stat label="Garantie" value="10 ans" />
-                <Stat label="Avis vérifiés" value="4,8 / 5" />
+                <Stat label="Artisan" value="Vérifié" />
               </dl>
             </aside>
           </div>
@@ -528,54 +498,42 @@ function CityPage() {
         </div>
       </section>
 
-      {/* Avis */}
-      <section id="avis" className="py-16 sm:py-20">
+      {/* Engagements qualité */}
+      <section id="engagements" className="py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
-                Avis vérifiés
+                Nos engagements
               </p>
               <h2 className="mt-3 font-display text-3xl sm:text-4xl">
-                Ils nous ont fait confiance à {city.name}
+                Ce que nous garantissons à {city.name}
               </h2>
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm">
-              <div className="flex">
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <Star
-                    key={i}
-                    className="h-4 w-4 fill-brand-orange text-brand-orange"
-                  />
-                ))}
-              </div>
-              <span className="font-semibold text-foreground">4,8</span>
-              <span className="text-muted-foreground">· 247 avis</span>
             </div>
           </div>
 
           <ul className="mt-10 grid gap-5 md:grid-cols-3">
-            {TESTIMONIALS.map((t) => (
+            {[
+              {
+                title: "Artisan vérifié",
+                text: "KBIS, décennale et RC Pro contrôlés chaque année. Vous recevez les justificatifs avant le devis.",
+              },
+              {
+                title: "Devis détaillé",
+                text: "Chaque poste est détaillé : main d'œuvre, matériaux, finition. Pas de chiffre d'accroche.",
+              },
+              {
+                title: "Médiation incluse",
+                text: "En cas de litige, Parqueto intervient en médiateur neutre. Vous n'êtes jamais seul face à un artisan.",
+              },
+            ].map((item) => (
               <li
-                key={t.name}
+                key={item.title}
                 className="flex h-full flex-col rounded-2xl border border-border bg-card p-6"
               >
-                <Quote className="h-6 w-6 text-brand-orange/40" aria-hidden />
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-foreground">"{t.text}"</p>
-                <div className="mt-5 flex items-center justify-between border-t border-border pt-4 text-xs">
-                  <span className="font-semibold text-foreground">
-                    {t.name}
-                    <span className="ml-1 font-normal text-muted-foreground">· {t.quartier}</span>
-                  </span>
-                  <span className="flex">
-                    {Array.from({ length: t.note }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className="h-3 w-3 fill-brand-orange text-brand-orange"
-                      />
-                    ))}
-                  </span>
-                </div>
+                <CheckCircle2 className="h-6 w-6 text-brand-orange" aria-hidden />
+                <h3 className="mt-3 text-base font-semibold text-foreground">{item.title}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{item.text}</p>
               </li>
             ))}
           </ul>
