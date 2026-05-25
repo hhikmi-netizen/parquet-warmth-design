@@ -69,7 +69,7 @@ function AbonnementPage() {
   const [selectedBilling, setSelectedBilling] = useState<"monthly" | "yearly">(sub.billing);
   const [switchLoading, setSwitchLoading] = useState(false);
 
-  const periodEndDate = new Date(sub.periodEnd);
+  void sub.periodEnd; // période réelle exposée par le backend Codex
   const trialEndDate = new Date(sub.trialEnd);
   const now = new Date();
   const daysLeft = Math.max(0, Math.ceil((trialEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
