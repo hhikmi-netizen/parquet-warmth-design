@@ -1,4 +1,12 @@
-import { useState, type ComponentType } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ComponentType,
+  type KeyboardEvent,
+} from "react";
 import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -7,25 +15,36 @@ export type JourneyStep = {
   title: string;
   body: string;
   icon: ComponentType<{ className?: string }>;
-  highlight?: string; // small visual chip text (e.g. "Sous 24 h", "100 % gratuit")
+  highlight?: string;
 };
+
+type Mode = "carousel" | "accordion" | "auto";
 
 type Props = {
   steps: JourneyStep[];
   accent?: "orange" | "ink";
   label?: string;
   compact?: boolean;
-  mode?: "carousel" | "accordion";
+  /**
+   * "carousel" : carrousel horizontal avec contrôles flèches
+   * "accordion" : accordéon vertical (un seul panneau ouvert)
+   * "auto" : accordéon sous 768px, carrousel au-dessus (compact uniquement)
+   */
+  mode?: Mode;
+  /** Breakpoint en px pour mode="auto" (défaut : 768 = Tailwind md). */
+  autoBreakpoint?: number;
 };
 
 /**
- * JourneyStepper — carrousel pédagogique pour expliquer un parcours
- * (client ou artisan) sans saturer la page avec de grosses images.
- * Mock UI léger : un visuel "carte" généré natif + texte + chips.
+ * JourneyStepper — composant pédagogique accessible (carrousel + accordéon).
  *
- * mode compact :
- *   • carousel → carrousel réduit (carte + texte empilés, idéal pour une sidebar ou un encart)
- *   • accordion → accordéon vertical (un seul panneau ouvert à la fois, idéal pour mobile ou FAQ intégrée)
+ * Accessibilité :
+ *  - Carrousel : role="tablist" / role="tab" / role="tabpanel" avec navigation
+ *    clavier ← → (Home/End pour aller au début/fin), aria-controls/labelledby.
+ *  - Accordéon : <button> natifs (Entrée/Espace gérés par le navigateur) avec
+ *    aria-expanded + aria-controls reliant chaque panneau.
+ *  - aria-live="polite" sur la zone texte du carrousel pour annoncer l'étape
+ *    courante aux lecteurs d'écran.
  */
 export function JourneyStepper({
   steps,
@@ -33,9 +52,14 @@ export function JourneyStepper({
   label,
   compact = false,
   mode = "carousel",
+  autoBreakpoint = 768,
 }: Props) {
+  // Mode "auto" : on bascule entre carousel et accordion selon la largeur.
+  const resolvedMode = useResolvedMode(mode, autoBreakpoint);
+
   const [i, setI] = useState(0);
   const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const baseId = useId();
 
   const step = steps[i];
   const Icon = step.icon;
@@ -43,10 +67,49 @@ export function JourneyStepper({
   const accentBg = accent === "orange" ? "bg-brand-orange" : "bg-foreground";
   const accentText = accent === "orange" ? "text-brand-orange" : "text-foreground";
 
+  const tabsRef = useRef<Array<HTMLButtonElement | null>>([]);
+
+  const goTo = useCallback(
+    (next: number, focus = false) => {
+      const idx = ((next % steps.length) + steps.length) % steps.length;
+      setI(idx);
+      if (focus) tabsRef.current[idx]?.focus();
+    },
+    [steps.length],
+  );
+
+  const onCarouselKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLElement>) => {
+      switch (e.key) {
+        case "ArrowRight":
+          e.preventDefault();
+          goTo(i + 1, true);
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          goTo(i - 1, true);
+          break;
+        case "Home":
+          e.preventDefault();
+          goTo(0, true);
+          break;
+        case "End":
+          e.preventDefault();
+          goTo(steps.length - 1, true);
+          break;
+      }
+    },
+    [goTo, i, steps.length],
+  );
+
   /* ---------- Accordéon compact ---------- */
-  if (compact && mode === "accordion") {
+  if (compact && resolvedMode === "accordion") {
     return (
-      <div className="rounded-2xl border border-border bg-card shadow-soft">
+      <div
+        className="rounded-2xl border border-border bg-card shadow-soft"
+        role="region"
+        aria-label={label ?? "Étapes du parcours"}
+      >
         {label && (
           <p className="px-5 pt-5 text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
             {label}
@@ -56,42 +119,56 @@ export function JourneyStepper({
           {steps.map((s, idx) => {
             const isOpen = openIdx === idx;
             const SIcon = s.icon;
+            const panelId = `${baseId}-acc-panel-${idx}`;
+            const buttonId = `${baseId}-acc-btn-${idx}`;
             return (
               <div key={s.n}>
-                <button
-                  type="button"
-                  onClick={() => setOpenIdx(isOpen ? null : idx)}
-                  className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-secondary/30"
-                >
-                  <span
-                    className={cn(
-                      "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold text-primary-foreground",
-                      accentBg
-                    )}
+                <h3 className="m-0">
+                  <button
+                    id={buttonId}
+                    type="button"
+                    onClick={() => setOpenIdx(isOpen ? null : idx)}
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-secondary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
                   >
-                    {s.n}
-                  </span>
-                  <SIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  <span className="flex-1 font-display text-sm font-medium text-foreground">
-                    {s.title}
-                  </span>
-                  {s.highlight && (
-                    <span className="hidden rounded-full bg-brand-orange/10 px-2 py-0.5 text-[10px] font-semibold text-brand-orange sm:inline-flex">
-                      {s.highlight}
+                    <span
+                      className={cn(
+                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold text-primary-foreground",
+                        accentBg,
+                      )}
+                      aria-hidden
+                    >
+                      {s.n}
                     </span>
-                  )}
-                  <ChevronDown
-                    className={cn(
-                      "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-300",
-                      isOpen && "rotate-180"
+                    <SIcon className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+                    <span className="flex-1 font-display text-sm font-medium text-foreground">
+                      <span className="sr-only">Étape {idx + 1} sur {steps.length} : </span>
+                      {s.title}
+                    </span>
+                    {s.highlight && (
+                      <span className="hidden rounded-full bg-brand-orange/10 px-2 py-0.5 text-[10px] font-semibold text-brand-orange sm:inline-flex">
+                        {s.highlight}
+                      </span>
                     )}
-                  />
-                </button>
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-300",
+                        isOpen && "rotate-180",
+                      )}
+                      aria-hidden
+                    />
+                  </button>
+                </h3>
 
                 <div
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={buttonId}
+                  hidden={!isOpen}
                   className={cn(
                     "overflow-hidden transition-all duration-300",
-                    isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
+                    isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0",
                   )}
                 >
                   <p className="px-5 pb-4 text-sm leading-relaxed text-muted-foreground">
@@ -107,32 +184,38 @@ export function JourneyStepper({
   }
 
   /* ---------- Carrousel compact ---------- */
-  if (compact && mode === "carousel") {
+  if (compact && resolvedMode === "carousel") {
+    const panelId = `${baseId}-panel-${i}`;
+    const tabId = `${baseId}-tab-${i}`;
     return (
-      <div className="rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-6">
+      <section
+        className="rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+        aria-roledescription="carrousel"
+        aria-label={label ?? "Étapes du parcours"}
+        tabIndex={0}
+        onKeyDown={onCarouselKeyDown}
+      >
         {label && (
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
             {label}
           </p>
         )}
 
-        {/* Mini visuel */}
         <div className="relative mt-4 aspect-[4/3] overflow-hidden rounded-xl border border-border bg-gradient-to-br from-brand-cream/60 via-background to-secondary/40 p-4">
           <div className="grain absolute inset-0 opacity-20" aria-hidden />
           <div className="relative flex h-full flex-col items-center justify-center">
             <div
               className={cn(
                 "flex h-14 w-14 items-center justify-center rounded-xl text-primary-foreground shadow-warm sm:h-16 sm:w-16",
-                accentBg
+                accentBg,
               )}
+              aria-hidden
             >
               <Icon className="h-7 w-7 sm:h-8 sm:w-8" />
             </div>
             <p
-              className={cn(
-                "mt-4 font-display text-5xl opacity-15 sm:text-6xl",
-                accentText
-              )}
+              className={cn("mt-4 font-display text-5xl opacity-15 sm:text-6xl", accentText)}
+              aria-hidden
             >
               {step.n}
             </p>
@@ -147,75 +230,84 @@ export function JourneyStepper({
           </div>
         </div>
 
-        {/* Texte & contrôles */}
-        <div className="mt-4">
-          <p
-            className={cn(
-              "text-xs font-semibold uppercase tracking-wider",
-              accentText
-            )}
-          >
-            Étape {i + 1} / {steps.length}
+        <div
+          id={panelId}
+          role="tabpanel"
+          aria-labelledby={tabId}
+          aria-live="polite"
+          className="mt-4"
+        >
+          <p className={cn("text-xs font-semibold uppercase tracking-wider", accentText)}>
+            Étape {i + 1} sur {steps.length}
           </p>
-          <h3 className="mt-1 font-display text-xl text-balance sm:text-2xl">
-            {step.title}
-          </h3>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            {step.body}
-          </p>
+          <h3 className="mt-1 font-display text-xl text-balance sm:text-2xl">{step.title}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.body}</p>
 
-          {/* Dots */}
           <div
             className="mt-5 flex items-center gap-2"
             role="tablist"
-            aria-label="Étapes du parcours"
+            aria-label="Sélection de l'étape"
+            aria-orientation="horizontal"
           >
             {steps.map((s, idx) => (
               <button
                 key={s.n}
+                ref={(el) => {
+                  tabsRef.current[idx] = el;
+                }}
                 type="button"
                 role="tab"
+                id={`${baseId}-tab-${idx}`}
                 aria-selected={idx === i}
-                aria-label={`Étape ${idx + 1} : ${s.title}`}
-                onClick={() => setI(idx)}
+                aria-controls={`${baseId}-panel-${idx}`}
+                aria-label={`Aller à l'étape ${idx + 1} sur ${steps.length} : ${s.title}`}
+                tabIndex={idx === i ? 0 : -1}
+                onClick={() => goTo(idx)}
+                onKeyDown={onCarouselKeyDown}
                 className={cn(
-                  "h-1.5 rounded-full transition-all",
-                  idx === i
-                    ? cn("w-6", accentBg)
-                    : "w-3 bg-border hover:bg-foreground/30"
+                  "h-3 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card",
+                  idx === i ? cn("w-6", accentBg) : "w-3 bg-border hover:bg-foreground/30",
                 )}
               />
             ))}
           </div>
 
-          {/* Flèches */}
           <div className="mt-4 flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setI((p) => (p - 1 + steps.length) % steps.length)}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition hover:border-brand-orange/40 hover:text-brand-orange"
+              onClick={() => goTo(i - 1)}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
               aria-label="Étape précédente"
+              aria-controls={panelId}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" aria-hidden />
             </button>
             <button
               type="button"
-              onClick={() => setI((p) => (p + 1) % steps.length)}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition hover:border-brand-orange/40 hover:text-brand-orange"
+              onClick={() => goTo(i + 1)}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
               aria-label="Étape suivante"
+              aria-controls={panelId}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4" aria-hidden />
             </button>
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 
   /* ---------- Carrousel complet (default) ---------- */
+  const panelId = `${baseId}-panel-${i}`;
+  const tabId = `${baseId}-tab-${i}`;
   return (
-    <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
-      {/* Visual mockup */}
+    <section
+      className="grid gap-8 focus-visible:outline-none lg:grid-cols-12 lg:items-center lg:gap-12"
+      aria-roledescription="carrousel"
+      aria-label={label ?? "Étapes du parcours"}
+      tabIndex={0}
+      onKeyDown={onCarouselKeyDown}
+    >
       <div className="lg:col-span-6">
         <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-cream/60 via-background to-secondary/40 p-6 shadow-soft sm:p-10">
           <div className="grain absolute inset-0 opacity-20" aria-hidden />
@@ -223,17 +315,15 @@ export function JourneyStepper({
             <div
               className={cn(
                 "flex h-20 w-20 items-center justify-center rounded-2xl text-primary-foreground shadow-warm sm:h-24 sm:w-24",
-                accentBg
+                accentBg,
               )}
+              aria-hidden
             >
               <Icon className="h-9 w-9 sm:h-11 sm:w-11" />
             </div>
             <p
-              className={cn(
-                "mt-6 font-display text-6xl sm:text-7xl",
-                accentText,
-                "opacity-15"
-              )}
+              className={cn("mt-6 font-display text-6xl sm:text-7xl", accentText, "opacity-15")}
+              aria-hidden
             >
               {step.n}
             </p>
@@ -249,47 +339,42 @@ export function JourneyStepper({
         </div>
       </div>
 
-      {/* Text & controls */}
-      <div className="lg:col-span-6">
+      <div id={panelId} role="tabpanel" aria-labelledby={tabId} aria-live="polite" className="lg:col-span-6">
         {label && (
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-orange">
             {label}
           </p>
         )}
-        <p
-          className={cn(
-            "mt-2 text-sm font-semibold uppercase tracking-wider",
-            accentText
-          )}
-        >
-          Étape {i + 1} / {steps.length}
+        <p className={cn("mt-2 text-sm font-semibold uppercase tracking-wider", accentText)}>
+          Étape {i + 1} sur {steps.length}
         </p>
-        <h3 className="mt-3 font-display text-3xl text-balance sm:text-4xl">
-          {step.title}
-        </h3>
-        <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-          {step.body}
-        </p>
+        <h3 className="mt-3 font-display text-3xl text-balance sm:text-4xl">{step.title}</h3>
+        <p className="mt-4 text-base leading-relaxed text-muted-foreground">{step.body}</p>
 
-        {/* Progress dots */}
         <div
           className="mt-8 flex items-center gap-2"
           role="tablist"
-          aria-label="Étapes du parcours"
+          aria-label="Sélection de l'étape"
+          aria-orientation="horizontal"
         >
           {steps.map((s, idx) => (
             <button
               key={s.n}
+              ref={(el) => {
+                tabsRef.current[idx] = el;
+              }}
               type="button"
               role="tab"
+              id={`${baseId}-tab-${idx}`}
               aria-selected={idx === i}
-              aria-label={`Étape ${idx + 1} : ${s.title}`}
-              onClick={() => setI(idx)}
+              aria-controls={`${baseId}-panel-${idx}`}
+              aria-label={`Aller à l'étape ${idx + 1} sur ${steps.length} : ${s.title}`}
+              tabIndex={idx === i ? 0 : -1}
+              onClick={() => goTo(idx)}
+              onKeyDown={onCarouselKeyDown}
               className={cn(
-                "h-1.5 rounded-full transition-all",
-                idx === i
-                  ? cn("w-8", accentBg)
-                  : "w-4 bg-border hover:bg-foreground/30"
+                "h-3 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                idx === i ? cn("w-8", accentBg) : "w-4 bg-border hover:bg-foreground/30",
               )}
             />
           ))}
@@ -298,22 +383,50 @@ export function JourneyStepper({
         <div className="mt-6 flex items-center gap-3">
           <button
             type="button"
-            onClick={() => setI((p) => (p - 1 + steps.length) % steps.length)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card transition hover:border-brand-orange/40 hover:text-brand-orange"
+            onClick={() => goTo(i - 1)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card transition hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
             aria-label="Étape précédente"
+            aria-controls={panelId}
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-5 w-5" aria-hidden />
           </button>
           <button
             type="button"
-            onClick={() => setI((p) => (p + 1) % steps.length)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card transition hover:border-brand-orange/40 hover:text-brand-orange"
+            onClick={() => goTo(i + 1)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card transition hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
             aria-label="Étape suivante"
+            aria-controls={panelId}
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-5 w-5" aria-hidden />
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
+}
+
+/**
+ * Résout le mode effectif. Pour "auto", écoute la media-query et renvoie
+ * "accordion" sous le breakpoint, "carousel" au-dessus. SSR-safe : valeur
+ * initiale = "carousel" (desktop-first), recalée au montage côté client.
+ */
+function useResolvedMode(mode: Mode, breakpoint: number): "carousel" | "accordion" {
+  const [resolved, setResolved] = useState<"carousel" | "accordion">(
+    mode === "accordion" ? "accordion" : "carousel",
+  );
+
+  useEffect(() => {
+    if (mode !== "auto") {
+      setResolved(mode);
+      return;
+    }
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    const apply = () => setResolved(mql.matches ? "accordion" : "carousel");
+    apply();
+    mql.addEventListener("change", apply);
+    return () => mql.removeEventListener("change", apply);
+  }, [mode, breakpoint]);
+
+  return resolved;
 }

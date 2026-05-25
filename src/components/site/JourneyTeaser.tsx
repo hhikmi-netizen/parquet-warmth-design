@@ -35,8 +35,7 @@ const teaserSteps: JourneyStep[] = [
 
 /**
  * Teaser parcours en page d'accueil.
- * - Mobile (<md) : accordéon compact (gain de hauteur, un panneau ouvert à la fois)
- * - Desktop (md+) : carrousel compact (lecture séquentielle, contrôles flèches)
+ * Mode "auto" : accordéon sous 768px (mobile), carrousel au-dessus (desktop).
  * Renvoie vers /comment-ca-marche pour le détail complet.
  */
 export function JourneyTeaser() {
@@ -59,14 +58,7 @@ export function JourneyTeaser() {
         </div>
 
         <div className="mt-12">
-          {/* Mobile : accordéon compact */}
-          <div className="md:hidden">
-            <JourneyStepper steps={teaserSteps} compact mode="accordion" />
-          </div>
-          {/* Desktop : carrousel compact */}
-          <div className="hidden md:block">
-            <JourneyStepper steps={teaserSteps} compact mode="carousel" />
-          </div>
+          <JourneyStepper steps={teaserSteps} compact mode="auto" />
         </div>
 
         <div className="mt-10 flex justify-center">
