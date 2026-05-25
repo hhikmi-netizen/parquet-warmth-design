@@ -244,7 +244,7 @@ function HowItWorksPage() {
           {tab === "client" ? (
             <JourneyStepper steps={clientSteps} label="Parcours client en 6 étapes" />
           ) : (
-            <JourneyStepper steps={artisanSteps} label="Parcours artisan en 4 étapes" accent="ink" />
+            <JourneyStepper steps={artisanSteps} label="Parcours artisan en 5 étapes" accent="ink" />
           )}
         </div>
       </section>
