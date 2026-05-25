@@ -6,7 +6,7 @@ import {
   ArrowRight,
   Check,
   CreditCard,
-  CreditCard as CreditCardIcon,
+  Calendar,
   ShieldCheck,
   AlertTriangle,
   Sparkles,
