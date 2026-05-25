@@ -485,8 +485,8 @@ function EstimerMonParquetPage() {
                           <ArrowRight className="ml-1.5 h-4 w-4" />
                         </Link>
                       </Button>
-                      <Button asChild variant="outline" onClick={reset}>
-                        <button type="button">Analyser une autre photo</button>
+                      <Button type="button" variant="outline" onClick={reset}>
+                        Analyser une autre photo
                       </Button>
                     </div>
                   </div>
