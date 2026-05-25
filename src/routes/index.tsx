@@ -240,6 +240,7 @@ function Index() {
       <AssistantTeaser />
       <AtelierVideo />
       <Process />
+      <HomeFAQ />
       <GondolagePillar />
       <ClientExperience />
       <MotionTechnique />
