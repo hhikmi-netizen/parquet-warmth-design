@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Calendar, ChevronDown, Clock } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { GuideBanner } from "@/components/guide/GuideBanner";
 import { BLOG_POSTS, getPostBySlug, type PostBlock } from "@/lib/blog-posts";
 
@@ -95,6 +96,7 @@ function PostPage() {
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
       <Header />
+      <Breadcrumbs items={[{ label: "Blog", href: "/blog" }, { label: post.title }]} />
 
       <article className="mx-auto max-w-3xl px-6 pb-16 pt-12 sm:pt-16">
         <Link
@@ -123,7 +125,7 @@ function PostPage() {
         </header>
 
         <figure className="my-10 overflow-hidden rounded-2xl border border-border bg-muted">
-          <img src={post.cover} alt={post.title} className="aspect-[16/9] w-full object-cover" />
+          <img src={post.cover} alt={post.title} className="aspect-[16/9] w-full object-cover" loading="eager" fetchPriority="high" width={1200} height={675} />
         </figure>
 
         <div className="space-y-5">
@@ -163,7 +165,7 @@ function PostPage() {
                   params={{ slug: r.slug }}
                   className="group block overflow-hidden rounded-2xl border border-border bg-card transition hover:border-brand-orange/40 hover:shadow-soft"
                 >
-                  <img src={r.cover} alt="" className="aspect-[16/10] w-full object-cover" />
+                  <img src={r.cover} alt="" className="aspect-[16/10] w-full object-cover" loading="lazy" width={640} height={400} />
                   <div className="p-4">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-orange">
                       {r.category}

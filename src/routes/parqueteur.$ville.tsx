@@ -60,7 +60,7 @@ export const Route = createFileRoute("/parqueteur/$ville")({
             name: `Parqueto — Parqueteurs à ${city.name}`,
             description,
             url: `https://parqueto.fr/parqueteur/${city.slug}`,
-            telephone: "+33-1-00-00-00-00",
+            email: "contact@parqueto.fr",
             priceRange: city.tarifIndicatif,
             areaServed: {
               "@type": "City",
