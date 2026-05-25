@@ -53,6 +53,27 @@ function OffresPage() {
   const [loading, setLoading] = useState(false);
   const sub = SUBSCRIPTION[billing];
 
+  // Toasts retour Stripe Checkout (?checkout=success | canceled)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get("checkout");
+    if (status === "success") {
+      toast.success("Abonnement activé 🎉", {
+        description: "Votre essai 14 jours a démarré. Bienvenue sur Parqueto Pro.",
+      });
+    } else if (status === "canceled") {
+      toast.info("Paiement annulé", {
+        description: "Aucun prélèvement effectué. Vous pouvez réessayer quand vous voulez.",
+      });
+    }
+    if (status) {
+      params.delete("checkout");
+      const qs = params.toString();
+      window.history.replaceState({}, "", window.location.pathname + (qs ? `?${qs}` : ""));
+    }
+  }, []);
+
   const handleSubscribe = () => {
     setLoading(true);
     setTimeout(() => {
