@@ -62,6 +62,12 @@ const STATUS_CLASS: Record<MatchStatus, string> = {
   expired: "bg-red-50 text-red-600",
 };
 
+function getLeadPrice(budgetMax: number): { tier: string; price: number } {
+  if (budgetMax < 3000) return { tier: "Standard", price: 49 };
+  if (budgetMax <= 8000) return { tier: "Qualifié", price: 89 };
+  return { tier: "Premium", price: 189 };
+}
+
 type FilterKey = "tous" | MatchStatus;
 
 function ProDashboard() {
