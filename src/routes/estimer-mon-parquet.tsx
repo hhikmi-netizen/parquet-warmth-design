@@ -70,8 +70,8 @@ function EstimerMonParquetPage() {
       setError("Format non supporté. Utilisez une photo JPG, PNG ou WEBP.");
       return;
     }
-    if (f.size > 12 * 1024 * 1024) {
-      setError("Image trop lourde (max 12 Mo). Réduisez la résolution.");
+    if (f.size > 5 * 1024 * 1024) {
+      setError("Image trop lourde (max 5 Mo). Réduisez la résolution.");
       return;
     }
     setFile(f);
@@ -85,7 +85,7 @@ function EstimerMonParquetPage() {
     setIsAnalyzing(true);
     setError(null);
     try {
-      const res = await analyze({ data: { imageDataUrl: preview } });
+      const res = await analyze({ data: { imageDataUrls: [preview] } });
       if (res.error || !res.result) {
         setError(res.error ?? "L'analyse a échoué. Réessayez dans quelques instants.");
       } else {
@@ -180,7 +180,7 @@ function EstimerMonParquetPage() {
                     Glissez une photo ou cliquez pour parcourir
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    JPG, PNG, WEBP · jusqu'à 12 Mo
+                    JPG, PNG, WEBP · jusqu'à 5 Mo
                   </p>
                   <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
                     <Button
