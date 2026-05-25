@@ -81,15 +81,15 @@ function GuideAdminPage() {
                   <AreaChart data={data.series}>
                     <defs>
                       <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#d97a3d" stopOpacity={0.5} />
-                        <stop offset="100%" stopColor="#d97a3d" stopOpacity={0} />
+                        <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.5} />
+                        <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={11} />
                     <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} allowDecimals={false} />
                     <Tooltip />
-                    <Area type="monotone" dataKey="n" stroke="#d97a3d" fill="url(#g)" strokeWidth={2} />
+                    <Area type="monotone" dataKey="n" stroke="var(--chart-1)" fill="url(#g)" strokeWidth={2} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -130,7 +130,7 @@ function GuideAdminPage() {
                       <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={11} allowDecimals={false} />
                       <YAxis dataKey="event" type="category" stroke="hsl(var(--muted-foreground))" fontSize={10} width={140} />
                       <Tooltip />
-                      <Bar dataKey="count" fill="#d97a3d" radius={[0, 4, 4, 0]} />
+                      <Bar dataKey="count" fill="var(--chart-1)" radius={[0, 4, 4, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
