@@ -272,7 +272,7 @@ function ProDashboard() {
           {tab === "historique" && <HistoryTab refunded={stats.refunded} />}
           {tab === "zone" && <ZoneTab />}
           {tab === "compte" && (
-            <CompteTab artisanName={inbox.artisan.raison_sociale} balance={inbox.artisan.credits_balance} />
+            <CompteTab artisanName={inbox.artisan.raison_sociale} />
           )}
         </main>
       </div>
