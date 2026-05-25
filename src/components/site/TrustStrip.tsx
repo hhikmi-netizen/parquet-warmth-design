@@ -15,7 +15,7 @@ export function TrustStrip() {
   return (
     <section
       aria-label="Nos engagements"
-      className="border-y border-border/60 bg-[#f6efe4]"
+      className="border-y border-border/60 bg-surface-warm"
     >
       <div className="mx-auto max-w-7xl px-6 py-5 sm:py-6">
         <ul className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 sm:justify-between">

@@ -43,7 +43,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative isolate overflow-hidden bg-[#f6efe4]"
+      className="relative isolate overflow-hidden bg-surface-warm"
     >
       {/* Background slideshow */}
       <div className="absolute inset-0">
@@ -79,11 +79,11 @@ export function Hero() {
         {/* Wash crème pour lisibilité gauche */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-r from-[#f7efe2]/92 via-[#f7efe2]/55 to-transparent md:from-[#f7efe2]/88 md:via-[#f7efe2]/40"
+          className="absolute inset-0 bg-gradient-to-r from-surface-warm/92 via-surface-warm/55 to-transparent md:from-surface-warm/88 md:via-surface-warm/40"
         />
         <div
           aria-hidden
-          className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7efe2]/70 to-transparent"
+          className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-surface-warm/70 to-transparent"
         />
       </div>
 

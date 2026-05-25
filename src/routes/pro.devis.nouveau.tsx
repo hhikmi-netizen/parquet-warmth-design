@@ -360,7 +360,7 @@ function NouveauDevisPage() {
         <section className="print:p-0">
           <div
             id="devis-print"
-            className="mx-auto w-full max-w-[820px] rounded-3xl border border-border bg-[#FBF7F0] p-8 shadow-warm print:max-w-none print:rounded-none print:border-0 print:shadow-none print:p-10"
+            className="mx-auto w-full max-w-[820px] rounded-3xl border border-border bg-surface-warm-soft p-8 shadow-warm print:max-w-none print:rounded-none print:border-0 print:shadow-none print:p-10"
           >
             {/* Header */}
             <div className="flex items-start justify-between gap-6 border-b border-brand-orange/30 pb-6">
