@@ -81,6 +81,7 @@ export function Footer() {
             <li><Link to="/a-propos" className="hover:text-brand-orange">À propos</Link></li>
             <li><Link to="/charte-qualite" className="hover:text-brand-orange">Charte qualité</Link></li>
             <li><Link to="/partenaires" className="hover:text-brand-orange">Partenaires</Link></li>
+            <li><Link to="/faq" className="hover:text-brand-orange">FAQ</Link></li>
             <li><Link to="/contact" className="hover:text-brand-orange">Contact</Link></li>
           </ul>
         </nav>
