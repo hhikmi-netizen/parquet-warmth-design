@@ -388,54 +388,61 @@ export function JourneyStepper({
         <h3 className="mt-3 font-display text-3xl text-balance sm:text-4xl">{step.title}</h3>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground">{step.body}</p>
 
-        <div
-          className="mt-8 flex items-center gap-2"
-          role="tablist"
-          aria-label="Sélection de l'étape"
-          aria-orientation="horizontal"
-        >
-          {steps.map((s, idx) => (
+        {/* Barre de contrôle unifiée : flèches + puces alignées */}
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
             <button
-              key={s.n}
-              ref={(el) => {
-                tabsRef.current[idx] = el;
-              }}
               type="button"
-              role="tab"
-              id={`${baseId}-tab-${idx}`}
-              aria-selected={idx === i}
-              aria-controls={`${baseId}-panel-${idx}`}
-              aria-label={`Aller à l'étape ${idx + 1} sur ${steps.length} : ${s.title}`}
-              tabIndex={idx === i ? 0 : -1}
-              onClick={() => goTo(idx)}
-              onKeyDown={onCarouselKeyDown}
-              className={cn(
-                "h-3 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                idx === i ? cn("w-8", accentBg) : "w-4 bg-border hover:bg-foreground/30",
-              )}
-            />
-          ))}
-        </div>
+              onClick={() => goTo(i - 1)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card transition hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              aria-label="Étape précédente"
+              aria-controls={panelId}
+            >
+              <ChevronLeft className="h-5 w-5" aria-hidden />
+            </button>
+            <button
+              type="button"
+              onClick={() => goTo(i + 1)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card transition hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              aria-label="Étape suivante"
+              aria-controls={panelId}
+            >
+              <ChevronRight className="h-5 w-5" aria-hidden />
+            </button>
+          </div>
 
-        <div className="mt-6 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => goTo(i - 1)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card transition hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-            aria-label="Étape précédente"
-            aria-controls={panelId}
+          <div
+            className="flex items-center gap-2"
+            role="tablist"
+            aria-label="Sélection de l'étape"
+            aria-orientation="horizontal"
           >
-            <ChevronLeft className="h-5 w-5" aria-hidden />
-          </button>
-          <button
-            type="button"
-            onClick={() => goTo(i + 1)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card transition hover:border-brand-orange/40 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-            aria-label="Étape suivante"
-            aria-controls={panelId}
-          >
-            <ChevronRight className="h-5 w-5" aria-hidden />
-          </button>
+            {steps.map((s, idx) => (
+              <button
+                key={s.n}
+                ref={(el) => {
+                  tabsRef.current[idx] = el;
+                }}
+                type="button"
+                role="tab"
+                id={`${baseId}-tab-${idx}`}
+                aria-selected={idx === i}
+                aria-controls={`${baseId}-panel-${idx}`}
+                aria-label={`Aller à l'étape ${idx + 1} sur ${steps.length} : ${s.title}`}
+                tabIndex={idx === i ? 0 : -1}
+                onClick={() => goTo(idx)}
+                onKeyDown={onCarouselKeyDown}
+                className={cn(
+                  "h-2.5 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                  idx === i ? cn("w-8", accentBg) : "w-2.5 bg-border hover:bg-foreground/30",
+                )}
+              />
+            ))}
+          </div>
+
+          <span className="ml-auto text-xs font-medium text-muted-foreground">
+            {i + 1} / {steps.length}
+          </span>
         </div>
       </div>
     </section>
