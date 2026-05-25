@@ -211,7 +211,7 @@ function DevenirArtisan() {
                 <h2 className="font-serif text-3xl tracking-tight">Nos garanties artisan</h2>
                 <p className="mt-2 max-w-2xl text-muted-foreground">
                   Vous payez pour un projet sérieux, pas pour une promesse. Si quelque chose
-                  ne va pas, votre crédit revient sur votre compte.
+                  ne va pas, votre lead est remboursé automatiquement.
                 </p>
               </div>
             </div>
