@@ -183,7 +183,7 @@ function DevenirArtisan() {
               {
                 n: "03",
                 t: "Le projet vous est proposé",
-                d: "Exclusivement. Vous acceptez (1 crédit) ou non, librement.",
+                d: "Exclusivement. Vous achetez le lead (49 / 89 / 189 € selon budget) ou non, librement.",
               },
               {
                 n: "04",
