@@ -24,11 +24,11 @@ function MonetisationPage() {
   return (
     <AdminShell
       title="Monétisation"
-      subtitle="Formules, crédits, factures et prévisions de revenus."
+      subtitle="MRR abonnements, ventes de leads et prévisions de revenus."
     >
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <KpiCard label="MRR" value="6 320 €" trend={{ dir: "up", value: "+11 %" }} icon={Banknote} />
-        <KpiCard label="Recharges crédits (30 j)" value="2 940 €" trend={{ dir: "up", value: "+7 %" }} icon={Coins} />
+        <KpiCard label="MRR abonnements" value="6 320 €" trend={{ dir: "up", value: "+11 %" }} icon={Banknote} />
+        <KpiCard label="Ventes de leads (30 j)" value="2 940 €" trend={{ dir: "up", value: "+7 %" }} icon={Coins} />
         <KpiCard label="Factures payées" value="142" icon={Receipt} />
         <KpiCard label="Prévision Févr." value="10 800 €" trend={{ dir: "up", value: "+18 %" }} icon={TrendingUp} />
       </div>
@@ -68,11 +68,15 @@ function MonetisationPage() {
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
-        <Panel title="Packs de crédits" description="Recharges disponibles.">
+        <Panel title="Prix des leads" description="Tarif unitaire selon le budget client.">
           <ul className="space-y-2">
-            {RECHARGES.map((r) => (
-              <li key={r.pack} className="flex items-center justify-between rounded-xl border border-border bg-background px-3 py-2.5">
-                <span className="text-sm text-foreground">{r.pack}</span>
+            {[
+              { tier: "Lead Standard · < 3 000 €", prix: "49 € TTC" },
+              { tier: "Lead Qualifié · 3 000 – 8 000 €", prix: "89 € TTC" },
+              { tier: "Lead Premium · > 8 000 €", prix: "189 € TTC" },
+            ].map((r) => (
+              <li key={r.tier} className="flex items-center justify-between rounded-xl border border-border bg-background px-3 py-2.5">
+                <span className="text-sm text-foreground">{r.tier}</span>
                 <span className="font-medium text-foreground">{r.prix}</span>
               </li>
             ))}

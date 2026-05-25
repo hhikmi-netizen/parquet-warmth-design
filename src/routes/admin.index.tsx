@@ -68,7 +68,7 @@ function OverviewPage() {
         <KpiCard label="Demandes d'estimation" value="424" trend={{ dir: "up", value: "+18 %" }} icon={FileText} />
         <KpiCard label="Leads qualifiés" value="187" trend={{ dir: "up", value: "+9 %" }} icon={Inbox} hint="44 % des demandes" />
         <KpiCard label="Artisans actifs" value="63" trend={{ dir: "up", value: "+4" }} icon={Hammer} />
-        <KpiCard label="Crédits consommés" value="312" trend={{ dir: "down", value: "−3 %" }} icon={Coins} />
+        <KpiCard label="Leads vendus" value="312" trend={{ dir: "up", value: "+6 %" }} icon={Coins} />
         <KpiCard label="CA estimé" value="9 180 €" trend={{ dir: "up", value: "+9 %" }} icon={Banknote} hint="Décembre" />
         <KpiCard label="Taux de conversion" value="4,6 %" trend={{ dir: "up", value: "+0,4 pt" }} icon={TrendingUp} />
         <KpiCard label="Alertes à traiter" value="5" trend={{ dir: "down", value: "−2" }} icon={ShieldAlert} hint="dont 2 urgentes" />
@@ -108,7 +108,7 @@ function OverviewPage() {
           </div>
         </Panel>
 
-        <Panel title="Revenus mensuels" description="Abonnements + recharges crédits.">
+        <Panel title="Revenus mensuels" description="MRR abonnements + ventes de leads.">
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={REVENUS} margin={{ top: 5, right: 8, bottom: 0, left: -16 }}>
@@ -194,7 +194,7 @@ function OverviewPage() {
           <Gauge value={4.7} max={5} label="4,7 / 5" tone="success" />
           <p className="mt-3 text-xs text-muted-foreground">Basé sur 312 retours clients sur 30 jours.</p>
         </Panel>
-        <Panel title="Capacité artisans" description="Crédits restants vs leads entrants.">
+        <Panel title="Capacité artisans" description="Artisans actifs vs leads entrants.">
           <Gauge value={72} max={100} label="72 %" tone="orange" />
           <p className="mt-3 text-xs text-muted-foreground">Marge confortable. Pic possible en Île-de-France.</p>
         </Panel>

@@ -74,7 +74,7 @@ function DevenirArtisan() {
               </Link>
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
-              3 premiers projets offerts · aucun engagement · aucune commission sur vos chantiers
+              Essai 14 jours offert · abonnement 49 €/mois (annuel) ou 59 €/mois · aucune commission sur vos chantiers
             </p>
           </div>
 
@@ -299,8 +299,8 @@ function DevenirArtisan() {
             Rejoignez le réseau Parqueto
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-            Inscription gratuite. 3 premiers projets offerts pour découvrir la plateforme,
-            sans saisie de moyen de paiement.
+            Inscription gratuite. 14 jours d'essai offerts pour découvrir la plateforme,
+            puis 49 €/mois en annuel (ou 59 €/mois) — sans engagement.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
