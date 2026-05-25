@@ -91,9 +91,10 @@ function MentionsLegalesPage() {
           <h2 className="font-display text-2xl text-foreground">Médiation de la consommation</h2>
           <p className="mt-3 text-sm text-muted-foreground">
             Conformément aux articles L.611-1 et suivants du Code de la consommation, en cas
-            de litige non résolu avec Parqueto, le consommateur peut recourir gratuitement à
-            un médiateur de la consommation. Le médiateur compétent sera précisé dans nos CGU
-            dès finalisation de l'adhésion.
+            de litige non résolu avec Parqueto, le consommateur peut recourir gratuitement au
+            médiateur de la consommation <strong>CNPM — Médiation de la consommation</strong>,
+            27 avenue de la Libération, 42400 Saint-Chamond —{" "}
+            <a href="https://cnpm-mediation-consommation.eu" className="text-brand-orange" rel="noopener noreferrer" target="_blank">cnpm-mediation-consommation.eu</a>.
           </p>
         </section>
 
