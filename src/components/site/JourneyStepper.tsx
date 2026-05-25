@@ -214,14 +214,14 @@ export function JourneyStepper({
 
         <div className={cn(
           "relative mt-4 overflow-hidden rounded-xl border border-border bg-gradient-to-br from-brand-cream/60 via-background to-secondary/40",
-          step.image ? "aspect-[16/10] p-0 sm:aspect-[4/3] sm:p-3" : "aspect-[4/3] p-4",
+          step.image ? "aspect-[4/3] p-2 sm:p-3" : "aspect-[4/3] p-4",
         )}>
           <div className="grain absolute inset-0 opacity-20 pointer-events-none" aria-hidden />
           {step.image ? (
             <img
               src={step.image}
               alt={imageAlt}
-              className="relative h-full w-full object-cover sm:rounded-lg sm:shadow-soft"
+              className="relative h-full w-full object-contain sm:rounded-lg"
               loading="lazy"
             />
           ) : (
@@ -335,7 +335,7 @@ export function JourneyStepper({
         <div className={cn(
           "relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-cream/60 via-background to-secondary/40 shadow-soft",
           step.image
-            ? "aspect-[16/10] p-0 sm:aspect-[4/3] sm:p-6"
+            ? "aspect-[4/3] p-2 sm:p-6"
             : "aspect-[4/3] p-4 sm:p-6",
         )}>
           <div className="grain absolute inset-0 opacity-20 pointer-events-none" aria-hidden />
@@ -343,7 +343,7 @@ export function JourneyStepper({
             <img
               src={step.image}
               alt={imageAlt}
-              className="relative h-full w-full object-cover sm:rounded-[1.25rem] sm:shadow-soft"
+              className="relative h-full w-full object-contain sm:rounded-[1.25rem]"
               loading="lazy"
             />
           ) : (
