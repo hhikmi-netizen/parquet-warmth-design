@@ -180,7 +180,7 @@ function EstimerMonParquetPage() {
                     Glissez une photo ou cliquez pour parcourir
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    JPG, PNG, WEBP · jusqu'à 12 Mo
+                    JPG, PNG, WEBP · jusqu'à 5 Mo
                   </p>
                   <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
                     <Button
