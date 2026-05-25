@@ -204,27 +204,6 @@ function buildFaqs(city: string, tarif: string) {
   ];
 }
 
-const TESTIMONIALS = [
-  {
-    name: "Camille R.",
-    quartier: "Marais",
-    note: 5,
-    text: "Ponçage et huilage d'un point de Hongrie de 1890. Travail méticuleux, artisan ponctuel, finition irréprochable. Je recommande Parqueto.",
-  },
-  {
-    name: "Famille Dupont",
-    quartier: "Batignolles",
-    note: 5,
-    text: "Devis clair, planning tenu, communication parfaite via l'espace client. Le parquet de notre salon a retrouvé une seconde vie.",
-  },
-  {
-    name: "Léa T.",
-    quartier: "Saint-Germain",
-    note: 5,
-    text: "Vitrification de 60 m² en 3 jours, chantier propre, prix conforme au devis. Vraiment au-delà de mes attentes.",
-  },
-];
-
 const PROCESS_STEPS = [
   {
     n: "01",
