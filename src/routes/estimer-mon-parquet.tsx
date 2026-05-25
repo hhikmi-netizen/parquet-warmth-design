@@ -1,5 +1,8 @@
 import { useCallback, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { analyzeParquetPhoto } from "@/lib/parquet-vision.functions";
+import type { AnalysisResult } from "@/lib/parquet-vision.types";
 import {
   Camera,
   Upload,
@@ -46,67 +49,12 @@ export const Route = createFileRoute("/estimer-mon-parquet")({
   }),
 });
 
-type AnalysisResult = {
-  flooringType: string;
-  flooringDescription: string;
-  recommendedParquet: Array<{ name: string; reason: string; priceRange: string }>;
-  compatibleMaterials: string[];
-  estimatedSurface: { value: number; unit: string; confidence: "Faible" | "Moyenne" | "Élevée" };
-  observations: string[];
-  warnings: string[];
-};
-
-// Mock response — wired to Gemini Vision via Codex backend.
-function mockAnalyze(): Promise<AnalysisResult> {
-  return new Promise((resolve) =>
-    setTimeout(
-      () =>
-        resolve({
-          flooringType: "Carrelage en grès cérame, format 30×30 cm",
-          flooringDescription:
-            "Sol existant en bon état, joints fins, surface plane. Compatible avec une pose flottante sans dépose.",
-          recommendedParquet: [
-            {
-              name: "Parquet contrecollé chêne, 14 mm",
-              reason:
-                "Pose flottante directe sur carrelage avec sous-couche acoustique. Stable, finition élégante.",
-              priceRange: "65–95 €/m² fourni",
-            },
-            {
-              name: "Parquet massif chêne 15 mm clipsable",
-              reason:
-                "Pour un rendu authentique sur sol parfaitement plan. Pose flottante possible.",
-              priceRange: "90–140 €/m² fourni",
-            },
-            {
-              name: "Stratifié haut de gamme AC5",
-              reason: "Option économique, rapide à poser, idéal pour pièces à fort passage.",
-              priceRange: "30–55 €/m² fourni",
-            },
-          ],
-          compatibleMaterials: [
-            "Sous-couche acoustique 3 mm",
-            "Plinthes assorties MDF placage chêne",
-            "Barre de seuil aluminium discrète",
-            "Profil de finition en L pour départ mur",
-          ],
-          estimatedSurface: { value: 18, unit: "m²", confidence: "Moyenne" },
-          observations: [
-            "Pièce de vie type séjour, exposition lumineuse correcte",
-            "Présence d'un radiateur — prévoir découpe d'habillage",
-            "Aucun seuil de porte visible nécessitant adaptation",
-          ],
-          warnings: [
-            "Vérifier la planéité du sol avec une règle de 2 m avant pose flottante.",
-            "Estimation de surface à confirmer avec mesures réelles ou plan.",
-          ],
-        }),
-      1800,
-    ),
-  );
-}
+// Type `AnalysisResult` importé depuis @/lib/parquet-vision.types (contrat partagé).
+// La server function `analyzeParquetPhoto` renvoie aujourd'hui un mock (V10) et
+// sera branchée sur Gemini Vision en V11 — voir docs/codex-gemini-vision-brief.md.
 
 function EstimerMonParquetPage() {
+  const analyze = useServerFn(analyzeParquetPhoto);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -133,12 +81,16 @@ function EstimerMonParquetPage() {
   }, []);
 
   const handleAnalyze = async () => {
-    if (!file) return;
+    if (!file || !preview) return;
     setIsAnalyzing(true);
     setError(null);
     try {
-      const data = await mockAnalyze();
-      setResult(data);
+      const res = await analyze({ data: { imageDataUrl: preview } });
+      if (res.error || !res.result) {
+        setError(res.error ?? "L'analyse a échoué. Réessayez dans quelques instants.");
+      } else {
+        setResult(res.result);
+      }
     } catch {
       setError("L'analyse a échoué. Réessayez dans quelques instants.");
     } finally {

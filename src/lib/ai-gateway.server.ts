@@ -6,9 +6,13 @@
 // de réécrire callAI() ci-dessous. Les server functions métier restent inchangées.
 // =============================================================================
 
+export type AIContentPart =
+  | { type: "text"; text: string }
+  | { type: "image_url"; image_url: { url: string; detail?: "low" | "high" | "auto" } };
+
 export type AIMessage = {
   role: "system" | "user" | "assistant" | "tool";
-  content: string;
+  content: string | AIContentPart[];
   tool_call_id?: string;
 };
 
