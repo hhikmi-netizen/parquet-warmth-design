@@ -305,24 +305,16 @@ function initials(name: string) {
     .join("");
 }
 
-function CreditsBadge({ balance }: { balance: number }) {
-  const low = balance <= 2;
+function CreditsBadge({ balance: _balance }: { balance: number }) {
+  void _balance;
   return (
-    <div
-      className={`hidden items-center gap-2 rounded-full border px-3 py-1.5 text-sm sm:flex ${
-        low ? "border-red-200 bg-red-50" : "border-border bg-background"
-      }`}
+    <Link
+      to="/pro/abonnement"
+      className="hidden items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-sm transition hover:bg-accent sm:flex"
     >
-      <Coins className={`h-4 w-4 ${low ? "text-red-500" : "text-brand-orange"}`} />
-      <span className="font-semibold">{balance}</span>
-      <span className="text-muted-foreground">crédit{balance > 1 ? "s" : ""}</span>
-      <Link
-        to="/pro/facturation"
-        className="ml-2 text-xs font-semibold text-brand-orange-deep hover:underline"
-      >
-        Facturation
-      </Link>
-    </div>
+      <CreditCard className="h-4 w-4 text-brand-orange" />
+      <span className="font-semibold">Mon abonnement</span>
+    </Link>
   );
 }
 
