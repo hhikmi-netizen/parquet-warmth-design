@@ -1112,7 +1112,7 @@ function ZoneTab() {
   );
 }
 
-function CompteTab({ artisanName, balance }: { artisanName: string; balance: number }) {
+function CompteTab({ artisanName }: { artisanName: string }) {
   return (
     <div className="space-y-6">
       <div className="rounded-3xl border border-border bg-background p-8">
@@ -1133,22 +1133,22 @@ function CompteTab({ artisanName, balance }: { artisanName: string; balance: num
       <div className="rounded-3xl border border-border bg-background p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-serif text-xl">Abonnement & crédits</h2>
+            <h2 className="font-serif text-xl">Abonnement</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Formule Essentiel · 29 € / mois · sans engagement
+              Parqueto Pro · accès illimité aux leads qualifiés
             </p>
           </div>
           <Link
-            to="/pro/offres"
+            to="/pro/abonnement"
             className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-semibold transition hover:bg-accent"
           >
-            Changer de formule <ArrowRight className="h-4 w-4" />
+            Gérer mon abonnement <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
-          <Stat label="Crédits disponibles" value={String(balance)} />
-          <Stat label="Inclus chaque mois" value="5" />
-          <Stat label="Prochaine recharge" value="14 juin" />
+          <Stat label="Formule" value="Pro" />
+          <Stat label="Facturation" value="Annuelle" />
+          <Stat label="Prochaine échéance" value="Juin 2027" />
         </div>
       </div>
     </div>
