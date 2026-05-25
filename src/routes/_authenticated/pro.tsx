@@ -843,51 +843,39 @@ function ProjectDrawer({
 
 function AcceptModal({
   match,
-  balance,
   onClose,
   onConfirm,
 }: {
   match: InboxMatch;
-  balance: number;
   onClose: () => void;
   onConfirm: () => void;
 }) {
-  const cost = match.project.credits_cost;
-  const insufficient = balance < cost;
-  const after = Math.max(0, balance - cost);
+  const pricing = getLeadPrice(match.project.budget_max);
 
   return (
-    <ModalShell onClose={onClose} title="Confirmer l'acceptation">
+    <ModalShell onClose={onClose} title="Acheter ce lead">
       <div className="space-y-4 text-sm">
         <p className="text-muted-foreground">
-          En acceptant ce projet, <strong className="text-foreground">{cost} crédit
-          {cost > 1 ? "s" : ""}</strong> sera débité de votre compte et les coordonnées
-          du client vous seront révélées immédiatement.
+          Ce lead est classé <strong className="text-foreground">{pricing.tier}</strong>{" "}
+          ({pricing.price}€ TTC). En confirmant, vous serez redirigé vers Stripe Checkout
+          pour finaliser l'achat. Les coordonnées du client vous seront révélées
+          immédiatement après paiement.
         </p>
         <div className="rounded-xl border border-border bg-muted/30 p-4 text-sm">
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Solde actuel</span>
-            <span className="font-semibold">{balance} crédits</span>
+            <span className="text-muted-foreground">Prix du lead</span>
+            <span className="font-semibold">{pricing.price}€ TTC</span>
           </div>
           <div className="mt-1 flex items-center justify-between">
-            <span className="text-muted-foreground">Après acceptation</span>
-            <span className={`font-semibold ${insufficient ? "text-red-600" : ""}`}>
-              {after} crédit{after > 1 ? "s" : ""}
-            </span>
+            <span className="text-muted-foreground">Catégorie</span>
+            <span className="font-semibold">{pricing.tier}</span>
           </div>
         </div>
-        {insufficient ? (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">
-            <AlertTriangle className="mb-1 inline h-4 w-4" /> Crédits insuffisants.
-            Rechargez votre compte pour accepter ce projet.
-          </div>
-        ) : (
-          <p className="text-xs text-muted-foreground">
-            <ShieldCheck className="mb-0.5 inline h-3.5 w-3.5 text-emerald-600" /> Si
-            le client est injoignable sous 5 jours ou hors zone, le crédit est
-            automatiquement remboursé.
-          </p>
-        )}
+        <p className="text-xs text-muted-foreground">
+          <ShieldCheck className="mb-0.5 inline h-3.5 w-3.5 text-emerald-600" /> Si le
+          client est injoignable sous 5 jours ou hors zone, le lead est remboursé
+          automatiquement.
+        </p>
         <div className="flex justify-end gap-2 pt-2">
           <button
             type="button"
@@ -896,22 +884,13 @@ function AcceptModal({
           >
             Annuler
           </button>
-          {insufficient ? (
-            <Link
-              to="/pro/offres"
-              className="rounded-full bg-brand-orange px-4 py-2 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
-            >
-              Recharger
-            </Link>
-          ) : (
-            <button
-              type="button"
-              onClick={onConfirm}
-              className="rounded-full bg-brand-orange px-4 py-2 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
-            >
-              Confirmer & débiter
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="rounded-full bg-brand-orange px-4 py-2 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
+          >
+            Payer {pricing.price}€ & débloquer
+          </button>
         </div>
       </div>
     </ModalShell>
