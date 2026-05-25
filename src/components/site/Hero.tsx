@@ -145,14 +145,14 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Badge stats */}
+        {/* Badge promesse */}
         <div className="mt-10 lg:col-span-5 lg:mt-0 lg:flex lg:justify-end xl:col-span-6">
           <div className="inline-flex flex-col items-start rounded-2xl border border-border/60 bg-background/85 px-6 py-5 shadow-warm backdrop-blur-md sm:px-7 sm:py-6 lg:items-center lg:text-center">
             <div className="font-display text-4xl font-semibold text-brand-orange sm:text-5xl">
-              +2 400
+              24 h
             </div>
             <div className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground sm:text-[13px]">
-              projets estimés en France
+              devis d'un artisan vérifié
             </div>
           </div>
         </div>
