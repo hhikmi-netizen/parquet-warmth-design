@@ -12,6 +12,7 @@ import {
   Target,
   MessagesSquare,
   CheckCircle2,
+  CircleDollarSign,
   MapPin,
   Award,
   Wrench,
@@ -25,6 +26,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import clientStep1 from "@/assets/how-it-works/client-step-1.png";
+import clientStep2 from "@/assets/how-it-works/client-step-2.png";
+import clientStep3 from "@/assets/how-it-works/client-step-3.png";
+import clientStep4 from "@/assets/how-it-works/client-step-4.png";
+import clientStep5 from "@/assets/how-it-works/client-step-5.png";
+import clientStep6 from "@/assets/how-it-works/client-step-6.png";
+import artisanStep1 from "@/assets/how-it-works/artisan-step-1.png";
+import artisanStep2 from "@/assets/how-it-works/artisan-step-2.png";
+import artisanStep3 from "@/assets/how-it-works/artisan-step-3.png";
+import artisanStep4 from "@/assets/how-it-works/artisan-step-4.png";
+import artisanStep5 from "@/assets/how-it-works/artisan-step-5.png";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/comment-ca-marche")({
@@ -41,7 +53,7 @@ export const Route = createFileRoute("/comment-ca-marche")({
       {
         property: "og:description",
         content:
-          "Le parcours Parqueto expliqué : 6 étapes côté client, 4 étapes côté artisan, et l'algorithme de mise en relation.",
+          "Le parcours Parqueto expliqué : 6 étapes côté client, 5 étapes côté artisan, et l'algorithme de mise en relation.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/comment-ca-marche" },
@@ -55,43 +67,55 @@ const clientSteps: JourneyStep[] = [
     n: "01",
     icon: ClipboardEdit,
     title: "Vous décrivez votre projet",
-    body: "Quelques questions simples, en français clair : type de prestation (pose, ponçage, vitrification, rénovation), surface, état du parquet, contraintes. Aucun jargon, aucune case piégeuse.",
+    body: "Quelques questions simples, en français clair : type de travaux, surface, budget, photos de votre parquet… en quelques minutes, votre demande est prête.",
     highlight: "5 minutes",
+    image: clientStep1,
+    imageAlt: "Étape 1 côté client : formulaire de description du projet parquet sur mobile.",
   },
   {
     n: "02",
     icon: Sparkles,
     title: "Nous estimons votre projet",
-    body: "Notre IA croise votre brief avec les tarifs réels du marché et les données des artisans de votre région. Vous recevez une fourchette de prix honnête, immédiatement.",
+    body: "Notre IA analyse votre demande et vous fournit une estimation personnalisée du coût des travaux, claire, gratuite et sans engagement.",
     highlight: "Estimation instantanée",
+    image: clientStep2,
+    imageAlt: "Étape 2 côté client : estimation de prix Parqueto avec détail des postes.",
   },
   {
     n: "03",
     icon: UserCheck,
-    title: "Nous sélectionnons le meilleur artisan",
-    body: "Un seul artisan vous est proposé — pas dix. Celui dont la spécialité, la zone d'intervention, la disponibilité et la note clients correspondent à votre projet.",
+    title: "Nous sélectionnons le meilleur artisan pour vous",
+    body: "Notre algorithme sélectionne l'artisan le plus qualifié, le plus proche et disponible pour votre projet. Un seul bon contact, au bon moment.",
     highlight: "1 artisan, pas 10",
+    image: clientStep3,
+    imageAlt: "Étape 3 côté client : fiche artisan sélectionné avec notes, proximité et disponibilité.",
   },
   {
     n: "04",
     icon: PhoneCall,
     title: "L'artisan vous contacte sous 24 h",
-    body: "Il prend le temps de vous écouter, propose une visite si nécessaire, et cadre les détails techniques. Pas de démarchage, pas de mise en concurrence.",
+    body: "L'artisan sélectionné prend contact rapidement pour échanger sur votre projet, répondre à vos questions et convenir d'une visite si nécessaire.",
     highlight: "Sous 24 h",
+    image: clientStep4,
+    imageAlt: "Étape 4 côté client : appel de l'artisan sélectionné dans l'interface mobile.",
   },
   {
     n: "05",
     icon: FileText,
     title: "Vous recevez un devis clair",
-    body: "Détaillé, lisible, transparent : matériaux, main-d'œuvre, délais, garanties. Pas de surprise, pas de ligne floue. Vous comparez en toute sérénité.",
+    body: "L'artisan vous propose un devis détaillé et transparent, adapté à votre projet : prestations, délais, garanties et prix justes, sans surprise.",
     highlight: "Devis détaillé",
+    image: clientStep5,
+    imageAlt: "Étape 5 côté client : devis détaillé parquet avec total, délais et garanties.",
   },
   {
     n: "06",
     icon: HandHeart,
     title: "Votre projet est entre de bonnes mains",
-    body: "Chantier suivi, photos partagées, communication directe avec l'artisan. À la réception : un parquet impeccable, et la tranquillité d'esprit.",
+    body: "Les travaux sont planifiés. Votre artisan s'occupe de tout, et Parqueto reste disponible avant, pendant et après le chantier pour votre tranquillité.",
     highlight: "Suivi inclus",
+    image: clientStep6,
+    imageAlt: "Étape 6 côté client : chantier parquet démarré avec suivi et satisfaction client.",
   },
 ];
 
@@ -99,30 +123,47 @@ const artisanSteps: JourneyStep[] = [
   {
     n: "01",
     icon: UserPlus,
-    title: "Créez votre compte artisan",
-    body: "Vos spécialités, votre zone d'intervention, vos disponibilités et vos justificatifs (KBIS, RC Pro, décennale). Tout est vérifié manuellement avant validation.",
-    highlight: "Essai 14 jours",
+    title: "Vous créez votre compte artisan",
+    body: "Inscription rapide et gratuite. Renseignez votre entreprise, vos spécialités et votre zone d'intervention pour commencer à recevoir des opportunités adaptées.",
+    highlight: "100 % gratuit",
+    image: artisanStep1,
+    imageAlt: "Étape 1 côté artisan : création du compte artisan sur mobile avec formulaire d'entreprise.",
   },
   {
     n: "02",
     icon: Target,
-    title: "Recevez des missions ciblées",
-    body: "Pas de pluie de leads non qualifiés. Notre algorithme vous envoie uniquement les projets qui correspondent à votre métier, votre zone et votre niveau de qualification.",
+    title: "Vous recevez des missions ciblées",
+    body: "Notre algorithme vous envoie uniquement des demandes correspondant à vos compétences, votre zone d'intervention et vos disponibilités.",
     highlight: "Leads qualifiés",
+    image: artisanStep2,
+    imageAlt: "Étape 2 côté artisan : notification de nouvelle mission ciblée correspondant au profil de l'artisan.",
   },
   {
     n: "03",
     icon: MessagesSquare,
-    title: "Échangez avec le client",
-    body: "Vous contactez directement le client, posez vos questions techniques, programmez une visite si besoin et établissez votre devis depuis l'application.",
+    title: "Vous répondez et échangez avec le client",
+    body: "Prenez connaissance du projet, posez vos questions et proposez votre expertise. Les échanges sont centralisés et sécurisés dans l'application.",
     highlight: "Direct & sans intermédiaire",
+    image: artisanStep3,
+    imageAlt: "Étape 3 côté artisan : détail de mission et échange avec le client depuis l'application.",
   },
   {
     n: "04",
     icon: CheckCircle2,
-    title: "Vous êtes sélectionné, chantier validé",
-    body: "Le client signe votre devis. Vous gérez le planning, les photos chantier, la facturation. Parqueto reste votre allié, jamais votre obstacle.",
-    highlight: "Chantier livré",
+    title: "Vous êtes sélectionné et le chantier est validé",
+    body: "Le client accepte votre proposition. Le chantier est officialisé sur la plateforme, avec toutes les informations utiles pour organiser l'intervention.",
+    highlight: "Chantier validé",
+    image: artisanStep4,
+    imageAlt: "Étape 4 côté artisan : mission acceptée, planning visible et chantier validé.",
+  },
+  {
+    n: "05",
+    icon: CircleDollarSign,
+    title: "Vous réalisez le chantier et êtes payé",
+    body: "Vous travaillez sereinement, le client est satisfait, votre paiement est sécurisé à la fin du chantier et votre réputation grandit sur la plateforme.",
+    highlight: "Paiement sécurisé",
+    image: artisanStep5,
+    imageAlt: "Étape 5 côté artisan : chantier terminé, avis client positif et paiement sécurisé effectué.",
   },
 ];
 
