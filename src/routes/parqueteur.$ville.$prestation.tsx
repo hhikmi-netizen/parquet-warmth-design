@@ -4,7 +4,6 @@ import {
   CheckCircle2,
   ArrowRight,
   Phone,
-  Star,
   ShieldCheck,
   Clock,
   Euro,

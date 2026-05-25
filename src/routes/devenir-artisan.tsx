@@ -8,9 +8,7 @@ import {
   MapPin,
   Clock,
   CheckCircle2,
-  Quote,
   ArrowRight,
-  Users,
   Lock,
   Heart,
 } from "lucide-react";
