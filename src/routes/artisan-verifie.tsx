@@ -137,11 +137,11 @@ function BadgePage() {
                 </div>
                 <div>
                   <dt className="text-xs uppercase tracking-wide text-muted-foreground">Chantiers</dt>
-                  <dd className="mt-1 font-semibold text-foreground">142 livrés</dd>
+                  <dd className="mt-1 font-semibold text-foreground">Exemple</dd>
                 </div>
                 <div>
                   <dt className="text-xs uppercase tracking-wide text-muted-foreground">Avis certifiés</dt>
-                  <dd className="mt-1 font-semibold text-foreground">4,9 / 5 · 87 avis</dd>
+                  <dd className="mt-1 font-semibold text-foreground">À jour</dd>
                 </div>
               </dl>
               <div className="mt-6 flex items-center justify-between border-t border-border pt-5">
