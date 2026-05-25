@@ -240,15 +240,15 @@ function ProDashboard() {
           </nav>
 
           <div className="mt-4 rounded-2xl border border-brand-orange/30 bg-brand-orange/5 p-4 text-sm">
-            <p className="font-semibold text-brand-orange-deep">Formule Essentiel</p>
+            <p className="font-semibold text-brand-orange-deep">Parqueto Pro</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              5 crédits inclus / mois · prochaine recharge le 14 juin
+              Abonnement actif · accès illimité aux leads qualifiés
             </p>
             <Link
-              to="/pro/offres"
+              to="/pro/abonnement"
               className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand-orange-deep hover:underline"
             >
-              Gérer ma formule <ChevronRight className="h-3 w-3" />
+              Gérer mon abonnement <ChevronRight className="h-3 w-3" />
             </Link>
           </div>
         </aside>
