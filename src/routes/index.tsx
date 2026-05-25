@@ -19,6 +19,7 @@ import { BrandFilm } from "@/components/site/BrandFilm";
 import { ClientExperience } from "@/components/site/ClientExperience";
 import { ArtisanExperience } from "@/components/site/ArtisanExperience";
 import { TrustStrip } from "@/components/site/TrustStrip";
+import { CharteTeaser } from "@/components/site/CharteTeaser";
 import { videoObjectSchema } from "@/lib/video-schema";
 import beforeAfter from "@/assets/before-after.jpg";
 import detail from "@/assets/detail-wood.jpg";
