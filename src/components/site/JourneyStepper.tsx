@@ -214,31 +214,40 @@ export function JourneyStepper({
 
         <div className="relative mt-4 aspect-[4/3] overflow-hidden rounded-xl border border-border bg-gradient-to-br from-brand-cream/60 via-background to-secondary/40 p-4">
           <div className="grain absolute inset-0 opacity-20" aria-hidden />
-          <div className="relative flex h-full flex-col items-center justify-center">
-            <div
-              className={cn(
-                "flex h-14 w-14 items-center justify-center rounded-xl text-primary-foreground shadow-warm sm:h-16 sm:w-16",
-                accentBg,
+          {step.image ? (
+            <img
+              src={step.image}
+              alt={imageAlt}
+              className="relative h-full w-full rounded-lg object-cover shadow-soft"
+              loading="lazy"
+            />
+          ) : (
+            <div className="relative flex h-full flex-col items-center justify-center">
+              <div
+                className={cn(
+                  "flex h-14 w-14 items-center justify-center rounded-xl text-primary-foreground shadow-warm sm:h-16 sm:w-16",
+                  accentBg,
+                )}
+                aria-hidden
+              >
+                <Icon className="h-7 w-7 sm:h-8 sm:w-8" />
+              </div>
+              <p
+                className={cn("mt-4 font-display text-5xl opacity-15 sm:text-6xl", accentText)}
+                aria-hidden
+              >
+                {step.n}
+              </p>
+              <p className="mt-1 text-center font-display text-lg text-foreground sm:text-xl">
+                {step.title}
+              </p>
+              {step.highlight && (
+                <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-card px-2.5 py-0.5 text-[10px] font-semibold text-brand-orange shadow-soft">
+                  {step.highlight}
+                </span>
               )}
-              aria-hidden
-            >
-              <Icon className="h-7 w-7 sm:h-8 sm:w-8" />
             </div>
-            <p
-              className={cn("mt-4 font-display text-5xl opacity-15 sm:text-6xl", accentText)}
-              aria-hidden
-            >
-              {step.n}
-            </p>
-            <p className="mt-1 text-center font-display text-lg text-foreground sm:text-xl">
-              {step.title}
-            </p>
-            {step.highlight && (
-              <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-card px-2.5 py-0.5 text-[10px] font-semibold text-brand-orange shadow-soft">
-                {step.highlight}
-              </span>
-            )}
-          </div>
+          )}
         </div>
 
         <div
