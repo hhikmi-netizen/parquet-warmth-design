@@ -212,13 +212,16 @@ export function JourneyStepper({
           </p>
         )}
 
-        <div className="relative mt-4 aspect-[4/3] overflow-hidden rounded-xl border border-border bg-gradient-to-br from-brand-cream/60 via-background to-secondary/40 p-4">
-          <div className="grain absolute inset-0 opacity-20" aria-hidden />
+        <div className={cn(
+          "relative mt-4 overflow-hidden rounded-xl border border-border bg-gradient-to-br from-brand-cream/60 via-background to-secondary/40",
+          step.image ? "aspect-[16/10] p-0 sm:aspect-[4/3] sm:p-3" : "aspect-[4/3] p-4",
+        )}>
+          <div className="grain absolute inset-0 opacity-20 pointer-events-none" aria-hidden />
           {step.image ? (
             <img
               src={step.image}
               alt={imageAlt}
-              className="relative h-full w-full rounded-lg object-cover shadow-soft"
+              className="relative h-full w-full object-cover sm:rounded-lg sm:shadow-soft"
               loading="lazy"
             />
           ) : (
