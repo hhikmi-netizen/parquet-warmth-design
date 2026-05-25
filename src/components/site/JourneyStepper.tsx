@@ -59,6 +59,7 @@ export function JourneyStepper({
   compact = false,
   mode = "carousel",
   autoBreakpoint = 768,
+  defaultOpenIndex = 0,
 }: Props) {
   // Mode "auto" : on bascule entre carousel et accordion selon la largeur.
   const resolvedMode = useResolvedMode(mode, autoBreakpoint);
