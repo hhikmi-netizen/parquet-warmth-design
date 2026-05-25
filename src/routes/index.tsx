@@ -3,6 +3,7 @@ import { ArrowRight, Droplets, AlertTriangle, Sparkles, CheckCircle2 } from "luc
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { Promise } from "@/components/site/Promise";
+import { JourneyTeaser } from "@/components/site/JourneyTeaser";
 import { Process } from "@/components/site/Process";
 import { HomeFAQ } from "@/components/site/HomeFAQ";
 import { ArtisansShowcase } from "@/components/site/ArtisansShowcase";
