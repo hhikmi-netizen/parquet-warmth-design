@@ -66,12 +66,42 @@ function AbonnementPage() {
   const sub = MOCK_SUBSCRIPTION;
   const meta = STATUS_META[sub.status];
   const StatusIcon = meta.Icon;
+  const [selectedBilling, setSelectedBilling] = useState<"monthly" | "yearly">(sub.billing);
+  const [switchLoading, setSwitchLoading] = useState(false);
 
   const periodEndDate = new Date(sub.periodEnd);
   const trialEndDate = new Date(sub.trialEnd);
   const now = new Date();
   const daysLeft = Math.max(0, Math.ceil((trialEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
   const isTrial = sub.status === "trial";
+
+  // Toasts retour Stripe Checkout / Portal (?checkout=success|canceled, ?portal=updated)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const checkout = params.get("checkout");
+    const portal = params.get("portal");
+    if (checkout === "success") {
+      toast.success("Abonnement activé 🎉", {
+        description: "Votre essai 14 jours a démarré. Bienvenue sur Parqueto Pro.",
+      });
+    } else if (checkout === "canceled") {
+      toast.info("Paiement annulé", {
+        description: "Aucun prélèvement effectué. Vous pouvez réessayer quand vous voulez.",
+      });
+    }
+    if (portal === "updated") {
+      toast.success("Abonnement mis à jour", {
+        description: "Vos changements ont bien été enregistrés.",
+      });
+    }
+    if (checkout || portal) {
+      params.delete("checkout");
+      params.delete("portal");
+      const qs = params.toString();
+      window.history.replaceState({}, "", window.location.pathname + (qs ? `?${qs}` : ""));
+    }
+  }, []);
 
   const handleOpenPortal = () => {
     toast.info("Portail Stripe", {
@@ -86,6 +116,19 @@ function AbonnementPage() {
 
   const handlePause = () => {
     toast.info("Mise en pause", { description: "Votre abonnement sera suspendu à la fin de la période en cours." });
+  };
+
+  const handleSwitchPlan = () => {
+    if (selectedBilling === sub.billing) return;
+    setSwitchLoading(true);
+    setTimeout(() => {
+      setSwitchLoading(false);
+      toast.success(
+        `Bascule vers ${selectedBilling === "yearly" ? "annuel (-17%)" : "mensuel"}`,
+        { description: "Redirection vers le portail Stripe pour confirmer le changement…" },
+      );
+      // TODO: appeler createServerFn (Customer Portal flow data avec subscription_update)
+    }, 500);
   };
 
   return (
