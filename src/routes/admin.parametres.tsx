@@ -25,12 +25,14 @@ function ParametresPage() {
           </div>
         </Panel>
 
-        <Panel title="Tarifs crédits" description="Prix unitaire et packs.">
+        <Panel title="Tarifs abonnement & leads" description="Modèle économique artisan.">
           <ul className="space-y-2 text-sm">
-            <Row icon={Coins} label="1 crédit chantier" value="6 €" />
-            <Row icon={Coins} label="Pack 10 crédits" value="60 €" />
-            <Row icon={Coins} label="Pack 25 crédits" value="140 €" />
-            <Row icon={Coins} label="Pack 60 crédits" value="300 €" />
+            <Row icon={Coins} label="Abonnement mensuel" value="59 €/mois" />
+            <Row icon={Coins} label="Abonnement annuel (-17%)" value="49 €/mois · 588 €/an" />
+            <Row icon={Coins} label="Essai gratuit" value="14 jours" />
+            <Row icon={Coins} label="Lead Standard (< 3 000 €)" value="49 € TTC" />
+            <Row icon={Coins} label="Lead Qualifié (3–8 000 €)" value="89 € TTC" />
+            <Row icon={Coins} label="Lead Premium (> 8 000 €)" value="189 € TTC" />
           </ul>
         </Panel>
 
@@ -39,7 +41,7 @@ function ParametresPage() {
             <Row icon={AlertTriangle} label="RC Pro expire dans" value="30 jours" />
             <Row icon={AlertTriangle} label="Lead sans réponse" value="5 jours" />
             <Row icon={AlertTriangle} label="Artisan sans activité" value="30 jours" />
-            <Row icon={AlertTriangle} label="Solde crédits faible" value="≤ 3 crédits" />
+            <Row icon={AlertTriangle} label="Abonnement past_due" value="Notif. immédiate" />
           </ul>
         </Panel>
 
@@ -56,7 +58,7 @@ function ParametresPage() {
             <Row label="Confirmation client" value="Personnalisé" />
             <Row label="Nouveau lead artisan" value="Personnalisé" />
             <Row label="Relance RC Pro" value="Par défaut" />
-            <Row label="Remboursement crédit" value="Par défaut" />
+            <Row label="Remboursement lead" value="Par défaut" />
           </ul>
         </Panel>
 

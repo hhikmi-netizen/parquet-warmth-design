@@ -395,7 +395,7 @@ function DesignSystemPage() {
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
             <PqKpi label="Demandes" value="424" icon={FileText} trend={{ dir: "up", value: "+18 %" }} hint="14 jours" />
             <PqKpi label="Leads qualifiés" value="187" icon={Users} trend={{ dir: "up", value: "+9 %" }} />
-            <PqKpi label="Crédits consommés" value="312" icon={Coins} trend={{ dir: "down", value: "−3 %" }} />
+            <PqKpi label="Leads vendus" value="312" icon={Coins} trend={{ dir: "up", value: "+6 %" }} />
             <PqKpi label="Conversion" value="4,6 %" icon={Eye} trend={{ dir: "up", value: "+0,4 pt" }} />
           </div>
         </Section>
@@ -406,7 +406,7 @@ function DesignSystemPage() {
             <PqSurface padding="lg" className="space-y-4">
               <PqGauge label="Qualité réseau" value={94} tone="success" hint="Score moyen artisans" />
               <PqGauge label="Conformité documents" value={72} tone="warning" hint="7 artisans à relancer" />
-              <PqGauge label="Crédits restants" value={28} tone="danger" hint="Recharge recommandée" />
+              <PqGauge label="Abonnements past_due" value={28} tone="danger" hint="Relance requise" />
               <PqGauge label="Trafic vs objectif" value={66} tone="info" />
             </PqSurface>
             <PqSurface padding="lg">
@@ -488,7 +488,7 @@ function DesignSystemPage() {
               onDismiss={() => {}}
             />
             <PqToast tone="info" title="Nouveau lead disponible" description="Pose 65 m² · Paris 11" />
-            <PqToast tone="danger" title="Crédit insuffisant" description="Rechargez pour accepter ce projet." />
+            <PqToast tone="danger" title="Abonnement requis" description="Activez votre abonnement pour acheter ce lead." />
           </div>
         </Section>
 

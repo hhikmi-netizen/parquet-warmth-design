@@ -52,7 +52,7 @@ const ENGAGEMENTS = [
   {
     icon: HandCoins,
     title: "Remboursement automatique",
-    body: "Si le client est injoignable sous 5 jours ouvrés, si le projet est finalement hors zone d'intervention, ou si la demande s'avère non sérieuse, le crédit est remboursé sans démarche.",
+    body: "Si le client est injoignable sous 5 jours ouvrés, si le projet est finalement hors zone d'intervention, ou si la demande s'avère non sérieuse, le lead est remboursé sans démarche.",
   },
   {
     icon: ShieldCheck,

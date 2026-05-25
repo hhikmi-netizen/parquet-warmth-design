@@ -13,7 +13,7 @@ function ArtisansPage() {
   return (
     <AdminShell
       title="Gestion des artisans"
-      subtitle="Fiches, zones, spécialités, documents et crédits du réseau."
+      subtitle="Fiches, zones, spécialités, documents et abonnements du réseau."
       actions={
         <button className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-soft hover:bg-brand-orange-deep">
           + Inviter un artisan
@@ -61,7 +61,7 @@ function ArtisansPage() {
                   <dd className="mt-1 font-medium text-foreground">{a.formule}</dd>
                 </div>
                 <div className="rounded-xl border border-border bg-background p-2">
-                  <dt className="text-[10px] uppercase tracking-wide text-muted-foreground">Crédits</dt>
+                  <dt className="text-[10px] uppercase tracking-wide text-muted-foreground">Leads achetés</dt>
                   <dd className="mt-1 inline-flex items-center gap-1 font-medium text-foreground">
                     <Coins className="h-3 w-3 text-brand-orange" /> {a.credits}
                   </dd>
