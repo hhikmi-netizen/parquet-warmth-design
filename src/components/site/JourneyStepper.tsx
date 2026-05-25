@@ -33,6 +33,12 @@ type Props = {
   mode?: Mode;
   /** Breakpoint en px pour mode="auto" (défaut : 768 = Tailwind md). */
   autoBreakpoint?: number;
+  /**
+   * Index de l'étape ouverte par défaut en mode accordéon compact.
+   * Si omis, le premier panneau (index 0) est ouvert.
+   * Pour aucun panneau ouvert par défaut, passer `null`.
+   */
+  defaultOpenIndex?: number | null;
 };
 
 /**
@@ -53,12 +59,13 @@ export function JourneyStepper({
   compact = false,
   mode = "carousel",
   autoBreakpoint = 768,
+  defaultOpenIndex = 0,
 }: Props) {
   // Mode "auto" : on bascule entre carousel et accordion selon la largeur.
   const resolvedMode = useResolvedMode(mode, autoBreakpoint);
 
   const [i, setI] = useState(0);
-  const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const [openIdx, setOpenIdx] = useState<number | null>(defaultOpenIndex ?? 0);
   const baseId = useId();
 
   const step = steps[i];
