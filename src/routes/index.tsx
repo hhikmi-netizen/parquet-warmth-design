@@ -238,6 +238,7 @@ function Index() {
       <Hero />
       <TrustStrip />
       <Promise />
+      <JourneyTeaser />
       <AssistantTeaser />
       <AtelierVideo />
       <Process />
