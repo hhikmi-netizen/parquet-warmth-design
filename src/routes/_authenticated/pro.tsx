@@ -280,7 +280,6 @@ function ProDashboard() {
       {selected && (
         <ProjectDrawer
           match={selected}
-          balance={inbox.artisan.credits_balance}
           onClose={() => setSelected(null)}
           onAccept={onAccept}
           onDecline={onDecline}
@@ -822,7 +821,6 @@ function ProjectDrawer({
       {acceptOpen && (
         <AcceptModal
           match={match}
-          balance={balance}
           onClose={() => setAcceptOpen(false)}
           onConfirm={() => {
             setAcceptOpen(false);
