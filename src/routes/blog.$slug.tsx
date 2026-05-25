@@ -125,7 +125,7 @@ function PostPage() {
         </header>
 
         <figure className="my-10 overflow-hidden rounded-2xl border border-border bg-muted">
-          <img src={post.cover} alt={post.title} className="aspect-[16/9] w-full object-cover" />
+          <img src={post.cover} alt={post.title} className="aspect-[16/9] w-full object-cover" loading="eager" fetchPriority="high" width={1200} height={675} />
         </figure>
 
         <div className="space-y-5">
@@ -165,7 +165,7 @@ function PostPage() {
                   params={{ slug: r.slug }}
                   className="group block overflow-hidden rounded-2xl border border-border bg-card transition hover:border-brand-orange/40 hover:shadow-soft"
                 >
-                  <img src={r.cover} alt="" className="aspect-[16/10] w-full object-cover" />
+                  <img src={r.cover} alt="" className="aspect-[16/10] w-full object-cover" loading="lazy" width={640} height={400} />
                   <div className="p-4">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-orange">
                       {r.category}
