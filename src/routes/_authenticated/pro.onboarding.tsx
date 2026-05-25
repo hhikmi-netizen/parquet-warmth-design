@@ -110,14 +110,14 @@ const STEPS: Step[] = [
     estMinutes: 2,
   },
   {
-    id: "credits",
-    title: "Crédits projets",
+    id: "abonnement",
+    title: "Activer mon abonnement",
     description:
-      "3 projets offerts à l'inscription. Rechargez à tout moment, sans abonnement.",
+      "Abonnement Pro avec essai gratuit de 14 jours. Accès illimité aux leads qualifiés.",
     icon: CreditCard,
-    status: "done",
+    status: "todo",
     required: false,
-    cta: { label: "Voir mes crédits", to: "/pro/facturation" },
+    cta: { label: "Voir mon abonnement", to: "/pro/abonnement" },
     estMinutes: 1,
   },
 ];
