@@ -75,6 +75,8 @@ export function JourneyStepper({
 
   const accentBg = accent === "orange" ? "bg-brand-orange" : "bg-foreground";
   const accentText = accent === "orange" ? "text-brand-orange" : "text-foreground";
+  const imageAlt = step.imageAlt ?? `Illustration de l'étape ${i + 1} : ${step.title}`;
+
 
   const tabsRef = useRef<Array<HTMLButtonElement | null>>([]);
 
