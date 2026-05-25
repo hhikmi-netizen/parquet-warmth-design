@@ -70,8 +70,8 @@ function EstimerMonParquetPage() {
       setError("Format non supporté. Utilisez une photo JPG, PNG ou WEBP.");
       return;
     }
-    if (f.size > 12 * 1024 * 1024) {
-      setError("Image trop lourde (max 12 Mo). Réduisez la résolution.");
+    if (f.size > 5 * 1024 * 1024) {
+      setError("Image trop lourde (max 5 Mo). Réduisez la résolution.");
       return;
     }
     setFile(f);
