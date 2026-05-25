@@ -33,6 +33,12 @@ type Props = {
   mode?: Mode;
   /** Breakpoint en px pour mode="auto" (défaut : 768 = Tailwind md). */
   autoBreakpoint?: number;
+  /**
+   * Index de l'étape ouverte par défaut en mode accordéon compact.
+   * Si omis, le premier panneau (index 0) est ouvert.
+   * Pour aucun panneau ouvert par défaut, passer `null`.
+   */
+  defaultOpenIndex?: number | null;
 };
 
 /**
