@@ -1,31 +1,33 @@
-import { MapPin, Star, ArrowRight } from "lucide-react";
+import { MapPin, ShieldCheck, ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import a1 from "@/assets/artisan-1.jpg";
 import a2 from "@/assets/artisan-2.jpg";
 import a3 from "@/assets/artisan-3.jpg";
 
+// NOTE — Profils types illustratifs. Aucun artisan réel n'est représenté ici tant que
+// le réseau n'est pas constitué publiquement (DGCCRF / loyauté des pratiques commerciales).
 const artisans = [
   {
     img: a1,
-    name: "Jean-Marc L.",
-    city: "Paris 11ᵉ",
-    years: 22,
+    label: "Profil type · Parquet ancien",
+    area: "Île-de-France",
+    experience: "15 ans et +",
     specialties: ["Parquet ancien", "Point de Hongrie", "Vitrification"],
     quote: "Un parquet bien posé, c'est un sol qu'on entend chanter sous les pas.",
   },
   {
     img: a2,
-    name: "Camille D.",
-    city: "Lyon 6ᵉ",
-    years: 14,
+    label: "Profil type · Pose & finition",
+    area: "Auvergne-Rhône-Alpes",
+    experience: "10 ans et +",
     specialties: ["Pose chevron", "Huile naturelle", "Massif chêne"],
     quote: "Chaque pièce a son grain, sa lumière. Le bois fait le reste.",
   },
   {
     img: a3,
-    name: "Thomas R.",
-    city: "Bordeaux",
-    years: 9,
+    label: "Profil type · Rénovation",
+    area: "Nouvelle-Aquitaine",
+    experience: "5 ans et +",
     specialties: ["Rénovation", "Ponçage", "Contrecollé"],
     quote: "On ne rattrape pas un bâclage. Le travail propre, c'est la base.",
   },
