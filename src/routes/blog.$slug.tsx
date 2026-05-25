@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Calendar, ChevronDown, Clock } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { GuideBanner } from "@/components/guide/GuideBanner";
 import { BLOG_POSTS, getPostBySlug, type PostBlock } from "@/lib/blog-posts";
 
@@ -95,6 +96,7 @@ function PostPage() {
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-background text-foreground focus:outline-none">
       <Header />
+      <Breadcrumbs items={[{ label: "Blog", href: "/blog" }, { label: post.title }]} />
 
       <article className="mx-auto max-w-3xl px-6 pb-16 pt-12 sm:pt-16">
         <Link
