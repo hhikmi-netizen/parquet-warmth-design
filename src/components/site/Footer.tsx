@@ -181,9 +181,15 @@ export function Footer() {
               Aucun paiement demandé
             </li>
           </ul>
-          <div className="mt-4 flex flex-col items-start justify-between gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center">
+          <div className="mt-4 flex flex-col items-start justify-between gap-3 text-xs text-muted-foreground sm:flex-row sm:items-center">
             <p>© {new Date().getFullYear()} Parqueto. Tous droits réservés.</p>
-            <p>Mentions légales · Confidentialité · CGU</p>
+            <ul className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <li><Link to="/mentions-legales" className="hover:text-brand-orange">Mentions légales</Link></li>
+              <li aria-hidden="true">·</li>
+              <li><Link to="/confidentialite" className="hover:text-brand-orange">Confidentialité</Link></li>
+              <li aria-hidden="true">·</li>
+              <li><Link to="/cgu" className="hover:text-brand-orange">CGU</Link></li>
+            </ul>
           </div>
         </div>
       </div>

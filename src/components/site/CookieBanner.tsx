@@ -56,8 +56,8 @@ export function CookieBanner() {
               Nous utilisons uniquement les cookies essentiels au fonctionnement du site et,
               avec votre accord, des cookies de mesure d'audience anonyme pour améliorer l'expérience.
               Aucun pistage publicitaire. {" "}
-              <a href="/charte-qualite" className="underline underline-offset-2 hover:text-brand-orange">
-                En savoir plus
+              <a href="/confidentialite" className="underline underline-offset-2 hover:text-brand-orange">
+                Politique de confidentialité
               </a>
               .
             </p>

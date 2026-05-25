@@ -26,6 +26,7 @@ import { Route as ParquetQuiGondoleRouteImport } from './routes/parquet-qui-gond
 import { Route as ParquetFlottantOuMassifRouteImport } from './routes/parquet-flottant-ou-massif'
 import { Route as OutilsRouteImport } from './routes/outils'
 import { Route as NewsletterRouteImport } from './routes/newsletter'
+import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GuideParquetRouteImport } from './routes/guide-parquet'
 import { Route as GuideRouteImport } from './routes/guide'
@@ -37,8 +38,10 @@ import { Route as DevenirArtisanRouteImport } from './routes/devenir-artisan'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConfrerieDuParquetRouteImport } from './routes/confrerie-du-parquet'
+import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as CommentCaMarcheRouteImport } from './routes/comment-ca-marche'
 import { Route as CharteQualiteRouteImport } from './routes/charte-qualite'
+import { Route as CguRouteImport } from './routes/cgu'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as ArtisansRouteImport } from './routes/artisans'
@@ -172,6 +175,11 @@ const NewsletterRoute = NewsletterRouteImport.update({
   path: '/newsletter',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
+  id: '/mentions-legales',
+  path: '/mentions-legales',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -227,6 +235,11 @@ const ConfrerieDuParquetRoute = ConfrerieDuParquetRouteImport.update({
   path: '/confrerie-du-parquet',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
+  id: '/confidentialite',
+  path: '/confidentialite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommentCaMarcheRoute = CommentCaMarcheRouteImport.update({
   id: '/comment-ca-marche',
   path: '/comment-ca-marche',
@@ -235,6 +248,11 @@ const CommentCaMarcheRoute = CommentCaMarcheRouteImport.update({
 const CharteQualiteRoute = CharteQualiteRouteImport.update({
   id: '/charte-qualite',
   path: '/charte-qualite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CguRoute = CguRouteImport.update({
+  id: '/cgu',
+  path: '/cgu',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -492,8 +510,10 @@ export interface FileRoutesByFullPath {
   '/artisans': typeof ArtisansRoute
   '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
+  '/cgu': typeof CguRoute
   '/charte-qualite': typeof CharteQualiteRoute
   '/comment-ca-marche': typeof CommentCaMarcheRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/confrerie-du-parquet': typeof ConfrerieDuParquetRouteWithChildren
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
@@ -505,6 +525,7 @@ export interface FileRoutesByFullPath {
   '/guide': typeof GuideRouteWithChildren
   '/guide-parquet': typeof GuideParquetRoute
   '/login': typeof LoginRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
   '/parquet-flottant-ou-massif': typeof ParquetFlottantOuMassifRoute
@@ -569,8 +590,10 @@ export interface FileRoutesByTo {
   '/artisans': typeof ArtisansRoute
   '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
+  '/cgu': typeof CguRoute
   '/charte-qualite': typeof CharteQualiteRoute
   '/comment-ca-marche': typeof CommentCaMarcheRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
   '/devenir-artisan': typeof DevenirArtisanRouteWithChildren
@@ -581,6 +604,7 @@ export interface FileRoutesByTo {
   '/guide': typeof GuideRouteWithChildren
   '/guide-parquet': typeof GuideParquetRoute
   '/login': typeof LoginRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
   '/parquet-flottant-ou-massif': typeof ParquetFlottantOuMassifRoute
@@ -648,8 +672,10 @@ export interface FileRoutesById {
   '/artisans': typeof ArtisansRoute
   '/assistant': typeof AssistantRoute
   '/blog': typeof BlogRouteWithChildren
+  '/cgu': typeof CguRoute
   '/charte-qualite': typeof CharteQualiteRoute
   '/comment-ca-marche': typeof CommentCaMarcheRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/confrerie-du-parquet': typeof ConfrerieDuParquetRouteWithChildren
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
@@ -661,6 +687,7 @@ export interface FileRoutesById {
   '/guide': typeof GuideRouteWithChildren
   '/guide-parquet': typeof GuideParquetRoute
   '/login': typeof LoginRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/newsletter': typeof NewsletterRoute
   '/outils': typeof OutilsRoute
   '/parquet-flottant-ou-massif': typeof ParquetFlottantOuMassifRoute
@@ -728,8 +755,10 @@ export interface FileRouteTypes {
     | '/artisans'
     | '/assistant'
     | '/blog'
+    | '/cgu'
     | '/charte-qualite'
     | '/comment-ca-marche'
+    | '/confidentialite'
     | '/confrerie-du-parquet'
     | '/contact'
     | '/design-system'
@@ -741,6 +770,7 @@ export interface FileRouteTypes {
     | '/guide'
     | '/guide-parquet'
     | '/login'
+    | '/mentions-legales'
     | '/newsletter'
     | '/outils'
     | '/parquet-flottant-ou-massif'
@@ -805,8 +835,10 @@ export interface FileRouteTypes {
     | '/artisans'
     | '/assistant'
     | '/blog'
+    | '/cgu'
     | '/charte-qualite'
     | '/comment-ca-marche'
+    | '/confidentialite'
     | '/contact'
     | '/design-system'
     | '/devenir-artisan'
@@ -817,6 +849,7 @@ export interface FileRouteTypes {
     | '/guide'
     | '/guide-parquet'
     | '/login'
+    | '/mentions-legales'
     | '/newsletter'
     | '/outils'
     | '/parquet-flottant-ou-massif'
@@ -883,8 +916,10 @@ export interface FileRouteTypes {
     | '/artisans'
     | '/assistant'
     | '/blog'
+    | '/cgu'
     | '/charte-qualite'
     | '/comment-ca-marche'
+    | '/confidentialite'
     | '/confrerie-du-parquet'
     | '/contact'
     | '/design-system'
@@ -896,6 +931,7 @@ export interface FileRouteTypes {
     | '/guide'
     | '/guide-parquet'
     | '/login'
+    | '/mentions-legales'
     | '/newsletter'
     | '/outils'
     | '/parquet-flottant-ou-massif'
@@ -963,8 +999,10 @@ export interface RootRouteChildren {
   ArtisansRoute: typeof ArtisansRoute
   AssistantRoute: typeof AssistantRoute
   BlogRoute: typeof BlogRouteWithChildren
+  CguRoute: typeof CguRoute
   CharteQualiteRoute: typeof CharteQualiteRoute
   CommentCaMarcheRoute: typeof CommentCaMarcheRoute
+  ConfidentialiteRoute: typeof ConfidentialiteRoute
   ConfrerieDuParquetRoute: typeof ConfrerieDuParquetRouteWithChildren
   ContactRoute: typeof ContactRoute
   DesignSystemRoute: typeof DesignSystemRoute
@@ -976,6 +1014,7 @@ export interface RootRouteChildren {
   GuideRoute: typeof GuideRouteWithChildren
   GuideParquetRoute: typeof GuideParquetRoute
   LoginRoute: typeof LoginRoute
+  MentionsLegalesRoute: typeof MentionsLegalesRoute
   NewsletterRoute: typeof NewsletterRoute
   OutilsRoute: typeof OutilsRoute
   ParquetFlottantOuMassifRoute: typeof ParquetFlottantOuMassifRoute
@@ -1123,6 +1162,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewsletterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mentions-legales': {
+      id: '/mentions-legales'
+      path: '/mentions-legales'
+      fullPath: '/mentions-legales'
+      preLoaderRoute: typeof MentionsLegalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -1200,6 +1246,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConfrerieDuParquetRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/confidentialite': {
+      id: '/confidentialite'
+      path: '/confidentialite'
+      fullPath: '/confidentialite'
+      preLoaderRoute: typeof ConfidentialiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/comment-ca-marche': {
       id: '/comment-ca-marche'
       path: '/comment-ca-marche'
@@ -1212,6 +1265,13 @@ declare module '@tanstack/react-router' {
       path: '/charte-qualite'
       fullPath: '/charte-qualite'
       preLoaderRoute: typeof CharteQualiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cgu': {
+      id: '/cgu'
+      path: '/cgu'
+      fullPath: '/cgu'
+      preLoaderRoute: typeof CguRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -1714,8 +1774,10 @@ const rootRouteChildren: RootRouteChildren = {
   ArtisansRoute: ArtisansRoute,
   AssistantRoute: AssistantRoute,
   BlogRoute: BlogRouteWithChildren,
+  CguRoute: CguRoute,
   CharteQualiteRoute: CharteQualiteRoute,
   CommentCaMarcheRoute: CommentCaMarcheRoute,
+  ConfidentialiteRoute: ConfidentialiteRoute,
   ConfrerieDuParquetRoute: ConfrerieDuParquetRouteWithChildren,
   ContactRoute: ContactRoute,
   DesignSystemRoute: DesignSystemRoute,
@@ -1727,6 +1789,7 @@ const rootRouteChildren: RootRouteChildren = {
   GuideRoute: GuideRouteWithChildren,
   GuideParquetRoute: GuideParquetRoute,
   LoginRoute: LoginRoute,
+  MentionsLegalesRoute: MentionsLegalesRoute,
   NewsletterRoute: NewsletterRoute,
   OutilsRoute: OutilsRoute,
   ParquetFlottantOuMassifRoute: ParquetFlottantOuMassifRoute,
@@ -1755,13 +1818,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
