@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, ShieldCheck, Clock3, BadgeEuro } from "lucide-react";
+import { ArrowRight, ShieldCheck, Clock3, BadgeEuro, Sparkles } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import heroSalon from "@/assets/hero-salon-parquet.jpg";
 import heroHaussmann from "@/assets/hero-haussmann-chevron.jpg";
