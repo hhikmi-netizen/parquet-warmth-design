@@ -82,6 +82,8 @@ import { Route as AuthenticatedProOnboardingRouteImport } from './routes/_authen
 import { Route as AuthenticatedProMessagesRouteImport } from './routes/_authenticated/pro.messages'
 import { Route as AuthenticatedProChantiersRouteImport } from './routes/_authenticated/pro.chantiers'
 import { Route as AuthenticatedProCalendrierRouteImport } from './routes/_authenticated/pro.calendrier'
+import { Route as AuthenticatedProAbonnementRouteImport } from './routes/_authenticated/pro.abonnement'
+import { Route as AuthenticatedProLeadsMatchIdRouteImport } from './routes/_authenticated/pro.leads.$matchId'
 
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
@@ -457,6 +459,18 @@ const AuthenticatedProCalendrierRoute =
     path: '/calendrier',
     getParentRoute: () => AuthenticatedProRoute,
   } as any)
+const AuthenticatedProAbonnementRoute =
+  AuthenticatedProAbonnementRouteImport.update({
+    id: '/abonnement',
+    path: '/abonnement',
+    getParentRoute: () => AuthenticatedProRoute,
+  } as any)
+const AuthenticatedProLeadsMatchIdRoute =
+  AuthenticatedProLeadsMatchIdRouteImport.update({
+    id: '/leads/$matchId',
+    path: '/leads/$matchId',
+    getParentRoute: () => AuthenticatedProRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -521,6 +535,7 @@ export interface FileRoutesByFullPath {
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
   '/confrerie-du-parquet/': typeof ConfrerieDuParquetIndexRoute
+  '/pro/abonnement': typeof AuthenticatedProAbonnementRoute
   '/pro/calendrier': typeof AuthenticatedProCalendrierRoute
   '/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/pro/messages': typeof AuthenticatedProMessagesRoute
@@ -531,6 +546,7 @@ export interface FileRoutesByFullPath {
   '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
   '/parqueteur/$ville/$prestation': typeof ParqueteurVillePrestationRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
+  '/pro/leads/$matchId': typeof AuthenticatedProLeadsMatchIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -593,6 +609,7 @@ export interface FileRoutesByTo {
   '/pro/offres': typeof ProOffresRoute
   '/admin': typeof AdminIndexRoute
   '/confrerie-du-parquet': typeof ConfrerieDuParquetIndexRoute
+  '/pro/abonnement': typeof AuthenticatedProAbonnementRoute
   '/pro/calendrier': typeof AuthenticatedProCalendrierRoute
   '/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/pro/messages': typeof AuthenticatedProMessagesRoute
@@ -603,6 +620,7 @@ export interface FileRoutesByTo {
   '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
   '/parqueteur/$ville/$prestation': typeof ParqueteurVillePrestationRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
+  '/pro/leads/$matchId': typeof AuthenticatedProLeadsMatchIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -669,6 +687,7 @@ export interface FileRoutesById {
   '/pro/offres': typeof ProOffresRoute
   '/admin/': typeof AdminIndexRoute
   '/confrerie-du-parquet/': typeof ConfrerieDuParquetIndexRoute
+  '/_authenticated/pro/abonnement': typeof AuthenticatedProAbonnementRoute
   '/_authenticated/pro/calendrier': typeof AuthenticatedProCalendrierRoute
   '/_authenticated/pro/chantiers': typeof AuthenticatedProChantiersRoute
   '/_authenticated/pro/messages': typeof AuthenticatedProMessagesRoute
@@ -679,6 +698,7 @@ export interface FileRoutesById {
   '/confrerie-du-parquet/candidater/merci': typeof ConfrerieDuParquetCandidaterMerciRoute
   '/parqueteur/$ville/$prestation': typeof ParqueteurVillePrestationRoute
   '/pro/devis/nouveau': typeof ProDevisNouveauRoute
+  '/_authenticated/pro/leads/$matchId': typeof AuthenticatedProLeadsMatchIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -745,6 +765,7 @@ export interface FileRouteTypes {
     | '/pro/offres'
     | '/admin/'
     | '/confrerie-du-parquet/'
+    | '/pro/abonnement'
     | '/pro/calendrier'
     | '/pro/chantiers'
     | '/pro/messages'
@@ -755,6 +776,7 @@ export interface FileRouteTypes {
     | '/confrerie-du-parquet/candidater/merci'
     | '/parqueteur/$ville/$prestation'
     | '/pro/devis/nouveau'
+    | '/pro/leads/$matchId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -817,6 +839,7 @@ export interface FileRouteTypes {
     | '/pro/offres'
     | '/admin'
     | '/confrerie-du-parquet'
+    | '/pro/abonnement'
     | '/pro/calendrier'
     | '/pro/chantiers'
     | '/pro/messages'
@@ -827,6 +850,7 @@ export interface FileRouteTypes {
     | '/confrerie-du-parquet/candidater/merci'
     | '/parqueteur/$ville/$prestation'
     | '/pro/devis/nouveau'
+    | '/pro/leads/$matchId'
   id:
     | '__root__'
     | '/'
@@ -892,6 +916,7 @@ export interface FileRouteTypes {
     | '/pro/offres'
     | '/admin/'
     | '/confrerie-du-parquet/'
+    | '/_authenticated/pro/abonnement'
     | '/_authenticated/pro/calendrier'
     | '/_authenticated/pro/chantiers'
     | '/_authenticated/pro/messages'
@@ -902,6 +927,7 @@ export interface FileRouteTypes {
     | '/confrerie-du-parquet/candidater/merci'
     | '/parqueteur/$ville/$prestation'
     | '/pro/devis/nouveau'
+    | '/_authenticated/pro/leads/$matchId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1463,23 +1489,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProCalendrierRouteImport
       parentRoute: typeof AuthenticatedProRoute
     }
+    '/_authenticated/pro/abonnement': {
+      id: '/_authenticated/pro/abonnement'
+      path: '/abonnement'
+      fullPath: '/pro/abonnement'
+      preLoaderRoute: typeof AuthenticatedProAbonnementRouteImport
+      parentRoute: typeof AuthenticatedProRoute
+    }
+    '/_authenticated/pro/leads/$matchId': {
+      id: '/_authenticated/pro/leads/$matchId'
+      path: '/leads/$matchId'
+      fullPath: '/pro/leads/$matchId'
+      preLoaderRoute: typeof AuthenticatedProLeadsMatchIdRouteImport
+      parentRoute: typeof AuthenticatedProRoute
+    }
   }
 }
 
 interface AuthenticatedProRouteChildren {
+  AuthenticatedProAbonnementRoute: typeof AuthenticatedProAbonnementRoute
   AuthenticatedProCalendrierRoute: typeof AuthenticatedProCalendrierRoute
   AuthenticatedProChantiersRoute: typeof AuthenticatedProChantiersRoute
   AuthenticatedProMessagesRoute: typeof AuthenticatedProMessagesRoute
   AuthenticatedProOnboardingRoute: typeof AuthenticatedProOnboardingRoute
   AuthenticatedProStatistiquesRoute: typeof AuthenticatedProStatistiquesRoute
+  AuthenticatedProLeadsMatchIdRoute: typeof AuthenticatedProLeadsMatchIdRoute
 }
 
 const AuthenticatedProRouteChildren: AuthenticatedProRouteChildren = {
+  AuthenticatedProAbonnementRoute: AuthenticatedProAbonnementRoute,
   AuthenticatedProCalendrierRoute: AuthenticatedProCalendrierRoute,
   AuthenticatedProChantiersRoute: AuthenticatedProChantiersRoute,
   AuthenticatedProMessagesRoute: AuthenticatedProMessagesRoute,
   AuthenticatedProOnboardingRoute: AuthenticatedProOnboardingRoute,
   AuthenticatedProStatistiquesRoute: AuthenticatedProStatistiquesRoute,
+  AuthenticatedProLeadsMatchIdRoute: AuthenticatedProLeadsMatchIdRoute,
 }
 
 const AuthenticatedProRouteWithChildren =
@@ -1669,13 +1713,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

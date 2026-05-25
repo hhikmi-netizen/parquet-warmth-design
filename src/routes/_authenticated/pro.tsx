@@ -14,7 +14,7 @@ import {
   Inbox,
   MapPin,
   Clock,
-  Coins,
+  CreditCard,
   Settings,
   CheckCircle2,
   XCircle,
@@ -89,7 +89,7 @@ function ProDashboard() {
     mutationFn: (match_id: string) => acceptFn({ data: { match_id } }),
     onSuccess: (res) => {
       if (res?.success) {
-        toast.success("Projet accepté", { description: "Crédit débité — coordonnées client débloquées." });
+        toast.success("Projet accepté", { description: "Coordonnées client débloquées." });
         invalidate();
         setSelected(null);
       } else {
@@ -102,7 +102,7 @@ function ProDashboard() {
   const declineMutation = useMutation({
     mutationFn: (match_id: string) => declineFn({ data: { match_id } }),
     onSuccess: () => {
-      toast("Projet décliné", { description: "Aucun crédit débité." });
+      toast("Projet décliné", { description: "Aucun frais appliqué." });
       invalidate();
       setSelected(null);
     },
@@ -114,7 +114,7 @@ function ProDashboard() {
       refundFn({ data: { match_id, reason } }),
     onSuccess: (res, vars) => {
       if (res?.success) {
-        toast.success("Crédit remboursé", { description: vars.reason });
+        toast.success("Lead remboursé", { description: vars.reason });
         invalidate();
         setSelected(null);
       } else {
