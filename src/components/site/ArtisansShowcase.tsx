@@ -46,9 +46,10 @@ export function ArtisansShowcase() {
               Des visages, des mains, <span className="italic text-brand-orange">un savoir-faire.</span>
             </h2>
             <p className="mt-4 max-w-xl text-muted-foreground">
-              Voici le type d'artisans avec qui nous travaillons : sélectionnés sur dossier, vérifiés
-              et notés par les particuliers. Vous n'avez pas à les démarcher — on cadre votre projet,
-              puis on vous oriente vers celui dont le savoir-faire correspond.
+              Voici les <strong>profils types</strong> d'artisans que nous recrutons :
+              SIRET actif, assurance décennale et RC Pro vérifiés avant chaque mise en relation.
+              Les photos et profils ci-dessous sont illustratifs — le réseau public est en
+              cours de constitution.
             </p>
           </div>
           <Link
