@@ -90,7 +90,21 @@ export function Footer() {
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             <li><Link to="/estimation" className="hover:text-brand-orange">Estimer un projet</Link></li>
             <li><Link to="/renovation-sinistre" className="hover:text-brand-orange">Dégât des eaux · devis assurance</Link></li>
-            <li><Link to="/devenir-artisan" className="hover:text-brand-orange">Devenir artisan partenaire</Link></li>
+            <li className="!mt-3">
+              <Link
+                to="/devenir-artisan"
+                className="group inline-flex items-center gap-2 rounded-full bg-brand-orange px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-brand-orange-deep hover:shadow-md"
+              >
+                <span className="inline-block h-2 w-2 rounded-full bg-white/80 group-hover:bg-white" />
+                Devenir artisan partenaire
+                <span className="ml-0.5 rounded-full bg-white/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide">
+                  Pro
+                </span>
+              </Link>
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                Rejoignez le réseau Parqueto — leads qualifiés, sans abonnement.
+              </p>
+            </li>
             <li><Link to="/artisan-verifie" className="hover:text-brand-orange">Badge Artisan Vérifié</Link></li>
             <li><Link to="/confrerie-du-parquet" className="hover:text-brand-orange">La Confrérie du Parquet</Link></li>
             <li>
