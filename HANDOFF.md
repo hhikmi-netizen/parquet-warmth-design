@@ -538,5 +538,91 @@ Hero (cinématique 3 slides)
 - `src/assets/experience-artisan.png`
 - `public/videos/parqueto-spot.mp4`
 
+---
+
+## 17. Journal — session du lundi 25 mai 2026 (conformité, confiance & SEO)
+
+Objectif global : **purger toute donnée non vérifiable** (chiffres fantômes, faux avis, profils nominatifs), **renforcer la confiance** via des preuves réelles, et **corriger les frictions UX** desktop/mobile détectées.
+
+### 17.1 Mentions légales & footer (coordonnées réelles)
+
+Brief : intégrer les vraies coordonnées (raison sociale, SIRET, adresse, email, téléphone) reçues par PJ.
+
+- `src/routes/mentions-legales.tsx` — page complète mise à jour : éditeur, SIRET, RCS, capital, hébergeur, contact, médiateur conso, propriété intellectuelle, données personnelles, cookies.
+- `src/components/site/Footer.tsx` — bloc identité : raison sociale + SIRET visible, email cliquable (`mailto:`), téléphone (`tel:`), liens mentions légales / CGU / confidentialité.
+- `src/routes/__root.tsx` — JSON-LD `Organization` enrichi (legalName, taxID, address, contactPoint).
+
+### 17.2 Breadcrumbs (SEO + UX)
+
+- `src/components/site/Breadcrumbs.tsx` créé — composant générique avec JSON-LD `BreadcrumbList`.
+- Intégré dans `src/routes/blog.$slug.tsx` et `src/routes/parqueteur.$ville.tsx`.
+- Séparateur `›`, dernier item non cliquable, sous le header.
+
+### 17.3 Avis clients — Trustpilot officiel (remplace les faux témoignages)
+
+- `src/components/site/TrustpilotWidget.tsx` — widget officiel Trustpilot (script `bootstrap5/tags.min.js` en `defer`, fallback skeleton, props : `templateId`, `businessUnitId`, `theme`, `height`, `locale=fr-FR`).
+- `src/components/site/SocialProof.tsx` — remplacement complet des cartes témoignages **inventées** par le widget Trustpilot + un bloc « Pourquoi Trustpilot » (avis vérifiés, source unique, droit de réponse).
+- À configurer plus tard : renseigner `businessUnitId` Trustpilot réel quand le compte sera activé (placeholder actuel).
+
+### 17.4 Purge des données non vérifiables (conformité DGCCRF)
+
+Aucun chiffre, note, ou avis non sourçable ne doit subsister.
+
+- **Schémas JSON-LD audités** :
+  - Suppression de tous les `aggregateRating` factices (`4.8/247 avis`) sur `parqueteur.$ville.tsx` et homepage.
+  - Conservation des schémas factuels uniquement : `Organization`, `LocalBusiness` (sans rating), `FAQPage`, `BreadcrumbList`, `VideoObject`.
+  - **Ajout `HowTo` JSON-LD** sur la homepage : 4 étapes du parcours estimation (Décrire → Fourchette prix → Mise en relation → Devis détaillé).
+  - **Ajout `Article` JSON-LD** sur les pages blog (au lieu de `BlogPosting` générique avec auteur inventé).
+- **Profils artisans anonymisés** (`src/components/site/ArtisansShowcase.tsx`) :
+  - Suppression des noms (« Jean-Marc L. ») et villes spécifiques.
+  - Libellés génériques : « Profil type · Parquet ancien », « Profil type · Pose & finition »…
+  - Badge `ShieldCheck` « Profil illustratif » sur chaque carte.
+  - Disclaimer : *« Les photos et profils ci-dessous sont illustratifs — le réseau public est en cours de constitution. »*
+- **Hero / TrustStrip / cartes** : audit final, plus aucun chiffre type « +2 400 projets », « depuis 1987 », « 4.8 ⭐ » — tout retiré ou remplacé par des promesses qualitatives.
+
+### 17.5 Charte qualité (nouveau pilier confiance)
+
+- `src/components/site/CharteTeaser.tsx` créé — section homepage avant `SocialProof`, 4 engagements : **vérification SIRET + assurance**, **délais respectés**, **devis détaillés ligne par ligne**, **lead remboursé si non sérieux**.
+- Lien vers la charte complète + page vérification artisans (à compléter ultérieurement).
+- Intégré dans `src/routes/index.tsx`.
+
+### 17.6 Section « Comment ça marche » — refonte desktop (≥ md)
+
+Bug remonté : sur PC (933 px), le carrousel `JourneyStepper` n'affichait qu'une étape à la fois (mur visuel), flèches de navigation décalées du cadre.
+
+- **`src/components/site/JourneyTeaser.tsx` (homepage)** — réécriture : grille responsive `grid gap-5 sm:grid-cols-2 lg:grid-cols-4` → les 4 étapes visibles côte à côte sur desktop. Ligne gradient subtile entre cartes, CTA « Voir le parcours complet » en dessous.
+- **`src/components/site/JourneyStepper.tsx` (page `/comment-ca-marche`)** — contrôles de navigation refondus dans une seule rangée `flex flex-wrap items-center gap-4` : flèches ← →, dots `h-2.5 rounded-full` (actif `w-8`, inactif `w-2.5 bg-border`), compteur d'étape. Alignement vertical centré, plus de décalage.
+
+### 17.7 Fichiers touchés (session 25 mai)
+
+**Créés** :
+- `src/components/site/Breadcrumbs.tsx`
+- `src/components/site/TrustpilotWidget.tsx`
+- `src/components/site/CharteTeaser.tsx`
+
+**Édités** :
+- `src/routes/mentions-legales.tsx`
+- `src/routes/__root.tsx`
+- `src/routes/index.tsx` (HowTo schema, CharteTeaser inséré)
+- `src/routes/blog.$slug.tsx` (Breadcrumbs + Article schema)
+- `src/routes/parqueteur.$ville.tsx` (Breadcrumbs, retrait aggregateRating)
+- `src/components/site/Footer.tsx` (coordonnées + SIRET)
+- `src/components/site/SocialProof.tsx` (Trustpilot remplace témoignages)
+- `src/components/site/ArtisansShowcase.tsx` (anonymisation + badge illustratif)
+- `src/components/site/JourneyTeaser.tsx` (grid 4 col desktop)
+- `src/components/site/JourneyStepper.tsx` (nav controls unifiés)
+
+### 17.8 TODO court-terme pour Codex
+
+- [ ] Renseigner le `businessUnitId` Trustpilot réel dans `TrustpilotWidget` (props sur `SocialProof.tsx`).
+- [ ] Créer une page `/charte-qualite` complète si décision marketing (charte aujourd'hui teasée mais pas détaillée).
+- [ ] Quand les premiers vrais artisans sont onboardés : repasser sur `ArtisansShowcase` pour brancher la table `artisans` (retirer mock + badge « Profil illustratif »).
+- [ ] Vérifier que **plus aucun** `aggregateRating` ne traîne dans les futures pages (règle de revue de code).
+- [ ] Tester rich-results Google sur `HowTo` (homepage) et `Article` (blog).
+- [ ] Audit Lighthouse + Google Search Console après mise en ligne des nouveaux schémas.
+
+---
+
 Bonne reprise. 🪵
+
 
