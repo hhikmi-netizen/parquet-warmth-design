@@ -11,7 +11,7 @@ import {
 import { Banknote, TrendingUp, Coins, Receipt } from "lucide-react";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { KpiCard, Panel, Pill } from "@/components/admin/atoms";
-import { FORMULES, RECHARGES, FACTURES, REVENUS } from "@/lib/admin-mock";
+import { FORMULES, FACTURES, REVENUS } from "@/lib/admin-mock";
 
 export const Route = createFileRoute("/admin/monetisation")({
   head: () => ({ meta: [{ title: "Monétisation — Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
