@@ -76,7 +76,7 @@ export function ArtisansShowcase() {
                     <h3 className="font-display text-2xl">{a.name}</h3>
                     <span className="inline-flex items-center gap-1 rounded-full bg-background/15 px-2 py-0.5 text-xs font-semibold backdrop-blur">
                       <Star className="h-3 w-3 fill-brand-orange text-brand-orange" />
-                      {a.rating}
+                      Artisan vérifié
                     </span>
                   </div>
                   <div className="mt-1 flex items-center gap-2 text-xs text-background/80">
@@ -102,7 +102,7 @@ export function ArtisansShowcase() {
                   ))}
                 </div>
                 <div className="mt-5 flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground">
-                  <span>{a.reviews} avis vérifiés</span>
+                  <span>Profil type</span>
                   <Link to="/estimation" className="font-semibold text-brand-orange">
                     Estimer mon projet →
                   </Link>
