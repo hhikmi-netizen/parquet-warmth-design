@@ -81,12 +81,6 @@ export const Route = createFileRoute("/parqueteur/$ville")({
               latitude: city.geo.lat,
               longitude: city.geo.lng,
             },
-            aggregateRating: {
-              "@type": "AggregateRating",
-              ratingValue: "4.8",
-              reviewCount: "247",
-              bestRating: "5",
-            },
             image: "https://parqueto.fr/logo.png",
           }),
         },
@@ -326,14 +320,13 @@ function CityPage() {
               {/* Signaux de confiance */}
               <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
                 <span className="inline-flex items-center gap-1.5">
-                  <Star className="h-3.5 w-3.5 fill-brand-orange text-brand-orange" />
-                  <strong className="font-semibold text-foreground">4,8 / 5</strong> · 247 avis
-                </span>
-                <span className="inline-flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Décennale vérifiée
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <Clock className="h-3.5 w-3.5 text-brand-orange" /> Devis sous 24 h
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-brand-orange" /> Artisan sélectionné
                 </span>
               </div>
             </div>
@@ -344,7 +337,7 @@ function CityPage() {
                 <Stat label="Tarif moyen" value={city.tarifIndicatif} />
                 <Stat label="Délai devis" value="24 h" />
                 <Stat label="Garantie" value="10 ans" />
-                <Stat label="Avis vérifiés" value="4,8 / 5" />
+                <Stat label="Artisan" value="Vérifié" />
               </dl>
             </aside>
           </div>
