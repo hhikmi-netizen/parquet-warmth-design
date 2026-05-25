@@ -21,7 +21,7 @@ export function Artisan() {
             <ul className="mt-6 space-y-3 text-sm">
               {[
                 "Projets pré-qualifiés avec budget et délai clairs",
-                "Aucun abonnement, aucun engagement",
+                "Essai 14 jours offert, sans engagement",
                 "Vous gardez la maîtrise de votre devis",
               ].map((b) => (
                 <li key={b} className="flex gap-3">

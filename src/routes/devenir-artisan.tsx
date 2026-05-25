@@ -111,8 +111,8 @@ function DevenirArtisan() {
               </ul>
               <div className="mt-6 flex items-center justify-between rounded-2xl bg-muted/60 p-4">
                 <div className="text-xs text-muted-foreground">
-                  <p className="font-semibold text-foreground">1 crédit projet</p>
-                  <p>Coordonnées débloquées à l'acceptation</p>
+                  <p className="font-semibold text-foreground">Lead Standard · 49 € TTC</p>
+                  <p>Coordonnées débloquées après achat</p>
                 </div>
                 <button className="rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background">
                   Voir le projet
@@ -124,7 +124,7 @@ function DevenirArtisan() {
                 <ShieldCheck className="h-5 w-5 text-emerald-600" />
                 <div>
                   <p className="text-xs font-semibold">Client injoignable ?</p>
-                  <p className="text-xs text-muted-foreground">Crédit remboursé automatiquement.</p>
+                  <p className="text-xs text-muted-foreground">Lead remboursé automatiquement.</p>
                 </div>
               </div>
             </div>
@@ -183,7 +183,7 @@ function DevenirArtisan() {
               {
                 n: "03",
                 t: "Le projet vous est proposé",
-                d: "Exclusivement. Vous acceptez (1 crédit) ou non, librement.",
+                d: "Exclusivement. Vous achetez le lead (49 / 89 / 189 € selon budget) ou non, librement.",
               },
               {
                 n: "04",
@@ -211,7 +211,7 @@ function DevenirArtisan() {
                 <h2 className="font-serif text-3xl tracking-tight">Nos garanties artisan</h2>
                 <p className="mt-2 max-w-2xl text-muted-foreground">
                   Vous payez pour un projet sérieux, pas pour une promesse. Si quelque chose
-                  ne va pas, votre crédit revient sur votre compte.
+                  ne va pas, votre lead est remboursé automatiquement.
                 </p>
               </div>
             </div>
@@ -224,12 +224,12 @@ function DevenirArtisan() {
                 },
                 {
                   t: "Client injoignable = remboursé",
-                  d: "Si vous ne parvenez pas à joindre le client sous 5 jours ouvrés, le crédit est restitué.",
+                  d: "Si vous ne parvenez pas à joindre le client sous 5 jours ouvrés, le lead est remboursé.",
                   i: ShieldCheck,
                 },
                 {
                   t: "Hors zone = remboursé",
-                  d: "Si le projet est finalement hors de votre rayon d'intervention, crédit restitué.",
+                  d: "Si le projet est finalement hors de votre rayon d'intervention, le lead est remboursé.",
                   i: MapPin,
                 },
                 {
@@ -258,7 +258,7 @@ function DevenirArtisan() {
             Ce que Parqueto n'est pas
           </p>
           <h2 className="mt-3 font-serif text-3xl tracking-tight sm:text-4xl">
-            Pas une marketplace agressive. Pas un casino à crédits.
+            Pas une marketplace agressive. Pas une foire aux leads.
           </h2>
           <div className="mt-10 grid gap-6 sm:grid-cols-2">
             {[
