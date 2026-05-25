@@ -26,17 +26,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import clientStep1 from "@/assets/how-it-works/client-step-1.png";
-import clientStep2 from "@/assets/how-it-works/client-step-2.png";
-import clientStep3 from "@/assets/how-it-works/client-step-3.png";
-import clientStep4 from "@/assets/how-it-works/client-step-4.png";
-import clientStep5 from "@/assets/how-it-works/client-step-5.png";
-import clientStep6 from "@/assets/how-it-works/client-step-6.png";
-import artisanStep1 from "@/assets/how-it-works/artisan-step-1.png";
-import artisanStep2 from "@/assets/how-it-works/artisan-step-2.png";
-import artisanStep3 from "@/assets/how-it-works/artisan-step-3.png";
-import artisanStep4 from "@/assets/how-it-works/artisan-step-4.png";
-import artisanStep5 from "@/assets/how-it-works/artisan-step-5.png";
+import clientStep1 from "@/assets/how-it-works/etape-1-decrire-projet-parquet-client-parqueto.png";
+import clientStep2 from "@/assets/how-it-works/etape-2-estimation-prix-parquet-client-parqueto.png";
+import clientStep3 from "@/assets/how-it-works/etape-3-selection-artisan-parquet-client-parqueto.png";
+import clientStep4 from "@/assets/how-it-works/etape-4-contact-artisan-24h-parquet-parqueto.png";
+import clientStep5 from "@/assets/how-it-works/etape-5-devis-parquet-detaille-parqueto.png";
+import clientStep6 from "@/assets/how-it-works/etape-6-chantier-parquet-suivi-parqueto.png";
+import artisanStep1 from "@/assets/how-it-works/etape-1-creation-compte-artisan-parquet-parqueto.png";
+import artisanStep2 from "@/assets/how-it-works/etape-2-missions-parquet-ciblees-artisan-parqueto.png";
+import artisanStep3 from "@/assets/how-it-works/etape-3-echange-client-artisan-parquet-parqueto.png";
+import artisanStep4 from "@/assets/how-it-works/etape-4-mission-parquet-validee-artisan-parqueto.png";
+import artisanStep5 from "@/assets/how-it-works/etape-5-chantier-parquet-paiement-artisan-parqueto.png";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/comment-ca-marche")({
