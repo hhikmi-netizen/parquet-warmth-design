@@ -723,7 +723,7 @@ function ProjectDrawer({
 
             <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 text-xs text-emerald-800">
               <ShieldCheck className="mb-1 inline h-4 w-4" /> Lead exclusif. Si le client
-              est injoignable sous 5 jours ouvrés ou hors zone, votre crédit est
+              est injoignable sous 5 jours ouvrés ou hors zone, le lead est
               automatiquement remboursé.
             </div>
 
@@ -734,7 +734,7 @@ function ProjectDrawer({
                   onClick={() => setAcceptOpen(true)}
                   className="rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
                 >
-                  Accepter ({p.credits_cost} crédit{p.credits_cost > 1 ? "s" : ""})
+                  Acheter — {getLeadPrice(p.budget_max).price}€
                 </button>
                 <button
                   type="button"
