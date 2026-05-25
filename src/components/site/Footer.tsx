@@ -182,7 +182,7 @@ export function Footer() {
             </li>
           </ul>
           <div className="mt-4 flex flex-col items-start justify-between gap-3 text-xs text-muted-foreground sm:flex-row sm:items-center">
-            <p>© {new Date().getFullYear()} Parqueto. Tous droits réservés.</p>
+            <p>© {new Date().getFullYear()} Parqueto — HH Digital (HIKMI Hicham) · SIRET 509 241 022 00037 · Antony (92).</p>
             <ul className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <li><Link to="/mentions-legales" className="hover:text-brand-orange">Mentions légales</Link></li>
               <li aria-hidden="true">·</li>
