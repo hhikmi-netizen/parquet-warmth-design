@@ -63,29 +63,29 @@ export function ArtisansShowcase() {
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {artisans.map((a) => (
             <article
-              key={a.name}
+              key={a.label}
               className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition hover:-translate-y-1 hover:shadow-warm"
             >
               <div className="relative overflow-hidden">
                 <img
                   src={a.img}
-                  alt={a.name}
+                  alt={`${a.label} — illustration d'artisan parqueteur`}
                   className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent p-5 text-background">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-display text-2xl">{a.name}</h3>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-background/15 px-2 py-0.5 text-xs font-semibold backdrop-blur">
-                      <Star className="h-3 w-3 fill-brand-orange text-brand-orange" />
-                      Artisan vérifié
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-display text-xl leading-tight">{a.label}</h3>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-background/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider backdrop-blur">
+                      <ShieldCheck className="h-3 w-3 text-brand-orange" />
+                      Profil illustratif
                     </span>
                   </div>
                   <div className="mt-1 flex items-center gap-2 text-xs text-background/80">
                     <MapPin className="h-3 w-3" />
-                    <span>{a.city}</span>
+                    <span>{a.area}</span>
                     <span className="h-1 w-1 rounded-full bg-background/40" />
-                    <span>{a.years} ans d'expérience</span>
+                    <span>{a.experience}</span>
                   </div>
                 </div>
               </div>
