@@ -32,12 +32,16 @@ export const AnalysisResultSchema = z.object({
 
 export type AnalysisResult = z.infer<typeof AnalysisResultSchema>;
 
-// Input contract — image envoyée en data URL base64 (jpg/png/webp).
+// Input contract V11 — jusqu'à 3 photos data URL base64 (jpg/png/webp), 5 Mo chacune.
+// V10 (mock) : la page n'envoie qu'une seule photo, wrappée dans le tableau.
+// Limite base64 ≈ 5 Mo binaire × 4/3 ≈ 6,8 Mo, on prend 7 Mo de marge.
+const IMAGE_DATA_URL = z
+  .string()
+  .regex(/^data:image\/(jpeg|jpg|png|webp);base64,/, "Format d'image invalide")
+  .max(7_000_000, "Image trop lourde (max 5 Mo)");
+
 export const AnalyzeInputSchema = z.object({
-  imageDataUrl: z
-    .string()
-    .regex(/^data:image\/(jpeg|jpg|png|webp);base64,/, "Format d'image invalide")
-    .max(20_000_000), // ~15 Mo base64 encodé
+  imageDataUrls: z.array(IMAGE_DATA_URL).min(1).max(3),
   hint: z.string().max(400).optional(), // contexte facultatif saisi par l'utilisateur
 });
 
