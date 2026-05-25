@@ -35,17 +35,24 @@ function MentionsLegalesPage() {
         <section className="mt-10">
           <h2 className="font-display text-2xl text-foreground">Éditeur du site</h2>
           <p className="mt-3 text-sm text-muted-foreground">
-            Le site <strong>parqueto.fr</strong> est édité par <strong>Parqueto</strong>.<br />
-            Adresse : Paris, France<br />
-            Contact : <a href="mailto:contact@parqueto.fr" className="text-brand-orange">contact@parqueto.fr</a><br />
-            Les informations légales complètes (forme juridique, SIRET, capital social, n° TVA
-            intracommunautaire, RCS) seront publiées dès l'immatriculation officielle de la société.
+            Le site <strong>parqueto.fr</strong> est édité par <strong>HIKMI Hicham</strong>,
+            entrepreneur individuel exerçant sous le nom commercial <strong>HH Digital</strong>.<br />
+            Siège social : 4 rue Pierre Kohlmann, 92160 Antony, France<br />
+            SIREN : <strong>509 241 022</strong> — SIRET (établissement principal) :{" "}
+            <strong>509 241 022 00037</strong><br />
+            Code APE : 6311Z — Traitement de données, hébergement et activités connexes<br />
+            Forme juridique : Entrepreneur individuel<br />
+            TVA intracommunautaire : non applicable, article 293 B du CGI<br />
+            Contact :{" "}
+            <a href="mailto:contact@parqueto.fr" className="text-brand-orange">
+              contact@parqueto.fr
+            </a>
           </p>
         </section>
 
         <section className="mt-10">
           <h2 className="font-display text-2xl text-foreground">Directeur de la publication</h2>
-          <p className="mt-3 text-sm text-muted-foreground">Le représentant légal de Parqueto.</p>
+          <p className="mt-3 text-sm text-muted-foreground">Hicham HIKMI, en qualité d'éditeur.</p>
         </section>
 
         <section className="mt-10">
