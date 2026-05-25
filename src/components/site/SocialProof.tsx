@@ -1,5 +1,6 @@
-import { Clock, BadgeCheck, Gift, PhoneOff, ShieldCheck } from "lucide-react";
+import { Clock, BadgeCheck, PhoneOff, ShieldCheck } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { TrustpilotWidget } from "@/components/site/TrustpilotWidget";
 
 const promises = [
   { icon: Clock, title: "Estimation claire et rapide", body: "Décrivez votre projet en 3 minutes. Fourchette de prix immédiate, sans démarchage." },
@@ -42,6 +43,11 @@ export function SocialProof() {
               <p className="mt-2 text-sm text-muted-foreground">{p.body}</p>
             </article>
           ))}
+        </div>
+
+        {/* Trustpilot — n'affiche rien tant que VITE_TRUSTPILOT_BUSINESS_UNIT_ID n'est pas défini */}
+        <div className="mt-12">
+          <TrustpilotWidget />
         </div>
       </div>
     </section>
