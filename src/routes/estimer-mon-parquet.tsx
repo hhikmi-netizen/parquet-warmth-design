@@ -81,12 +81,16 @@ function EstimerMonParquetPage() {
   }, []);
 
   const handleAnalyze = async () => {
-    if (!file) return;
+    if (!file || !preview) return;
     setIsAnalyzing(true);
     setError(null);
     try {
-      const data = await mockAnalyze();
-      setResult(data);
+      const res = await analyze({ data: { imageDataUrl: preview } });
+      if (res.error || !res.result) {
+        setError(res.error ?? "L'analyse a échoué. Réessayez dans quelques instants.");
+      } else {
+        setResult(res.result);
+      }
     } catch {
       setError("L'analyse a échoué. Réessayez dans quelques instants.");
     } finally {
