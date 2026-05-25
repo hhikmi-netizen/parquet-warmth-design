@@ -14,7 +14,7 @@ import {
   Inbox,
   MapPin,
   Clock,
-  Coins,
+  CreditCard,
   Settings,
   CheckCircle2,
   XCircle,
@@ -62,6 +62,12 @@ const STATUS_CLASS: Record<MatchStatus, string> = {
   expired: "bg-red-50 text-red-600",
 };
 
+function getLeadPrice(budgetMax: number): { tier: string; price: number } {
+  if (budgetMax < 3000) return { tier: "Standard", price: 49 };
+  if (budgetMax <= 8000) return { tier: "Qualifié", price: 89 };
+  return { tier: "Premium", price: 189 };
+}
+
 type FilterKey = "tous" | MatchStatus;
 
 function ProDashboard() {
@@ -89,7 +95,7 @@ function ProDashboard() {
     mutationFn: (match_id: string) => acceptFn({ data: { match_id } }),
     onSuccess: (res) => {
       if (res?.success) {
-        toast.success("Projet accepté", { description: "Crédit débité — coordonnées client débloquées." });
+        toast.success("Projet accepté", { description: "Coordonnées client débloquées." });
         invalidate();
         setSelected(null);
       } else {
@@ -102,7 +108,7 @@ function ProDashboard() {
   const declineMutation = useMutation({
     mutationFn: (match_id: string) => declineFn({ data: { match_id } }),
     onSuccess: () => {
-      toast("Projet décliné", { description: "Aucun crédit débité." });
+      toast("Projet décliné", { description: "Aucun frais appliqué." });
       invalidate();
       setSelected(null);
     },
@@ -114,7 +120,7 @@ function ProDashboard() {
       refundFn({ data: { match_id, reason } }),
     onSuccess: (res, vars) => {
       if (res?.success) {
-        toast.success("Crédit remboursé", { description: vars.reason });
+        toast.success("Lead remboursé", { description: vars.reason });
         invalidate();
         setSelected(null);
       } else {
@@ -130,12 +136,10 @@ function ProDashboard() {
   }, [filter, inbox?.matches]);
 
   const onAccept = (m: InboxMatch) => {
-    const balance = inbox?.artisan?.credits_balance ?? 0;
-    if (balance < m.project.credits_cost) {
-      toast.error("Crédits insuffisants", { description: "Rechargez votre compte pour accepter ce projet." });
-      return;
-    }
-    acceptMutation.mutate(m.match_id);
+    // TODO: rediriger vers /pro/leads/$matchId pour achat Stripe
+    toast.info("Achat du lead", {
+      description: `Ouvrez la fiche complète pour acheter ce lead (${getLeadPrice(m.project.budget_max).price}€).`,
+    });
   };
   const onDecline = (m: InboxMatch) => declineMutation.mutate(m.match_id);
   const onRefund = (m: InboxMatch, reasonLabel: string) => {
@@ -236,15 +240,15 @@ function ProDashboard() {
           </nav>
 
           <div className="mt-4 rounded-2xl border border-brand-orange/30 bg-brand-orange/5 p-4 text-sm">
-            <p className="font-semibold text-brand-orange-deep">Formule Essentiel</p>
+            <p className="font-semibold text-brand-orange-deep">Parqueto Pro</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              5 crédits inclus / mois · prochaine recharge le 14 juin
+              Abonnement actif · accès illimité aux leads qualifiés
             </p>
             <Link
-              to="/pro/offres"
+              to="/pro/abonnement"
               className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand-orange-deep hover:underline"
             >
-              Gérer ma formule <ChevronRight className="h-3 w-3" />
+              Gérer mon abonnement <ChevronRight className="h-3 w-3" />
             </Link>
           </div>
         </aside>
@@ -268,7 +272,7 @@ function ProDashboard() {
           {tab === "historique" && <HistoryTab refunded={stats.refunded} />}
           {tab === "zone" && <ZoneTab />}
           {tab === "compte" && (
-            <CompteTab artisanName={inbox.artisan.raison_sociale} balance={inbox.artisan.credits_balance} />
+            <CompteTab artisanName={inbox.artisan.raison_sociale} />
           )}
         </main>
       </div>
@@ -276,7 +280,6 @@ function ProDashboard() {
       {selected && (
         <ProjectDrawer
           match={selected}
-          balance={inbox.artisan.credits_balance}
           onClose={() => setSelected(null)}
           onAccept={onAccept}
           onDecline={onDecline}
@@ -305,24 +308,16 @@ function initials(name: string) {
     .join("");
 }
 
-function CreditsBadge({ balance }: { balance: number }) {
-  const low = balance <= 2;
+function CreditsBadge({ balance: _balance }: { balance: number }) {
+  void _balance;
   return (
-    <div
-      className={`hidden items-center gap-2 rounded-full border px-3 py-1.5 text-sm sm:flex ${
-        low ? "border-red-200 bg-red-50" : "border-border bg-background"
-      }`}
+    <Link
+      to="/pro/abonnement"
+      className="hidden items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-sm transition hover:bg-accent sm:flex"
     >
-      <Coins className={`h-4 w-4 ${low ? "text-red-500" : "text-brand-orange"}`} />
-      <span className="font-semibold">{balance}</span>
-      <span className="text-muted-foreground">crédit{balance > 1 ? "s" : ""}</span>
-      <Link
-        to="/pro/facturation"
-        className="ml-2 text-xs font-semibold text-brand-orange-deep hover:underline"
-      >
-        Facturation
-      </Link>
-    </div>
+      <CreditCard className="h-4 w-4 text-brand-orange" />
+      <span className="font-semibold">Mon abonnement</span>
+    </Link>
   );
 }
 
@@ -576,8 +571,7 @@ function MatchCard({
           {p.budget_min.toLocaleString("fr-FR")} – {p.budget_max.toLocaleString("fr-FR")} €
         </p>
         <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-brand-orange/10 px-2 py-0.5 text-[10px] font-semibold text-brand-orange-deep">
-          <Coins className="h-3 w-3" /> {p.credits_cost} crédit
-          {p.credits_cost > 1 ? "s" : ""}
+          <CreditCard className="h-3 w-3" /> {getLeadPrice(p.budget_max).price}€
         </p>
       </div>
     </button>
@@ -586,14 +580,12 @@ function MatchCard({
 
 function ProjectDrawer({
   match,
-  balance,
   onClose,
   onAccept,
   onDecline,
   onRefund,
 }: {
   match: InboxMatch;
-  balance: number;
   onClose: () => void;
   onAccept: (m: InboxMatch) => void;
   onDecline: (m: InboxMatch) => void;
@@ -731,7 +723,7 @@ function ProjectDrawer({
 
             <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 text-xs text-emerald-800">
               <ShieldCheck className="mb-1 inline h-4 w-4" /> Lead exclusif. Si le client
-              est injoignable sous 5 jours ouvrés ou hors zone, votre crédit est
+              est injoignable sous 5 jours ouvrés ou hors zone, le lead est
               automatiquement remboursé.
             </div>
 
@@ -742,7 +734,7 @@ function ProjectDrawer({
                   onClick={() => setAcceptOpen(true)}
                   className="rounded-full bg-brand-orange px-5 py-3 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
                 >
-                  Accepter ({p.credits_cost} crédit{p.credits_cost > 1 ? "s" : ""})
+                  Acheter — {getLeadPrice(p.budget_max).price}€
                 </button>
                 <button
                   type="button"
@@ -829,7 +821,6 @@ function ProjectDrawer({
       {acceptOpen && (
         <AcceptModal
           match={match}
-          balance={balance}
           onClose={() => setAcceptOpen(false)}
           onConfirm={() => {
             setAcceptOpen(false);
@@ -852,51 +843,39 @@ function ProjectDrawer({
 
 function AcceptModal({
   match,
-  balance,
   onClose,
   onConfirm,
 }: {
   match: InboxMatch;
-  balance: number;
   onClose: () => void;
   onConfirm: () => void;
 }) {
-  const cost = match.project.credits_cost;
-  const insufficient = balance < cost;
-  const after = Math.max(0, balance - cost);
+  const pricing = getLeadPrice(match.project.budget_max);
 
   return (
-    <ModalShell onClose={onClose} title="Confirmer l'acceptation">
+    <ModalShell onClose={onClose} title="Acheter ce lead">
       <div className="space-y-4 text-sm">
         <p className="text-muted-foreground">
-          En acceptant ce projet, <strong className="text-foreground">{cost} crédit
-          {cost > 1 ? "s" : ""}</strong> sera débité de votre compte et les coordonnées
-          du client vous seront révélées immédiatement.
+          Ce lead est classé <strong className="text-foreground">{pricing.tier}</strong>{" "}
+          ({pricing.price}€ TTC). En confirmant, vous serez redirigé vers Stripe Checkout
+          pour finaliser l'achat. Les coordonnées du client vous seront révélées
+          immédiatement après paiement.
         </p>
         <div className="rounded-xl border border-border bg-muted/30 p-4 text-sm">
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Solde actuel</span>
-            <span className="font-semibold">{balance} crédits</span>
+            <span className="text-muted-foreground">Prix du lead</span>
+            <span className="font-semibold">{pricing.price}€ TTC</span>
           </div>
           <div className="mt-1 flex items-center justify-between">
-            <span className="text-muted-foreground">Après acceptation</span>
-            <span className={`font-semibold ${insufficient ? "text-red-600" : ""}`}>
-              {after} crédit{after > 1 ? "s" : ""}
-            </span>
+            <span className="text-muted-foreground">Catégorie</span>
+            <span className="font-semibold">{pricing.tier}</span>
           </div>
         </div>
-        {insufficient ? (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">
-            <AlertTriangle className="mb-1 inline h-4 w-4" /> Crédits insuffisants.
-            Rechargez votre compte pour accepter ce projet.
-          </div>
-        ) : (
-          <p className="text-xs text-muted-foreground">
-            <ShieldCheck className="mb-0.5 inline h-3.5 w-3.5 text-emerald-600" /> Si
-            le client est injoignable sous 5 jours ou hors zone, le crédit est
-            automatiquement remboursé.
-          </p>
-        )}
+        <p className="text-xs text-muted-foreground">
+          <ShieldCheck className="mb-0.5 inline h-3.5 w-3.5 text-emerald-600" /> Si le
+          client est injoignable sous 5 jours ou hors zone, le lead est remboursé
+          automatiquement.
+        </p>
         <div className="flex justify-end gap-2 pt-2">
           <button
             type="button"
@@ -905,22 +884,13 @@ function AcceptModal({
           >
             Annuler
           </button>
-          {insufficient ? (
-            <Link
-              to="/pro/offres"
-              className="rounded-full bg-brand-orange px-4 py-2 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
-            >
-              Recharger
-            </Link>
-          ) : (
-            <button
-              type="button"
-              onClick={onConfirm}
-              className="rounded-full bg-brand-orange px-4 py-2 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
-            >
-              Confirmer & débiter
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="rounded-full bg-brand-orange px-4 py-2 text-sm font-semibold text-primary-foreground shadow-warm transition hover:bg-brand-orange-deep"
+          >
+            Payer {pricing.price}€ & débloquer
+          </button>
         </div>
       </div>
     </ModalShell>
@@ -1142,7 +1112,7 @@ function ZoneTab() {
   );
 }
 
-function CompteTab({ artisanName, balance }: { artisanName: string; balance: number }) {
+function CompteTab({ artisanName }: { artisanName: string }) {
   return (
     <div className="space-y-6">
       <div className="rounded-3xl border border-border bg-background p-8">
@@ -1163,22 +1133,22 @@ function CompteTab({ artisanName, balance }: { artisanName: string; balance: num
       <div className="rounded-3xl border border-border bg-background p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-serif text-xl">Abonnement & crédits</h2>
+            <h2 className="font-serif text-xl">Abonnement</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Formule Essentiel · 29 € / mois · sans engagement
+              Parqueto Pro · accès illimité aux leads qualifiés
             </p>
           </div>
           <Link
-            to="/pro/offres"
+            to="/pro/abonnement"
             className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-semibold transition hover:bg-accent"
           >
-            Changer de formule <ArrowRight className="h-4 w-4" />
+            Gérer mon abonnement <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
-          <Stat label="Crédits disponibles" value={String(balance)} />
-          <Stat label="Inclus chaque mois" value="5" />
-          <Stat label="Prochaine recharge" value="14 juin" />
+          <Stat label="Formule" value="Pro" />
+          <Stat label="Facturation" value="Annuelle" />
+          <Stat label="Prochaine échéance" value="Juin 2027" />
         </div>
       </div>
     </div>
