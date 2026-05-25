@@ -329,33 +329,42 @@ export function JourneyStepper({
       onKeyDown={onCarouselKeyDown}
     >
       <div className="lg:col-span-6">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-cream/60 via-background to-secondary/40 p-6 shadow-soft sm:p-10">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-cream/60 via-background to-secondary/40 p-4 shadow-soft sm:p-6">
           <div className="grain absolute inset-0 opacity-20" aria-hidden />
-          <div className="relative flex h-full flex-col items-center justify-center">
-            <div
-              className={cn(
-                "flex h-20 w-20 items-center justify-center rounded-2xl text-primary-foreground shadow-warm sm:h-24 sm:w-24",
-                accentBg,
+          {step.image ? (
+            <img
+              src={step.image}
+              alt={imageAlt}
+              className="relative h-full w-full rounded-[1.25rem] object-cover shadow-soft"
+              loading="lazy"
+            />
+          ) : (
+            <div className="relative flex h-full flex-col items-center justify-center">
+              <div
+                className={cn(
+                  "flex h-20 w-20 items-center justify-center rounded-2xl text-primary-foreground shadow-warm sm:h-24 sm:w-24",
+                  accentBg,
+                )}
+                aria-hidden
+              >
+                <Icon className="h-9 w-9 sm:h-11 sm:w-11" />
+              </div>
+              <p
+                className={cn("mt-6 font-display text-6xl sm:text-7xl", accentText, "opacity-15")}
+                aria-hidden
+              >
+                {step.n}
+              </p>
+              <p className="mt-2 text-center font-display text-xl text-foreground sm:text-2xl">
+                {step.title}
+              </p>
+              {step.highlight && (
+                <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-1 text-xs font-semibold text-brand-orange shadow-soft">
+                  {step.highlight}
+                </span>
               )}
-              aria-hidden
-            >
-              <Icon className="h-9 w-9 sm:h-11 sm:w-11" />
             </div>
-            <p
-              className={cn("mt-6 font-display text-6xl sm:text-7xl", accentText, "opacity-15")}
-              aria-hidden
-            >
-              {step.n}
-            </p>
-            <p className="mt-2 text-center font-display text-xl text-foreground sm:text-2xl">
-              {step.title}
-            </p>
-            {step.highlight && (
-              <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-1 text-xs font-semibold text-brand-orange shadow-soft">
-                {step.highlight}
-              </span>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
