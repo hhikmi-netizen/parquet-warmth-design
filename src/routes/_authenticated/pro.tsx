@@ -136,12 +136,10 @@ function ProDashboard() {
   }, [filter, inbox?.matches]);
 
   const onAccept = (m: InboxMatch) => {
-    const balance = inbox?.artisan?.credits_balance ?? 0;
-    if (balance < m.project.credits_cost) {
-      toast.error("Crédits insuffisants", { description: "Rechargez votre compte pour accepter ce projet." });
-      return;
-    }
-    acceptMutation.mutate(m.match_id);
+    // TODO: rediriger vers /pro/leads/$matchId pour achat Stripe
+    toast.info("Achat du lead", {
+      description: `Ouvrez la fiche complète pour acheter ce lead (${getLeadPrice(m.project.budget_max).price}€).`,
+    });
   };
   const onDecline = (m: InboxMatch) => declineMutation.mutate(m.match_id);
   const onRefund = (m: InboxMatch, reasonLabel: string) => {
