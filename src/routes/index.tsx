@@ -19,6 +19,7 @@ import { BrandFilm } from "@/components/site/BrandFilm";
 import { ClientExperience } from "@/components/site/ClientExperience";
 import { ArtisanExperience } from "@/components/site/ArtisanExperience";
 import { TrustStrip } from "@/components/site/TrustStrip";
+import { CharteTeaser } from "@/components/site/CharteTeaser";
 import { videoObjectSchema } from "@/lib/video-schema";
 import beforeAfter from "@/assets/before-after.jpg";
 import detail from "@/assets/detail-wood.jpg";
@@ -92,6 +93,49 @@ export const Route = createFileRoute("/")({
               "@type": "Question",
               name: "Que se passe-t-il si je ne suis pas satisfait du devis ?",
               acceptedAnswer: { "@type": "Answer", text: "Aucun engagement, aucun frais. L'estimation vous appartient. Si le courant ne passe pas avec l'artisan proposé, on en discute et on vous oriente vers une autre solution. On préfère un projet bien cadré qu'un projet forcé." },
+            },
+          ],
+        }),
+      },
+
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          name: "Estimer son projet parquet en ligne avec Parqueto",
+          description:
+            "Méthode en 4 étapes pour estimer le prix d'un projet parquet (pose, ponçage, vitrification, rénovation) et recevoir un devis d'un artisan parqueteur vérifié sous 24 h.",
+          totalTime: "PT5M",
+          estimatedCost: { "@type": "MonetaryAmount", currency: "EUR", value: "0" },
+          step: [
+            {
+              "@type": "HowToStep",
+              position: 1,
+              name: "Décrire votre projet",
+              text: "Renseignez la surface, le type de parquet et la prestation souhaitée (pose, ponçage, vitrification, rénovation).",
+              url: "https://parqueto.fr/estimation",
+            },
+            {
+              "@type": "HowToStep",
+              position: 2,
+              name: "Recevoir une fourchette de prix",
+              text: "Notre estimateur calcule immédiatement une fourchette indicative basée sur les tarifs réels des artisans de votre région.",
+              url: "https://parqueto.fr/estimation",
+            },
+            {
+              "@type": "HowToStep",
+              position: 3,
+              name: "Être mis en relation avec un artisan vérifié",
+              text: "Un seul artisan partenaire (SIRET, décennale et RC Pro contrôlés) reçoit votre projet — pas de mise en concurrence, pas de démarchage.",
+              url: "https://parqueto.fr/artisan-verifie",
+            },
+            {
+              "@type": "HowToStep",
+              position: 4,
+              name: "Recevoir un devis détaillé sous 24 à 48 h",
+              text: "L'artisan vous recontacte, propose une visite si nécessaire, puis établit un devis ligne par ligne (main d'œuvre, matériaux, finition).",
+              url: "https://parqueto.fr/charte-qualite",
             },
           ],
         }),
@@ -256,6 +300,7 @@ function Index() {
       <ArtisanExperience />
       <RealisationsTeaser />
       <BrandFilm />
+      <CharteTeaser />
       <SocialProof />
       <Partners />
       <FinalCTA />

@@ -1,31 +1,33 @@
-import { MapPin, Star, ArrowRight } from "lucide-react";
+import { MapPin, ShieldCheck, ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import a1 from "@/assets/artisan-1.jpg";
 import a2 from "@/assets/artisan-2.jpg";
 import a3 from "@/assets/artisan-3.jpg";
 
+// NOTE — Profils types illustratifs. Aucun artisan réel n'est représenté ici tant que
+// le réseau n'est pas constitué publiquement (DGCCRF / loyauté des pratiques commerciales).
 const artisans = [
   {
     img: a1,
-    name: "Jean-Marc L.",
-    city: "Paris 11ᵉ",
-    years: 22,
+    label: "Profil type · Parquet ancien",
+    area: "Île-de-France",
+    experience: "15 ans et +",
     specialties: ["Parquet ancien", "Point de Hongrie", "Vitrification"],
     quote: "Un parquet bien posé, c'est un sol qu'on entend chanter sous les pas.",
   },
   {
     img: a2,
-    name: "Camille D.",
-    city: "Lyon 6ᵉ",
-    years: 14,
+    label: "Profil type · Pose & finition",
+    area: "Auvergne-Rhône-Alpes",
+    experience: "10 ans et +",
     specialties: ["Pose chevron", "Huile naturelle", "Massif chêne"],
     quote: "Chaque pièce a son grain, sa lumière. Le bois fait le reste.",
   },
   {
     img: a3,
-    name: "Thomas R.",
-    city: "Bordeaux",
-    years: 9,
+    label: "Profil type · Rénovation",
+    area: "Nouvelle-Aquitaine",
+    experience: "5 ans et +",
     specialties: ["Rénovation", "Ponçage", "Contrecollé"],
     quote: "On ne rattrape pas un bâclage. Le travail propre, c'est la base.",
   },
@@ -44,9 +46,10 @@ export function ArtisansShowcase() {
               Des visages, des mains, <span className="italic text-brand-orange">un savoir-faire.</span>
             </h2>
             <p className="mt-4 max-w-xl text-muted-foreground">
-              Voici le type d'artisans avec qui nous travaillons : sélectionnés sur dossier, vérifiés
-              et notés par les particuliers. Vous n'avez pas à les démarcher — on cadre votre projet,
-              puis on vous oriente vers celui dont le savoir-faire correspond.
+              Voici les <strong>profils types</strong> d'artisans que nous recrutons :
+              SIRET actif, assurance décennale et RC Pro vérifiés avant chaque mise en relation.
+              Les photos et profils ci-dessous sont illustratifs — le réseau public est en
+              cours de constitution.
             </p>
           </div>
           <Link
@@ -61,29 +64,29 @@ export function ArtisansShowcase() {
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {artisans.map((a) => (
             <article
-              key={a.name}
+              key={a.label}
               className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition hover:-translate-y-1 hover:shadow-warm"
             >
               <div className="relative overflow-hidden">
                 <img
                   src={a.img}
-                  alt={a.name}
+                  alt={`${a.label} — illustration d'artisan parqueteur`}
                   className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent p-5 text-background">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-display text-2xl">{a.name}</h3>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-background/15 px-2 py-0.5 text-xs font-semibold backdrop-blur">
-                      <Star className="h-3 w-3 fill-brand-orange text-brand-orange" />
-                      Artisan vérifié
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-display text-xl leading-tight">{a.label}</h3>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-background/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider backdrop-blur">
+                      <ShieldCheck className="h-3 w-3 text-brand-orange" />
+                      Profil illustratif
                     </span>
                   </div>
                   <div className="mt-1 flex items-center gap-2 text-xs text-background/80">
                     <MapPin className="h-3 w-3" />
-                    <span>{a.city}</span>
+                    <span>{a.area}</span>
                     <span className="h-1 w-1 rounded-full bg-background/40" />
-                    <span>{a.years} ans d'expérience</span>
+                    <span>{a.experience}</span>
                   </div>
                 </div>
               </div>
