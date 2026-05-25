@@ -16,6 +16,8 @@ export type JourneyStep = {
   body: string;
   icon: ComponentType<{ className?: string }>;
   highlight?: string;
+  image?: string;
+  imageAlt?: string;
 };
 
 type Mode = "carousel" | "accordion" | "auto";
