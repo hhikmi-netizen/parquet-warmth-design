@@ -70,27 +70,33 @@ export const Route = createFileRoute("/")({
           mainEntity: [
             {
               "@type": "Question",
-              name: "Combien coûte une estimation parquet chez Parqueto ?",
-              acceptedAnswer: { "@type": "Answer", text: "L'estimation en ligne est 100 % gratuite. Vous obtenez une fourchette de prix selon la surface, le type de parquet et la prestation (pose, ponçage, vitrification, rénovation), puis un devis chiffré par un artisan vérifié sous 24 h." },
+              name: "Comment se passe l'estimation en ligne ?",
+              acceptedAnswer: { "@type": "Answer", text: "Quelques questions simples sur votre projet : surface, type de parquet, prestation souhaitée. Pas de jargon, pas de case piégeuse. En 5 minutes, vous recevez une fourchette de prix calée sur les vrais tarifs des artisans de votre région." },
             },
             {
               "@type": "Question",
-              name: "Que faire si mon parquet gondole ?",
-              acceptedAnswer: { "@type": "Answer", text: "Coupez la source d'humidité, ventilez, puis utilisez notre simulateur de gravité (5 questions) pour savoir si un ponçage suffit ou si une dépose partielle est nécessaire. Un artisan vous rappelle sous 24 h avec un devis conforme à votre assurance MRH." },
+              name: "L'estimation est-elle vraiment gratuite et sans engagement ?",
+              acceptedAnswer: { "@type": "Answer", text: "Oui, totalement. Vous n'avez pas besoin de créer un compte pour obtenir votre estimation. C'est un repère de prix honnête, pas un piège commercial. Vous décidez ensuite, à votre rythme, si vous voulez aller plus loin." },
             },
             {
               "@type": "Question",
-              name: "Quel prix au m² pour poncer et vitrifier un parquet ?",
-              acceptedAnswer: { "@type": "Answer", text: "Comptez 35 à 60 €/m² TTC pour un ponçage + vitrification standard, et 50 à 90 €/m² pour une rénovation complète (réparation des lames + teinte + finition). Lancez l'estimation pour un chiffrage personnalisé." },
+              name: "Comment choisissez-vous l'artisan pour mon projet ?",
+              acceptedAnswer: { "@type": "Answer", text: "Notre algorithme croise trois critères : la zone d'intervention, la spécialité métier (pose, ponçage, rénovation…) et le niveau de qualification. Un seul artisan vous est proposé — celui qui correspond vraiment à votre chantier." },
             },
             {
               "@type": "Question",
-              name: "Les artisans Parqueto sont-ils vraiment vérifiés ?",
-              acceptedAnswer: { "@type": "Answer", text: "Oui : Kbis à jour, assurance décennale en cours de validité, avis clients contrôlés et chartre qualité signée. Aucun démarchage, vous restez maître du contact." },
+              name: "Sous quel délai l'artisan me contacte-t-il ?",
+              acceptedAnswer: { "@type": "Answer", text: "Dans la grande majorité des cas, sous 24 heures ouvrées après votre demande. Il prend le temps de vous écouter, propose une visite si nécessaire, et établit un devis détaillé. Pas de démarchage, pas de relance." },
+            },
+            {
+              "@type": "Question",
+              name: "Que se passe-t-il si je ne suis pas satisfait du devis ?",
+              acceptedAnswer: { "@type": "Answer", text: "Aucun engagement, aucun frais. L'estimation vous appartient. Si le courant ne passe pas avec l'artisan proposé, on en discute et on vous oriente vers une autre solution. On préfère un projet bien cadré qu'un projet forcé." },
             },
           ],
         }),
       },
+
       videoObjectSchema({
         name: "Parqueto — Le parquet, sans détour",
         description:
