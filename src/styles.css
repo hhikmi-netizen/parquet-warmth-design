@@ -33,9 +33,26 @@
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
   --color-brand-cream: var(--brand-cream);
+  --color-brand-cream-deep: var(--brand-cream-deep);
   --color-brand-ink: var(--brand-ink);
+  --color-brand-ink-soft: var(--brand-ink-soft);
   --color-brand-orange: var(--brand-orange);
   --color-brand-orange-deep: var(--brand-orange-deep);
+  --color-brand-orange-soft: var(--brand-orange-soft);
+  --color-surface-warm: var(--surface-warm);
+  --color-surface-warm-soft: var(--surface-warm-soft);
+  --color-state-success: var(--state-success);
+  --color-state-success-surface: var(--state-success-surface);
+  --color-state-warning: var(--state-warning);
+  --color-state-warning-surface: var(--state-warning-surface);
+  --color-state-danger: var(--state-danger);
+  --color-state-danger-surface: var(--state-danger-surface);
+  --color-state-info: var(--state-info);
+  --color-state-info-surface: var(--state-info-surface);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
   --font-display: "Fraunces", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
 }
@@ -70,6 +87,10 @@
   --brand-orange-deep: oklch(0.58 0.16 45);
   --brand-orange-soft: oklch(0.94 0.04 60);
 
+  /* Surfaces warm — fond beige/crème récurrent (Hero, TrustStrip, previews) */
+  --surface-warm: oklch(0.94 0.018 75);        /* ≈ #f6efe4 */
+  --surface-warm-soft: oklch(0.965 0.012 75);  /* ≈ #fbf7f0 */
+
   /* Semantic states — pastel surface + readable text */
   --state-success: oklch(0.62 0.13 150);
   --state-success-surface: oklch(0.95 0.05 150);
@@ -79,6 +100,24 @@
   --state-danger-surface: oklch(0.95 0.05 25);
   --state-info: oklch(0.6 0.12 235);
   --state-info-surface: oklch(0.95 0.04 235);
+
+  /* Chart palette — recharts/dataviz */
+  --chart-1: var(--brand-orange);
+  --chart-2: oklch(0.62 0.13 150);
+  --chart-3: oklch(0.6 0.12 235);
+  --chart-4: oklch(0.55 0.05 50);
+
+  /* Motion — durées + easings (référence unique) */
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
+  --duration-slow: 380ms;
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Spacing scale — alias documentés (Tailwind reste source de vérité) */
+  --space-section: 5rem;       /* py-20 */
+  --space-section-lg: 7rem;    /* py-28 */
+  --container-max: 80rem;      /* max-w-7xl */
 
   --shadow-warm: 0 24px 60px -24px oklch(0.4 0.08 50 / 0.28);
   --shadow-soft: 0 8px 24px -12px oklch(0.4 0.05 50 / 0.18);
