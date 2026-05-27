@@ -39,39 +39,60 @@ export const Route = createFileRoute("/tarifs")({
 
 type Billing = "monthly" | "yearly";
 
-const LEAD_TIERS = [
+type LeadTier = {
+  key: "standard" | "qualified" | "premium";
+  label: string;
+  description: string;
+  leadPriceHt: number;
+  responseDelayHours: number;
+  rangeLabel: string;
+  icon: typeof Star;
+  badge: string;
+  band: string;
+  highlight?: boolean;
+  extraTimeAllowed?: boolean;
+  extraTimeHours?: number;
+};
+
+const LEAD_TIERS: LeadTier[] = [
   {
-    key: "standard" as const,
-    ...PRICING.leadCategories.standard,
-    icon: Star,
-    ring: "ring-emerald-500/30",
-    badge: "bg-emerald-100 text-emerald-700",
-    accent: "text-emerald-700",
-    band: "bg-emerald-600",
+    key: "standard",
+    label: PRICING.leadCategories.standard.label,
+    description: PRICING.leadCategories.standard.description,
+    leadPriceHt: PRICING.leadCategories.standard.leadPriceHt,
+    responseDelayHours: PRICING.leadCategories.standard.responseDelayHours,
     rangeLabel: "< 3 000 €",
+    icon: Star,
+    badge: "bg-emerald-100 text-emerald-700",
+    band: "bg-emerald-600",
   },
   {
-    key: "qualified" as const,
-    ...PRICING.leadCategories.qualified,
-    icon: ShieldCheck,
-    ring: "ring-orange-500/40",
-    badge: "bg-orange-100 text-orange-700",
-    accent: "text-orange-700",
-    band: "bg-orange-500",
+    key: "qualified",
+    label: PRICING.leadCategories.qualified.label,
+    description: PRICING.leadCategories.qualified.description,
+    leadPriceHt: PRICING.leadCategories.qualified.leadPriceHt,
+    responseDelayHours: PRICING.leadCategories.qualified.responseDelayHours,
     rangeLabel: "3 000 € – 8 000 €",
+    icon: ShieldCheck,
+    badge: "bg-orange-100 text-orange-700",
+    band: "bg-orange-500",
     highlight: true,
   },
   {
-    key: "premium" as const,
-    ...PRICING.leadCategories.premium,
-    icon: Crown,
-    ring: "ring-purple-500/30",
-    badge: "bg-purple-100 text-purple-700",
-    accent: "text-purple-700",
-    band: "bg-purple-600",
+    key: "premium",
+    label: PRICING.leadCategories.premium.label,
+    description: PRICING.leadCategories.premium.description,
+    leadPriceHt: PRICING.leadCategories.premium.leadPriceHt,
+    responseDelayHours: PRICING.leadCategories.premium.responseDelayHours,
     rangeLabel: "> 8 000 €",
+    icon: Crown,
+    badge: "bg-purple-100 text-purple-700",
+    band: "bg-purple-600",
+    extraTimeAllowed: PRICING.leadCategories.premium.extraTimeAllowed,
+    extraTimeHours: PRICING.leadCategories.premium.extraTimeHours,
   },
 ];
+
 
 function TarifsPage() {
   const [billing, setBilling] = useState<Billing>("yearly");
