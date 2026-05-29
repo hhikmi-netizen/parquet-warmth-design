@@ -27,12 +27,12 @@ function ParametresPage() {
 
         <Panel title="Tarifs abonnement & leads" description="Modèle économique artisan.">
           <ul className="space-y-2 text-sm">
-            <Row icon={Coins} label="Abonnement mensuel" value="59 €/mois" />
-            <Row icon={Coins} label="Abonnement annuel (-17%)" value="49 €/mois · 588 €/an" />
+            <Row icon={Coins} label="Abonnement mensuel" value="59 € HT/mois" />
+            <Row icon={Coins} label="Abonnement annuel (-17%)" value="49 € HT/mois · 588 € HT/an" />
             <Row icon={Coins} label="Essai gratuit" value="14 jours" />
-            <Row icon={Coins} label="Lead Standard (< 3 000 €)" value="49 € TTC" />
-            <Row icon={Coins} label="Lead Qualifié (3–8 000 €)" value="89 € TTC" />
-            <Row icon={Coins} label="Lead Premium (> 8 000 €)" value="189 € TTC" />
+            <Row icon={Coins} label="Lead Standard (< 3 000 €)" value="49 € HT" />
+            <Row icon={Coins} label="Lead Qualifié (3–8 000 €)" value="89 € HT" />
+            <Row icon={Coins} label="Lead Premium (> 8 000 €)" value="189 € HT" />
           </ul>
         </Panel>
 
